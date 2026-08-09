@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printer Test — XP-58IIT</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 36px 40px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+        }
+        .card h1 { font-size: 18px; color: #1e293b; margin-bottom: 6px; }
+        .card p  { font-size: 13px; color: #64748b; margin-bottom: 24px; line-height: 1.5; }
+        .device  { font-family: monospace; background: #f8fafc; border: 1px solid #e2e8f0;
+                   border-radius: 6px; padding: 4px 10px; font-size: 12px; color: #475569; }
+
+        .btn-print {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            background: #4f46e5;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .btn-print:hover:not(:disabled) { background: #4338ca; }
+        .btn-print:disabled { background: #a5b4fc; cursor: not-allowed; }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 14px;
+            font-size: 13px;
+            color: #64748b;
+            text-decoration: none;
+        }
+        .btn-back:hover { color: #1e293b; }
+
+        .result {
+            margin-top: 16px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: left;
+            display: none;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .result.ok    { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .result.error { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+
+        .spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>🖨 Thermal Printer Test</h1>
+    <p>
+        Sends a test receipt directly to<br>
+        <span class="device">/dev/usb/lp4</span><br><br>
+        Make sure the XP-58IIT is plugged in and powered on.
+    </p>
+
+    <button class="btn-print" id="printBtn" onclick="sendTestPrint()">
+        Print Test Receipt
+    </button>
+
+    <div class="result" id="result"></div>
+    <br>
+    <a href="/dashboard/" class="btn-back">← Back to CRM</a>
+</div>
+
+<script>
+async function sendTestPrint() {
+    const btn = document.getElementById('printBtn');
+    const result = document.getElementById('result');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>Sending to printer…';
+    result.style.display = 'none';
+
+    try {
+        const resp = await fetch('', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        });
+        const data = await resp.json();
+
+        result.style.display = 'block';
+        if (data.ok) {
+            result.className = 'result ok';
+            result.textContent = '✓ Receipt sent to printer successfully!';
+        } else {
+            result.className = 'result error';
+            result.textContent = '✗ ' + data.error;
+        }
+    } catch (e) {
+        result.style.display = 'block';
+        result.className = 'result error';
+        result.textContent = '✗ Network error: ' + e.message;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = 'Print Test Receipt';
+    }
+}
+
+function getCookie(name) {
+    const v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return v ? v.pop() : '';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Sign In" %} — TrustBuilding</title>
+    <style>
+        /* Login page styles — self-contained, no Tailwind build dependency */
+        body.login-page {
+            background-color: #08090f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+            margin: 0;
+        }
+        .login-wrap {
+            width: 100%;
+            max-width: 380px;
+        }
+        .login-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .login-logo h1 {
+            color: #fff;
+            font-size: 1.75rem;
+            margin: 0;
+        }
+        .login-card {
+            background-color: #12131a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+        }
+        .login-card h1 {
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 0.25rem 0;
+        }
+        .login-card p.subtitle {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0 0 1.75rem 0;
+        }
+        .login-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+        .login-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.75rem 1rem;
+            background-color: #1e2030 !important;
+            color: #f9fafb !important;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 0.625rem;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.15s;
+            caret-color: #60a5fa;
+        }
+        .login-input::placeholder { color: #4b5563; }
+        .login-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+        .login-field { margin-bottom: 1.25rem; }
+        .alert { padding: 0.75rem 1rem; border-radius: 0.625rem; font-size: 0.875rem; font-weight: 500; margin-bottom: 1.25rem; }
+        .alert-error { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+        .alert-success { background: rgba(16,185,129,0.1); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.2); }
+        .alert-info { background: rgba(59,130,246,0.1); color: #93c5fd; border: 1px solid rgba(59,130,246,0.2); }
+        .login-btn {
+            width: 100%; padding: 0.8125rem 1rem; background-color: #2563eb; color: #fff;
+            font-size: 0.875rem; font-weight: 600; border: none; border-radius: 0.625rem;
+            cursor: pointer; transition: background-color 0.15s, transform 0.1s;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.35); margin-top: 0.5rem;
+        }
+        .login-btn:hover { background-color: #1d4ed8; }
+        .login-btn:active { transform: scale(0.98); }
+        .login-footer { text-align: center; font-size: 0.75rem; color: #374151; margin-top: 1.5rem; }
+    </style>
+</head>
+<body class="login-page">
+
+    <div class="login-wrap">
+        <!-- Logo -->
+        <div class="login-logo">
+            <h1>TrustBuilding</h1>
+        </div>
+
+        <!-- Card -->
+        <div class="login-card">
+            <h1>{% trans "Sign In" %}</h1>
+            <p class="subtitle">{% trans "Enter your phone number to receive a login code." %}</p>
+
+            <!-- Django messages -->
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Form -->
+            <form method="post" action="{% url 'otp:request_otp' %}">
+                {% csrf_token %}
+
+                <!-- Phone -->
+                <div class="login-field">
+                    <label for="phone_number" class="login-label">
+                        {% trans "Phone Number" %}
+                    </label>
+                    <input type="text"
+                           name="phone_number"
+                           id="phone_number"
+                           placeholder="+998 90 123 45 67"
+                           autofocus
+                           required
+                           class="login-input">
+                </div>
+
+                <button type="submit" class="login-btn">{% trans "Send Code" %}</button>
+            </form>
+        </div>
+
+        <p class="login-footer">TrustBuilding &copy; {% now "Y" %}</p>
+    </div>
+
+</body>
+</html>

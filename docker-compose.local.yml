@@ -1,0 +1,25 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: trustbuilding_web_local
+    command: /start
+    volumes:
+      - .:/app
+    ports:
+      - 8010:8010
+    env_file:
+      - ./env/.local
+    depends_on:
+      - db
+
+  db:
+    image: postgres:18
+    volumes:
+      - trustbuilding_local_data:/var/lib/postgresql/18/data/
+    env_file:
+      - ./env/.local
+
+volumes:
+  trustbuilding_local_data:

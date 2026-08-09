@@ -1,0 +1,173 @@
+/* Sidebar Animations and Styles */
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes ripple {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 225, 255, 0.4),
+                    0 0 0 0 rgba(0, 225, 255, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(0, 225, 255, 0),
+                    0 0 0 20px rgba(0, 225, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(0, 225, 255, 0),
+                    0 0 0 40px rgba(0, 225, 255, 0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        filter: drop-shadow(0 0 10px rgba(0, 225, 255, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(0, 225, 255, 0.6));
+    }
+}
+
+@keyframes gradientShift {
+    0%, 100% { 
+        background-position: 0% 50%; 
+    }
+    50% { 
+        background-position: 100% 50%; 
+    }
+}
+
+/* Navigation Item Animations */
+.nav-item {
+    animation: slideInLeft 0.3s ease-out backwards;
+}
+
+.nav-item:nth-child(1) { animation-delay: 0.05s; }
+.nav-item:nth-child(2) { animation-delay: 0.1s; }
+.nav-item:nth-child(3) { animation-delay: 0.15s; }
+.nav-item:nth-child(4) { animation-delay: 0.2s; }
+.nav-item:nth-child(5) { animation-delay: 0.25s; }
+.nav-item:nth-child(6) { animation-delay: 0.3s; }
+.nav-item:nth-child(7) { animation-delay: 0.35s; }
+.nav-item:nth-child(8) { animation-delay: 0.4s; }
+.nav-item:nth-child(9) { animation-delay: 0.45s; }
+.nav-item:nth-child(10) { animation-delay: 0.5s; }
+.nav-item:nth-child(11) { animation-delay: 0.55s; }
+
+/* Logo Animation */
+.logo-animate {
+    animation: glow 3s ease-in-out infinite;
+}
+
+/* Active State Glow */
+.active-glow {
+    animation: ripple 2s infinite;
+}
+
+/* Sidebar Background */
+.sidebar-bg {
+    background: linear-gradient(135deg, #001034 0%, #000820 50%, #001034 100%);
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+}
+
+/* Icon Hover Animation */
+.nav-item:hover svg {
+    animation: float 0.6s ease-in-out;
+}
+
+/* Dropdown Enter Animation */
+.dropdown-enter {
+    animation: slideInLeft 0.2s ease-out;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #00e1ff #001034;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #001034;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #00e1ff;
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #00b8cc;
+}
+
+/* Gradient Border Helper */
+.gradient-border-bottom {
+    border-image: linear-gradient(90deg, rgba(0, 225, 255, 0.3), rgba(0, 225, 255, 0.1)) 1;
+    border-width: 0 0 1px 0;
+}
+
+.gradient-border-top {
+    border-image: linear-gradient(90deg, rgba(0, 225, 255, 0.3), rgba(0, 225, 255, 0.1)) 1;
+    border-width: 1px 0 0 0;
+}
+
+/* Lesson name marquee — only activates when text overflows (.marquee-active class set by Alpine) */
+@keyframes lesson-marquee {
+    0%   { transform: translateX(0); }
+    10%  { transform: translateX(0); }       /* pause at start */
+    80%  { transform: translateX(var(--marquee-distance)); }
+    90%  { transform: translateX(var(--marquee-distance)); } /* pause at end */
+    100% { transform: translateX(0); }
+}
+
+.lesson-marquee-wrap {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* always inline-block so transform works and scrollWidth is measurable */
+.lesson-marquee-text {
+    display: inline-block;
+}
+
+.lesson-marquee-wrap.marquee-active .lesson-marquee-text {
+    animation: lesson-marquee 3.5s ease-in-out infinite;
+}

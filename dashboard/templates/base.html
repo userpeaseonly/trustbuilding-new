@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+{% load static %}
+{% load i18n %}
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{% block title %}{% trans "Dashboard" %}{% endblock %} - Imaan</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
+    <!-- Tailwind CSS compiled -->
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+
+    <!-- Flatpickr date picker (non-blocking) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"></noscript>
+    <style>
+        .flatpickr-input { cursor: pointer; }
+        .flatpickr-calendar { font-family: inherit; }
+    </style>
+
+    <!-- Sidebar styles -->
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+
+    <!-- Alpine.js x-cloak to hide elements until loaded -->
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+        
+        /* Screen reader only - for accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* ── Chrome compositing fix ──────────────────────────────────────────
+           backdrop-filter on full-screen overlays forces Chrome to allocate a
+           separate GPU compositing layer per element, even for hidden modals.
+           Firefox handles this efficiently; Chrome does not.
+           Overlays retain their semi-transparent bg for visual separation.
+        */
+        .backdrop-blur-sm, .backdrop-blur, .backdrop-blur-md,
+        .backdrop-blur-lg, .backdrop-blur-xl, .backdrop-blur-2xl {
+            -webkit-backdrop-filter: none !important;
+            backdrop-filter: none !important;
+        }
+        
+        /* ── HTMX swap animations ────────────────────────────────────────────
+           Use keyframe animations, not CSS transitions. Transitions require the
+           property to be pre-defined on the element before the class is added —
+           keyframes work independently and are reliable across all browsers.
+        */
+        @keyframes htmx-fade-in {
+            from { opacity: 0; transform: translateY(3px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes htmx-fade-out {
+            to   { opacity: 0; }
+        }
+        .htmx-added {
+            animation: htmx-fade-in 150ms ease-out forwards;
+        }
+        .htmx-swapping {
+            animation: htmx-fade-out 80ms ease-out forwards;
+        }
+
+        /* HTMX loading indicator */
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        .htmx-indicator {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        /* Schedule section — suppress HTMX swap animations.
+           Fade-out then fade-in on a large table creates a perceived
+           "double flicker". Instant swap feels cleaner for filter changes. */
+        #schedule-section.htmx-swapping {
+            animation: none !important;
+        }
+        #schedule-section.htmx-added {
+            animation: none !important;
+        }
+
+        /* Main content — smooth opacity dim while new page loads */
+        #main-content {
+            transition: opacity 0.12s ease-out;
+        }
+    </style>
+
+    <!-- Alpine.js for reactive components - deferred to load after body -->
+    <script defer src="{% static 'js/alpine.min.js' %}"></script>
+
+    <!-- HTMX for dynamic interactions -->
+    <script src="{% static 'js/htmx.min.js' %}" defer></script>
+    <!-- HTMX preload extension: starts fetching on mouseenter so clicks feel instant -->
+    <script src="{% static 'js/htmx-preload.min.js' %}" defer></script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen" x-data="{ sidebarOpen: false }">
+    {% include 'partials/sidebar.html' %}
+    {% include 'partials/topbar.html' %}
+
+    <!-- Main Content Area -->
+    <div class="min-h-screen w-full lg:pl-64 pt-8">
+        <!-- Main Content -->
+        <main id="main-wrapper">
+            <div id="main-content" class="p-4 lg:p-8">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+        
+        <!-- HTMX Loading Indicator -->
+        <div id="htmx-indicator" class="htmx-indicator fixed top-14 lg:left-64 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-cyan-500 to-blue-500 z-50" style="display: none;">
+            <div class="h-full bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600 animate-pulse"></div>
+        </div>
+    </div>
+
+    <!-- Hidden form for language switching -->
+    <form id="languageForm" method="post" action="{% url 'set_language' %}">
+        {% csrf_token %}
+        <input type="hidden" name="language" id="languageInput">
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    </form>
+
+    <!-- Global Student Detail Modal (used by topbar search from any page) -->
+    <div id="global-student-modal"
+         x-data="{ open: false }"
+         @open-global-student-modal.window="open = true"
+         @close-global-student-modal.window="open = false"
+         @close-student-modal.window="open = false"
+         @keydown.escape.window="open = false"
+         x-show="open"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         style="display:none;"
+         class="fixed inset-0 z-[60] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" @click="open = false"></div>
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto z-10" @click.stop>
+            <div id="global-student-modal-body" class="student-modal-body"></div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    
+    <!-- HTMX Configuration -->
+    <script>
+        (function () {
+            var indicator = document.getElementById('htmx-indicator');
+            var mainContent = document.getElementById('main-content');
+
+            // ── Sidebar active-state helper ────────────────────────────────────
+            // The sidebar is outside #main-content and never re-renders on HTMX
+            // navigation, so we manage active classes in JS.
+            function syncSidebarActive() {
+                var path = window.location.pathname;
+                document.querySelectorAll('#sidebar-nav a[hx-get]').forEach(function (a) {
+                    var href = (a.getAttribute('href') || '').split('?')[0];
+                    var exact = a.hasAttribute('data-nav-exact');
+                    // exact links: only match if path === href
+                    // prefix links: match if path starts with href (for namespace grouping)
+                    var active = href && (href === path || (!exact && href.length > 1 && path.startsWith(href)));
+                    if (active) {
+                        a.classList.add('bg-blue-600', 'text-white');
+                        a.classList.remove('text-gray-400', 'hover:bg-[#252938]', 'hover:text-white');
+                    } else {
+                        a.classList.remove('bg-blue-600', 'text-white');
+                        a.classList.add('text-gray-400');
+                    }
+                });
+            }
+
+            // ── Before every HTMX request ──────────────────────────────────────
+            document.body.addEventListener('htmx:beforeRequest', function (evt) {
+                // Show loading bar
+                if (indicator) indicator.style.display = 'block';
+
+                var el = evt.detail.elt;
+
+                // Sidebar navigation: give immediate visual feedback
+                if (el.closest && el.closest('#sidebar-nav')) {
+                    // 1. Immediately highlight the clicked link
+                    document.querySelectorAll('#sidebar-nav a[hx-get]').forEach(function (a) {
+                        a.classList.remove('bg-blue-600', 'text-white');
+                        a.classList.add('text-gray-400');
+                    });
+                    el.classList.add('bg-blue-600', 'text-white');
+                    el.classList.remove('text-gray-400');
+
+                    // 2. Dim the current page content so user sees it's loading
+                    if (mainContent) mainContent.style.opacity = '0.35';
+                    return;
+                }
+
+                // Throttle: prevent double-submits on buttons/links
+                if (el.hasAttribute('data-htmx-busy')) {
+                    evt.preventDefault();
+                    return;
+                }
+                el.setAttribute('data-htmx-busy', 'true');
+                var xhr = evt.detail.xhr;
+                if (xhr) xhr.addEventListener('loadend', function () { el.removeAttribute('data-htmx-busy'); });
+
+                // Disable buttons/inputs during request (skip search inputs)
+                if ((el.tagName === 'BUTTON' || el.tagName === 'INPUT') && el.id !== 'topbar-search-input') {
+                    el.disabled = true;
+                    el.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            });
+
+            // ── After request completes ────────────────────────────────────────
+            document.body.addEventListener('htmx:afterRequest', function (evt) {
+                if (indicator) indicator.style.display = 'none';
+
+                var el = evt.detail.elt;
+                if (el.tagName === 'BUTTON' || el.tagName === 'INPUT') {
+                    el.disabled = false;
+                    el.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            });
+
+            // ── After content is settled in the DOM ────────────────────────────
+            document.body.addEventListener('htmx:afterSettle', function () {
+                // Restore main content opacity
+                if (mainContent) mainContent.style.opacity = '';
+                // Re-sync sidebar active state based on current URL
+                syncSidebarActive();
+            });
+
+            // Keep sidebar in sync on browser back/forward
+            window.addEventListener('popstate', syncSidebarActive);
+        })();
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+
+    <!-- Flatpickr: enforce dd/mm/yyyy on all date inputs -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        function initDatePickers() {
+            document.querySelectorAll('input[type="date"]:not(.flatpickr-input)').forEach(function(el) {
+                // Read existing value (YYYY-MM-DD) to reapply after init
+                var existingValue = el.value;
+                flatpickr(el, {
+                    altInput: true,
+                    altFormat: 'd/m/Y',
+                    dateFormat: 'Y-m-d',
+                    defaultDate: existingValue || null,
+                    allowInput: true,
+                });
+            });
+        }
+        // Init on page load
+        document.addEventListener('DOMContentLoaded', initDatePickers);
+        // Re-init after any HTMX swap (modals, partials)
+        document.addEventListener('htmx:afterSettle', initDatePickers);
+    </script>
+
+    <!-- Kill django_browser_reload polling -->
+    <script>
+        if (window.djangoBrowserReload) {
+            window.djangoBrowserReload.stop();
+        }
+    </script>
+</body>
+</html>

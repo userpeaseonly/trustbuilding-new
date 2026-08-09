@@ -1,0 +1,237 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-09 07:47+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: application/settings/defaults.py:148
+msgid "English"
+msgstr "English"
+
+#: application/settings/defaults.py:149
+msgid "Russian"
+msgstr "Russian"
+
+#: application/settings/defaults.py:150
+msgid "Uzbek"
+msgstr "Uzbek"
+
+#: dashboard/templates/base.html:8 dashboard/templates/base.html:45
+#: dashboard/templates/base.html:127 dashboard/templates/dashboard/home.html:4
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: dashboard/templates/base.html:48 dashboard/templates/base.html:130
+msgid "Schedule"
+msgstr "Schedule"
+
+#: dashboard/templates/base.html:51 dashboard/templates/base.html:133
+msgid "Attendance"
+msgstr "Attendance"
+
+#: dashboard/templates/base.html:54 dashboard/templates/base.html:136
+msgid "Leads"
+msgstr "Leads"
+
+#: dashboard/templates/base.html:57 dashboard/templates/base.html:139
+#, fuzzy
+#| msgid "Is Student"
+msgid "Students"
+msgstr "Is Student"
+
+#: dashboard/templates/base.html:60 dashboard/templates/base.html:142
+#: dashboard/templates/dashboard/home.html:53
+msgid "Groups"
+msgstr "Groups"
+
+#: dashboard/templates/base.html:63 dashboard/templates/base.html:145
+msgid "Employees"
+msgstr "Employees"
+
+#: dashboard/templates/base.html:66 dashboard/templates/base.html:148
+msgid "Courses"
+msgstr "Courses"
+
+#: dashboard/templates/base.html:69 dashboard/templates/base.html:151
+msgid "Finance"
+msgstr "Finance"
+
+#: dashboard/templates/base.html:100
+msgid "User avatar"
+msgstr "User avatar"
+
+#: dashboard/templates/base.html:105
+msgid "Profile"
+msgstr "Profile"
+
+#: dashboard/templates/base.html:106
+msgid "Settings"
+msgstr "Settings"
+
+#: dashboard/templates/base.html:107
+msgid "Sign out"
+msgstr "Sign out"
+
+#: dashboard/templates/dashboard/home.html:13
+msgid "Order"
+msgstr "Order"
+
+#: dashboard/templates/dashboard/home.html:18
+msgid "Come order"
+msgstr "Come order"
+
+#: dashboard/templates/dashboard/home.html:23
+#, fuzzy
+#| msgid "Is Student"
+msgid "New student"
+msgstr "Is Student"
+
+#: dashboard/templates/dashboard/home.html:28
+msgid "Active students"
+msgstr "Active students"
+
+#: dashboard/templates/dashboard/home.html:33
+msgid "Left order"
+msgstr "Left order"
+
+#: dashboard/templates/dashboard/home.html:38
+msgid "New leavers"
+msgstr "New leavers"
+
+#: dashboard/templates/dashboard/home.html:43
+#, fuzzy
+#| msgid "Is Student"
+msgid "Students left"
+msgstr "Is Student"
+
+#: dashboard/templates/dashboard/home.html:48
+msgid "Debtor"
+msgstr "Debtor"
+
+#: dashboard/templates/dashboard/home.html:58
+msgid "First payment"
+msgstr "First payment"
+
+#: dashboard/templates/dashboard/home.html:63
+msgid "Frozen"
+msgstr "Frozen"
+
+#: dashboard/templates/dashboard/home.html:68
+msgid "Archive"
+msgstr "Archive"
+
+#: dashboard/templates/dashboard/home.html:82
+msgid "Odd days"
+msgstr "Odd days"
+
+#: dashboard/templates/dashboard/home.html:86
+msgid "Even days"
+msgstr "Even days"
+
+#: dashboard/templates/dashboard/home.html:89
+msgid "Today"
+msgstr "Today"
+
+#: dashboard/templates/dashboard/home.html:97
+msgid "By Group"
+msgstr "By Group"
+
+#: dashboard/templates/dashboard/home.html:101
+#, fuzzy
+#| msgid "Is Teacher"
+msgid "By Teacher"
+msgstr "Is Teacher"
+
+#: dashboard/templates/dashboard/home.html:114
+msgid "GROUP"
+msgstr "GROUP"
+
+#: dashboard/templates/dashboard/home.html:114
+msgid "TEACHER"
+msgstr "TEACHER"
+
+#: dashboard/templates/dashboard/home.html:174
+msgid "No schedules for this day type"
+msgstr "No schedules for this day type"
+
+#: users/admin.py:17
+msgid "Personal info"
+msgstr "Personal info"
+
+#: users/admin.py:18
+msgid "User Type"
+msgstr "User Type"
+
+#: users/admin.py:19
+msgid "Permissions"
+msgstr "Permissions"
+
+#: users/admin.py:20
+msgid "Important dates"
+msgstr "Important dates"
+
+#: users/models.py:11
+msgid "Phone number"
+msgstr "Phone number"
+
+#: users/models.py:12
+msgid "Full name"
+msgstr "Full name"
+
+#: users/models.py:15
+msgid "Male"
+msgstr "Male"
+
+#: users/models.py:16
+msgid "Female"
+msgstr "Female"
+
+#: users/models.py:18
+msgid "Gender"
+msgstr "Gender"
+
+#: users/models.py:20
+msgid "Profile Picture"
+msgstr "Profile Picture"
+
+#: users/models.py:21
+msgid "Status"
+msgstr "Status"
+
+#: users/models.py:22
+msgid "Is Student"
+msgstr "Is Student"
+
+#: users/models.py:23
+msgid "Is Teacher"
+msgstr "Is Teacher"
+
+#: users/models.py:25
+msgid "Created At"
+msgstr "Created At"
+
+#: users/models.py:26
+msgid "Updated At"
+msgstr "Updated At"
+
+#: users/models.py:34
+msgid "User"
+msgstr "User"
+
+#: users/models.py:35
+msgid "Users"
+msgstr "Users"

@@ -1,0 +1,103 @@
+# =========================
+# Upstream — Staging Gunicorn
+# =========================
+upstream gunicorn_staging {
+    server 127.0.0.1:8020;
+    keepalive 8;
+}
+
+# =========================
+# HTTP (certbot will upgrade to HTTPS)
+# =========================
+server {
+    listen 80;
+    server_name staging.imaan-school.uz;
+
+    access_log /var/log/nginx/imaan-staging.access.log;
+    error_log  /var/log/nginx/imaan-staging.error.log;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+
+    client_max_body_size 100M;
+
+    # =========================
+    # Gzip
+    # =========================
+    gzip on;
+    gzip_disable "msie6";
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_buffers 16 8k;
+    gzip_http_version 1.1;
+    gzip_types
+        text/plain
+        text/css
+        application/json
+        application/javascript
+        text/xml
+        application/xml
+        application/xml+rss
+        image/svg+xml;
+
+    # =========================
+    # Security Headers
+    # =========================
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+
+    # =========================
+    # Static files
+    # =========================
+    location /static/ {
+        alias /var/www/imaan-staging/static/;
+        expires 1d;
+        add_header Cache-Control "public";
+        access_log off;
+    }
+
+    # =========================
+    # Media files
+    # =========================
+    location /media/ {
+        alias /var/www/imaan-staging/media/;
+        expires 1d;
+        access_log off;
+    }
+
+    # =========================
+    # Django / Gunicorn
+    # =========================
+    location / {
+        proxy_pass http://gunicorn_staging;
+        proxy_redirect off;
+
+        proxy_http_version 1.1;
+        proxy_set_header Connection "";
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        proxy_set_header Upgrade $http_upgrade;
+
+        proxy_buffering on;
+        proxy_buffer_size        8k;
+        proxy_buffers           16 16k;
+        proxy_busy_buffers_size 32k;
+
+        proxy_connect_timeout 60s;
+        proxy_send_timeout    120s;
+        proxy_read_timeout    120s;
+
+        send_timeout 120s;
+    }
+}
+
+

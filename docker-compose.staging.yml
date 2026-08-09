@@ -1,0 +1,79 @@
+name: imaan_staging
+
+services:
+  web-staging:
+    build:
+      context: .
+      dockerfile: ./compose/staging/django/Dockerfile
+    image: imaan_web_staging
+    command: /start
+    volumes:
+      - staging_static:/app/static
+      - staging_media:/app/media
+    ports:
+      - 8020:8000
+    env_file:
+      - ./env/.staging
+    depends_on:
+      - db-staging
+    networks:
+      - staging_net
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+
+  bot-staging:
+    build:
+      context: .
+      dockerfile: ./compose/staging/django/Dockerfile
+    image: imaan_web_staging
+    command: python manage.py run_bot --settings=application.settings.production
+    volumes:
+      - staging_static:/app/static
+      - staging_media:/app/media
+    env_file:
+      - ./env/.staging
+    depends_on:
+      - db-staging
+    networks:
+      - staging_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  db-staging:
+    image: postgres:18
+    volumes:
+      - imaan_staging_data:/var/lib/postgresql/18/data/
+    env_file:
+      - ./env/.staging
+    networks:
+      - staging_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+networks:
+  staging_net:
+    driver: bridge
+
+volumes:
+  imaan_staging_data:
+  staging_static:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/www/imaan-staging/static
+  staging_media:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/www/imaan-staging/media

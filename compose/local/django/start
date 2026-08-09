@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+echo "Running database migrations..."
+python manage.py migrate --settings=application.settings.local
+
+echo "Creating superuser if none exists..."
+python manage.py createsuperuserifnone --settings=application.settings.local
+
+echo "Compiling translation messages..."
+# Check if locale directory exists
+if [ -d "locale" ] && [ -n "$(find locale -name '*.po' 2>/dev/null)" ]; then
+    if command -v msgfmt >/dev/null 2>&1; then
+        python manage.py compilemessages --settings=application.settings.local
+        echo "✅ Translations compiled successfully"
+    else
+        echo "⚠️  gettext/msgfmt is not installed; using existing compiled translation files"
+    fi
+else
+    echo "⚠️  No translation files found, skipping compilemessages"
+fi
+
+echo "Installing Tailwind dependencies..."
+# Check if theme app exists and install npm dependencies
+if [ -d "theme/static_src" ]; then
+    cd theme/static_src
+    if [ -f "package.json" ]; then
+        if [ ! -d "node_modules" ]; then
+            npm install
+            echo "✅ Tailwind dependencies installed"
+        else
+            echo "✅ Tailwind node_modules already present, skipping npm install"
+        fi
+        cd /app
+    else
+        cd /app
+        echo "⚠️  No package.json found in theme/static_src"
+    fi
+else
+    echo "⚠️  Theme app not initialized yet. Run 'python manage.py tailwind init' first"
+fi
+
+echo "Building Tailwind CSS..."
+# Build Tailwind for development (tailwind commands don't accept --settings)
+python manage.py tailwind build || echo "⚠️  Tailwind build skipped"
+
+echo "Starting Django development server..."
+python manage.py runserver 0.0.0.0:8010 --settings=application.settings.local

@@ -1,0 +1,11 @@
+{% load i18n %}
+{% load custom_filters %}
+{% comment %} {#
+  HTMX out-of-band sidebar nav swap.
+  Targets <nav id="sidebar-nav"> in sidebar.html.
+  Nav items are defined once in _nav_items.html — edit there, not here.
+#} {% endcomment %}
+
+<nav id="sidebar-nav" class="flex-1 px-4 py-4 space-y-1 overflow-y-auto custom-scrollbar" hx-swap-oob="true" hx-ext="preload">
+    {% include 'partials/_nav_items.html' %}
+</nav>

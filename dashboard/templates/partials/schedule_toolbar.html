@@ -1,0 +1,39 @@
+{% load i18n %}
+
+{# Schedule Toolbar Component #}
+{# Parameters: day_type, view_by #}
+
+<div class="px-6 py-4 bg-linear-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <!-- Left: Day Type -->
+        <div class="flex items-center gap-3">
+            <a href="?day_type=odd&view_by={{ view_by }}" 
+               class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all shadow-sm {% if day_type != 'odd' %}bg-white hover:bg-gray-100 border border-gray-300{% endif %}" 
+               {% if day_type == 'odd' %}style="background-color: #00e1ff; color: #001034;"{% else %}style="color: #001034;"{% endif %}>
+                {% trans "Odd days" %}
+            </a>
+            <a href="?day_type=even&view_by={{ view_by }}" 
+               class="px-5 py-2.5 text-sm font-semibold rounded-lg transition-all shadow-sm {% if day_type != 'even' %}bg-white hover:bg-gray-100 border border-gray-300{% endif %}" 
+               {% if day_type == 'even' %}style="background-color: #00e1ff; color: #001034;"{% else %}style="color: #001034;"{% endif %}>
+                {% trans "Even days" %}
+            </a>
+            <span class="ml-2 px-4 py-2 rounded-full text-xs font-bold shadow-sm" style="background-color: #dbfe01; color: #001034;">
+                {% trans "Today" %}
+            </span>
+        </div>
+
+        <!-- Right: View Toggle -->
+        <div class="flex items-center gap-2 bg-white rounded-lg p-1.5 shadow-sm border border-gray-300">
+            <a href="?day_type={{ day_type }}&view_by=by_group" 
+               class="px-5 py-2 text-sm font-semibold rounded-md transition-all {% if view_by != 'by_group' %}hover:bg-gray-100{% endif %}" 
+               {% if view_by == 'by_group' %}style="background-color: #00e1ff; color: #001034;"{% else %}style="color: #001034;"{% endif %}>
+                {% trans "By Group" %}
+            </a>
+            <a href="?day_type={{ day_type }}&view_by=by_teacher" 
+               class="px-5 py-2 text-sm font-semibold rounded-md transition-all {% if view_by != 'by_teacher' %}hover:bg-gray-100{% endif %}" 
+               {% if view_by == 'by_teacher' %}style="background-color: #00e1ff; color: #001034;"{% else %}style="color: #001034;"{% endif %}>
+                {% trans "By Teacher" %}
+            </a>
+        </div>
+    </div>
+</div>

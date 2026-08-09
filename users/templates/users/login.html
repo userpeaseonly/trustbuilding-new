@@ -1,0 +1,246 @@
+{% load static %}
+{% load i18n %}
+{% load tailwind_tags %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Sign In" %} — Imaan</title>
+    {% tailwind_css %}
+    <script defer src="{% static 'js/alpine.min.js' %}"></script>
+    <style>
+        /* Login page styles — self-contained, no Tailwind build dependency */
+        body.login-page {
+            background-color: #08090f;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+        }
+        .login-wrap {
+            width: 100%;
+            max-width: 380px;
+        }
+        .login-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .login-logo img {
+            height: 5rem;
+            width: auto;
+        }
+        .login-card {
+            background-color: #12131a;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+        }
+        .login-card h1 {
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 0 0.25rem 0;
+        }
+        .login-card p.subtitle {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0 0 1.75rem 0;
+        }
+        .login-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.5rem;
+        }
+        .login-input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.75rem 1rem;
+            background-color: #1e2030 !important;
+            color: #f9fafb !important;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 0.625rem;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.15s;
+            caret-color: #60a5fa;
+        }
+        .login-input::placeholder {
+            color: #4b5563;
+        }
+        .login-input:hover {
+            border-color: rgba(255,255,255,0.22);
+        }
+        .login-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        .login-input.input-error {
+            border-color: rgba(239,68,68,0.5);
+        }
+        /* Defeat browser autofill colour override */
+        .login-input:-webkit-autofill,
+        .login-input:-webkit-autofill:hover,
+        .login-input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #f9fafb !important;
+            -webkit-box-shadow: 0 0 0 1000px #1e2030 inset !important;
+            box-shadow: 0 0 0 1000px #1e2030 inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+            caret-color: #60a5fa;
+        }
+        .login-input-wrap {
+            position: relative;
+            margin-bottom: 0;
+        }
+        .login-input-wrap .pw-toggle {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+        .login-input-wrap .pw-toggle:hover { color: #d1d5db; }
+        .login-field { margin-bottom: 1.25rem; }
+        .login-field-error {
+            font-size: 0.75rem;
+            color: #f87171;
+            margin-top: 0.375rem;
+        }
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 0.625rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+        }
+        .alert-error   { background: rgba(239,68,68,0.1);   color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+        .alert-success { background: rgba(16,185,129,0.1);  color: #6ee7b7; border: 1px solid rgba(16,185,129,0.2); }
+        .alert-info    { background: rgba(59,130,246,0.1);  color: #93c5fd; border: 1px solid rgba(59,130,246,0.2); }
+        .login-btn {
+            width: 100%;
+            padding: 0.8125rem 1rem;
+            background-color: #2563eb;
+            color: #fff;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.625rem;
+            cursor: pointer;
+            transition: background-color 0.15s, transform 0.1s;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+            margin-top: 0.5rem;
+        }
+        .login-btn:hover  { background-color: #1d4ed8; }
+        .login-btn:active { transform: scale(0.98); }
+        .login-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #374151;
+            margin-top: 1.5rem;
+        }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="login-page">
+
+    <div class="login-wrap" x-data="{ showPassword: false }">
+
+        <!-- Logo -->
+        <div class="login-logo">
+            <img src="{% static 'images/Imaan_logo.svg' %}" alt="Imaan">
+        </div>
+
+        <!-- Card -->
+        <div class="login-card">
+            <h1>{% trans "Welcome back" %}</h1>
+            <p class="subtitle">{% trans "Sign in to your account to continue." %}</p>
+
+            <!-- Django messages -->
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Form -->
+            <form method="post" action="{% url 'users:login' %}">
+                {% csrf_token %}
+
+                <!-- Phone -->
+                <div class="login-field">
+                    <label for="{{ form.username.id_for_label }}" class="login-label">
+                        {% trans "Phone Number" %}
+                    </label>
+                    <input type="text"
+                           name="username"
+                           id="{{ form.username.id_for_label }}"
+                           value="{{ form.username.value|default:'' }}"
+                           placeholder="+998 90 123 45 67"
+                           autofocus
+                           required
+                           class="login-input{% if form.username.errors %} input-error{% endif %}">
+                    {% if form.username.errors %}
+                        <p class="login-field-error">{{ form.username.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Password -->
+                <div class="login-field">
+                    <label for="{{ form.password.id_for_label }}" class="login-label">
+                        {% trans "Password" %}
+                    </label>
+                    <div class="login-input-wrap">
+                        <input :type="showPassword ? 'text' : 'password'"
+                               name="password"
+                               id="{{ form.password.id_for_label }}"
+                               placeholder="••••••••"
+                               required
+                               style="padding-right:2.75rem;"
+                               class="login-input{% if form.password.errors %} input-error{% endif %}">
+                        <button type="button" class="pw-toggle" @click="showPassword = !showPassword" tabindex="-1">
+                            <svg x-show="!showPassword" style="width:1.2rem;height:1.2rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                            <svg x-show="showPassword" x-cloak style="width:1.2rem;height:1.2rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                            </svg>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        <p class="login-field-error">{{ form.password.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Non-field errors -->
+                {% if form.non_field_errors %}
+                <div class="alert alert-error">
+                    {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                </div>
+                {% endif %}
+
+                <button type="submit" class="login-btn">{% trans "Sign In" %}</button>
+            </form>
+        </div>
+
+        <p class="login-footer">Imaan &copy; {% now "Y" %}</p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+{% load i18n %}
+
+{% if query and query|length >= 2 %}
+    {% if students %}
+        <div class="px-4 pt-2.5 pb-1">
+            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Students" %}</p>
+        </div>
+        <ul class="pb-1">
+            {% for student in students %}
+            <li>
+                <button type="button"
+                        hx-get="{% url 'students:student_modal' student.pk %}"
+                        hx-target="#global-student-modal-body"
+                        hx-swap="innerHTML"
+                        hx-on:htmx:after-request="window.dispatchEvent(new CustomEvent('open-global-student-modal')); document.getElementById('topbar-search-input').value=''; document.getElementById('topbar-search-results').innerHTML='';"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors text-left">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-bold shrink-0">
+                        {{ student.user.full_name|first|upper }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-slate-800 truncate">{{ student.user.full_name }}</p>
+                        <p class="text-xs text-slate-400">{{ student.user.phone_number }}</p>
+                    </div>
+                    <div class="flex flex-col items-end gap-1 shrink-0">
+                        {% if student.group %}
+                            <span class="text-xs text-slate-500 truncate max-w-[90px]">{{ student.group.name }}</span>
+                        {% else %}
+                            <span class="text-xs text-slate-300">{% trans "No group" %}</span>
+                        {% endif %}
+                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold
+                            {% if student.status == 'active' %}bg-emerald-100 text-emerald-700
+                            {% elif student.status == 'lead' %}bg-blue-100 text-blue-700
+                            {% elif student.status == 'frozen' %}bg-sky-100 text-sky-700
+                            {% elif student.status == 'completed' %}bg-purple-100 text-purple-700
+                            {% elif student.status == 'left' %}bg-red-100 text-red-700
+                            {% else %}bg-slate-100 text-slate-500{% endif %}">
+                            {{ student.get_status_display }}
+                        </span>
+                    </div>
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+        {% if has_more_students %}
+        <div class="px-4 py-1.5 border-t border-slate-100">
+            <p class="text-xs text-slate-400">{% trans "More results — refine your search" %}</p>
+        </div>
+        {% endif %}
+    {% endif %}
+
+    {% if groups %}
+        <div class="px-4 pt-2.5 pb-1 {% if students %}border-t border-slate-100{% endif %}">
+            <p class="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Groups" %}</p>
+        </div>
+        <ul class="pb-1">
+            {% for group in groups %}
+            <li>
+                <a href="{% url 'groups:group_detail' group.pk %}"
+                   hx-get="{% url 'groups:group_detail' group.pk %}"
+                   hx-target="#main-content"
+                   hx-swap="innerHTML"
+                   hx-push-url="true"
+                   onclick="document.getElementById('topbar-search-input').value=''; document.getElementById('topbar-search-results').innerHTML='';"
+                   class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors text-left">
+                    <div class="w-8 h-8 rounded-lg bg-violet-100 text-violet-600 flex items-center justify-center text-xs font-bold shrink-0">
+                        {{ group.name|first|upper }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-slate-800 truncate">{{ group.name }}</p>
+                        <p class="text-xs text-slate-400 truncate">{{ group.course.name }}</p>
+                    </div>
+                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold shrink-0
+                        {% if group.status == 'active' %}bg-emerald-100 text-emerald-700
+                        {% elif group.status == 'completed' %}bg-purple-100 text-purple-700
+                        {% else %}bg-slate-100 text-slate-500{% endif %}">
+                        {{ group.get_status_display }}
+                    </span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% if has_more_groups %}
+        <div class="px-4 py-1.5 border-t border-slate-100">
+            <p class="text-xs text-slate-400">{% trans "More groups — refine your search" %}</p>
+        </div>
+        {% endif %}
+    {% endif %}
+
+    {% if not students and not groups %}
+        <div class="py-8 text-center">
+            <svg class="w-7 h-7 text-slate-200 mx-auto mb-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <p class="text-xs text-slate-400">{% trans "No results found" %}</p>
+        </div>
+    {% endif %}
+{% endif %}

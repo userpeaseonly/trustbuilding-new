@@ -1,0 +1,69 @@
+{% load i18n %}
+
+{# Stats Card Component #}
+{# Parameters: title, value, icon, icon_bg_color, link, tooltip #}
+{# Optional: split_value (second number shown beside value, e.g. for Debtors card) #}
+
+<a href="{{ link|default:'#' }}"
+   class="relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-4 flex items-start gap-3 hover:ring-2 hover:ring-blue-100 hover:scale-[1.02] hover:z-10">
+
+    <!-- Icon Circle -->
+    <div class="shrink-0 w-11 h-11 rounded-full flex items-center justify-center" style="background-color: {{ icon_bg_color }};">
+        {% if icon == 'clipboard' %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
+                <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path>
+            </svg>
+        {% elif icon == 'funnel' %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd"/>
+            </svg>
+        {% elif icon == 'user-add' %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+            </svg>
+        {% elif icon == 'users' %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+            </svg>
+        {% elif icon == 'user-remove' %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M11 6a3 3 0 11-6 0 3 3 0 016 0zM14 17a6 6 0 00-12 0h12zM13 8a1 1 0 100 2h4a1 1 0 100-2h-4z"></path>
+            </svg>
+        {% elif icon == 'clock' %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+            </svg>
+        {% elif icon == 'snowflake' %}
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20m0-20l-2 2m2-2l2 2M12 22l-2-2m2 2l2-2m-9-10h20M2 12l2-2m-2 2l2 2m20-2l-2-2m2 2l-2 2M6.343 6.343l11.314 11.314m-11.314 0L17.657 6.343"></path>
+            </svg>
+        {% elif icon == 'academic-cap' %}
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+            </svg>
+        {% elif icon == 'trash' %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+        {% else %}
+            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+            </svg>
+        {% endif %}
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 min-w-0">
+        <p class="text-xs text-gray-500 leading-tight mb-1 truncate">{{ title }}</p>
+        {% if split_value != "" %}
+            <div class="flex items-center gap-2">
+                <span class="text-xl font-bold text-gray-900">{{ value }}</span>
+                <span class="text-xl font-bold text-gray-900">{{ split_value }}</span>
+            </div>
+        {% else %}
+            <span class="text-2xl font-bold text-gray-900">{{ value }}</span>
+        {% endif %}
+    </div>
+</a>

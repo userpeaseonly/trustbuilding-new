@@ -1,0 +1,196 @@
+{% load i18n %}
+{% load l10n %}
+{% load dashboard_tags %}
+
+{# Schedule Section Component #}
+{# Parameters: day_type, view_by, time_slots, columns, schedule_grid, color_map #}
+
+<div id="schedule-section" class="bg-white rounded-xl shadow overflow-hidden border border-gray-200">
+    <!-- Toolbar -->
+    <div class="px-4 py-2.5 border-b border-gray-200 bg-gray-50">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <!-- Left side - View By selector -->
+            <div class="flex gap-1.5 items-center">
+                <span class="text-xs text-gray-600 font-medium">{% trans "View by:" %}</span>
+                <a href="?day_type={{ day_type }}&view_by=group{{ branch_query }}"
+                   hx-get="{% url 'dashboard:home' %}?day_type={{ day_type }}&view_by=group{{ branch_query }}"
+                   hx-target="#schedule-section"
+                   hx-swap="outerHTML"
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {% if view_by == 'group' %}bg-blue-600 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100 border border-gray-300{% endif %}">
+                    {% trans "Room" %}
+                </a>
+                <a href="?day_type={{ day_type }}&view_by=teacher{{ branch_query }}"
+                   hx-get="{% url 'dashboard:home' %}?day_type={{ day_type }}&view_by=teacher{{ branch_query }}"
+                   hx-target="#schedule-section"
+                   hx-swap="outerHTML"
+                   class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {% if view_by == 'teacher' %}bg-blue-600 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100 border border-gray-300{% endif %}">
+                    {% trans "Teacher" %}
+                </a>
+            </div>
+            
+            <div class="flex flex-wrap gap-2 items-center justify-end">
+                {% if not user_branch %}
+                    <form
+                        hx-get="{% url 'dashboard:home' %}"
+                        hx-target="#main-content"
+                        hx-swap="innerHTML"
+                        hx-push-url="true"
+                        hx-trigger="change"
+                        class="flex gap-1.5 items-center">
+                        <input type="hidden" name="day_type" value="{{ day_type }}">
+                        <input type="hidden" name="view_by" value="{{ view_by }}">
+                        <span class="text-xs text-gray-600 font-medium">{% trans "Branch:" %}</span>
+                        <select name="branch" class="px-3 py-1.5 rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">{% trans "All branches" %}</option>
+                            {% for branch in branch_options %}
+                                <option value="{{ branch.id }}" {% if selected_branch and selected_branch.id == branch.id %}selected{% endif %}>
+                                    {{ branch.short_name|default:branch.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                {% endif %}
+
+                <!-- Day type selector -->
+                <div class="flex gap-1.5 items-center">
+                    <span class="text-xs text-gray-600 font-medium">{% trans "Filter by:" %}</span>
+                    <a href="?day_type=odd&view_by={{ view_by }}{{ branch_query }}"
+                       hx-get="{% url 'dashboard:home' %}?day_type=odd&view_by={{ view_by }}{{ branch_query }}"
+                       hx-target="#schedule-section"
+                       hx-swap="outerHTML"
+                       class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {% if day_type == 'odd' %}bg-blue-600 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100 border border-gray-300{% endif %}">
+                        {% trans "Odd Days" %}
+                    </a>
+                    <a href="?day_type=even&view_by={{ view_by }}{{ branch_query }}"
+                       hx-get="{% url 'dashboard:home' %}?day_type=even&view_by={{ view_by }}{{ branch_query }}"
+                       hx-target="#schedule-section"
+                       hx-swap="outerHTML"
+                       class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {% if day_type == 'even' %}bg-blue-600 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100 border border-gray-300{% endif %}">
+                        {% trans "Even Days" %}
+                    </a>
+                    <a href="?day_type=daily&view_by={{ view_by }}{{ branch_query }}"
+                       hx-get="{% url 'dashboard:home' %}?day_type=daily&view_by={{ view_by }}{{ branch_query }}"
+                       hx-target="#schedule-section"
+                       hx-swap="outerHTML"
+                       class="px-3 py-1.5 rounded-lg text-sm font-medium transition-colors {% if day_type == 'daily' %}bg-blue-600 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100 border border-gray-300{% endif %}">
+                        {% trans "Daily" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Grid -->
+    <div class="overflow-auto" style="max-height: 70vh;">
+        <table class="w-full border-collapse" style="table-layout: fixed;">
+            <thead class="sticky top-0 z-30">
+                <tr class="bg-blue-600">
+                    <th class="px-3 py-2 text-left text-xs font-semibold text-white border border-blue-500 sticky left-0 z-40 bg-blue-600" style="min-width: 120px; width: 120px;">
+                        {% trans "Time" %}
+                    </th>
+                    {% for column in columns %}
+                        <th class="px-3 py-2 text-center text-xs font-semibold text-white border border-blue-500 bg-blue-600" style="min-width: 170px; width: 170px;">
+                            {{ column.schedule_label }}
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for slot in time_slots %}
+                    <tr class="hover:bg-gray-50" style="height: 32px; background-color: #ffffff;">
+                        <td class="px-3 py-1.5 text-xs text-gray-900 font-medium border border-gray-200 sticky left-0 bg-white z-10" style="height: 32px;">
+                            {{ slot.label }}
+                        </td>
+                        {% for column in columns %}
+                            {% if view_by == 'teacher' %}
+                                {% with column_key=column.schedule_key %}
+                                    {% with group=schedule_grid|get_item:slot.label|get_item:column_key %}
+                                        {% if group == 'SKIP' %}
+                                            {# Cell is occupied by rowspan from above, skip rendering #}
+                                        {% elif group %}
+                                            <td class="p-1.5 border border-gray-200 align-top" rowspan="{{ group.rowspan }}" style="height: {% widthratio group.rowspan 1 32 %}px;">
+                                                <a href="{% url 'groups:group_detail' group.pk %}" class="block w-full max-w-full box-border p-1.5 rounded-lg text-white text-xs flex flex-col overflow-hidden shadow-sm hover:brightness-110 transition-all cursor-pointer" style="height: calc({% widthratio group.rowspan 1 32 %}px - 12px); max-height: calc({% widthratio group.rowspan 1 32 %}px - 12px); background-color: {{ color_map|get_item:group.id }};">
+                                                    <div class="min-h-0 overflow-hidden">
+                                                        <div class="font-semibold mb-0.5 text-[13px] leading-tight truncate">{{ group.name }}</div>
+                                                        <div class="text-[11px] leading-tight mb-0.5 opacity-90 truncate">{{ group.course.name }}</div>
+                                                        <div class="text-[11px] leading-tight opacity-80 truncate">
+                                                            {% if group.room %}{% trans "Room" %}: {{ group.room.name }}{% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-auto flex items-center justify-between gap-1 pt-1 border-t border-white border-opacity-20 min-w-0 flex-shrink-0">
+                                                        <div class="lesson-marquee-wrap min-w-0 flex-1 mr-1">
+                                                            <span class="lesson-marquee-text text-[11px] font-medium leading-tight">{{ group.current_lesson_name|default:"—" }}</span>
+                                                        </div>
+                                                        <span class="text-[11px] leading-tight font-semibold flex-shrink-0 px-1.5 py-0.5 rounded bg-white text-gray-700">
+                                                            {{ group.current_students_count }}/{{ group.capacity }}
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td class="p-1.5 border border-gray-200 align-middle" style="height: 32px; background-color: #ffffff;">
+                                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">—</div>
+                                            </td>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% else %}
+                                {% with column_key=column.schedule_key %}
+                                    {% with group=schedule_grid|get_item:slot.label|get_item:column_key %}
+                                        {% if group == 'SKIP' %}
+                                            {# Cell is occupied by rowspan from above, skip rendering #}
+                                        {% elif group %}
+                                            <td class="p-1.5 border border-gray-200 align-top" rowspan="{{ group.rowspan }}" style="height: {% widthratio group.rowspan 1 32 %}px;">
+                                                <a href="{% url 'groups:group_detail' group.pk %}" class="block w-full max-w-full box-border p-1.5 rounded-lg text-white text-xs shadow-sm flex flex-col overflow-hidden hover:brightness-110 transition-all cursor-pointer" style="height: calc({% widthratio group.rowspan 1 32 %}px - 12px); max-height: calc({% widthratio group.rowspan 1 32 %}px - 12px); background-color: {{ color_map|get_item:group.id }};">
+                                                    <div class="min-h-0 overflow-hidden">
+                                                        <div class="font-semibold mb-0.5 text-[13px] leading-tight truncate">{{ group.name }}</div>
+                                                        <div class="text-[11px] leading-tight opacity-90 mb-0.5 truncate">{{ group.course.name }}</div>
+                                                        <div class="text-[11px] leading-tight opacity-80 truncate">
+                                                            {% if group.teacher %}{{ group.teacher.full_name }}{% else %}{% trans "No teacher" %}{% endif %}
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-auto flex items-center justify-between gap-1 pt-1 border-t border-white border-opacity-20 min-w-0 flex-shrink-0">
+                                                        <div class="lesson-marquee-wrap min-w-0 flex-1 mr-1">
+                                                            <span class="lesson-marquee-text text-[11px] font-medium leading-tight">{{ group.current_lesson_name|default:"—" }}</span>
+                                                        </div>
+                                                        <span class="text-[11px] leading-tight font-semibold flex-shrink-0 bg-white text-gray-700 px-1.5 py-0.5 rounded">
+                                                            {{ group.current_students_count }}/{{ group.capacity }}
+                                                        </span>
+                                                    </div>
+                                                </a>
+                                            </td>
+                                        {% else %}
+                                            <td class="p-1.5 border border-gray-200 align-middle" style="height: 32px;">
+                                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">—</div>
+                                            </td>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+(function () {
+    function initMarquees() {
+        document.querySelectorAll('.lesson-marquee-wrap:not([data-marquee-init])').forEach(function (wrap) {
+            wrap.setAttribute('data-marquee-init', '1');
+            var text = wrap.querySelector('.lesson-marquee-text');
+            if (!text) return;
+            var overflow = text.scrollWidth - wrap.clientWidth;
+            if (overflow > 0) {
+                wrap.style.setProperty('--marquee-distance', '-' + (overflow + 8) + 'px');
+                wrap.classList.add('marquee-active');
+            }
+        });
+    }
+    /* double-rAF ensures layout is fully painted before measuring — works on both
+       initial render and HTMX outerHTML swaps (script re-executes each time) */
+    requestAnimationFrame(function () { requestAnimationFrame(initMarquees); });
+})();
+</script>

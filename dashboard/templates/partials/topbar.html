@@ -1,0 +1,221 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!-- Top Bar -->
+<header class="fixed top-0 right-0 left-0 lg:left-64 z-40 h-14 bg-white border-b border-slate-200 flex items-center px-4 gap-3">
+
+    <!-- Left: hamburger (mobile) + search (desktop) -->
+    <div class="flex items-center gap-3 flex-1 min-w-0">
+
+        <!-- Mobile hamburger -->
+        <button @click="sidebarOpen = true" class="lg:hidden shrink-0 p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+        </button>
+
+        <!-- Mobile logo -->
+        <a href="{% url 'dashboard:home' %}" class="lg:hidden shrink-0">
+            <img src="{% static 'images/Imaan_logo.svg' %}" alt="Imaan" class="h-8 w-8">
+        </a>
+
+        <!-- Search (desktop only) -->
+        <div class="hidden lg:block flex-1 max-w-sm"
+             x-data="{ open: false }"
+             @keydown.escape.window="open = false"
+             @click.away="open = false">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <input id="topbar-search-input"
+                       type="text"
+                       name="q"
+                       autocomplete="off"
+                       placeholder="{% trans 'Search students...' %}"
+                       class="block w-full pl-9 pr-3 py-1.5 text-sm border border-slate-200 rounded-lg bg-slate-50 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                       hx-get="{% url 'dashboard:topbar_search' %}"
+                       hx-trigger="input changed delay:300ms"
+                       hx-target="#topbar-search-results"
+                       hx-swap="innerHTML"
+                       @focus="open = true"
+                       @input="open = true"
+                       @htmx:after-swap="open = $el.value.length >= 2">
+                <!-- Results dropdown -->
+                <div id="topbar-search-results"
+                     x-show="open"
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="absolute top-full left-0 right-0 mt-1.5 rounded-xl border border-slate-200 bg-white shadow-lg overflow-hidden z-50 max-h-80 overflow-y-auto">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: action icons -->
+    <div class="flex items-center gap-0.5 shrink-0">
+
+        <!-- Language selector (flags only) -->
+        <div x-data="{ langOpen: false }" class="relative">
+            <button @click="langOpen = !langOpen"
+                    class="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-slate-100 transition-colors text-lg leading-none"
+                    title="{% trans 'Language' %}">
+                {% if LANGUAGE_CODE == 'uz' %}🇺🇿
+                {% elif LANGUAGE_CODE == 'ru' %}🇷🇺
+                {% else %}🇬🇧{% endif %}
+            </button>
+            <div x-show="langOpen" x-cloak @click.away="langOpen = false"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute right-0 top-full mt-1 w-40 rounded-xl shadow-lg border border-slate-200 bg-white overflow-hidden z-50">
+                <button onclick="document.getElementById('languageInput').value='uz'; document.getElementById('languageForm').submit();"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors {% if LANGUAGE_CODE == 'uz' %}bg-indigo-50 text-indigo-700 font-medium{% endif %}">
+                    <span class="text-base">🇺🇿</span><span>O'zbekcha</span>
+                </button>
+                <button onclick="document.getElementById('languageInput').value='ru'; document.getElementById('languageForm').submit();"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors {% if LANGUAGE_CODE == 'ru' %}bg-indigo-50 text-indigo-700 font-medium{% endif %}">
+                    <span class="text-base">🇷🇺</span><span>Русский</span>
+                </button>
+                <button onclick="document.getElementById('languageInput').value='en'; document.getElementById('languageForm').submit();"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors {% if LANGUAGE_CODE == 'en' %}bg-indigo-50 text-indigo-700 font-medium{% endif %}">
+                    <span class="text-base">🇬🇧</span><span>English</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div x-data="{ open: false }" class="relative">
+            <button @click="open = !open"
+                    class="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700"
+                    title="{% trans 'Instructions' %}">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </button>
+            <div x-show="open" x-cloak @click.away="open = false"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute right-0 top-full mt-1 w-72 rounded-xl shadow-lg border border-slate-200 bg-white p-4 z-50">
+                <p class="text-sm font-semibold text-slate-800 mb-1">{% trans "Instructions" %}</p>
+                <p class="text-xs text-slate-400">{% trans "Help documentation coming soon." %}</p>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div x-data="{ open: false }" class="relative">
+            <button @click="open = !open"
+                    class="relative flex items-center justify-center w-9 h-9 rounded-lg hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700"
+                    title="{% trans 'Notifications' %}">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+            </button>
+            <div x-show="open" x-cloak @click.away="open = false"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute right-0 top-full mt-1 w-80 rounded-xl shadow-lg border border-slate-200 bg-white z-50">
+                <div class="px-4 py-3 border-b border-slate-100">
+                    <p class="text-sm font-semibold text-slate-800">{% trans "Notifications" %}</p>
+                </div>
+                <div class="py-8 text-center">
+                    <svg class="w-8 h-8 text-slate-200 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                    </svg>
+                    <p class="text-xs text-slate-400">{% trans "No notifications yet" %}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <a href="#"
+           class="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-slate-100 transition-colors text-slate-500 hover:text-slate-700"
+           title="{% trans 'Settings' %}">
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+        </a>
+
+        <!-- Divider -->
+        <div class="w-px h-5 bg-slate-200 mx-1.5"></div>
+
+        <!-- Profile -->
+        <div x-data="{ open: false }" class="relative">
+            <button @click="open = !open"
+                    class="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden ring-2 ring-slate-200 hover:ring-indigo-400 transition-all"
+                    title="{{ request.user.full_name }}">
+                {% if request.user.profile_picture %}
+                    <img src="{{ request.user.profile_picture.url }}" alt="{{ request.user.full_name }}" class="w-full h-full object-cover">
+                {% else %}
+                    <div class="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-600 text-xs font-bold">
+                        {{ request.user.full_name|first|upper }}
+                    </div>
+                {% endif %}
+            </button>
+
+            <div x-show="open" x-cloak @click.away="open = false"
+                 x-transition:enter="transition ease-out duration-150"
+                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                 x-transition:leave="transition ease-in duration-100"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="absolute right-0 top-full mt-1 w-64 rounded-xl shadow-lg border border-slate-200 bg-white z-50">
+
+                <!-- User info -->
+                <div class="p-4 border-b border-slate-100 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg overflow-hidden shrink-0">
+                        {% if request.user.profile_picture %}
+                            <img src="{{ request.user.profile_picture.url }}" alt="{{ request.user.full_name }}" class="w-full h-full object-cover">
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center bg-indigo-100 text-indigo-600 font-bold text-base">
+                                {{ request.user.full_name|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-semibold text-slate-800 truncate">{{ request.user.full_name }}</p>
+                        <p class="text-xs text-slate-400 truncate">{{ request.user.phone_number }}</p>
+                    </div>
+                </div>
+
+                <!-- Active sessions -->
+                <div class="px-4 py-2.5 border-b border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                        <p class="text-xs text-slate-500">{% trans "1 active session" %}</p>
+                    </div>
+                </div>
+
+                <!-- Sign out -->
+                <div class="p-2">
+                    <a href="{% url 'users:logout' %}"
+                       class="flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors w-full">
+                        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        <span>{% trans "Sign Out" %}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</header>

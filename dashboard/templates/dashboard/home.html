@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block content %}
+<div class="space-y-2 p-0">
+
+    <!-- Stats Cards Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        {% url 'leads:leads_main' as leads_url %}
+        {% include 'partials/stats_card.html' with title=_("Leads") value=stats.leads icon="funnel" icon_bg_color="#ec4899" link=leads_url tooltip=_("Leads in the first two pipeline stages who have not yet been assigned a trial lesson.") %}
+
+        {% url 'leads:trial_view' as trial_url %}
+        {% include 'partials/stats_card.html' with title=_("Trial Lessons") value=stats.trials icon="user-add" icon_bg_color="#3b82f6" link=trial_url tooltip=_("Total trial lessons scheduled or completed — leads who have visited for a free trial class.") %}
+
+        {% url 'students:student_list' as student_list_url %}
+        {% include 'partials/stats_card.html' with title=_("New Students") value=stats.new_students icon="users" icon_bg_color="#10b981" link=student_list_url tooltip=_("Active, non-debtor students whose enrollment date falls in the current month.") %}
+
+        {% include 'partials/stats_card.html' with title=_("Active Students") value=stats.active_students icon="users" icon_bg_color="#f97316" link=student_list_url tooltip=_("All active, non-debtor students — excluding newly enrolled students this month. This is your stable, paying student base.") %}
+
+        {% url 'leads:deleted_view' as deleted_url %}
+        {% include 'partials/stats_card.html' with title=_("Left Leads") value=stats.left_leads icon="trash" icon_bg_color="#8b5cf6" link=deleted_url tooltip=_("Leads that were deleted (lost) during the current month — prospects who did not convert.") %}
+
+        {% url 'students:student_list_archived' as archived_url %}
+        {% include 'partials/stats_card.html' with title=_("New Student Leavers") value=stats.new_leavers icon="user-remove" icon_bg_color="#ef4444" link=archived_url tooltip=_("Students who were archived this month, counted from the exact moment they were archived.") %}
+
+        {% include 'partials/stats_card.html' with title=_("Active Students Left") value=stats.students_left icon="user-remove" icon_bg_color="#eab308" link=student_list_url tooltip=_("Students with 'Left' status — previously active students who chose to stop attending.") %}
+
+        {% include 'partials/stats_card.html' with title=_("Debtors") value=stats.debtors split_value=stats.debtors_this_month icon="clock" icon_bg_color="#6b7280" link=student_list_url tooltip=_("Left: all students currently with a negative balance. Right: students who first became a debtor this month.") %}
+
+        {% include 'partials/stats_card.html' with title=_("Frozen Students") value=stats.frozen icon="snowflake" icon_bg_color="#06b6d4" link=student_list_url tooltip=_("Students currently on a temporary freeze — their group attendance is paused and billing is suspended.") %}
+
+        {% include 'partials/stats_card.html' with title=_("Graduated") value=stats.graduated icon="academic-cap" icon_bg_color="#6b7280" link=archived_url tooltip=_("Students who completed their course this month, counted from their exact graduation date.") %}
+    </div>
+
+
+    <!-- Schedule Section -->
+    {% include "partials/schedule_section.html" with day_type=day_type view_by=view_by time_slots=time_slots columns=columns schedule_grid=schedule_grid color_map=color_map %}
+
+
+</div>
+{% endblock %}
