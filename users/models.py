@@ -22,6 +22,7 @@ class CustomUser(AbstractUser):
     # Roles
     is_company = models.BooleanField(_("Is Company"), default=False)
     is_customer = models.BooleanField(_("Is Customer"), default=False)
+    is_staff_member = models.BooleanField(_("Is Staff Member"), default=False)
     
     # Identity / Passport Details
     passport_series = models.CharField(_("Passport Series"), max_length=10, blank=True)
@@ -63,3 +64,18 @@ class CompanyProfile(models.Model):
 
     def __str__(self):
         return self.company_name
+
+
+class StaffProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='staff_profile')
+    company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='company_staff_members', limit_choices_to={'is_company': True})
+    position = models.CharField(_("Position"), max_length=255, blank=True)
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Staff Profile")
+        verbose_name_plural = _("Staff Profiles")
+
+    def __str__(self):
+        return f"{self.user.full_name or self.user.phone_number} ({self.company})"
+

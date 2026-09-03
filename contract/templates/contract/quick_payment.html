@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load i18n dashboard_tags %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-700">
+        <div>
+            <h1 class="text-2xl font-bold text-white">{% trans "Sales Staff Payment Terminal" %}</h1>
+            <p class="text-sm text-gray-400 mt-1">{% trans "Quick payment collection & instant receipt printing" %}</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Customer Search Panel -->
+        <div class="md:col-span-5 bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-700 space-y-4">
+            <h2 class="text-lg font-bold text-white border-b border-gray-700 pb-2">1. {% trans "Search & Select Customer" %}</h2>
+            
+            <form method="get" class="flex gap-2">
+                <input type="text" name="q" value="{{ query }}" 
+                       hx-get="{% url 'contract:quick_payment' %}" 
+                       hx-target="#customer-list" 
+                       hx-trigger="keyup changed delay:300ms, search" 
+                       hx-select="#customer-list"
+                       placeholder="{% trans 'Search customer by phone, name, or PINFL...' %}" 
+                       class="flex-1 px-4 py-2 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500">
+                <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition">
+                    {% trans "Search" %}
+                </button>
+            </form>
+
+            <div id="customer-list" class="divide-y divide-gray-700 max-h-[450px] overflow-y-auto pr-1">
+                {% for c in customers %}
+                <a href="?customer={{ c.pk }}&q={{ query }}" class="p-3 block rounded-lg hover:bg-gray-700/50 transition {% if selected_customer.pk == c.pk %}bg-indigo-900/40 border border-indigo-700{% endif %}">
+                    <div class="font-semibold text-white text-sm">{{ c.full_name|default:"Customer" }}</div>
+                    <div class="text-xs text-gray-400 font-mono mt-0.5">{{ c.phone_number }}</div>
+                </a>
+                {% empty %}
+                <p class="text-xs text-gray-400 italic text-center py-6">{% trans "No customers found." %}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Contracts & Payment Form Panel -->
+        <div class="md:col-span-7 bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-700 space-y-6">
+            <h2 class="text-lg font-bold text-white border-b border-gray-700 pb-2">2. {% trans "Active Contracts & Log Payment" %}</h2>
+
+            {% if selected_customer %}
+            <div class="bg-indigo-900/30 border border-indigo-800 rounded-xl p-4 text-xs text-indigo-200 flex justify-between items-center">
+                <div>
+                    <span class="text-gray-400 text-[10px] uppercase block">{% trans "Selected Customer:" %}</span>
+                    <strong class="font-bold text-sm text-indigo-100 block">{{ selected_customer.full_name|default:selected_customer.phone_number }}</strong>
+                </div>
+                <span class="font-mono text-gray-300 font-semibold">{{ selected_customer.phone_number }}</span>
+            </div>
+
+            <div class="space-y-6">
+                {% for contract in contracts %}
+                <div class="border border-gray-700 rounded-xl p-5 space-y-4 bg-gray-900/40">
+                    <div class="flex justify-between items-center border-b border-gray-700 pb-3">
+                        <div>
+                            <span class="font-bold text-base text-white">Contract #{{ contract.id }}</span>
+                            <span class="text-xs text-gray-400 block font-normal">{{ contract.apartment.building.name }} - Apt {{ contract.apartment.apartment_number }}</span>
+                        </div>
+                        <a href="{% url 'contract:detail' pk=contract.pk %}" target="_blank" class="text-xs text-indigo-400 hover:text-indigo-300 underline font-medium">
+                            {% trans "View Schedule" %} &rarr;
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-gray-800 p-2.5 rounded-lg border border-gray-700">
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Total Value" %}</span>
+                            <span class="text-white font-bold text-sm">{{ contract.total_amount|uzs }}</span>
+                        </div>
+                        <div class="bg-gray-800 p-2.5 rounded-lg border border-gray-700">
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Down Payment" %}</span>
+                            <span class="text-emerald-400 font-bold text-sm">{{ contract.down_payment_amount|uzs }}</span>
+                        </div>
+                        <div class="bg-gray-800 p-2.5 rounded-lg border border-gray-700 col-span-2 sm:col-span-1">
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Last Payment" %}</span>
+                            <span class="text-indigo-400 font-bold text-sm">{{ contract.last_payment_amount|uzs }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Form -->
+                    <form method="post" action="{% url 'contract:process_payment' contract.pk %}" class="bg-gray-800 p-4 rounded-xl border border-gray-700 space-y-4"
+                          x-data="{ 
+                            displayAmount: '', 
+                            rawAmount: '',
+                            paymentType: 'CASH',
+                            formatNumber(val) {
+                                if (!val) return '';
+                                let str = val.toString().replace(/[^0-9.]/g, '');
+                                let parts = str.split('.');
+                                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                                return parts.join('.');
+                            },
+                            setAmount(val) {
+                                let clean = val.toString().replace(/[^0-9.]/g, '');
+                                this.rawAmount = clean;
+                                this.displayAmount = this.formatNumber(clean);
+                            }
+                          }">
+                        {% csrf_token %}
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">{% trans "Amount (UZS)" %}</label>
+                            <input type="hidden" name="amount" :value="rawAmount">
+                            <input type="text" 
+                                   x-model="displayAmount" 
+                                   @input="setAmount($event.target.value)"
+                                   placeholder="0 UZS" 
+                                   class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono font-bold">
+                        </div>
+
+                        <!-- Payment Method Visual Selector -->
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 uppercase mb-2">{% trans "Select Payment Method" %}</label>
+                            <input type="hidden" name="payment_type" :value="paymentType">
+                            
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                <button type="button" 
+                                        @click="paymentType = 'CASH'" 
+                                        :class="paymentType === 'CASH' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                        class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
+                                    <span class="text-base">💵</span>
+                                    <span>{% trans "Cash" %}</span>
+                                </button>
+                                <button type="button" 
+                                        @click="paymentType = 'CARD'" 
+                                        :class="paymentType === 'CARD' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                        class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
+                                    <span class="text-base">💳</span>
+                                    <span>{% trans "Card" %}</span>
+                                </button>
+                                <button type="button" 
+                                        @click="paymentType = 'BANK'" 
+                                        :class="paymentType === 'BANK' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                        class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
+                                    <span class="text-base">🏦</span>
+                                    <span>{% trans "Bank Transfer" %}</span>
+                                </button>
+                                <button type="button" 
+                                        @click="paymentType = 'MATERIAL'" 
+                                        :class="paymentType === 'MATERIAL' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                        class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
+                                    <span class="text-base">📦</span>
+                                    <span>{% trans "Material" %}</span>
+                                </button>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">{% trans "Payment Date (d/m/Y)" %}</label>
+                            <input type="text" name="date_paid" placeholder="DD/MM/YYYY" class="datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono">
+                            <p class="text-[10px] text-gray-400 mt-0.5">{% trans "Leave blank for current date/time, or enter custom payment date." %}</p>
+                        </div>
+
+                        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-lg transition shadow-sm flex items-center justify-center gap-2">
+                            💳 {% trans "Log Payment & Print Receipt" %}
+                        </button>
+                    </form>
+                </div>
+                {% empty %}
+                <p class="text-xs text-gray-400 italic text-center py-6">{% trans "No active contracts found for this customer." %}</p>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-16 text-gray-400 text-sm italic bg-gray-900/30 rounded-xl border border-dashed border-gray-700 p-8">
+                👈 {% trans "Select a customer from the left panel to display active contracts and log payments." %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    flatpickr(".datepicker-dmy", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        defaultDate: "today"
+    });
+});
+</script>
+{% endblock %}

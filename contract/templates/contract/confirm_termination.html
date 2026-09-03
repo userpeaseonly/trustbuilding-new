@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="max-w-xl mx-auto space-y-6 mt-8">
+    <div class="bg-gray-800 p-8 rounded-xl shadow-sm border border-rose-900/50 space-y-6">
+        <div class="flex items-center gap-3 border-b pb-4 border-gray-700">
+            <div class="w-10 h-10 rounded-full bg-rose-900/50 text-rose-400 flex items-center justify-center font-bold">
+                ⚠️
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-white">{% trans "Confirm Contract Termination" %}</h1>
+                <p class="text-xs text-gray-400">{% trans "Contract" %} #{{ contract.id }} - {{ contract.customer.full_name|default:contract.customer.phone_number }}</p>
+            </div>
+        </div>
+
+        <div class="bg-amber-900/30 border border-amber-800 rounded-lg p-4 text-xs text-amber-200 space-y-1">
+            <strong class="font-bold block">{% trans "Security Verification Required:" %}</strong>
+            <p>{% trans "A 6-digit OTP confirmation code has been sent to the company manager's phone via Eskiz SMS. Enter the code below to authorize termination." %}</p>
+        </div>
+
+        <form method="post" action="{% url 'contract:confirm_termination' contract.pk %}" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "6-Digit OTP Code" %}</label>
+                <input type="text" name="otp_code" maxlength="6" required placeholder="123456" class="w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-lg font-mono text-center text-xl tracking-widest focus:ring-2 focus:ring-rose-500">
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Termination Reason" %}</label>
+                <textarea name="reason" rows="3" placeholder="{% trans 'State the reason for contract termination...' %}" class="w-full px-4 py-2.5 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-lg text-sm"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Fine Penalty Amount (UZS)" %}</label>
+                <input type="number" step="0.01" name="fine_amount" value="0.00" class="w-full px-4 py-2.5 border border-gray-600 bg-gray-700 text-white rounded-lg text-sm">
+            </div>
+
+            <div class="pt-4 flex justify-between items-center border-t border-gray-700">
+                <a href="{% url 'contract:detail' contract.pk %}" class="text-sm font-medium text-gray-400 hover:text-white transition">
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-medium text-sm rounded-lg transition shadow-xs">
+                    {% trans "Authorize & Terminate Contract" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

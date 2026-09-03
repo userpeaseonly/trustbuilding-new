@@ -8,7 +8,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8010:8010
+      - 8011:8010
     env_file:
       - ./env/.local
     depends_on:
@@ -20,6 +20,39 @@ services:
       - trustbuilding_local_data:/var/lib/postgresql/18/data/
     env_file:
       - ./env/.local
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: trustbuilding_celery_worker_local
+    command: celery -A application worker -l info
+    volumes:
+      - .:/app
+    env_file:
+      - ./env/.local
+    depends_on:
+      - redis
+      - db
+
+  celery_beat:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: trustbuilding_celery_beat_local
+    command: celery -A application beat -l info
+    volumes:
+      - .:/app
+    env_file:
+      - ./env/.local
+    depends_on:
+      - redis
+      - db
 
 volumes:
   trustbuilding_local_data:

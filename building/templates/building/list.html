@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block page_actions %}
+{% if request.user.is_company %}
+<button onclick="document.getElementById('buildingModal').classList.remove('hidden')" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-xs">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+    {% trans "New Building Project" %}
+</button>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Building Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for building in buildings %}
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 hover:border-indigo-500 transition shadow-sm flex flex-col justify-between space-y-4">
+            <div class="space-y-2">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-white hover:text-indigo-400 transition">{{ building.name }}</h3>
+                        <p class="text-xs font-semibold text-indigo-300 mt-1">{% trans "Block" %}: {{ building.block_number|default:"-" }}</p>
+                    </div>
+                    <span class="bg-indigo-900/50 text-indigo-200 border border-indigo-800 text-xs px-2.5 py-1 rounded-full font-medium">
+                        {{ building.apartment_count }} {% trans "Apts" %}
+                    </span>
+                </div>
+                <p class="text-xs text-gray-400 truncate">{{ building.address|default:_("No address specified") }}</p>
+            </div>
+            
+            <div class="pt-4 border-t border-gray-700 grid grid-cols-2 gap-4 text-xs text-gray-400">
+                <div>
+                    <span class="block text-gray-500 font-semibold uppercase tracking-wider text-[10px]">{% trans "Floors" %}</span>
+                    <span class="text-white font-bold text-sm">{{ building.floor_count }}</span>
+                </div>
+                <div>
+                    <span class="block text-gray-500 font-semibold uppercase tracking-wider text-[10px]">{% trans "Entrances" %}</span>
+                    <span class="text-white font-bold text-sm">{{ building.entrance_count }}</span>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <a href="{% url 'building:matrix' pk=building.pk %}" class="block w-full text-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold transition shadow-xs">
+                    📐 {% trans "View Apartment Visualizer Matrix" %}
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full bg-gray-800 border border-gray-700 border-dashed rounded-xl p-12 text-center space-y-4">
+            <div class="w-12 h-12 rounded-full bg-indigo-900/50 text-indigo-400 flex items-center justify-center mx-auto text-xl font-bold">
+                🏢
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white">{% trans "No residential buildings yet" %}</h3>
+                <p class="text-gray-400 text-sm mt-1">{% trans "Create your first residential project to generate visual apartment grids and sales schedules." %}</p>
+            </div>
+            {% if request.user.is_company %}
+            <button onclick="document.getElementById('buildingModal').classList.remove('hidden')" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
+                + {% trans "Create First Building Project" %}
+            </button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Building Popup Modal -->
+<div id="buildingModal" class="hidden fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div class="bg-gray-800 rounded-xl shadow-xl border border-gray-700 max-w-lg w-full p-6 space-y-6 max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between border-b border-gray-700 pb-3">
+            <div>
+                <h3 class="text-lg font-bold text-white">{% trans "New Building Project" %}</h3>
+                <p class="text-xs text-gray-400 mt-0.5">{% trans "Define structural parameters to auto-generate the apartment grid" %}</p>
+            </div>
+            <button onclick="document.getElementById('buildingModal').classList.add('hidden')" class="text-gray-400 hover:text-white transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <form method="post" action="{% url 'building:create' %}" class="space-y-4">
+            {% csrf_token %}
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Building Name" %}</label>
+                    {{ form.name }}
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Block Number" %}</label>
+                    {{ form.block_number }}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Address" %}</label>
+                {{ form.address }}
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border-t border-gray-700 pt-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Number of Entrances" %}</label>
+                    {{ form.entrance_count }}
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Number of Floors" %}</label>
+                    {{ form.floor_count }}
+                </div>
+            </div>
+
+            <div class="bg-indigo-900/30 border border-indigo-800 rounded-lg p-3 text-xs text-indigo-200">
+                💡 <strong>{% trans "Automated Grid:" %}</strong> {% trans "An entrance-by-floor apartment matrix will be automatically generated upon creation." %}
+            </div>
+            
+            <div class="pt-4 flex justify-end gap-3 border-t border-gray-700">
+                <button type="button" onclick="document.getElementById('buildingModal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition">
+                    {% trans "Cancel" %}
+                </button>
+                <button type="submit" class="px-5 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-xs">
+                    {% trans "Generate Building Project" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

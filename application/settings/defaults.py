@@ -92,6 +92,8 @@ AUTH_USER_MODEL = "users.CustomUser"
 LOGIN_URL = 'otp:request_otp'
 LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL = 'otp:request_otp'
+SESSION_COOKIE_AGE = 86400  # 1 day (24 hours in seconds)
+SESSION_SAVE_EVERY_REQUEST = True  # Resets the 1-day expiration timer on user activity
 
 ROOT_URLCONF = 'application.urls'
 
@@ -156,6 +158,11 @@ LOCALE_PATHS = [os.path.join(BASE_DIR, "locale")]
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+# Date formats — d/m/Y standard (e.g., 12/08/2026)
+DATE_FORMAT = 'd/m/Y'
+SHORT_DATE_FORMAT = 'd/m/Y'
+DATE_INPUT_FORMATS = ['%d/%m/%Y', '%d.%m.%Y', '%Y-%m-%d']
 
 gettext = lambda s: s
 LANGUAGES = (
@@ -292,3 +299,10 @@ LOGGING = {
         },
     },
 }
+
+# Celery settings
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://redis:6379/0')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE

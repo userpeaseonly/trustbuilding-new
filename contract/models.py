@@ -1,7 +1,9 @@
+import uuid
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from dateutil.relativedelta import relativedelta
 from decimal import Decimal
 
@@ -26,7 +28,7 @@ class Contract(models.Model):
     contract_date = models.DateField(_("Contract Date"))
     price_per_square = models.DecimalField(_("Price per m2"), max_digits=12, decimal_places=2)
     down_payment_amount = models.DecimalField(_("Down Payment"), max_digits=15, decimal_places=2, default=0)
-    discount_amount = models.DecimalField(_("Discount Amount"), max_digits=15, decimal_places=2, default=0)
+    last_payment_amount = models.DecimalField(_("Last Payment"), max_digits=15, decimal_places=2, default=0)
     payment_months = models.PositiveIntegerField(_("Payment Duration (Months)"))
     status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
     
@@ -49,26 +51,29 @@ class Contract(models.Model):
             self.total_amount = self.price_per_square * self.apartment.total_area
         super().save(*args, **kwargs)
 
+    def terminate(self, reason="", fine_amount=0):
+        """
+        Terminate contract, clone apartment to archive contract history (is_real=False),
+        and reset real apartment status to AVAILABLE.
+        """
+        from copy import deepcopy
+        if self.status == self.STATUS_ACTIVE:
+            real_apt = self.apartment
+            # 1. Deepcopy apartment as fake archived apartment
+            cloned_apt = deepcopy(real_apt)
+            cloned_apt.pk = None
+            cloned_apt.id = None
+            cloned_apt.is_real = False
+            cloned_apt.save()
 
-class PaymentRecord(models.Model):
-    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_records')
-    month_number = models.PositiveIntegerField(_("Month Number"))
-    due_date = models.DateField(_("Due Date"))
-    plan_amount = models.DecimalField(_("Planned Amount"), max_digits=12, decimal_places=2)
-    paid_amount = models.DecimalField(_("Paid Amount"), max_digits=12, decimal_places=2, default=0)
-    debt = models.DecimalField(_("Debt"), max_digits=12, decimal_places=2, default=0)
-    is_late = models.BooleanField(_("Is Late"), default=False)
+            # 2. Re-link contract to cloned apartment
+            self.apartment = cloned_apt
+            self.status = self.STATUS_TERMINATED
+            self.save(update_fields=['apartment', 'status', 'updated_at'])
 
-    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
-    updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
-
-    class Meta:
-        verbose_name = _("Payment Record")
-        verbose_name_plural = _("Payment Records")
-        ordering = ['contract', 'month_number']
-
-    def __str__(self):
-        return f"{self.contract} - Month {self.month_number}"
+            # 3. Reset real apartment to AVAILABLE
+            real_apt.status = 'AVAILABLE'
+            real_apt.save(update_fields=['status', 'updated_at'])
 
 
 class PaymentLog(models.Model):
@@ -85,63 +90,250 @@ class PaymentLog(models.Model):
     ]
 
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_logs')
-    amount = models.DecimalField(_("Payment Amount"), max_digits=12, decimal_places=2)
+    payment_record = models.ForeignKey('PaymentRecord', on_delete=models.SET_NULL, null=True, blank=True, related_name='payment_logs')
+    amount = models.DecimalField(_("Payment Amount"), max_digits=15, decimal_places=2)
     payment_type = models.CharField(_("Payment Type"), max_length=20, choices=PAYMENT_TYPE_CHOICES)
     transaction_id = models.CharField(_("Transaction ID"), max_length=255, blank=True, help_text=_("For bank transfers/terminal"))
     receipt_image = models.ImageField(_("Receipt Image"), upload_to='payment_receipts/', blank=True, null=True)
-    date_paid = models.DateTimeField(_("Date Paid"), auto_now_add=True)
+    date_paid = models.DateTimeField(_("Date Paid"), default=timezone.now, blank=True)
     
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
 
     class Meta:
         verbose_name = _("Payment Log")
         verbose_name_plural = _("Payment Logs")
-        ordering = ['-date_paid']
+        ordering = ['date_paid']
+
+    def save(self, *args, **kwargs):
+        if not self.pk or not self.transaction_id:
+            today_str = timezone.now().strftime("%Y%m%d")
+            rand_hex = uuid.uuid4().hex[:6].upper()
+            self.transaction_id = f"TX-{today_str}-{rand_hex}"
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.contract} - {self.amount} ({self.payment_type})"
 
 
+class TerminateContract(models.Model):
+    contract = models.OneToOneField(Contract, on_delete=models.CASCADE, related_name='termination')
+    termination_date = models.DateField(_("Termination Date"))
+    termination_reason = models.TextField(_("Termination Reason"), blank=True)
+    fine_amount = models.DecimalField(_("Fine Amount"), max_digits=15, decimal_places=2, default=0)
+    fine_paid = models.BooleanField(_("Fine Paid"), default=False)
+    planned_refund = models.DecimalField(_("Planned Refund Amount"), max_digits=15, decimal_places=2, default=0)
+    paid_refund = models.DecimalField(_("Paid Refund Amount"), max_digits=15, decimal_places=2, default=0)
+
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
+
+    class Meta:
+        verbose_name = _("Terminated Contract")
+        verbose_name_plural = _("Terminated Contracts")
+
+    def __str__(self):
+        return f"Termination - {self.contract}"
+
+
+class TerminateContractPayment(models.Model):
+    termination = models.ForeignKey(TerminateContract, on_delete=models.CASCADE, related_name='refund_payments')
+    payment_date = models.DateField(_("Payment Date"))
+    amount = models.DecimalField(_("Payment Amount"), max_digits=15, decimal_places=2)
+    payment_type = models.CharField(_("Payment Type"), max_length=20, choices=PaymentLog.PAYMENT_TYPE_CHOICES, default=PaymentLog.PAYMENT_TYPE_CASH)
+    transaction_id = models.CharField(_("Transaction ID"), max_length=255, blank=True)
+    notes = models.TextField(_("Notes"), blank=True)
+
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Termination Payment")
+        verbose_name_plural = _("Termination Payments")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        # Update termination paid refund
+        total_refund_paid = sum(p.amount for p in self.termination.refund_payments.all())
+        self.termination.paid_refund = total_refund_paid
+        self.termination.save(update_fields=['paid_refund', 'updated_at'])
+
+
+
+class PaymentRecord(models.Model):
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_records')
+    month_number = models.PositiveIntegerField(_("Month Number"))
+    due_date = models.DateField(_("Due Date"))
+    plan_amount = models.DecimalField(_("Planned Amount"), max_digits=15, decimal_places=2)
+    paid_amount = models.DecimalField(_("Paid Amount"), max_digits=15, decimal_places=2, default=0)
+    debt = models.DecimalField(_("Debt"), max_digits=15, decimal_places=2, default=0)
+    excess_amount = models.DecimalField(_("Excess / Overpayment"), max_digits=15, decimal_places=2, default=0)
+    is_debt_saved_to_next_month = models.BooleanField(_("Debt Carried Over"), default=False)
+    is_late = models.BooleanField(_("Is Late"), default=False)
+
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+    updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
+
+    class Meta:
+        verbose_name = _("Payment Record")
+        verbose_name_plural = _("Payment Records")
+        ordering = ['contract', 'month_number']
+
+    @property
+    def status(self):
+        """Dynamic calculated status: PAID, PARTIAL, OVERDUE, PENDING"""
+        if self.debt <= Decimal('0.00'):
+            return 'PAID'
+        elif self.paid_amount > Decimal('0.00'):
+            return 'PARTIAL'
+        elif self.due_date < timezone.now().date():
+            return 'OVERDUE'
+        return 'PENDING'
+
+    def __str__(self):
+        return f"{self.contract} - Month {self.month_number}"
+
+
 # --- SIGNALS ---
+
 
 @receiver(post_save, sender=Contract)
 def generate_payment_records(sender, instance, created, **kwargs):
-    if created and instance.payment_months > 0:
-        # Subtract down payment and discount from the total amount to find the installment pool
-        installment_pool = instance.total_amount - instance.down_payment_amount - instance.discount_amount
-        if installment_pool < 0:
-            installment_pool = Decimal(0)
-            
-        monthly_amount = installment_pool / Decimal(instance.payment_months)
-        
+    if created:
+        M = instance.payment_months or 0  # Intermediate monthly installment count
+        total = instance.total_amount
+        dp = instance.down_payment_amount or Decimal(0)
+        lp = instance.last_payment_amount or Decimal(0)
+
         records = []
-        for i in range(1, instance.payment_months + 1):
-            due_date = instance.contract_date + relativedelta(months=i)
+        has_dp = (dp > 0)
+        has_lp = (lp > 0)
+
+        # Calculate intermediate pool
+        intermediate_pool = total
+        if has_dp:
+            intermediate_pool -= dp
+        if has_lp:
+            intermediate_pool -= lp
+        if intermediate_pool < 0:
+            intermediate_pool = Decimal(0)
+
+        # Base monthly for M intermediate installments
+        if M > 0:
+            base_monthly = (intermediate_pool / Decimal(M)).quantize(Decimal('0.01'))
+            allocated = base_monthly * Decimal(M)
+            remainder = intermediate_pool - allocated
+        else:
+            base_monthly = Decimal(0)
+            remainder = intermediate_pool
+
+        month_counter = 1
+        
+        # 1. Month 1: Down Payment (if provided)
+        if has_dp:
             records.append(PaymentRecord(
                 contract=instance,
-                month_number=i,
-                due_date=due_date,
-                plan_amount=monthly_amount,
-                debt=monthly_amount  # Initially debt is the plan amount
+                month_number=month_counter,
+                due_date=instance.contract_date,
+                plan_amount=dp,
+                debt=dp
             ))
+            month_counter += 1
+
+        # 2. Intermediate Monthly Installments (M months)
+        for i in range(1, M + 1):
+            due_date = instance.contract_date + relativedelta(months=(month_counter - 1))
+            planned = base_monthly
+            # If no last payment, add integer remainder to the last intermediate month
+            if i == M and not has_lp:
+                planned += remainder
+
+            records.append(PaymentRecord(
+                contract=instance,
+                month_number=month_counter,
+                due_date=due_date,
+                plan_amount=planned,
+                debt=planned
+            ))
+            month_counter += 1
+
+        # 3. Final Month: Last Payment (if provided)
+        if has_lp:
+            due_date = instance.contract_date + relativedelta(months=(month_counter - 1))
+            planned = lp + (remainder if M > 0 else Decimal(0))
+            records.append(PaymentRecord(
+                contract=instance,
+                month_number=month_counter,
+                due_date=due_date,
+                plan_amount=planned,
+                debt=planned
+            ))
+
+        # Fallback if no records created
+        if not records:
+            records.append(PaymentRecord(
+                contract=instance,
+                month_number=1,
+                due_date=instance.contract_date,
+                plan_amount=total,
+                debt=total
+            ))
+
         PaymentRecord.objects.bulk_create(records)
 
 
 def recalculate_contract_debt(contract):
     """
-    Recalculate debt for all payment records of a contract.
-    This cascades payments across the schedule.
+    Pure Per-Row Calendar Ledger (Historical Data Mode).
+
+    Step 1 — Receipt assignment:
+        Each PaymentLog is matched to the PaymentRecord whose due_date shares
+        the same calendar year+month as log.date_paid (fallback: nearest due_date).
+        Uses .update() — never .save() — to avoid signal recursion.
+
+    Step 2 — Per-row balance (self-contained, strict physical cash matching):
+        paid_amount  = sum of attached PaymentLog amounts for this record
+        debt         = max(0, plan_amount - paid_amount)
+        excess_amount= max(0, paid_amount - plan_amount)
+        Invariant:   paid_amount == plan_amount - debt + excess_amount  (always true)
     """
-    total_paid = sum(log.amount for log in contract.payment_logs.all())
-    
+    all_logs = list(contract.payment_logs.all().order_by('date_paid', 'id'))
     records = list(contract.payment_records.all().order_by('month_number'))
-    
-    remaining_payment = total_paid
+    if not records:
+        return
+
+    # ── Step 1: Assign each PaymentLog to its calendar-month PaymentRecord ──
+    for log in all_logs:
+        log_date = log.date_paid.date() if hasattr(log.date_paid, 'date') else log.date_paid
+
+        # Primary: same year + month
+        target = next(
+            (r for r in records
+             if r.due_date.year == log_date.year and r.due_date.month == log_date.month),
+            None,
+        )
+        # Fallback: nearest due_date
+        if not target:
+            target = min(records, key=lambda r: abs((r.due_date - log_date).days))
+
+        if target and log.payment_record_id != target.id:
+            PaymentLog.objects.filter(pk=log.pk).update(payment_record=target)
+
+    # Re-fetch after FK updates so payment_record_id reflects new values
+    all_logs = list(contract.payment_logs.all().order_by('date_paid', 'id'))
+
+    # Build receipt-total map: record.id → total cash received in that row
+    receipt_totals: dict = {}
+    for log in all_logs:
+        receipt_totals[log.payment_record_id] = (
+            receipt_totals.get(log.payment_record_id, Decimal('0.00')) + log.amount
+        )
+
+    # ── Step 2: Per-row strict historical balance ──
     for record in records:
-        record.paid_amount = min(remaining_payment, record.plan_amount)
-        record.debt = record.plan_amount - record.paid_amount
-        remaining_payment = max(Decimal(0), remaining_payment - record.plan_amount)
-        record.save(update_fields=['paid_amount', 'debt', 'updated_at'])
+        paid = receipt_totals.get(record.id, Decimal('0.00'))
+        record.paid_amount   = paid
+        record.debt          = max(Decimal('0.00'), record.plan_amount - paid)
+        record.excess_amount = max(Decimal('0.00'), paid - record.plan_amount)
+        record.save(update_fields=['paid_amount', 'debt', 'excess_amount', 'updated_at'])
 
 
 @receiver(post_save, sender=PaymentLog)
@@ -152,3 +344,4 @@ def on_payment_log_created(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=PaymentLog)
 def on_payment_log_deleted(sender, instance, **kwargs):
     recalculate_contract_debt(instance.contract)
+

@@ -1,43 +1,147 @@
 {% extends 'base.html' %}
-{% load i18n %}
-
-{% block title %}{% trans "Dashboard" %}{% endblock %}
+{% load i18n dashboard_tags %}
 
 {% block content %}
-<div class="space-y-2 p-0">
+<div class="space-y-6">
 
-    <!-- Stats Cards Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-        {% url 'leads:leads_main' as leads_url %}
-        {% include 'partials/stats_card.html' with title=_("Leads") value=stats.leads icon="funnel" icon_bg_color="#ec4899" link=leads_url tooltip=_("Leads in the first two pipeline stages who have not yet been assigned a trial lesson.") %}
+    <!-- KPI Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Active Contracts -->
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-400">{% trans "Active Contracts" %}</p>
+                    <p class="text-2xl font-bold text-white mt-1">{{ stats.active_contracts_count }}</p>
+                </div>
+                <div class="p-3 bg-blue-900/30 rounded-lg">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
 
-        {% url 'leads:trial_view' as trial_url %}
-        {% include 'partials/stats_card.html' with title=_("Trial Lessons") value=stats.trials icon="user-add" icon_bg_color="#3b82f6" link=trial_url tooltip=_("Total trial lessons scheduled or completed — leads who have visited for a free trial class.") %}
+        <!-- Monthly Revenue -->
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-400">{% trans "Monthly Revenue" %}</p>
+                    <p class="text-2xl font-bold text-green-400 mt-1">{{ stats.monthly_revenue|uzs }}</p>
+                </div>
+                <div class="p-3 bg-green-900/30 rounded-lg">
+                    <svg class="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
 
-        {% url 'students:student_list' as student_list_url %}
-        {% include 'partials/stats_card.html' with title=_("New Students") value=stats.new_students icon="users" icon_bg_color="#10b981" link=student_list_url tooltip=_("Active, non-debtor students whose enrollment date falls in the current month.") %}
+        <!-- Outstanding Debt -->
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-400">{% trans "Outstanding Debt" %}</p>
+                    <p class="text-2xl font-bold text-red-400 mt-1">{{ stats.total_outstanding_debt|uzs }}</p>
+                </div>
+                <div class="p-3 bg-red-900/30 rounded-lg">
+                    <svg class="w-6 h-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" />
+                    </svg>
+                </div>
+            </div>
+        </div>
 
-        {% include 'partials/stats_card.html' with title=_("Active Students") value=stats.active_students icon="users" icon_bg_color="#f97316" link=student_list_url tooltip=_("All active, non-debtor students — excluding newly enrolled students this month. This is your stable, paying student base.") %}
+        <!-- Inventory Sold -->
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-400">{% trans "Inventory Sold" %}</p>
+                    <p class="text-2xl font-bold text-white mt-1">{{ stats.inventory_sold_percent }}%</p>
+                    <p class="text-xs text-gray-500 mt-1">{{ stats.sold_apartments }} / {{ stats.total_apartments }} {% trans "Apartments" %}</p>
+                </div>
+                <div class="p-3 bg-indigo-900/30 rounded-lg">
+                    <svg class="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                </div>
+            </div>
+        </div>
 
-        {% url 'leads:deleted_view' as deleted_url %}
-        {% include 'partials/stats_card.html' with title=_("Left Leads") value=stats.left_leads icon="trash" icon_bg_color="#8b5cf6" link=deleted_url tooltip=_("Leads that were deleted (lost) during the current month — prospects who did not convert.") %}
-
-        {% url 'students:student_list_archived' as archived_url %}
-        {% include 'partials/stats_card.html' with title=_("New Student Leavers") value=stats.new_leavers icon="user-remove" icon_bg_color="#ef4444" link=archived_url tooltip=_("Students who were archived this month, counted from the exact moment they were archived.") %}
-
-        {% include 'partials/stats_card.html' with title=_("Active Students Left") value=stats.students_left icon="user-remove" icon_bg_color="#eab308" link=student_list_url tooltip=_("Students with 'Left' status — previously active students who chose to stop attending.") %}
-
-        {% include 'partials/stats_card.html' with title=_("Debtors") value=stats.debtors split_value=stats.debtors_this_month icon="clock" icon_bg_color="#6b7280" link=student_list_url tooltip=_("Left: all students currently with a negative balance. Right: students who first became a debtor this month.") %}
-
-        {% include 'partials/stats_card.html' with title=_("Frozen Students") value=stats.frozen icon="snowflake" icon_bg_color="#06b6d4" link=student_list_url tooltip=_("Students currently on a temporary freeze — their group attendance is paused and billing is suspended.") %}
-
-        {% include 'partials/stats_card.html' with title=_("Graduated") value=stats.graduated icon="academic-cap" icon_bg_color="#6b7280" link=archived_url tooltip=_("Students who completed their course this month, counted from their exact graduation date.") %}
     </div>
 
+    <!-- Main Content Area -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Recent Transactions -->
+        <div class="lg:col-span-2 bg-gray-800 border border-gray-700 rounded-xl shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-white">{% trans "Recent Payments" %}</h3>
+                <a href="{% url 'contract:list' %}" class="text-sm text-blue-400 hover:text-blue-300">{% trans "View all contracts" %}</a>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-900/50 border-b border-gray-700">
+                            <th class="py-3 px-6 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Customer" %}</th>
+                            <th class="py-3 px-6 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Apartment" %}</th>
+                            <th class="py-3 px-6 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Amount" %}</th>
+                            <th class="py-3 px-6 text-xs font-medium text-gray-400 uppercase tracking-wider">{% trans "Date" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        {% for log in recent_payments %}
+                        <tr class="hover:bg-gray-700/50 transition-colors cursor-pointer" onclick="window.location='{% url 'contract:detail' pk=log.contract.pk %}'">
+                            <td class="py-4 px-6 text-sm text-white">{{ log.contract.customer.full_name|default:log.contract.customer.phone_number }}</td>
+                            <td class="py-4 px-6 text-sm text-blue-400">Apt {{ log.contract.apartment.apartment_number }}</td>
+                            <td class="py-4 px-6 text-sm font-bold text-green-400">+{{ log.amount|uzs }}</td>
+                            <td class="py-4 px-6 text-sm text-gray-400">{{ log.date_paid|date:"d M Y, H:i" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="py-8 text-center text-gray-500 text-sm">{% trans "No recent payments." %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <!-- Schedule Section -->
-    {% include "partials/schedule_section.html" with day_type=day_type view_by=view_by time_slots=time_slots columns=columns schedule_grid=schedule_grid color_map=color_map %}
+        <!-- Action Center / Alerts -->
+        <div class="space-y-6">
+            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
+                <h3 class="text-lg font-bold text-white mb-4">{% trans "Action Center" %}</h3>
+                
+                <div class="space-y-4">
+                    {% if stats.late_payments_count > 0 %}
+                    <div class="flex items-start space-x-3 p-3 bg-red-900/20 border border-red-800 rounded-lg">
+                        <div class="mt-0.5 p-1.5 bg-red-900/50 rounded-md">
+                            <svg class="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-red-400">{{ stats.late_payments_count }} {% trans "Late Payments" %}</h4>
+                            <p class="text-xs text-gray-400 mt-1">{% trans "Clients who have missed their scheduled due date." %}</p>
+                            <!-- Note: Link to filtered contract list will be added in future iterations -->
+                            <a href="{% url 'contract:list' %}" class="inline-block mt-2 text-xs font-medium text-red-400 hover:text-red-300">{% trans "Review Contracts &rarr;" %}</a>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="flex items-center space-x-3 p-3 bg-green-900/20 border border-green-800 rounded-lg">
+                        <div class="p-1.5 bg-green-900/50 rounded-md">
+                            <svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <span class="text-sm font-medium text-green-400">{% trans "All accounts are up to date." %}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
 
-
+    </div>
 </div>
 {% endblock %}

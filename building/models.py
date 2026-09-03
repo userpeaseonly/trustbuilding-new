@@ -4,6 +4,7 @@ from users.models import CustomUser
 
 class Building(models.Model):
     company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='buildings', limit_choices_to={'is_company': True})
+    assigned_staff = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_buildings', limit_choices_to={'is_staff_member': True})
     name = models.CharField(_("Building Name / Number"), max_length=255)
     block_number = models.CharField(_("Block Number"), max_length=255, blank=True)
     address = models.TextField(_("Address"), blank=True)

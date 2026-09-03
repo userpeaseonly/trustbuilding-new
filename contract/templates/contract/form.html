@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-6 mt-4" 
+     x-data="{ 
+        customerMode: '{{ form.customer_mode.value|default:"existing" }}', 
+        selectedCustomerId: '{{ form.existing_customer.value|default:"" }}', 
+        selectedCustomerName: '', 
+        openCustomerSearch: false,
+        selectedApartmentId: '{% if initial_apartment %}{{ initial_apartment.pk }}{% else %}{{ form.apartment.value|default:"" }}{% endif %}',
+        selectedApartmentName: '{% if initial_apartment %}Apt {{ initial_apartment.apartment_number }} ({{ initial_apartment.building.name }}) - {{ initial_apartment.total_area }} m²{% endif %}',
+        selectedApartmentArea: parseFloat('{% if initial_apartment %}{{ initial_apartment.total_area }}{% else %}0{% endif %}'),
+        openApartmentSearch: false,
+
+        // Financials calculation state
+        pricePerSquare: '{{ form.price_per_square.value|default:"" }}',
+        downPayment: '{{ form.down_payment_amount.value|default:"" }}',
+        lastPayment: '{{ form.last_payment_amount.value|default:"" }}',
+        paymentMonths: '{{ form.payment_months.value|default:"10" }}',
+
+        formatSpace(num) {
+            if (!num || isNaN(num)) return '0';
+            let parts = Math.round(num).toString().split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            return parts.join('.');
+        },
+        calcTotalAmount() {
+            return (this.selectedApartmentArea || 0) * (parseFloat(this.pricePerSquare) || 0);
+        },
+        calcDpAmount() {
+            return parseFloat(this.downPayment) || 0;
+        },
+        calcLpAmount() {
+            return parseFloat(this.lastPayment) || 0;
+        },
+        calcIntermediatePool() {
+            let pool = this.calcTotalAmount() - this.calcDpAmount() - this.calcLpAmount();
+            return pool > 0 ? pool : 0;
+        },
+        calcIntermediateMonthly() {
+            let months = parseInt(this.paymentMonths) || 0;
+            return months > 0 ? (this.calcIntermediatePool() / months) : 0;
+        },
+        calcTotalDuration() {
+            let months = parseInt(this.paymentMonths) || 0;
+            let dpCount = this.calcDpAmount() > 0 ? 1 : 0;
+            let lpCount = this.calcLpAmount() > 0 ? 1 : 0;
+            return dpCount + months + lpCount;
+        }
+     }">
+    <div class="bg-gray-800 border border-gray-700 rounded-xl p-8 shadow-sm space-y-8">
+        <div class="flex items-center gap-3 border-b border-gray-700 pb-4">
+            <div class="w-10 h-10 rounded-full bg-indigo-900/50 text-indigo-400 flex items-center justify-center font-bold text-xl">
+                📄
+            </div>
+            <div>
+                <h1 class="text-xl font-bold text-white">{% trans "Create New Real Estate Contract" %}</h1>
+                <p class="text-xs text-gray-400">{% trans "Register contract, set installment terms, and generate payment schedule" %}</p>
+            </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-8">
+            {% csrf_token %}
+            
+            <input type="hidden" name="customer_mode" :value="customerMode">
+
+            {% if form.non_field_errors %}
+            <div class="bg-red-900/50 border border-red-800 text-red-200 p-3 rounded-lg text-xs">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+            
+            <!-- Customer Details Section -->
+            <div class="space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-gray-700 pb-3">
+                    <h3 class="text-sm font-bold text-indigo-400 uppercase tracking-wider">{% trans "1. Customer Identity" %}</h3>
+                    
+                    <!-- Mode Switcher Tabs -->
+                    <div class="inline-flex p-1 bg-gray-900 rounded-lg border border-gray-700 text-xs font-medium">
+                        <button type="button" 
+                                @click="customerMode = 'existing'" 
+                                :class="customerMode === 'existing' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'" 
+                                class="px-3 py-1.5 rounded-md transition">
+                            🔍 {% trans "Search Existing Customer" %}
+                        </button>
+                        <button type="button" 
+                                @click="customerMode = 'new'" 
+                                :class="customerMode === 'new' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'" 
+                                class="px-3 py-1.5 rounded-md transition">
+                            👤+ {% trans "Register New Customer" %}
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 1: Live Customer Search for Thousands of Records -->
+                <div x-show="customerMode === 'existing'" class="space-y-3">
+                    <input type="hidden" name="existing_customer" :value="selectedCustomerId">
+                    
+                    <div class="relative">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Search Customer (Name, Phone, or PINFL)" %}</label>
+                        
+                        <div x-show="selectedCustomerId" class="flex items-center justify-between p-3.5 bg-indigo-900/40 border border-indigo-700 rounded-xl text-xs mb-2">
+                            <div>
+                                <span class="text-gray-400 block text-[10px] uppercase">{% trans "Selected Customer:" %}</span>
+                                <span class="text-white font-bold text-sm" x-text="selectedCustomerName || 'Customer Selected'"></span>
+                            </div>
+                            <button type="button" @click="selectedCustomerId = ''; selectedCustomerName = ''; openCustomerSearch = true" class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg text-xs transition">
+                                ✏️ {% trans "Change Customer" %}
+                            </button>
+                        </div>
+
+                        <div x-show="!selectedCustomerId">
+                            <input type="text" 
+                                   name="q"
+                                   hx-get="{% url 'contract:search_customers' %}"
+                                   hx-target="#customer-search-results"
+                                   hx-trigger="focus, keyup changed delay:200ms"
+                                   @focus="openCustomerSearch = true"
+                                   @click="openCustomerSearch = true"
+                                   placeholder="{% trans 'Click or type phone (+99890...), customer full name, or PINFL...' %}" 
+                                   class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500">
+                            
+                            <div id="customer-search-results" 
+                                 x-show="openCustomerSearch" 
+                                 @click.away="openCustomerSearch = false"
+                                 class="absolute z-50 left-0 right-0 mt-1.5 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto p-2">
+                                <p class="text-xs text-gray-400 italic text-center py-3">{% trans "Type to search customer database..." %}</p>
+                            </div>
+                        </div>
+                        
+                        {% if form.existing_customer.errors %}<p class="text-red-400 text-xs mt-1">{{ form.existing_customer.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Tab 2: Register New Customer Form -->
+                <div x-show="customerMode === 'new'" class="space-y-4 bg-gray-900/40 p-4 rounded-xl border border-gray-700/60">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_phone.label }} *</label>
+                            {{ form.new_customer_phone }}
+                            {% if form.new_customer_phone.errors %}<p class="text-red-400 text-xs mt-1">{{ form.new_customer_phone.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_name.label }} *</label>
+                            {{ form.new_customer_name }}
+                            {% if form.new_customer_name.errors %}<p class="text-red-400 text-xs mt-1">{{ form.new_customer_name.errors.0 }}</p>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_gender.label }}</label>
+                            {{ form.new_customer_gender }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_passport_series.label }} *</label>
+                            {{ form.new_customer_passport_series }}
+                            {% if form.new_customer_passport_series.errors %}<p class="text-red-400 text-xs mt-1">{{ form.new_customer_passport_series.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_passport_jshshr.label }} *</label>
+                            {{ form.new_customer_passport_jshshr }}
+                            {% if form.new_customer_passport_jshshr.errors %}<p class="text-red-400 text-xs mt-1">{{ form.new_customer_passport_jshshr.errors.0 }}</p>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_passport_issued_by.label }}</label>
+                            {{ form.new_customer_passport_issued_by }}
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_passport_date_of_issue.label }} (d/m/Y)</label>
+                            {{ form.new_customer_passport_date_of_issue }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.new_customer_passport_scan.label }}</label>
+                        {{ form.new_customer_passport_scan }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Section: Searchable Apartment Selection -->
+            <div class="space-y-4">
+                <h3 class="text-sm font-bold text-indigo-400 uppercase tracking-wider border-b border-gray-700 pb-2">{% trans "2. Selected Apartment" %}</h3>
+                
+                <input type="hidden" name="apartment" :value="selectedApartmentId">
+
+                <div class="relative">
+                    <div x-show="selectedApartmentId" class="flex items-center justify-between p-3.5 bg-indigo-900/40 border border-indigo-700 rounded-xl text-xs">
+                        <div>
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Selected Apartment Unit:" %}</span>
+                            <span class="text-white font-bold text-sm" x-text="selectedApartmentName || 'Apartment Selected'"></span>
+                        </div>
+                        <button type="button" @click="selectedApartmentId = ''; selectedApartmentName = ''; selectedApartmentArea = 0; openApartmentSearch = true" class="px-3 py-1.5 bg-gray-700 hover:bg-gray-600 text-gray-200 rounded-lg text-xs transition">
+                            ✏️ {% trans "Search & Change Unit" %}
+                        </button>
+                    </div>
+
+                    <div x-show="!selectedApartmentId">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Search Available Apartment (Unit #, Building, Floor, Rooms)" %}</label>
+                        <input type="text" 
+                               name="q"
+                               hx-get="{% url 'contract:search_apartments' %}"
+                               hx-target="#apartment-search-results"
+                               hx-trigger="focus, keyup changed delay:200ms"
+                               @focus="openApartmentSearch = true"
+                               @click="openApartmentSearch = true"
+                               placeholder="{% trans 'Click or type apartment number, building name, floor or room count...' %}" 
+                               class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500">
+                        
+                        <div id="apartment-search-results" 
+                             x-show="openApartmentSearch" 
+                             @click.away="openApartmentSearch = false"
+                             class="absolute z-50 left-0 right-0 mt-1.5 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl max-h-60 overflow-y-auto p-2">
+                            <p class="text-xs text-gray-400 italic text-center py-3">{% trans "Type to search available apartments..." %}</p>
+                        </div>
+                    </div>
+                    {% if form.apartment.errors %}<p class="text-red-400 text-xs mt-1">{{ form.apartment.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+
+            <!-- Financials Section -->
+            <div class="space-y-5">
+                <h3 class="text-sm font-bold text-indigo-400 uppercase tracking-wider border-b border-gray-700 pb-2">{% trans "3. Financial Terms & Schedule Setup" %}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.contract_date.label }} (d/m/Y)</label>
+                        {{ form.contract_date }}
+                        {% if form.contract_date.errors %}<p class="text-red-400 text-xs mt-1">{{ form.contract_date.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.payment_months.label }} ({% trans "Intermediate Months" %})</label>
+                        <input type="number" name="payment_months" x-model="paymentMonths" placeholder="10" class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono">
+                        <p class="text-[10px] text-gray-400 mt-0.5">{% trans "Intermediate monthly installments count (excludes DP & LP months)." %}</p>
+                        {% if form.payment_months.errors %}<p class="text-red-400 text-xs mt-1">{{ form.payment_months.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.price_per_square.label }} (UZS / m²)</label>
+                        <input type="hidden" name="price_per_square" :value="pricePerSquare">
+                        <input type="text" 
+                               :value="formatSpace(pricePerSquare)" 
+                               @input="pricePerSquare = $event.target.value.replace(/[^0-9.]/g, '')" 
+                               placeholder="0 UZS" 
+                               class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono font-bold">
+                        {% if form.price_per_square.errors %}<p class="text-red-400 text-xs mt-1">{{ form.price_per_square.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.down_payment_amount.label }} (UZS) <span class="text-gray-400 font-normal lowercase">({% trans "optional" %})</span></label>
+                        <input type="hidden" name="down_payment_amount" :value="downPayment">
+                        <input type="text" 
+                               :value="formatSpace(downPayment)" 
+                               @input="downPayment = $event.target.value.replace(/[^0-9.]/g, '')" 
+                               placeholder="0 UZS ({% trans 'optional' %})" 
+                               class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono font-bold">
+                        <p class="text-[10px] text-gray-400 mt-0.5">{% trans "Optional Month 1 planned amount. Leave empty if no down payment." %}</p>
+                        {% if form.down_payment_amount.errors %}<p class="text-red-400 text-xs mt-1">{{ form.down_payment_amount.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.last_payment_amount.label }} (UZS) <span class="text-gray-400 font-normal lowercase">({% trans "optional" %})</span></label>
+                        <input type="hidden" name="last_payment_amount" :value="lastPayment">
+                        <input type="text" 
+                               :value="formatSpace(lastPayment)" 
+                               @input="lastPayment = $event.target.value.replace(/[^0-9.]/g, '')" 
+                               placeholder="0 UZS ({% trans 'optional' %})" 
+                               class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono font-bold">
+                        <p class="text-[10px] text-gray-400 mt-0.5">{% trans "Optional final month planned amount. Leave empty if no last payment." %}</p>
+                        {% if form.last_payment_amount.errors %}<p class="text-red-400 text-xs mt-1">{{ form.last_payment_amount.errors.0 }}</p>{% endif %}
+                    </div>
+                </div>
+
+                <!-- Real-Time Live Auto-Calculator Preview Card -->
+                <div class="bg-gray-900/70 border border-indigo-500/40 rounded-xl p-5 space-y-4 shadow-lg">
+                    <div class="flex items-center justify-between border-b border-gray-700/80 pb-3">
+                        <h4 class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-2">
+                            📊 {% trans "Live Schedule Calculation Preview" %}
+                        </h4>
+                        <span class="text-[11px] font-mono bg-indigo-900/60 text-indigo-200 px-3 py-1 rounded-full border border-indigo-700 font-bold">
+                            <span x-text="calcTotalDuration()"></span> {% trans "Total Schedule Months" %}
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                        <div class="bg-gray-800/80 p-3 rounded-lg border border-gray-700">
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Apartment Area" %}</span>
+                            <span class="text-white font-bold text-sm" x-text="selectedApartmentArea ? selectedApartmentArea + ' m²' : '—'"></span>
+                        </div>
+
+                        <div class="bg-gray-800/80 p-3 rounded-lg border border-gray-700">
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Total Contract Value" %}</span>
+                            <span class="text-emerald-400 font-bold font-mono text-sm" x-text="formatSpace(calcTotalAmount()) + ' UZS'"></span>
+                        </div>
+
+                        <div class="bg-gray-800/80 p-3 rounded-lg border border-gray-700">
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Month 1 (Down Payment)" %}</span>
+                            <span class="text-amber-400 font-bold font-mono text-sm" x-text="formatSpace(calcDpAmount()) + ' UZS'"></span>
+                        </div>
+
+                        <div class="bg-gray-800/80 p-3 rounded-lg border border-gray-700">
+                            <span class="text-gray-400 block text-[10px] uppercase">{% trans "Final Month (Last Payment)" %}</span>
+                            <span class="text-indigo-400 font-bold font-mono text-sm" x-text="formatSpace(calcLpAmount()) + ' UZS'"></span>
+                        </div>
+                    </div>
+
+                    <!-- Intermediate Monthly Installment Banner -->
+                    <div class="bg-indigo-950/40 border border-indigo-800/60 rounded-lg p-3.5 text-xs flex justify-between items-center">
+                        <div>
+                            <span class="text-indigo-300 font-bold block text-sm">⚡ {% trans "Intermediate Monthly Installment:" %}</span>
+                            <span class="text-gray-400 text-[11px]">
+                                {% trans "Covering" %} <span x-text="paymentMonths || 0" class="text-white font-bold"></span> {% trans "intermediate months" %}
+                            </span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-white font-bold font-mono text-base block" x-text="formatSpace(calcIntermediateMonthly()) + ' UZS'"></span>
+                            <span class="text-[10px] text-gray-400">{% trans "per month" %}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Helpful Summary Banner -->
+            <div class="bg-indigo-900/30 border border-indigo-800 rounded-xl p-4 space-y-2 text-xs text-indigo-200">
+                <div class="flex justify-between items-center font-medium">
+                    <span>💡 {% trans "Automatic Schedule Generation:" %}</span>
+                    <span class="text-white font-bold">{% trans "Payment schedule generated based on intermediate months & terms" %}</span>
+                </div>
+            </div>
+            
+            <div class="pt-4 border-t border-gray-700 flex justify-between items-center">
+                <a href="{% url 'contract:list' %}" class="text-sm font-medium text-gray-400 hover:text-white transition">
+                    {% trans "Cancel" %}
+                </a>
+                <button type="submit" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition shadow-xs">
+                    📄 {% trans "Generate Contract & Schedule" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    flatpickr(".datepicker-dmy", {
+        dateFormat: "d/m/Y",
+        allowInput: true,
+        defaultDate: "today"
+    });
+});
+</script>
+{% endblock %}

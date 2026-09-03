@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="space-y-1">
+    {% for c in customers %}
+    <div @click="selectedCustomerId = '{{ c.pk }}'; selectedCustomerName = '{{ c.full_name|default:c.phone_number|escapejs }} ({{ c.phone_number }})'; openCustomerSearch = false" 
+         class="p-3 bg-gray-700/80 hover:bg-indigo-600/30 hover:border-indigo-500 rounded-lg cursor-pointer transition border border-gray-600 flex justify-between items-center text-xs group">
+        <div>
+            <div class="font-bold text-white group-hover:text-indigo-200">{{ c.full_name|default:"Customer" }}</div>
+            <div class="text-[11px] text-gray-300 font-mono mt-0.5">{{ c.phone_number }}</div>
+        </div>
+        <div class="text-right">
+            <span class="text-[10px] text-indigo-300 font-mono block bg-gray-900/60 px-2 py-0.5 rounded">{{ c.passport_jshshr|default:c.passport_series|default:"No PINFL" }}</span>
+            <span class="text-[11px] text-emerald-400 font-bold mt-1 block">{% trans "Select" %} &rarr;</span>
+        </div>
+    </div>
+    {% empty %}
+    <div class="p-4 text-center text-xs text-gray-400 italic bg-gray-900/50 rounded-lg">
+        {% trans "No customers found. Click 'Register New Customer' above to add them." %}
+    </div>
+    {% endfor %}
+</div>

@@ -18,15 +18,14 @@ urlpatterns = [
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
     # API — auth & public
-    path('api/v1/auth/', include('users.api.urls')),
-    path('api/v2/auth/', include('users.api.v2.urls')),
-    path('api/v1/about-us/', include('users.api.public_urls')),
-    
+    # Legacy APIs removed. New endpoints will be added as needed.
     # App URLs
     path('i18n/', include('django.conf.urls.i18n')),  # Language switching
     path('dashboard/', include('dashboard.urls')),  # Dashboard app
     path('users/', include('users.urls')),  # Users app
     path('otp/', include('otp.urls')),  # OTP Auth app
+    path('building/', include('building.urls')),  # Inventory app
+    path('contract/', include('contract.urls')),  # Contract app
 ]
 
 # Serve static and media files in development

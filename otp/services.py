@@ -67,3 +67,9 @@ class EskizSMS:
             if hasattr(e, 'response') and e.response is not None:
                 logger.error(f"Eskiz response: {e.response.text}")
             return False
+
+
+def send_sms(phone_number, message):
+    """Convenience wrapper for sending SMS via EskizSMS"""
+    return EskizSMS.send_sms(phone_number, message)
+

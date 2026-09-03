@@ -1,0 +1,109 @@
+{% load i18n %}
+{% load dashboard_tags %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'uz' }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Payment Receipt" %} #{{ payment.id }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @media print {
+            .no-print { display: none; }
+            body { background: white; padding: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 p-6 text-gray-800 flex items-start justify-center min-h-screen">
+    <div class="max-w-2xl w-full bg-white border border-gray-300 rounded-lg p-8 shadow-xl mt-8 mb-8 relative">
+        <!-- Navigation & Actions Bar -->
+        <div class="no-print flex justify-between items-center mb-6 border-b pb-4">
+            <a href="{% url 'contract:detail' pk=contract.pk %}" class="bg-gray-700 hover:bg-gray-600 text-white font-medium text-xs py-2 px-4 rounded-lg transition flex items-center gap-1.5">
+                &larr; {% trans "Back to Contract" %} #{{ contract.id }}
+            </a>
+            <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs py-2 px-4 rounded-lg transition shadow-sm flex items-center gap-1.5">
+                🖨️ {% trans "Print Receipt" %}
+            </button>
+        </div>
+
+        <!-- Header -->
+        <div class="border-b pb-4 mb-6 text-center">
+            <h1 class="text-2xl font-bold text-indigo-900 uppercase tracking-wide">{% trans "PAYMENT RECEIPT" %}</h1>
+            <p class="text-sm text-gray-500">{% trans "TrustBuilding - Real Estate Contract Payment Voucher" %}</p>
+            <p class="text-xs text-gray-400 mt-1">{% trans "Receipt ID" %}: #{{ payment.id }} | {% trans "Date" %}: {{ payment.date_paid|date:"d.m.Y H:i" }}</p>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div class="bg-gray-50 p-3 rounded">
+                <span class="text-xs text-gray-500 block">{% trans "Customer" %}:</span>
+                <strong class="text-base text-gray-900">{{ contract.customer.full_name|default:contract.customer.phone_number }}</strong>
+                <p class="text-xs text-gray-600 mt-1">{% trans "Phone" %}: {{ contract.customer.phone_number }}</p>
+            </div>
+            <div class="bg-gray-50 p-3 rounded">
+                <span class="text-xs text-gray-500 block">{% trans "Company" %}:</span>
+                <strong class="text-base text-gray-900">{{ contract.company.company_profile.company_name|default:contract.company }}</strong>
+                <p class="text-xs text-gray-600 mt-1">{% trans "Contract" %} #{{ contract.id }}</p>
+            </div>
+        </div>
+
+        <!-- Object Details -->
+        <div class="border-t border-b py-3 mb-6 grid grid-cols-3 gap-2 text-center text-sm">
+            <div>
+                <span class="text-xs text-gray-500 block">{% trans "Building" %}:</span>
+                <span class="font-semibold">{{ contract.apartment.building.name }}</span>
+            </div>
+            <div>
+                <span class="text-xs text-gray-500 block">{% trans "Apartment" %}:</span>
+                <span class="font-semibold">№ {{ contract.apartment.apartment_number }}</span>
+            </div>
+            <div>
+                <span class="text-xs text-gray-500 block">{% trans "Area" %}:</span>
+                <span class="font-semibold">{{ contract.apartment.total_area }} m²</span>
+            </div>
+        </div>
+
+        <!-- Payment Info -->
+        <div class="bg-indigo-50 border border-indigo-100 rounded-lg p-5 mb-6 text-center">
+            <span class="text-xs text-indigo-700 uppercase font-bold block mb-1">{% trans "Paid Amount" %}</span>
+            <div class="text-3xl font-extrabold text-indigo-900 mb-2">
+                {{ payment.amount|uzs }}
+            </div>
+            <p class="text-sm font-medium text-indigo-800 italic">
+                ({{ amount_in_words }})
+            </p>
+        </div>
+
+        <!-- Transaction Specs -->
+        <div class="space-y-2 text-xs border-t pt-4 text-gray-600">
+            <div class="flex justify-between">
+                <span>{% trans "Payment Type" %}:</span>
+                <strong class="text-gray-800">{{ payment.get_payment_type_display }}</strong>
+            </div>
+            {% if payment.transaction_id %}
+            <div class="flex justify-between">
+                <span>{% trans "Transaction ID" %}:</span>
+                <strong class="text-gray-800">{{ payment.transaction_id }}</strong>
+            </div>
+            {% endif %}
+            <div class="flex justify-between">
+                <span>{% trans "Remaining Debt" %}:</span>
+                <strong class="text-red-600">{{ remaining_debt|uzs }}</strong>
+            </div>
+        </div>
+
+        <!-- Signatures -->
+        <div class="mt-12 pt-6 border-t grid grid-cols-2 gap-8 text-xs text-center">
+            <div>
+                <p class="mb-8">{% trans "Received by" %}:</p>
+                <div class="border-b border-gray-400 w-3/4 mx-auto"></div>
+                <p class="mt-1 text-gray-400">{% trans "Signature & Stamp" %}</p>
+            </div>
+            <div>
+                <p class="mb-8">{% trans "Paid by" %}:</p>
+                <div class="border-b border-gray-400 w-3/4 mx-auto"></div>
+                <p class="mt-1 text-gray-400">{% trans "Signature" %}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
