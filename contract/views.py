@@ -54,11 +54,12 @@ def contract_detail(request, pk):
         r.is_running_zero = net_balance == 0
 
     total_paid = sum(log.amount for log in payment_logs)
-    total_remaining_debt = sum(r.debt for r in records)
-    total_excess = sum(r.excess_amount for r in records)
+    global_balance = running_plan - total_paid
+    total_remaining_debt = max(Decimal('0.00'), global_balance)
+    total_excess = max(Decimal('0.00'), -global_balance)
 
-    next_due_record = next((r for r in records if r.debt > 0), None)
-    next_due_amount = next_due_record.debt if next_due_record else Decimal(0)
+    next_due_record = next((r for r in records if r.is_running_debt), None)
+    next_due_amount = next_due_record.running_balance_abs if next_due_record else Decimal('0.00')
 
     return render(request, 'contract/detail.html', {
         'contract': contract,

@@ -128,7 +128,6 @@
                                 <th class="py-3 px-3">{% trans "Paid Amount" %}</th>
                                 <th class="py-3 px-3">{% trans "Remaining Debt" %}</th>
                                 <th class="py-3 px-3">{% trans "Excess" %}</th>
-                                <th class="py-3 px-3">{% trans "Running Balance" %}</th>
                                 <th class="py-3 px-3">{% trans "Status" %}</th>
                             </tr>
                         </thead>
@@ -146,26 +145,17 @@
                                     {% if record.paid_amount > 0 %}{{ record.paid_amount|formatted_amount }}{% else %}<span class="text-gray-500">0</span>{% endif %}
                                 </td>
                                 <td class="py-3.5 px-3 font-mono">
-                                    {% if record.debt > 0 %}
-                                    <span class="text-amber-400 font-semibold">{{ record.debt|formatted_amount }}</span>
-                                    {% else %}
-                                    <span class="text-gray-500">0</span>
-                                    {% endif %}
-                                </td>
-                                <td class="py-3.5 px-3 font-mono">
-                                    {% if record.excess_amount > 0 %}
-                                    <span class="text-purple-400 font-bold bg-purple-900/40 px-2 py-0.5 rounded border border-purple-800">+{{ record.excess_amount|formatted_amount }}</span>
-                                    {% else %}
-                                    <span class="text-gray-500">0</span>
-                                    {% endif %}
-                                </td>
-                                <td class="py-3.5 px-3 font-mono">
                                     {% if record.is_running_debt %}
-                                    <span class="text-amber-400 font-bold bg-amber-900/20 px-2 py-0.5 rounded">{{ record.running_balance_abs|formatted_amount }}</span>
-                                    {% elif record.is_running_credit %}
-                                    <span class="text-purple-400 font-bold bg-purple-900/20 px-2 py-0.5 rounded">(Cr) {{ record.running_balance_abs|formatted_amount }}</span>
+                                    <span class="text-amber-400 font-semibold">{{ record.running_balance_abs|formatted_amount }}</span>
                                     {% else %}
-                                    <span class="text-gray-500 font-medium">0</span>
+                                    <span class="text-gray-500">0</span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3.5 px-3 font-mono">
+                                    {% if record.is_running_credit %}
+                                    <span class="text-purple-400 font-bold bg-purple-900/40 px-2 py-0.5 rounded border border-purple-800">+{{ record.running_balance_abs|formatted_amount }}</span>
+                                    {% else %}
+                                    <span class="text-gray-500">0</span>
                                     {% endif %}
                                 </td>
                                 <td class="py-3.5 px-3">
