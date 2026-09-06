@@ -176,19 +176,40 @@ def download_docx_contract(request, pk):
 
 @login_required
 def receipt_view(request, payment_id):
-    """Printable payment receipt view"""
+    """Printable payment receipt view in KO-1 standard"""
+    from .utils.utils import amount_to_words_ru, MONTHS_RU
     payment = get_object_or_404(PaymentLog, pk=payment_id)
     contract = payment.contract
     
-    # Calculate remaining total contract debt
-    remaining_debt = sum(r.debt for r in contract.payment_records.all())
-    amount_words = number_to_words(payment.amount)
+    # Use robust fallback for company name
+    try:
+        company_name = contract.company.company_profile.company_name
+    except AttributeError:
+        company_name = contract.company.get_full_name() or contract.company.username
+        
+    customer_name = contract.customer.full_name or contract.customer.phone_number
+    customer_desc = f"{customer_name} №{contract.id} сонли шартномага асосан тўлов"
+    
+    amount_words = amount_to_words_ru(payment.amount)
+    if payment.payment_type == PaymentLog.PAYMENT_TYPE_CARD:
+        payment_method_upper = 'ПЛАСТИК'
+    else:
+        payment_method_upper = ''
+    
+    # Format date: 4 сентября 2026 г.
+    day = payment.date_paid.day
+    month_name = MONTHS_RU.get(payment.date_paid.month, str(payment.date_paid.month))
+    year = payment.date_paid.year
+    date_ru = f"{day} {month_name} {year} г."
     
     return render(request, 'contract/receipt.html', {
         'payment': payment,
         'contract': contract,
-        'remaining_debt': remaining_debt,
-        'amount_in_words': amount_words,
+        'company_name': company_name,
+        'customer_desc': customer_desc,
+        'payment_method_upper': payment_method_upper,
+        'amount_words': amount_words,
+        'date_ru': date_ru,
     })
 
 
