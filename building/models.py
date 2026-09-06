@@ -10,6 +10,7 @@ class Building(models.Model):
     address = models.TextField(_("Address"), blank=True)
     floor_count = models.PositiveIntegerField(_("Floor Count"), default=1)
     entrance_count = models.PositiveIntegerField(_("Entrance Count"), default=1)
+    apartments_per_floor = models.PositiveIntegerField(_("Apartments per Floor"), default=4)
     apartment_count = models.PositiveIntegerField(_("Apartment Count"), default=1)
     
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)

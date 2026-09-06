@@ -49,25 +49,51 @@ def building_create(request):
             building.company = request.user
             building.save()
             
-            # Auto-generate apartments
+            # Check if JSON apartments data was provided via Excel upload
+            import json
+            from decimal import Decimal
+            apts_json_str = request.POST.get('apartments_json')
             apts_to_create = []
-            apt_counter = 1
             
-            for entrance in range(1, building.entrance_count + 1):
-                for floor in range(1, building.floor_count + 1):
-                    # For a basic generator, let's assume 4 apartments per floor per entrance
-                    for a in range(1, 5):
+            if apts_json_str:
+                try:
+                    apts_data = json.loads(apts_json_str)
+                    for apt in apts_data:
                         apts_to_create.append(
                             Apartment(
                                 building=building,
-                                apartment_number=str(apt_counter),
-                                floor_number=floor,
-                                entrance_number=entrance,
-                                total_area=Decimal('50.00'),
-                                living_area=Decimal('40.00'),
+                                apartment_number=str(apt.get('Apartment Number', '')),
+                                floor_number=int(apt.get('Floor Number', 1)),
+                                entrance_number=int(apt.get('Entrance Number', 1)),
+                                living_room_count=int(apt.get('Rooms Count', 1)),
+                                total_area=Decimal(str(apt.get('Total Area (m2)', '50.00'))),
+                                living_area=Decimal(str(apt.get('Living Area (m2)', '40.00'))),
+                                balcony_area=Decimal(str(apt.get('Balcony Area (m2)', '0.00'))),
                             )
                         )
-                        apt_counter += 1
+                except Exception as e:
+                    messages.error(request, f"Error parsing apartments JSON: {e}")
+                    # fallback to default generation
+                    apts_to_create = []
+            
+            # Fallback auto-generation if no valid JSON
+            if not apts_to_create:
+                apt_counter = 1
+                apts_per_floor = building.apartments_per_floor or 4
+                for entrance in range(1, building.entrance_count + 1):
+                    for floor in range(1, building.floor_count + 1):
+                        for a in range(1, apts_per_floor + 1):
+                            apts_to_create.append(
+                                Apartment(
+                                    building=building,
+                                    apartment_number=str(apt_counter),
+                                    floor_number=floor,
+                                    entrance_number=entrance,
+                                    total_area=Decimal('50.00'),
+                                    living_area=Decimal('40.00'),
+                                )
+                            )
+                            apt_counter += 1
                         
             Apartment.objects.bulk_create(apts_to_create)
             
