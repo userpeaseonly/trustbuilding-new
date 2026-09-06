@@ -14,6 +14,8 @@
         openApartmentSearch: false,
 
         // Financials calculation state
+        contractDate: '{{ form.contract_date.value|default:"" }}',
+        downPaymentDate: '{{ form.down_payment_date.value|default:"" }}',
         pricePerSquare: '{{ form.price_per_square.value|default:"" }}',
         downPayment: '{{ form.down_payment_amount.value|default:"" }}',
         lastPayment: '{{ form.last_payment_amount.value|default:"" }}',
@@ -24,6 +26,130 @@
             let parts = Math.round(num).toString().split('.');
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
             return parts.join('.');
+        },
+        parseDateStr(dateStr) {
+            if (!dateStr) return null;
+            let parts = dateStr.split('/');
+            if (parts.length === 3) return new Date(parts[2], parts[1] - 1, parts[0]);
+            parts = dateStr.split('-');
+            if (parts.length === 3) return new Date(parts[0], parts[1] - 1, parts[2]);
+            return null;
+        },
+        addMonths(date, months) {
+            if (!date) return null;
+            let d = new Date(date);
+            d.setMonth(d.getMonth() + months);
+            return d;
+        },
+        formatDateStr(date) {
+            if (!date) return 'N/A';
+            let d = date.getDate().toString().padStart(2, '0');
+            let m = (date.getMonth() + 1).toString().padStart(2, '0');
+            let y = date.getFullYear();
+            return `${d}/${m}/${y}`;
+        },
+        generatePreviewRows() {
+            let total = this.calcTotalAmount();
+            if (total <= 0) return [];
+            
+            let dp = this.calcDpAmount();
+            let lp = this.calcLpAmount();
+            let hasDp = dp > 0;
+            let hasLp = lp > 0;
+            let mCount = parseInt(this.paymentMonths) || 0;
+            let interm = this.calcIntermediateMonthly();
+            
+            let cDate = this.parseDateStr(this.contractDate);
+            let dpDate = this.parseDateStr(this.downPaymentDate);
+            
+            let rows = [];
+            let monthIndex = 1;
+            let dateOffset = 0;
+            
+            if (hasDp) {
+                rows.push({
+                    month: monthIndex++,
+                    type: 'DP',
+                    amount: dp,
+                    date: this.formatDateStr(dpDate || cDate)
+                });
+                if (!dpDate) dateOffset++;
+            }
+            
+            // intermediates
+            if (mCount > 0) {
+                // first intermediate
+                rows.push({
+                    month: monthIndex++,
+                    type: 'INTERM',
+                    amount: interm,
+                    date: this.formatDateStr(this.addMonths(cDate, dateOffset))
+                });
+                dateOffset++;
+                
+                if (mCount > 1) {
+                    rows.push({
+                        month: monthIndex++,
+                        type: 'INTERM',
+                        amount: interm,
+                        date: this.formatDateStr(this.addMonths(cDate, dateOffset))
+                    });
+                    dateOffset++;
+                }
+                
+                if (mCount > 2) {
+                    rows.push({
+                        month: '...',
+                        type: 'ELLIPSIS',
+                        amount: null,
+                        date: '...'
+                    });
+                    monthIndex += (mCount - 3);
+                    dateOffset += (mCount - 3);
+                    
+                    // last intermediate
+                    let lastIntermAmount = interm + (this.calcTotalAmount() - dp - lp - (interm * mCount)); // add remainder if no LP
+                    if (hasLp) {
+                        rows.push({
+                            month: monthIndex++,
+                            type: 'INTERM',
+                            amount: interm, // no remainder added here if LP exists
+                            date: this.formatDateStr(this.addMonths(cDate, dateOffset))
+                        });
+                    } else {
+                        rows.push({
+                            month: monthIndex++,
+                            type: 'INTERM',
+                            amount: lastIntermAmount,
+                            date: this.formatDateStr(this.addMonths(cDate, dateOffset))
+                        });
+                    }
+                    dateOffset++;
+                } else if (mCount === 2) {
+                    // if mCount is exactly 2, we showed 1 and 2, but we need to add remainder to 2 if no LP
+                    if (!hasLp) {
+                        rows[rows.length-1].amount = interm + (this.calcTotalAmount() - dp - lp - (interm * mCount));
+                    }
+                } else if (mCount === 1) {
+                    if (!hasLp) {
+                        rows[rows.length-1].amount = interm + (this.calcTotalAmount() - dp - lp - (interm * mCount));
+                    }
+                }
+            }
+            
+            if (hasLp) {
+                // remainder added to LP
+                let remainder = this.calcTotalAmount() - dp - lp - (interm * mCount);
+                if (remainder < 0) remainder = 0;
+                rows.push({
+                    month: monthIndex,
+                    type: 'LP',
+                    amount: lp + remainder,
+                    date: this.formatDateStr(this.addMonths(cDate, dateOffset))
+                });
+            }
+            
+            return rows;
         },
         calcTotalAmount() {
             return (this.selectedApartmentArea || 0) * (parseFloat(this.pricePerSquare) || 0);
@@ -259,7 +385,13 @@
                         <p class="text-[10px] text-gray-400 mt-0.5">{% trans "Optional Month 1 planned amount. Leave empty if no down payment." %}</p>
                         {% if form.down_payment_amount.errors %}<p class="text-red-400 text-xs mt-1">{{ form.down_payment_amount.errors.0 }}</p>{% endif %}
                     </div>
-                    <div class="md:col-span-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.down_payment_date.label }} <span class="text-gray-400 font-normal lowercase">({% trans "optional" %})</span></label>
+                        {{ form.down_payment_date }}
+                        <p class="text-[10px] text-gray-400 mt-0.5">{% trans "Leave empty to use main Contract Date for the down payment." %}</p>
+                        {% if form.down_payment_date.errors %}<p class="text-red-400 text-xs mt-1">{{ form.down_payment_date.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
                         <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{{ form.last_payment_amount.label }} (UZS) <span class="text-gray-400 font-normal lowercase">({% trans "optional" %})</span></label>
                         <input type="hidden" name="last_payment_amount" :value="lastPayment">
                         <input type="text" 
@@ -318,6 +450,28 @@
                             <span class="text-[10px] text-gray-400">{% trans "per month" %}</span>
                         </div>
                     </div>
+
+                    <!-- Visual Schedule Table Preview -->
+                    <div x-show="calcTotalAmount() > 0" class="mt-4 border border-gray-700/80 rounded-lg overflow-hidden bg-gray-900/50">
+                        <table class="w-full text-left text-xs whitespace-nowrap">
+                            <thead class="bg-gray-800/80 text-gray-400 uppercase font-semibold text-[10px]">
+                                <tr>
+                                    <th class="py-2 px-3">#</th>
+                                    <th class="py-2 px-3">{% trans "Due Date" %}</th>
+                                    <th class="py-2 px-3">{% trans "Planned Amount" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-700/60 font-mono">
+                                <template x-for="row in generatePreviewRows()" :key="row.month">
+                                    <tr class="hover:bg-gray-800/40 transition">
+                                        <td class="py-2 px-3 font-bold text-gray-300" x-text="row.month"></td>
+                                        <td class="py-2 px-3" :class="row.date === 'N/A' || row.date === '...' ? 'text-gray-500' : 'text-indigo-300'" x-text="row.date"></td>
+                                        <td class="py-2 px-3" :class="row.type === 'ELLIPSIS' ? 'text-gray-500' : (row.type === 'DP' ? 'text-amber-400 font-bold' : (row.type === 'LP' ? 'text-indigo-400 font-bold' : 'text-white font-medium'))" x-text="row.type === 'ELLIPSIS' ? '...' : formatSpace(row.amount) + ' UZS'"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -346,7 +500,10 @@ document.addEventListener("DOMContentLoaded", function() {
     flatpickr(".datepicker-dmy", {
         dateFormat: "d/m/Y",
         allowInput: true,
-        defaultDate: "today"
+        defaultDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            instance.element.dispatchEvent(new Event('input', { bubbles: true }));
+        }
     });
 });
 </script>

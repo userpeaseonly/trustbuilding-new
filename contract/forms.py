@@ -70,12 +70,13 @@ class ContractWizardForm(forms.ModelForm):
     
     class Meta:
         model = Contract
-        fields = ['apartment', 'contract_date', 'price_per_square', 'down_payment_amount', 'last_payment_amount', 'payment_months']
+        fields = ['apartment', 'contract_date', 'price_per_square', 'down_payment_amount', 'down_payment_date', 'last_payment_amount', 'payment_months']
         widgets = {
             'apartment': forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500'}),
-            'contract_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY'}),
+            'contract_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY', 'x-model': 'contractDate'}),
             'price_per_square': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
             'down_payment_amount': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
+            'down_payment_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY (Optional)', 'x-model': 'downPaymentDate'}),
             'last_payment_amount': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
             'payment_months': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': '12'}),
         }
@@ -84,6 +85,8 @@ class ContractWizardForm(forms.ModelForm):
         company = kwargs.pop('company', None)
         super().__init__(*args, **kwargs)
         self.fields['contract_date'].input_formats = ['%d/%m/%Y', '%d.%m.%Y', '%Y-%m-%d']
+        self.fields['down_payment_date'].input_formats = ['%d/%m/%Y', '%d.%m.%Y', '%Y-%m-%d']
+        self.fields['down_payment_date'].required = False
         self.fields['down_payment_amount'].required = False
         self.fields['last_payment_amount'].required = False
         self.fields['existing_customer'].queryset = CustomUser.objects.filter(is_customer=True).order_by('-created_at')

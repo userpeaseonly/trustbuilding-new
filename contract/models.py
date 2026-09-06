@@ -26,6 +26,7 @@ class Contract(models.Model):
     company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='company_contracts', limit_choices_to={'is_company': True})
     
     contract_date = models.DateField(_("Contract Date"))
+    down_payment_date = models.DateField(_("Down Payment Date"), null=True, blank=True)
     price_per_square = models.DecimalField(_("Price per m2"), max_digits=12, decimal_places=2)
     down_payment_amount = models.DecimalField(_("Down Payment"), max_digits=15, decimal_places=2, default=0)
     last_payment_amount = models.DecimalField(_("Last Payment"), max_digits=15, decimal_places=2, default=0)
@@ -226,21 +227,24 @@ def generate_payment_records(sender, instance, created, **kwargs):
             remainder = intermediate_pool
 
         month_counter = 1
+        date_offset_months = 0
         
         # 1. Month 1: Down Payment (if provided)
         if has_dp:
             records.append(PaymentRecord(
                 contract=instance,
                 month_number=month_counter,
-                due_date=instance.contract_date,
+                due_date=instance.down_payment_date or instance.contract_date,
                 plan_amount=dp,
                 debt=dp
             ))
             month_counter += 1
+            if not instance.down_payment_date:
+                date_offset_months += 1
 
         # 2. Intermediate Monthly Installments (M months)
         for i in range(1, M + 1):
-            due_date = instance.contract_date + relativedelta(months=(month_counter - 1))
+            due_date = instance.contract_date + relativedelta(months=date_offset_months)
             planned = base_monthly
             # If no last payment, add integer remainder to the last intermediate month
             if i == M and not has_lp:
@@ -254,10 +258,11 @@ def generate_payment_records(sender, instance, created, **kwargs):
                 debt=planned
             ))
             month_counter += 1
+            date_offset_months += 1
 
         # 3. Final Month: Last Payment (if provided)
         if has_lp:
-            due_date = instance.contract_date + relativedelta(months=(month_counter - 1))
+            due_date = instance.contract_date + relativedelta(months=date_offset_months)
             planned = lp + (remainder if M > 0 else Decimal(0))
             records.append(PaymentRecord(
                 contract=instance,

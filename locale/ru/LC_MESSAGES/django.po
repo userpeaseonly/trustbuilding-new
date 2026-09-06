@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imaan\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 20:44+0500\n"
+"POT-Creation-Date: 2026-09-04 15:34+0500\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,15 +60,15 @@ msgstr "Количество подъездов"
 msgid "Apartment Count"
 msgstr "Количество квартир"
 
-#: building/models.py:15 building/models.py:52 contract/models.py:38
-#: contract/models.py:100 contract/models.py:127 contract/models.py:146
-#: contract/models.py:172 otp/models.py:12 users/models.py:36
+#: building/models.py:15 building/models.py:52 contract/models.py:39
+#: contract/models.py:101 contract/models.py:128 contract/models.py:147
+#: contract/models.py:173 otp/models.py:12 users/models.py:36
 #: users/models.py:58 users/models.py:73
 msgid "Created At"
 msgstr "Дата создания"
 
-#: building/models.py:16 building/models.py:53 contract/models.py:39
-#: contract/models.py:128 contract/models.py:173 users/models.py:37
+#: building/models.py:16 building/models.py:53 contract/models.py:40
+#: contract/models.py:129 contract/models.py:174 users/models.py:37
 #: users/models.py:59
 msgid "Updated At"
 msgstr "Дата обновления"
@@ -139,14 +139,14 @@ msgstr "Set to False if cloned/archived for a terminated contract."
 
 #: building/models.py:50
 #: building/templates/building/partials/apartment_modal.html:136
-#: contract/models.py:33 contract/templates/contract/detail.html:248
+#: contract/models.py:34 contract/templates/contract/detail.html:131
 #: contract/templates/contract/list.html:43 users/models.py:34
 msgid "Status"
 msgstr "Статус"
 
 #: building/models.py:56
 #: building/templates/building/partials/apartment_modal.html:20
-#: contract/templates/contract/detail.html:74
+#: contract/templates/contract/detail.html:75
 #: contract/templates/contract/list.html:41
 #: contract/templates/contract/receipt.html:56
 #: dashboard/templates/dashboard/home.html:88
@@ -214,7 +214,7 @@ msgstr ""
 #: building/templates/building/list.html:117
 #: building/templates/building/partials/apartment_modal.html:197
 #: contract/templates/contract/confirm_termination.html:41
-#: contract/templates/contract/form.html:334
+#: contract/templates/contract/form.html:340
 #: users/templates/users/customer_list.html:140
 #: users/templates/users/staff_list.html:97
 msgid "Cancel"
@@ -410,7 +410,7 @@ msgstr "Выберите клиента"
 msgid "Phone Number"
 msgstr "Номер телефона"
 
-#: contract/forms.py:34 contract/templates/contract/detail.html:49
+#: contract/forms.py:34 contract/templates/contract/detail.html:50
 #: users/templates/users/customer_list.html:108
 #: users/templates/users/staff_list.html:83
 msgid "Full Name"
@@ -434,7 +434,7 @@ msgstr "Мужской"
 msgid "Female"
 msgstr "Женский"
 
-#: contract/forms.py:45 contract/templates/contract/detail.html:61
+#: contract/forms.py:45 contract/templates/contract/detail.html:62
 #: users/models.py:28 users/templates/users/customer_list.html:48
 #: users/templates/users/customer_list.html:117
 msgid "Passport Series"
@@ -461,27 +461,27 @@ msgstr "Дата выдачи"
 msgid "Passport Scan File"
 msgstr "Passport Scan File"
 
-#: contract/forms.py:109
+#: contract/forms.py:112
 msgid "Please select an existing customer from the dropdown."
 msgstr "Please select an existing customer from the dropdown."
 
-#: contract/forms.py:117
+#: contract/forms.py:120
 msgid "Phone number is required for registering a new customer."
 msgstr "Phone number is required for registering a new customer."
 
-#: contract/forms.py:119
+#: contract/forms.py:122
 msgid "Full name is required for registering a new customer."
 msgstr "Full name is required for registering a new customer."
 
-#: contract/forms.py:121
+#: contract/forms.py:124
 msgid "Passport series is required for legal contract generation."
 msgstr "Passport series is required for legal contract generation."
 
-#: contract/forms.py:123
+#: contract/forms.py:126
 msgid "PINFL (JSHSHR) is required for legal contract generation."
 msgstr "PINFL (JSHSHR) is required for legal contract generation."
 
-#: contract/forms.py:126
+#: contract/forms.py:129
 msgid ""
 "A customer with this phone number already exists. Please select 'Existing "
 "Customer' instead."
@@ -489,11 +489,11 @@ msgstr ""
 "A customer with this phone number already exists. Please select 'Existing "
 "Customer' instead."
 
-#: contract/forms.py:134 contract/templates/contract/quick_payment.html:150
+#: contract/forms.py:137 contract/templates/contract/quick_payment.html:150
 msgid "Payment Date (d/m/Y)"
 msgstr "Дата оплаты (д/м/г)"
 
-#: contract/forms.py:163
+#: contract/forms.py:166
 msgid "Payment amount must be greater than zero."
 msgstr "Payment amount must be greater than zero."
 
@@ -510,185 +510,190 @@ msgid "Completed"
 msgstr "Завершен"
 
 #: contract/models.py:29
+#| msgid "Down Payment"
+msgid "Down Payment Date"
+msgstr "Первоначальный взнос"
+
+#: contract/models.py:30
 msgid "Price per m2"
 msgstr "Цена за 1 м²"
 
-#: contract/models.py:30 contract/templates/contract/detail.html:82
+#: contract/models.py:31 contract/templates/contract/detail.html:83
 #: contract/templates/contract/quick_payment.html:76
 msgid "Down Payment"
 msgstr "Первоначальный взнос"
 
-#: contract/models.py:31 contract/templates/contract/detail.html:86
+#: contract/models.py:32 contract/templates/contract/detail.html:87
 #: contract/templates/contract/quick_payment.html:80
 msgid "Last Payment"
 msgstr "Последний платеж"
 
-#: contract/models.py:32
+#: contract/models.py:33
 msgid "Payment Duration (Months)"
 msgstr "Срок рассрочки (Месяцев)"
 
-#: contract/models.py:36
+#: contract/models.py:37
 msgid "Total Contract Amount"
 msgstr "Total Contract Amount"
 
-#: contract/models.py:42
+#: contract/models.py:43
 #: contract/templates/contract/confirm_termination.html:13
 #: contract/templates/contract/detail.html:12
 #: contract/templates/contract/receipt.html:45
 msgid "Contract"
 msgstr "Договор"
 
-#: contract/models.py:43 contract/templates/contract/detail.html:10
+#: contract/models.py:44 contract/templates/contract/detail.html:10
 #: contract/views.py:33 users/templates/users/customer_list.html:65
 msgid "Contracts"
 msgstr "Contracts"
 
-#: contract/models.py:86 contract/templates/contract/detail.html:166
+#: contract/models.py:87 contract/templates/contract/detail.html:324
 #: contract/templates/contract/quick_payment.html:126
 msgid "Cash"
 msgstr "Наличные"
 
-#: contract/models.py:87 contract/templates/contract/detail.html:173
+#: contract/models.py:88 contract/templates/contract/detail.html:331
 #: contract/templates/contract/quick_payment.html:133
 msgid "Card"
 msgstr "Банковская карта"
 
-#: contract/models.py:88 contract/templates/contract/detail.html:180
+#: contract/models.py:89 contract/templates/contract/detail.html:338
 #: contract/templates/contract/quick_payment.html:140
 msgid "Bank Transfer"
 msgstr "Банковский перевод"
 
-#: contract/models.py:89 contract/templates/contract/detail.html:187
+#: contract/models.py:90 contract/templates/contract/detail.html:345
 #: contract/templates/contract/quick_payment.html:147
 msgid "Material"
 msgstr "Материал / Другое"
 
-#: contract/models.py:94 contract/models.py:141
+#: contract/models.py:95 contract/models.py:142
 msgid "Payment Amount"
 msgstr "Сумма платежа"
 
-#: contract/models.py:95 contract/models.py:142
+#: contract/models.py:96 contract/models.py:143
 #: contract/templates/contract/receipt.html:79
 msgid "Payment Type"
 msgstr "Способ оплаты"
 
-#: contract/models.py:96 contract/models.py:143
+#: contract/models.py:97 contract/models.py:144
 #: contract/templates/contract/receipt.html:84
 msgid "Transaction ID"
 msgstr "ID транзакции"
 
-#: contract/models.py:96
+#: contract/models.py:97
 msgid "For bank transfers/terminal"
 msgstr "For bank transfers/terminal"
 
-#: contract/models.py:97
+#: contract/models.py:98
 msgid "Receipt Image"
 msgstr "Receipt Image"
 
-#: contract/models.py:98
+#: contract/models.py:99
 msgid "Date Paid"
 msgstr "Date Paid"
 
-#: contract/models.py:103
+#: contract/models.py:104
 msgid "Payment Log"
 msgstr "Payment Log"
 
-#: contract/models.py:104
+#: contract/models.py:105
 msgid "Payment Logs"
 msgstr "Payment Logs"
 
-#: contract/models.py:120 contract/templates/contract/terminated_list.html:22
+#: contract/models.py:121 contract/templates/contract/terminated_list.html:22
 msgid "Termination Date"
 msgstr "Termination Date"
 
-#: contract/models.py:121
+#: contract/models.py:122
 #: contract/templates/contract/confirm_termination.html:30
 msgid "Termination Reason"
 msgstr "Причина расторжения"
 
-#: contract/models.py:122
+#: contract/models.py:123
 msgid "Fine Amount"
 msgstr "Fine Amount"
 
-#: contract/models.py:123
+#: contract/models.py:124
 msgid "Fine Paid"
 msgstr "Fine Paid"
 
-#: contract/models.py:124
+#: contract/models.py:125
 msgid "Planned Refund Amount"
 msgstr "Planned Refund Amount"
 
-#: contract/models.py:125
+#: contract/models.py:126
 msgid "Paid Refund Amount"
 msgstr "Paid Refund Amount"
 
-#: contract/models.py:131
+#: contract/models.py:132
 msgid "Terminated Contract"
 msgstr "Terminated Contract"
 
-#: contract/models.py:132 contract/views.py:278
+#: contract/models.py:133 contract/views.py:279
 msgid "Terminated Contracts"
 msgstr "Terminated Contracts"
 
-#: contract/models.py:140
+#: contract/models.py:141
 msgid "Payment Date"
 msgstr "Дата платежа"
 
-#: contract/models.py:144
+#: contract/models.py:145
 msgid "Notes"
 msgstr "Заметки / Примечания"
 
-#: contract/models.py:149
+#: contract/models.py:150
 msgid "Termination Payment"
 msgstr "Termination Payment"
 
-#: contract/models.py:150
+#: contract/models.py:151
 msgid "Termination Payments"
 msgstr "Termination Payments"
 
-#: contract/models.py:163
+#: contract/models.py:164
 msgid "Month Number"
 msgstr "Month Number"
 
-#: contract/models.py:164 contract/templates/contract/detail.html:242
+#: contract/models.py:165 contract/templates/contract/detail.html:126
 msgid "Due Date"
 msgstr "Срок оплаты"
 
-#: contract/models.py:165 contract/templates/contract/detail.html:243
+#: contract/models.py:166 contract/templates/contract/detail.html:127
 msgid "Planned Amount"
 msgstr "Планируемая сумма"
 
-#: contract/models.py:166 contract/templates/contract/detail.html:244
+#: contract/models.py:167 contract/templates/contract/detail.html:128
 #: contract/templates/contract/receipt.html:67
 msgid "Paid Amount"
 msgstr "Оплаченная сумма"
 
-#: contract/models.py:167
+#: contract/models.py:168
 msgid "Debt"
 msgstr "Задолженность"
 
-#: contract/models.py:168
+#: contract/models.py:169
 msgid "Excess / Overpayment"
 msgstr "Излишек / Переплата"
 
-#: contract/models.py:169
+#: contract/models.py:170
 msgid "Debt Carried Over"
 msgstr "Долг перенесен на следующий месяц"
 
-#: contract/models.py:170
+#: contract/models.py:171
 msgid "Is Late"
 msgstr "Is Late"
 
-#: contract/models.py:176
+#: contract/models.py:177
 msgid "Payment Record"
 msgstr "Payment Record"
 
-#: contract/models.py:177
+#: contract/models.py:178
 msgid "Payment Records"
 msgstr "Payment Records"
 
 #: contract/templates/contract/confirm_termination.html:12
-#: contract/views.py:217 contract/views.py:262
+#: contract/views.py:218 contract/views.py:263
 msgid "Confirm Contract Termination"
 msgstr "Подтверждение расторжения договора"
 
@@ -729,128 +734,125 @@ msgid "Download .DOCX Contract"
 msgstr "Скачать договор в .DOCX"
 
 #: contract/templates/contract/detail.html:32
+#: contract/templates/contract/detail.html:265
+msgid "Process Payment"
+msgstr "Process Payment"
+
+#: contract/templates/contract/detail.html:35
 msgid "Terminate Contract"
 msgstr "Расторгнуть договор"
 
-#: contract/templates/contract/detail.html:45
+#: contract/templates/contract/detail.html:46
 msgid "Customer Details"
 msgstr "Customer Details"
 
-#: contract/templates/contract/detail.html:53
+#: contract/templates/contract/detail.html:54
 #: contract/templates/contract/receipt.html:40
 msgid "Phone"
 msgstr "Тел"
 
-#: contract/templates/contract/detail.html:57
+#: contract/templates/contract/detail.html:58
 msgid "PINFL / JSHSHR"
 msgstr "PINFL / JSHSHR"
 
-#: contract/templates/contract/detail.html:70
+#: contract/templates/contract/detail.html:71
 msgid "Contract Terms"
 msgstr "Contract Terms"
 
-#: contract/templates/contract/detail.html:78
+#: contract/templates/contract/detail.html:79
 #: contract/templates/contract/list.html:42
 msgid "Total Amount"
 msgstr "Total Amount"
 
-#: contract/templates/contract/detail.html:113
-msgid "Process Payment"
-msgstr "Process Payment"
+#: contract/templates/contract/detail.html:100
+msgid "Installment Schedule Matrix"
+msgstr "Матрица графика платежей"
+
+#: contract/templates/contract/detail.html:101
+msgid "Monthly planned installments, payments, and payment receipts"
+msgstr "Ежемесячные плановые платежи, оплаты и квитанции"
+
+#: contract/templates/contract/detail.html:107
+msgid "Total Paid"
+msgstr "Итого оплачено"
+
+#: contract/templates/contract/detail.html:111
+msgid "Total Remaining"
+msgstr "Общий остаток"
 
 #: contract/templates/contract/detail.html:115
+msgid "Total Excess"
+msgstr "Общий излишек"
+
+#: contract/templates/contract/detail.html:129
+#: contract/templates/contract/receipt.html:89
+msgid "Remaining Debt"
+msgstr "Остаток долга"
+
+#: contract/templates/contract/detail.html:130
+msgid "Excess"
+msgstr "Излишек"
+
+#: contract/templates/contract/detail.html:163
+msgid "Paid"
+msgstr "Оплачено"
+
+#: contract/templates/contract/detail.html:165
+msgid "Partially Paid"
+msgstr "Частично оплачено"
+
+#: contract/templates/contract/detail.html:167
+msgid "Overdue"
+msgstr "Просрочено"
+
+#: contract/templates/contract/detail.html:169
+msgid "Pending"
+msgstr "Ожидается"
+
+#: contract/templates/contract/detail.html:180
+#: contract/templates/contract/detail.html:189
+#: contract/templates/contract/detail.html:217
+msgid "Receipt"
+msgstr "Квитанция"
+
+#: contract/templates/contract/detail.html:203
+msgid "Payment History Logs"
+msgstr "История платежей"
+
+#: contract/templates/contract/detail.html:222
+msgid "No payments recorded yet."
+msgstr "No payments recorded yet."
+
+#: contract/templates/contract/detail.html:267
 msgid "Instant Recalculation"
 msgstr "Instant Recalculation"
 
-#: contract/templates/contract/detail.html:125
+#: contract/templates/contract/detail.html:283
 msgid "Next Due:"
 msgstr "Next Due:"
 
-#: contract/templates/contract/detail.html:142
+#: contract/templates/contract/detail.html:300
 msgid "Fill Next Due"
 msgstr "Fill Next Due"
 
-#: contract/templates/contract/detail.html:149
+#: contract/templates/contract/detail.html:307
 msgid "Fill Full Debt"
 msgstr "Fill Full Debt"
 
-#: contract/templates/contract/detail.html:157
+#: contract/templates/contract/detail.html:315
 #: contract/templates/contract/quick_payment.html:117
 msgid "Select Payment Method"
 msgstr "Select Payment Method"
 
-#: contract/templates/contract/detail.html:195
+#: contract/templates/contract/detail.html:353
 #: contract/templates/contract/quick_payment.html:152
 msgid "Leave blank for current date/time, or enter custom payment date."
 msgstr ""
 "Оставьте пустым для текущей даты/времени или введите другую дату оплаты."
 
-#: contract/templates/contract/detail.html:204
+#: contract/templates/contract/detail.html:362
 msgid "Register Payment & Issue Receipt"
 msgstr "Внести платеж и выдать квитанцию"
-
-#: contract/templates/contract/detail.html:216
-msgid "Installment Schedule Matrix"
-msgstr "Матрица графика платежей"
-
-#: contract/templates/contract/detail.html:217
-msgid "Monthly planned installments, payments, and payment receipts"
-msgstr "Ежемесячные плановые платежи, оплаты и квитанции"
-
-#: contract/templates/contract/detail.html:223
-msgid "Total Paid"
-msgstr "Итого оплачено"
-
-#: contract/templates/contract/detail.html:227
-msgid "Total Remaining"
-msgstr "Общий остаток"
-
-#: contract/templates/contract/detail.html:231
-msgid "Total Excess"
-msgstr "Общий излишек"
-
-#: contract/templates/contract/detail.html:245
-#: contract/templates/contract/receipt.html:89
-msgid "Remaining Debt"
-msgstr "Остаток долга"
-
-#: contract/templates/contract/detail.html:246
-msgid "Excess"
-msgstr "Излишек"
-
-#: contract/templates/contract/detail.html:247
-msgid "Running Balance"
-msgstr "Running Balance"
-
-#: contract/templates/contract/detail.html:286
-msgid "Paid"
-msgstr "Оплачено"
-
-#: contract/templates/contract/detail.html:288
-msgid "Partially Paid"
-msgstr "Частично оплачено"
-
-#: contract/templates/contract/detail.html:290
-msgid "Overdue"
-msgstr "Просрочено"
-
-#: contract/templates/contract/detail.html:292
-msgid "Pending"
-msgstr "Ожидается"
-
-#: contract/templates/contract/detail.html:301
-#: contract/templates/contract/detail.html:310
-#: contract/templates/contract/detail.html:338
-msgid "Receipt"
-msgstr "Квитанция"
-
-#: contract/templates/contract/detail.html:324
-msgid "Payment History Logs"
-msgstr "История платежей"
-
-#: contract/templates/contract/detail.html:343
-msgid "No payments recorded yet."
-msgstr "No payments recorded yet."
 
 #: contract/templates/contract/form.html:58
 msgid "Create New Real Estate Contract"
@@ -930,7 +932,8 @@ msgstr "Intermediate monthly installments count (excludes DP & LP months)."
 #: contract/templates/contract/form.html:252
 #: contract/templates/contract/form.html:257
 #: contract/templates/contract/form.html:263
-#: contract/templates/contract/form.html:268
+#: contract/templates/contract/form.html:269
+#: contract/templates/contract/form.html:274
 msgid "optional"
 msgstr "optional"
 
@@ -938,59 +941,63 @@ msgstr "optional"
 msgid "Optional Month 1 planned amount. Leave empty if no down payment."
 msgstr "Optional Month 1 planned amount. Leave empty if no down payment."
 
-#: contract/templates/contract/form.html:270
+#: contract/templates/contract/form.html:265
+msgid "Leave empty to use main Contract Date for the down payment."
+msgstr "Leave empty to use main Contract Date for the down payment."
+
+#: contract/templates/contract/form.html:276
 msgid "Optional final month planned amount. Leave empty if no last payment."
 msgstr "Optional final month planned amount. Leave empty if no last payment."
 
-#: contract/templates/contract/form.html:279
+#: contract/templates/contract/form.html:285
 msgid "Live Schedule Calculation Preview"
 msgstr "Предпросмотр расчета графика"
 
-#: contract/templates/contract/form.html:282
+#: contract/templates/contract/form.html:288
 msgid "Total Schedule Months"
 msgstr "Всего месяцев договора"
 
-#: contract/templates/contract/form.html:288
+#: contract/templates/contract/form.html:294
 msgid "Apartment Area"
 msgstr "Apartment Area"
 
-#: contract/templates/contract/form.html:293
+#: contract/templates/contract/form.html:299
 msgid "Total Contract Value"
 msgstr "Общая сумма договора"
 
-#: contract/templates/contract/form.html:298
+#: contract/templates/contract/form.html:304
 msgid "Month 1 (Down Payment)"
 msgstr "Month 1 (Down Payment)"
 
-#: contract/templates/contract/form.html:303
+#: contract/templates/contract/form.html:309
 msgid "Final Month (Last Payment)"
 msgstr "Final Month (Last Payment)"
 
-#: contract/templates/contract/form.html:311
+#: contract/templates/contract/form.html:317
 msgid "Intermediate Monthly Installment:"
 msgstr "Intermediate Monthly Installment:"
 
-#: contract/templates/contract/form.html:313
+#: contract/templates/contract/form.html:319
 msgid "Covering"
 msgstr "Covering"
 
-#: contract/templates/contract/form.html:313
+#: contract/templates/contract/form.html:319
 msgid "intermediate months"
 msgstr "intermediate months"
 
-#: contract/templates/contract/form.html:318
+#: contract/templates/contract/form.html:324
 msgid "per month"
 msgstr "per month"
 
-#: contract/templates/contract/form.html:327
+#: contract/templates/contract/form.html:333
 msgid "Automatic Schedule Generation:"
 msgstr "Automatic Schedule Generation:"
 
-#: contract/templates/contract/form.html:328
+#: contract/templates/contract/form.html:334
 msgid "Payment schedule generated based on intermediate months & terms"
 msgstr "Payment schedule generated based on intermediate months & terms"
 
-#: contract/templates/contract/form.html:337
+#: contract/templates/contract/form.html:343
 msgid "Generate Contract & Schedule"
 msgstr "Сформировать договор и график"
 
@@ -1174,39 +1181,39 @@ msgstr "Reason"
 msgid "No terminated contracts found."
 msgstr "No terminated contracts found."
 
-#: contract/views.py:115
+#: contract/views.py:116
 msgid "Contract successfully generated for {}!"
 msgstr "Contract successfully generated for {}!"
 
-#: contract/views.py:134
+#: contract/views.py:135
 msgid "Create Contract"
 msgstr "Create Contract"
 
-#: contract/views.py:151
+#: contract/views.py:152
 msgid "Payment logged successfully!"
 msgstr "Payment logged successfully!"
 
-#: contract/views.py:154
+#: contract/views.py:155
 msgid "Invalid payment data. Please check the entered amount."
 msgstr "Invalid payment data. Please check the entered amount."
 
-#: contract/views.py:211
+#: contract/views.py:212
 msgid "A 6-digit OTP code has been sent to your phone for verification."
 msgstr "A 6-digit OTP code has been sent to your phone for verification."
 
-#: contract/views.py:213
+#: contract/views.py:214
 msgid "OTP generated ({}) but SMS failed: {}"
 msgstr "OTP generated ({}) but SMS failed: {}"
 
-#: contract/views.py:256
+#: contract/views.py:257
 msgid "Contract #{} terminated successfully! Apartment reset to AVAILABLE."
 msgstr "Contract #{} terminated successfully! Apartment reset to AVAILABLE."
 
-#: contract/views.py:259
+#: contract/views.py:260
 msgid "Invalid or expired OTP code."
 msgstr "Invalid or expired OTP code."
 
-#: contract/views.py:307
+#: contract/views.py:308
 msgid "Staff Payment Terminal"
 msgstr "Staff Payment Terminal"
 
@@ -1970,6 +1977,9 @@ msgstr "Manage Staff Members"
 #: users/views.py:107
 msgid "Customer profile registered successfully!"
 msgstr "Customer profile registered successfully!"
+
+#~ msgid "Running Balance"
+#~ msgstr "Running Balance"
 
 #~ msgid "Actions"
 #~ msgstr "Действия"
