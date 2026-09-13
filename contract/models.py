@@ -350,3 +350,27 @@ def on_payment_log_created(sender, instance, created, **kwargs):
 def on_payment_log_deleted(sender, instance, **kwargs):
     recalculate_contract_debt(instance.contract)
 
+
+class ContractTemplate(models.Model):
+    company = models.ForeignKey('users.CustomUser', on_delete=models.CASCADE, related_name='contract_templates')
+    name = models.CharField(_("Template Name"), max_length=255)
+    file = models.FileField(_("Template File (.docx)"), upload_to='contract_templates/')
+    content_html = models.TextField(_("HTML Content"), blank=True)
+    is_default = models.BooleanField(_("Is Default"), default=False)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Contract Template")
+        verbose_name_plural = _("Contract Templates")
+        ordering = ['-is_default', '-created_at']
+
+    def __str__(self):
+        return f"{self.name} ({self.company})"
+
+    def save(self, *args, **kwargs):
+        if self.is_default:
+            # Unset other defaults for this company
+            ContractTemplate.objects.filter(company=self.company, is_default=True).update(is_default=False)
+        super().save(*args, **kwargs)

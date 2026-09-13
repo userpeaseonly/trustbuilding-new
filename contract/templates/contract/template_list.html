@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-2xl font-bold text-white tracking-tight">{% trans "Contract Templates" %}</h2>
+            <p class="text-sm text-gray-400 mt-1">{% trans "Manage Word (.docx) templates used for generating customer contracts" %}</p>
+        </div>
+        <button onclick="document.getElementById('uploadModal').classList.remove('hidden')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+            {% trans "Upload Template" %}
+        </button>
+    </div>
+
+    <!-- Templates Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for tmpl in templates %}
+        <div class="bg-gray-800 border {% if tmpl.is_default %}border-indigo-500 ring-1 ring-indigo-500{% else %}border-gray-700{% endif %} rounded-xl p-5 hover:border-gray-600 transition shadow-sm flex flex-col justify-between">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-900/30 text-blue-400 flex items-center justify-center shrink-0">
+                        📄
+                    </div>
+                    <div class="overflow-hidden">
+                        <h3 class="text-base font-bold text-white truncate" title="{{ tmpl.name }}">{{ tmpl.name }}</h3>
+                        <p class="text-[10px] font-mono text-gray-400 truncate mt-0.5">{{ tmpl.file.name|slice:"19:" }}</p>
+                    </div>
+                </div>
+                {% if tmpl.is_default %}
+                <span class="bg-indigo-900/50 text-indigo-300 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider shrink-0 ml-2">
+                    {% trans "Default" %}
+                </span>
+                {% endif %}
+            </div>
+            
+            <div class="flex justify-between items-center pt-4 border-t border-gray-700 mt-2">
+                <div class="flex items-center gap-2">
+                    {% if not tmpl.is_default %}
+                    <form method="post" action="{% url 'contract:template_set_default' pk=tmpl.pk %}" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="text-xs font-semibold text-gray-400 hover:text-indigo-400 transition" title="{% trans "Set as Default" %}">
+                            ⭐ {% trans "Make Default" %}
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="text-xs font-semibold text-gray-500">
+                        ✓ {% trans "Active Template" %}
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <div class="flex gap-2">
+                    <a href="{{ tmpl.file.url }}" download class="p-1.5 text-gray-400 hover:text-white bg-gray-700 hover:bg-gray-600 rounded-md transition" title="{% trans "Download Original" %}">
+                        ⬇️
+                    </a>
+                    <form method="post" action="{% url 'contract:template_delete' pk=tmpl.pk %}" onsubmit="return confirm('{% trans "Are you sure you want to delete this template?" %}');" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="p-1.5 text-gray-400 hover:text-red-400 bg-gray-700 hover:bg-red-900/30 rounded-md transition" title="{% trans "Delete" %}">
+                            🗑️
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full bg-gray-800 border border-gray-700 border-dashed rounded-xl p-12 text-center">
+            <div class="text-4xl mb-4">📄</div>
+            <h3 class="text-lg font-bold text-white mb-2">{% trans "No Templates Uploaded" %}</h3>
+            <p class="text-gray-400 text-sm max-w-md mx-auto">
+                {% trans "Upload your company's official MS Word contract templates to automatically generate contracts for your customers." %}
+            </p>
+            <button onclick="document.getElementById('uploadModal').classList.remove('hidden')" class="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition">
+                + {% trans "Upload First Template" %}
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Cheat Sheet Section -->
+    <div class="bg-gray-800 border border-gray-700 rounded-xl overflow-hidden mt-8">
+        <div class="bg-gray-700/50 p-4 border-b border-gray-700 flex justify-between items-center cursor-pointer" onclick="document.getElementById('cheatSheet').classList.toggle('hidden')">
+            <div>
+                <h3 class="font-bold text-white">💡 {% trans "Template Variables Cheat Sheet" %}</h3>
+                <p class="text-xs text-gray-400 mt-1">{% trans "Copy and paste these exact tags into your MS Word document." %}</p>
+            </div>
+            <span class="text-gray-400 text-xs border border-gray-600 px-2 py-1 rounded">{% trans "Show / Hide" %}</span>
+        </div>
+        
+        <div id="cheatSheet" class="hidden p-6">
+            <div class="mb-6 space-y-3">
+                <p class="text-sm text-gray-300 bg-indigo-900/30 border border-indigo-800 p-3 rounded-lg">
+                    <strong>{% trans "Note:" %}</strong> {% trans "The system natively supports both standard English Jinja tags (e.g. <code>{{ contract_amount }}</code>) and native Latin Uzbek chevron tags exactly as shown below." %}
+                </p>
+                <p class="text-sm text-gray-300 bg-gray-800 border border-gray-700 p-3 rounded-lg flex items-start gap-2">
+                    <span class="text-amber-500 text-lg leading-none">ℹ️</span>
+                    <span>
+                        <strong class="text-gray-200">{% trans "Backward Compatibility:" %}</strong> 
+                        {% trans "Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, <code>«Этаж»</code>) from previous document versions are still fully supported and will continue to work automatically. You do not need to update your existing templates." %}
+                    </span>
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm font-mono text-gray-300">
+                <div class="space-y-2">
+                    <h4 class="font-bold text-gray-100 font-sans border-b border-gray-700 pb-1 mb-2">{% trans "Contract Info" %}</h4>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-blue-300">«Shartnoma_raqami»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Contract ID" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-blue-300">«Shartnoma_kuni»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Day of month" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-blue-300">«Shartnoma_oyi»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Month (e.g. aprel)" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-blue-300">«Shartnoma_yili»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Year" %}</span></div>
+                    
+                    
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-blue-300">«Kompaniya_rahbari»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Company Director" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-blue-300">«Kompaniya_rahbari_qisqa»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Director Short Name" %}</span></div>
+                    <h4 class="font-bold text-gray-100 font-sans border-b border-gray-700 pb-1 mb-2 mt-6">{% trans "Customer Info" %}</h4>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-purple-300">«Xaridor_FIO»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Full Name" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-purple-300">«Xaridor_FIO_qisqa»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Short Name" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-purple-300">«Xaridor_pasporti»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Passport Series" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-purple-300">«Pasport_berilgan_sana»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Passport Date" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-purple-300">«Pasport_berilgan_joy»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Given By" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-purple-300">«Telefon_raqami»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Phone" %}</span></div>
+                </div>
+
+                <div class="space-y-2">
+                    <h4 class="font-bold text-gray-100 font-sans border-b border-gray-700 pb-1 mb-2">{% trans "Financials" %}</h4>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-green-300">«Shartnoma_summasi»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Total Amount" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-green-300">«Shartnoma_summasi_soz_bilan»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Total in Words" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-green-300">«Boshlangich_tolov»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Down Payment" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-green-300">«Oylik_tolov»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Monthly Installment" %}</span></div>
+                    
+                    <h4 class="font-bold text-gray-100 font-sans border-b border-gray-700 pb-1 mb-2 mt-6">{% trans "Apartment Info" %}</h4>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Blok»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Block" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Podyezd»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Entrance" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Qavat»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Floor" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Kvartira_raqami»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Apartment No" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Xonalar_soni»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Rooms" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Umumiy_maydon»</span> <span class="text-gray-500 text-xs font-sans">{% trans "Area (m²)" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Bir_kv_metr_narxi»</span> <span class="text-gray-500 text-xs font-sans">{% trans "1 m² Price" %}</span></div>
+                    <div class="flex justify-between border-b border-gray-700/50 pb-1 hover:bg-gray-700/30 p-1"><span class="text-orange-300">«Bir_kv_metr_narxi_soz_bilan»</span> <span class="text-gray-500 text-xs font-sans">{% trans "1 m² Price Words" %}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div id="uploadModal" class="hidden fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div class="bg-gray-800 rounded-xl shadow-xl border border-gray-700 max-w-md w-full p-6">
+        <div class="flex items-center justify-between border-b border-gray-700 pb-3 mb-4">
+            <h3 class="text-lg font-bold text-white">{% trans "Upload Contract Template" %}</h3>
+            <button onclick="document.getElementById('uploadModal').classList.add('hidden')" class="text-gray-400 hover:text-white">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <form method="post" action="{% url 'contract:template_create' %}" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Template Name" %}</label>
+                <input type="text" name="name" required placeholder="e.g. Standard 2026 Template" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none">
+            </div>
+            
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Document File (.docx)" %}</label>
+                <input type="file" name="file" accept=".docx" required class="w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-gray-700 file:text-white hover:file:bg-gray-600">
+            </div>
+
+            <div class="flex items-center mt-2">
+                <input type="checkbox" name="is_default" id="is_default" class="rounded border-gray-600 bg-gray-900 text-indigo-600 focus:ring-indigo-500">
+                <label for="is_default" class="ml-2 text-sm text-gray-300">{% trans "Set as default template" %}</label>
+            </div>
+            
+            <div class="pt-4 flex justify-end gap-3 border-t border-gray-700 mt-6">
+                <button type="button" onclick="document.getElementById('uploadModal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition">
+                    {% trans "Cancel" %}
+                </button>
+                <button type="submit" class="px-5 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-sm">
+                    {% trans "Upload Template" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

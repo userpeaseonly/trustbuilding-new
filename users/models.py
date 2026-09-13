@@ -52,6 +52,8 @@ class CustomUser(AbstractUser):
 class CompanyProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='company_profile')
     company_name = models.CharField(_("Company Name"), max_length=255)
+    director_name = models.CharField(_("Director Full Name"), max_length=255, blank=True, help_text=_("e.g. Arslanov Axror Jamolovich"))
+    director_short_name = models.CharField(_("Director Short Name"), max_length=100, blank=True, help_text=_("e.g. A.J.Arslanov"))
     inn = models.CharField(_("INN"), max_length=20, blank=True)
     address = models.TextField(_("Company Address"), blank=True)
     

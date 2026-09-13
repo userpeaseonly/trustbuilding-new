@@ -43,6 +43,15 @@ class EskizSMS:
         # Clean phone number (remove +, spaces)
         clean_phone = str(phone_number).replace('+', '').replace(' ', '')
         
+        # --- DEVELOPMENT LOGGING ---
+        print(f"\n{'='*60}")
+        print(f"📨 SMS DISPATCH INTERCEPTED")
+        print(f"TO: +{clean_phone}")
+        print(f"MESSAGE: {message}")
+        print(f"{'='*60}\n")
+        logger.info(f"Attempting to send SMS to {clean_phone}: {message}")
+        # ---------------------------
+        
         token = cls.get_token()
         if not token:
             logger.error("Cannot send SMS: No Eskiz token available.")

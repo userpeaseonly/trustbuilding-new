@@ -1,4 +1,6 @@
 from decimal import Decimal
+import openpyxl
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,11 +8,12 @@ from django.utils.translation import gettext as _
 from django.db import transaction
 from django.db.models import Q
 
-from .models import Contract, PaymentRecord, PaymentLog
+from .models import Contract, PaymentRecord, PaymentLog, ContractTemplate
 from .forms import ContractWizardForm, PaymentLogForm
 from users.models import CustomUser
 from building.models import Apartment
 from building.views import get_user_company
+from .utils.utils import number_to_words, amount_to_words_ru, MONTHS_UZ
 
 @login_required
 def contract_list(request):
@@ -61,6 +64,8 @@ def contract_detail(request, pk):
     next_due_record = next((r for r in records if r.is_running_debt), None)
     next_due_amount = next_due_record.running_balance_abs if next_due_record else Decimal('0.00')
 
+    available_templates = ContractTemplate.objects.filter(company=contract.company)
+
     return render(request, 'contract/detail.html', {
         'contract': contract,
         'records': records,
@@ -70,6 +75,7 @@ def contract_detail(request, pk):
         'total_excess': total_excess,
         'next_due_record': next_due_record,
         'next_due_amount': next_due_amount,
+        'available_templates': available_templates,
         'page_title': f"{_('Contract')} #{contract.id}",
         'payment_form': PaymentLogForm()
     })
@@ -168,10 +174,168 @@ from .docx_generator import generate_contract_docx_response
 from .utils.utils import number_to_words
 from otp.services import send_sms
 
+from .docx_generator import generate_contract_docx_response
+
 @login_required
 def download_docx_contract(request, pk):
-    """Download pre-filled official .docx legal contract"""
-    return generate_contract_docx_response(pk)
+    """Download the official .docx legal contract."""
+    template_id = request.GET.get('template_id')
+    return generate_contract_docx_response(pk, template_id=template_id)
+
+
+
+
+@login_required
+def download_import_template(request):
+    """Generate a blank Excel template for bulk payment imports."""
+    if not getattr(request.user, 'is_company', False) and not getattr(request.user, 'is_staff_member', False):
+        return redirect('dashboard:home')
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Payments Template"
+
+    headers = ['Sana (DD.MM.YYYY)', 'Summa', "To'lov turi"]
+    ws.append(headers)
+
+    for col in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col)
+        cell.font = openpyxl.styles.Font(bold=True)
+        ws.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 20
+
+    # Data validation for Payment Type
+    from openpyxl.worksheet.datavalidation import DataValidation
+    dv = DataValidation(type="list", formula1='"Cash,Card,Bank Transfer,Material"', allow_blank=True)
+    ws.add_data_validation(dv)
+    # Apply to C2:C1000
+    dv.add('C2:C1000')
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="Payment_Template.xlsx"'
+    wb.save(response)
+    return response
+
+
+@login_required
+def import_payments_excel(request, pk):
+    """Process the uploaded Excel template and bulk create payment logs."""
+    company = get_user_company(request.user)
+    contract = get_object_or_404(Contract, pk=pk, company=company)
+
+    if request.method == 'POST':
+        if contract.payment_logs.count() > 0:
+            messages.error(request, _("Cannot import payments: Contract already has existing payments."))
+            return redirect('contract:detail', pk=contract.pk)
+
+        excel_file = request.FILES.get('file')
+        if not excel_file or not excel_file.name.endswith('.xlsx'):
+            messages.error(request, _("Please upload a valid .xlsx file."))
+            return redirect('contract:detail', pk=contract.pk)
+
+        try:
+            wb = openpyxl.load_workbook(excel_file)
+            ws = wb.active
+
+            type_mapping = {
+                'cash': PaymentLog.PAYMENT_TYPE_CASH,
+                'card': PaymentLog.PAYMENT_TYPE_CARD,
+                'bank transfer': PaymentLog.PAYMENT_TYPE_BANK,
+                'material': PaymentLog.PAYMENT_TYPE_MATERIAL,
+            }
+
+            import datetime
+
+            payments_created = 0
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                raw_date, raw_amount, raw_type = row[0], row[1], row[2]
+                
+                # Skip completely empty rows
+                if not raw_date and not raw_amount:
+                    continue
+
+                try:
+                    amount = Decimal(str(raw_amount))
+                except:
+                    continue  # Skip invalid amount
+                
+                # Parse Date
+                date_paid = timezone.now()
+                if isinstance(raw_date, datetime.datetime):
+                    date_paid = timezone.make_aware(raw_date) if timezone.is_naive(raw_date) else raw_date
+                elif isinstance(raw_date, str):
+                    try:
+                        parsed = datetime.datetime.strptime(raw_date, '%d.%m.%Y')
+                        date_paid = timezone.make_aware(parsed)
+                    except:
+                        pass
+
+                # Parse Payment Type
+                payment_type = PaymentLog.PAYMENT_TYPE_CASH
+                if raw_type and str(raw_type).strip().lower() in type_mapping:
+                    payment_type = type_mapping[str(raw_type).strip().lower()]
+
+                payment = PaymentLog(
+                    contract=contract,
+                    amount=amount,
+                    payment_type=payment_type,
+                    date_paid=date_paid
+                )
+                payment.save()
+                payments_created += 1
+
+            messages.success(request, _(f"Successfully imported {payments_created} payments!"))
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(f"Error importing payments: {e}")
+            messages.error(request, _("Failed to process Excel file. Please ensure it matches the template."))
+
+    return redirect('contract:detail', pk=contract.pk)
+
+@login_required
+def download_payments_excel(request, pk):
+    """Download the payment history as an Excel file."""
+    company = get_user_company(request.user)
+    contract = get_object_or_404(Contract, pk=pk, company=company)
+    
+    # Create an Excel workbook
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Payments"
+    
+    # Headers
+    headers = ['ID', 'Sana', 'Summa', 'To\'lov turi', 'Tranzaksiya ID', 'Xodim']
+    ws.append(headers)
+    
+    # Style the header row
+    for col in range(1, len(headers) + 1):
+        cell = ws.cell(row=1, column=col)
+        cell.font = openpyxl.styles.Font(bold=True)
+    
+    # Fetch logs
+    payment_logs = contract.payment_logs.all().order_by('-date_paid')
+    
+    for log in payment_logs:
+        staff_name = "Noma'lum"
+        try:
+            # We assume added_by or similar exists, otherwise leave blank
+            pass
+        except:
+            pass
+            
+        ws.append([
+            log.id,
+            log.date_paid.strftime("%d.%m.%Y"),
+            float(log.amount),
+            log.get_payment_type_display(),
+            log.transaction_id or '',
+            ''
+        ])
+        
+    # Return response
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="Payments_{contract.id}.xlsx"'
+    wb.save(response)
+    return response
 
 
 @login_required
@@ -365,3 +529,126 @@ def search_apartments_api(request):
     apartments = apartments.order_by('building__name', 'entrance_number', 'floor_number', 'apartment_number')[:30]
     return render(request, 'contract/partials/apartment_search_results.html', {'apartments': apartments})
 
+
+# ==========================================
+# CONTRACT TEMPLATES MANAGEMENT
+# ==========================================
+
+@login_required
+def template_list(request):
+    """List all contract templates for the company."""
+    if not getattr(request.user, 'is_company', False):
+        messages.error(request, _("Access denied."))
+        return redirect('dashboard:home')
+        
+    templates = ContractTemplate.objects.filter(company=request.user)
+    return render(request, 'contract/template_list.html', {'templates': templates})
+
+@login_required
+def template_create(request):
+    """Upload a new contract template."""
+    if not getattr(request.user, 'is_company', False):
+        messages.error(request, _("Access denied."))
+        return redirect('dashboard:home')
+        
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        file = request.FILES.get('file')
+        is_default = request.POST.get('is_default') == 'on'
+        
+        if name and file:
+            # Magic: Modify the uploaded document to make the schedule table dynamic
+            try:
+                from docx import Document
+                import io
+                
+                # Read into python-docx
+                doc = Document(file)
+                for table in doc.tables:
+                    try:
+                        header = table.rows[0].cells[1].text.strip().lower()
+                        if 'тўлов номи' in header or 'тўлов суммаси' in header:
+                            jami_idx = -1
+                            for i, row in enumerate(table.rows):
+                                if len(row.cells) > 1 and 'Жами' in row.cells[1].text:
+                                    jami_idx = i
+                                    break
+                            
+                            if jami_idx > 4:
+                                # Row 1 is {%tr for %}
+                                table.rows[1].cells[0].text = "{%tr for r in schedule %}"
+                                for c in table.rows[1].cells[1:]: c.text = ""
+                                
+                                # Row 2 is data
+                                table.rows[2].cells[0].text = "{{ loop.index }}"
+                                table.rows[2].cells[1].text = "{{ r.name }}"
+                                table.rows[2].cells[2].text = "{{ r.amount }}"
+                                if len(table.rows[2].cells) > 3:
+                                    table.rows[2].cells[3].text = "{{ r.date }}"
+                                
+                                # Row 3 is {%tr endfor %}
+                                table.rows[3].cells[0].text = "{%tr endfor %}"
+                                for c in table.rows[3].cells[1:]: c.text = ""
+                                
+                                # Delete all rows from 4 up to jami_idx - 1
+                                for _idx in range(4, jami_idx):
+                                    tr = table.rows[4]._tr
+                                    tr.getparent().remove(tr)
+                                    
+                                # Replace Jami row amounts
+                                if len(table.rows[4].cells) > 2:
+                                    table.rows[4].cells[2].text = "«Шартнома_суммаси»"
+                                break
+                    except Exception:
+                        continue
+                
+                # Save back to a BytesIO object
+                file_io = io.BytesIO()
+                doc.save(file_io)
+                file_io.seek(0)
+                
+                from django.core.files.uploadedfile import InMemoryUploadedFile
+                file = InMemoryUploadedFile(
+                    file_io, 'file', file.name,
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    file_io.getbuffer().nbytes, None
+                )
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).error(f"Error parsing table: {e}")
+                
+            ContractTemplate.objects.create(
+                company=request.user,
+                name=name,
+                file=file,
+                is_default=is_default
+            )
+            messages.success(request, _("Template uploaded successfully."))
+            return redirect('contract:template_list')
+            
+        messages.error(request, _("Please provide a name and a valid .docx file."))
+        
+    return redirect('contract:template_list')
+
+@login_required
+def template_delete(request, pk):
+    if not getattr(request.user, 'is_company', False):
+        return redirect('dashboard:home')
+        
+    template = get_object_or_404(ContractTemplate, pk=pk, company=request.user)
+    if request.method == 'POST':
+        template.delete()
+        messages.success(request, _("Template deleted."))
+    return redirect('contract:template_list')
+
+@login_required
+def template_set_default(request, pk):
+    if not getattr(request.user, 'is_company', False):
+        return redirect('dashboard:home')
+        
+    template = get_object_or_404(ContractTemplate, pk=pk, company=request.user)
+    if request.method == 'POST':
+        template.is_default = True
+        template.save()
+        messages.success(request, _("Default template updated."))
+    return redirect('contract:template_list')

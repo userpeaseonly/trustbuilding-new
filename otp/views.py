@@ -30,16 +30,16 @@ def request_otp_view(request):
             messages.error(request, _("Too many OTP requests. Please wait."))
             return redirect('otp:request_otp')
             
-        # Create token
+        # Create token (OTPToken's save method automatically generates a 6-digit random code)
         token = OTPToken.objects.create(phone_number=phone_number)
-        token.code = '123456'
-        token.save(update_fields=['code'])
         
         # Send SMS via Eskiz
         message = _(f"TrustBuilding: Your login code is {token.code}")
         success = EskizSMS.send_sms(phone_number, message)
         
         if success or True:  # Fallback to True for development without Eskiz credentials
+            if not success:
+                print(f"--- DEV MODE: SMS failed. The OTP for {phone_number} is {token.code} ---")
             # Store phone number in session for verification step
             request.session['otp_phone_number'] = str(phone_number)
             messages.success(request, _("OTP sent to your phone."))
