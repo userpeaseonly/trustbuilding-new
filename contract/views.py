@@ -41,7 +41,12 @@ def contract_list(request):
 def contract_detail(request, pk):
     """View details of a specific contract and its financial schedule"""
     company = get_user_company(request.user)
+
     contract = get_object_or_404(Contract, pk=pk, company=company)
+    
+    if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
+        return redirect('contract:termination_dashboard', pk=contract.pk)
+
     records = list(contract.payment_records.all().order_by('month_number'))
     payment_logs = contract.payment_logs.all().order_by('-date_paid')
 
@@ -146,7 +151,12 @@ def contract_create(request):
 def process_payment(request, pk):
     """Process a payment for a contract"""
     company = get_user_company(request.user)
+
     contract = get_object_or_404(Contract, pk=pk, company=company)
+    
+    if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
+        return redirect('contract:termination_dashboard', pk=contract.pk)
+
     
     if request.method == 'POST':
         form = PaymentLogForm(request.POST, request.FILES)
@@ -220,7 +230,12 @@ def download_import_template(request):
 def import_payments_excel(request, pk):
     """Process the uploaded Excel template and bulk create payment logs."""
     company = get_user_company(request.user)
+
     contract = get_object_or_404(Contract, pk=pk, company=company)
+    
+    if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
+        return redirect('contract:termination_dashboard', pk=contract.pk)
+
 
     if request.method == 'POST':
         if contract.payment_logs.count() > 0:
@@ -295,7 +310,12 @@ def import_payments_excel(request, pk):
 def download_payments_excel(request, pk):
     """Download the payment history as an Excel file."""
     company = get_user_company(request.user)
+
     contract = get_object_or_404(Contract, pk=pk, company=company)
+    
+    if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
+        return redirect('contract:termination_dashboard', pk=contract.pk)
+
     
     # Create an Excel workbook
     wb = openpyxl.Workbook()
@@ -398,8 +418,10 @@ def initiate_termination(request, pk):
         except Exception as e:
             messages.warning(request, _("OTP generated ({}) but SMS failed: {}").format(otp_code, e))
             
+        total_paid = sum(p.amount for p in contract.payment_logs.all())
         return render(request, 'contract/confirm_termination.html', {
             'contract': contract,
+            'total_paid': total_paid,
             'page_title': _("Confirm Contract Termination")
         })
         
@@ -443,13 +465,61 @@ def confirm_termination(request, pk):
             return redirect('contract:terminated_list')
         else:
             messages.error(request, _("Invalid or expired OTP code."))
-            return render(request, 'contract/confirm_termination.html', {
-                'contract': contract,
-                'page_title': _("Confirm Contract Termination")
-            })
+            total_paid = sum(p.amount for p in contract.payment_logs.all())
+        return render(request, 'contract/confirm_termination.html', {
+            'contract': contract,
+            'total_paid': total_paid,
+            'page_title': _("Confirm Contract Termination")
+        })
             
     return redirect('contract:detail', pk=pk)
 
+
+@login_required
+
+@login_required
+def termination_dashboard(request, pk):
+    """Dashboard for managing refunds on a terminated contract."""
+    company = get_user_company(request.user)
+    contract = get_object_or_404(Contract, pk=pk, company=company, status=Contract.STATUS_TERMINATED)
+    termination = get_object_or_404(TerminateContract, contract=contract)
+    
+    refund_payments = termination.refund_payments.all().order_by('-payment_date', '-created_at')
+    remaining_refund = max(Decimal(0), termination.planned_refund - termination.paid_refund)
+    
+    return render(request, 'contract/termination_dashboard.html', {
+        'contract': contract,
+        'termination': termination,
+        'refund_payments': refund_payments,
+        'remaining_refund': remaining_refund,
+        'page_title': _("Terminated Contract Dashboard")
+    })
+
+@login_required
+def process_refund(request, pk):
+    """Process a refund payment to the customer."""
+    company = get_user_company(request.user)
+    contract = get_object_or_404(Contract, pk=pk, company=company, status=Contract.STATUS_TERMINATED)
+    termination = get_object_or_404(TerminateContract, contract=contract)
+    
+    if request.method == 'POST':
+        amount = Decimal(request.POST.get('amount', '0').strip() or 0)
+        payment_method = request.POST.get('payment_method', PaymentLog.PAYMENT_TYPE_CASH)
+        notes = request.POST.get('notes', '')
+        
+        if amount > 0:
+            TerminateContractPayment.objects.create(
+                termination=termination,
+                amount=amount,
+                payment_type=payment_method,
+                notes=notes,
+                payment_date=timezone.now().date()
+            )
+            messages.success(request, _("Refund payment recorded successfully!"))
+        else:
+            messages.error(request, _("Amount must be greater than 0."))
+            
+    return redirect('contract:termination_dashboard', pk=contract.pk)
 
 @login_required
 def terminated_contracts_list(request):

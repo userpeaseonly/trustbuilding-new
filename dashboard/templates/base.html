@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
     
     <title>{% block title %}{% trans "Dashboard" %}{% endblock %} - Imaan</title>
     
@@ -107,6 +108,14 @@
     <script src="{% static 'js/htmx.min.js' %}" defer></script>
     <!-- HTMX preload extension: starts fetching on mouseenter so clicks feel instant -->
     <script src="{% static 'js/htmx-preload.min.js' %}" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.htmx) {
+                htmx.config.globalViewTransitions = true;
+            }
+        });
+    </script>
+
 
     {% block extra_head %}{% endblock %}
 </head>

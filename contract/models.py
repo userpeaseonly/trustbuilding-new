@@ -54,27 +54,16 @@ class Contract(models.Model):
 
     def terminate(self, reason="", fine_amount=0):
         """
-        Terminate contract, clone apartment to archive contract history (is_real=False),
-        and reset real apartment status to AVAILABLE.
+        Terminate contract and reset real apartment status to AVAILABLE.
         """
-        from copy import deepcopy
         if self.status == self.STATUS_ACTIVE:
-            real_apt = self.apartment
-            # 1. Deepcopy apartment as fake archived apartment
-            cloned_apt = deepcopy(real_apt)
-            cloned_apt.pk = None
-            cloned_apt.id = None
-            cloned_apt.is_real = False
-            cloned_apt.save()
-
-            # 2. Re-link contract to cloned apartment
-            self.apartment = cloned_apt
             self.status = self.STATUS_TERMINATED
-            self.save(update_fields=['apartment', 'status', 'updated_at'])
+            self.save(update_fields=['status', 'updated_at'])
 
-            # 3. Reset real apartment to AVAILABLE
-            real_apt.status = 'AVAILABLE'
-            real_apt.save(update_fields=['status', 'updated_at'])
+            # Reset real apartment to AVAILABLE
+            if self.apartment:
+                self.apartment.status = 'AVAILABLE'
+                self.apartment.save(update_fields=['status', 'updated_at'])
 
 
 class PaymentLog(models.Model):
@@ -374,3 +363,5 @@ class ContractTemplate(models.Model):
             # Unset other defaults for this company
             ContractTemplate.objects.filter(company=self.company, is_default=True).update(is_default=False)
         super().save(*args, **kwargs)
+
+
