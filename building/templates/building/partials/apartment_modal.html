@@ -2,30 +2,30 @@
 <div id="apartment-modal-{{ apt.pk }}" class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4" aria-labelledby="modal-title" role="dialog" aria-modal="true" x-data="{ open: true }" x-show="open">
     
     <!-- Backdrop -->
-    <div class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm transition-opacity" 
+    <div class="fixed inset-0 bg-slate-50/80 backdrop-blur-sm transition-opacity" 
          aria-hidden="true" 
          @click="open = false; setTimeout(() => $el.closest('#apartment-modal-{{ apt.pk }}').remove(), 200)"
          onclick="document.getElementById('apartment-modal-{{ apt.pk }}')?.remove()"></div>
 
     <!-- Modal Panel -->
-    <div class="relative bg-gray-800 rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all max-w-lg w-full border border-gray-700 z-10 p-6 space-y-6">
+    <div class="relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all max-w-lg w-full border border-slate-200 z-10 p-6 space-y-6">
         
         {% if is_sold or apt.status == 'SOLD' %}
         <!-- READ ONLY VIEW FOR SOLD APARTMENT -->
         <div class="space-y-6">
-            <div class="flex justify-between items-center border-b border-gray-700 pb-4">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-4">
                 <div>
                     <div class="flex items-center gap-2">
-                        <h3 class="text-xl font-bold text-white" id="modal-title">
+                        <h3 class="text-xl font-bold text-slate-900" id="modal-title">
                             {% trans "Apartment" %} № {{ apt.apartment_number }}
                         </h3>
                         <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-900/60 text-rose-300 border border-rose-700">
                             🔒 {% trans "SOLD (Read Only)" %}
                         </span>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1">{{ apt.building.name }} | {% trans "Entrance" %} {{ apt.entrance_number }}, {% trans "Floor" %} {{ apt.floor_number }}</p>
+                    <p class="text-xs text-slate-500 mt-1">{{ apt.building.name }} | {% trans "Entrance" %} {{ apt.entrance_number }}, {% trans "Floor" %} {{ apt.floor_number }}</p>
                 </div>
-                <button type="button" class="text-gray-400 hover:text-white transition" 
+                <button type="button" class="text-slate-500 hover:text-slate-900 transition" 
                         @click="open = false; setTimeout(() => $el.closest('#apartment-modal-{{ apt.pk }}').remove(), 200)"
                         onclick="document.getElementById('apartment-modal-{{ apt.pk }}')?.remove()">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,48 +44,48 @@
             </div>
 
             <!-- Apartment Specs Display -->
-            <div class="grid grid-cols-2 gap-4 bg-gray-900/40 p-4 rounded-xl border border-gray-700/60 text-xs">
+            <div class="grid grid-cols-2 gap-4 bg-slate-50/40 p-4 rounded-xl border border-slate-200/60 text-xs">
                 <div>
-                    <span class="block text-gray-500 font-semibold uppercase text-[10px]">{% trans "Living Rooms" %}</span>
-                    <span class="text-white font-bold text-sm mt-0.5 block">{{ apt.living_room_count }} {% trans "Rooms" %}</span>
+                    <span class="block text-slate-400 font-semibold uppercase text-[10px]">{% trans "Living Rooms" %}</span>
+                    <span class="text-slate-900 font-bold text-sm mt-0.5 block">{{ apt.living_room_count }} {% trans "Rooms" %}</span>
                 </div>
                 <div>
-                    <span class="block text-gray-500 font-semibold uppercase text-[10px]">{% trans "Total Area" %}</span>
-                    <span class="text-white font-bold text-sm mt-0.5 block">{{ apt.total_area }} m²</span>
+                    <span class="block text-slate-400 font-semibold uppercase text-[10px]">{% trans "Total Area" %}</span>
+                    <span class="text-slate-900 font-bold text-sm mt-0.5 block">{{ apt.total_area }} m²</span>
                 </div>
                 <div>
-                    <span class="block text-gray-500 font-semibold uppercase text-[10px]">{% trans "Living Area" %}</span>
-                    <span class="text-gray-300 font-medium mt-0.5 block">{{ apt.living_area }} m²</span>
+                    <span class="block text-slate-400 font-semibold uppercase text-[10px]">{% trans "Living Area" %}</span>
+                    <span class="text-slate-700 font-medium mt-0.5 block">{{ apt.living_area }} m²</span>
                 </div>
                 <div>
-                    <span class="block text-gray-500 font-semibold uppercase text-[10px]">{% trans "Balcony Area" %}</span>
-                    <span class="text-gray-300 font-medium mt-0.5 block">{{ apt.balcony_area }} m²</span>
+                    <span class="block text-slate-400 font-semibold uppercase text-[10px]">{% trans "Balcony Area" %}</span>
+                    <span class="text-slate-700 font-medium mt-0.5 block">{{ apt.balcony_area }} m²</span>
                 </div>
             </div>
 
             <!-- Active Contract Card -->
             {% if active_contract %}
-            <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-700 space-y-3">
-                <div class="flex items-center justify-between border-b border-gray-700/60 pb-2">
+            <div class="bg-slate-50/60 p-4 rounded-xl border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-200/60 pb-2">
                     <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">{% trans "Linked Contract Details" %}</span>
-                    <span class="text-xs font-semibold text-white">#{{ active_contract.id }}</span>
+                    <span class="text-xs font-semibold text-slate-900">#{{ active_contract.id }}</span>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 text-xs">
                     <div>
-                        <span class="block text-gray-500 text-[10px]">{% trans "Customer" %}</span>
-                        <span class="text-white font-semibold block truncate">{{ active_contract.customer.full_name|default:active_contract.customer.phone_number }}</span>
-                        <span class="text-[10px] text-gray-400 font-mono">{{ active_contract.customer.phone_number }}</span>
+                        <span class="block text-slate-400 text-[10px]">{% trans "Customer" %}</span>
+                        <span class="text-slate-900 font-semibold block truncate">{{ active_contract.customer.full_name|default:active_contract.customer.phone_number }}</span>
+                        <span class="text-[10px] text-slate-500 font-mono">{{ active_contract.customer.phone_number }}</span>
                     </div>
                     <div>
-                        <span class="block text-gray-500 text-[10px]">{% trans "Contract Date" %}</span>
-                        <span class="text-gray-200 font-medium block mt-0.5">{{ active_contract.contract_date|date:"d M Y" }}</span>
+                        <span class="block text-slate-400 text-[10px]">{% trans "Contract Date" %}</span>
+                        <span class="text-slate-800 font-medium block mt-0.5">{{ active_contract.contract_date|date:"d M Y" }}</span>
                     </div>
                 </div>
 
-                <div class="pt-2 border-t border-gray-700/60 flex items-center justify-between">
-                    <span class="text-xs text-gray-400">{% trans "Total Amount:" %} <strong class="text-white">{{ active_contract.total_amount|uzs }}</strong></span>
-                    <a href="{% url 'contract:detail' pk=active_contract.pk %}" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium transition shadow-xs">
+                <div class="pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                    <span class="text-xs text-slate-500">{% trans "Total Amount:" %} <strong class="text-slate-900">{{ active_contract.total_amount|uzs }}</strong></span>
+                    <a href="{% url 'contract:detail' pk=active_contract.pk %}" class="px-3 py-1.5 bg-gradient-to-b from-indigo-500 to-indigo-600 hover:from-indigo-400 hover:to-indigo-500 text-slate-900 shadow-[inset_0px_1px_0px_rgba(255,255,255,0.2),0px_2px_4px_rgba(0,0,0,0.4)] border border-indigo-700 rounded-lg text-xs font-medium transition-all">
                         {% trans "View Schedule & Contract" %} &rarr;
                     </a>
                 </div>
@@ -93,17 +93,17 @@
             {% endif %}
 
             {% if apt.plan_image %}
-            <div class="border-t border-gray-700 pt-3">
-                <span class="block text-xs font-semibold text-gray-400 uppercase mb-2">{% trans "Blueprint Image" %}</span>
-                <img src="{{ apt.plan_image.url }}" alt="Plan" class="h-28 rounded-lg border border-gray-600 object-cover">
+            <div class="border-t border-slate-200 pt-3">
+                <span class="block text-xs font-semibold text-slate-500 uppercase mb-2">{% trans "Blueprint Image" %}</span>
+                <img src="{{ apt.plan_image.url }}" alt="Plan" class="h-28 rounded-lg border border-slate-300 object-cover">
             </div>
             {% endif %}
 
-            <div class="pt-4 flex justify-end border-t border-gray-700">
+            <div class="pt-4 flex justify-end border-t border-slate-200">
                 <button type="button" 
                         @click="open = false; setTimeout(() => $el.closest('#apartment-modal-{{ apt.pk }}').remove(), 200)"
                         onclick="document.getElementById('apartment-modal-{{ apt.pk }}')?.remove()" 
-                        class="px-5 py-2 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 rounded-lg transition">
+                        class="px-5 py-2 text-sm font-medium text-slate-900 bg-slate-100 hover:bg-gray-600 rounded-lg transition">
                     {% trans "Close" %}
                 </button>
             </div>
@@ -114,14 +114,14 @@
         <form hx-post="{% url 'building:apartment_update' pk=apt.pk %}" hx-encoding="multipart/form-data" hx-target="#apartment-modal-{{ apt.pk }}" hx-swap="outerHTML" class="space-y-4">
             {% csrf_token %}
             
-            <div class="flex justify-between items-center border-b border-gray-700 pb-4">
+            <div class="flex justify-between items-center border-b border-slate-200 pb-4">
                 <div>
-                    <h3 class="text-xl font-bold text-white" id="modal-title">
+                    <h3 class="text-xl font-bold text-slate-900" id="modal-title">
                         {% trans "Edit Apartment" %} № {{ apt.apartment_number }}
                     </h3>
-                    <p class="text-xs text-gray-400 mt-0.5">{{ apt.building.name }} | {% trans "Entrance" %} {{ apt.entrance_number }}, {% trans "Floor" %} {{ apt.floor_number }}</p>
+                    <p class="text-xs text-slate-500 mt-0.5">{{ apt.building.name }} | {% trans "Entrance" %} {{ apt.entrance_number }}, {% trans "Floor" %} {{ apt.floor_number }}</p>
                 </div>
-                <button type="button" class="text-gray-400 hover:text-white transition" 
+                <button type="button" class="text-slate-500 hover:text-slate-900 transition" 
                         @click="open = false; setTimeout(() => $el.closest('#apartment-modal-{{ apt.pk }}').remove(), 200)"
                         onclick="document.getElementById('apartment-modal-{{ apt.pk }}')?.remove()">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -133,56 +133,56 @@
             <div class="space-y-4 pt-2">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Status" %}</label>
-                        <div class="[&>select]:w-full [&>select]:px-3 [&>select]:py-2 [&>select]:bg-gray-700 [&>select]:border [&>select]:border-gray-600 [&>select]:rounded-lg [&>select]:text-white [&>select]:text-sm">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Status" %}</label>
+                        <div class="[&>select]:w-full [&>select]:px-3 [&>select]:py-2.5 [&>select]:bg-white [&>select]:border [&>select]:border-slate-200 [&>select]:rounded-lg [&>select]:text-slate-900 [&>select]:text-sm [&>select]:shadow-sm focus:[&>select]:border-indigo-500 focus:[&>select]:ring-1 focus:[&>select]:ring-indigo-500 [&>select]:transition-all">
                             {{ form.status }}
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Rooms" %}</label>
-                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2 [&>input]:bg-gray-700 [&>input]:border [&>input]:border-gray-600 [&>input]:rounded-lg [&>input]:text-white [&>input]:text-sm">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Rooms" %}</label>
+                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2.5 [&>input]:bg-white [&>input]:border [&>input]:border-slate-200 [&>input]:rounded-lg [&>input]:text-slate-900 [&>input]:text-sm [&>input]:shadow-sm focus:[&>input]:border-indigo-500 focus:[&>input]:ring-1 focus:[&>input]:ring-indigo-500 [&>input]:transition-all">
                             {{ form.living_room_count }}
                         </div>
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-3 gap-3 border-t border-gray-700 pt-4">
+                <div class="grid grid-cols-3 gap-3 border-t border-slate-200 pt-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Total Area (m²)" %}</label>
-                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2 [&>input]:bg-gray-700 [&>input]:border [&>input]:border-gray-600 [&>input]:rounded-lg [&>input]:text-white [&>input]:text-sm">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Total Area (m²)" %}</label>
+                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2.5 [&>input]:bg-white [&>input]:border [&>input]:border-slate-200 [&>input]:rounded-lg [&>input]:text-slate-900 [&>input]:text-sm [&>input]:shadow-sm focus:[&>input]:border-indigo-500 focus:[&>input]:ring-1 focus:[&>input]:ring-indigo-500 [&>input]:transition-all">
                             {{ form.total_area }}
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Living Area" %}</label>
-                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2 [&>input]:bg-gray-700 [&>input]:border [&>input]:border-gray-600 [&>input]:rounded-lg [&>input]:text-white [&>input]:text-sm">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Living Area" %}</label>
+                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2.5 [&>input]:bg-white [&>input]:border [&>input]:border-slate-200 [&>input]:rounded-lg [&>input]:text-slate-900 [&>input]:text-sm [&>input]:shadow-sm focus:[&>input]:border-indigo-500 focus:[&>input]:ring-1 focus:[&>input]:ring-indigo-500 [&>input]:transition-all">
                             {{ form.living_area }}
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Balcony Area" %}</label>
-                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2 [&>input]:bg-gray-700 [&>input]:border [&>input]:border-gray-600 [&>input]:rounded-lg [&>input]:text-white [&>input]:text-sm">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Balcony Area" %}</label>
+                        <div class="[&>input]:w-full [&>input]:px-3 [&>input]:py-2.5 [&>input]:bg-white [&>input]:border [&>input]:border-slate-200 [&>input]:rounded-lg [&>input]:text-slate-900 [&>input]:text-sm [&>input]:shadow-sm focus:[&>input]:border-indigo-500 focus:[&>input]:ring-1 focus:[&>input]:ring-indigo-500 [&>input]:transition-all">
                             {{ form.balcony_area }}
                         </div>
                     </div>
                 </div>
                 
-                <div class="border-t border-gray-700 pt-4">
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Blueprint Image" %}</label>
+                <div class="border-t border-slate-200 pt-4">
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Blueprint Image" %}</label>
                     {% if apt.plan_image %}
                         <div class="mb-2">
-                            <img src="{{ apt.plan_image.url }}" alt="Plan" class="h-24 rounded-lg border border-gray-600 object-cover">
+                            <img src="{{ apt.plan_image.url }}" alt="Plan" class="h-24 rounded-lg border border-slate-300 object-cover">
                         </div>
                     {% endif %}
-                    <div class="[&>input]:block [&>input]:w-full [&>input]:text-xs [&>input]:text-gray-400 [&>input]:file:mr-4 [&>input]:file:py-2 [&>input]:file:px-4 [&>input]:file:rounded-lg [&>input]:file:border-0 [&>input]:file:text-xs [&>input]:file:font-semibold [&>input]:file:bg-indigo-600 [&>input]:file:text-white hover:[&>input]:file:bg-indigo-700">
+                    <div class="[&>input]:block [&>input]:w-full [&>input]:text-xs [&>input]:text-slate-500 [&>input]:file:mr-4 [&>input]:file:py-2 [&>input]:file:px-4 [&>input]:file:rounded-lg [&>input]:file:border [&>input]:file:border-indigo-100 [&>input]:file:text-xs [&>input]:file:font-semibold [&>input]:file:bg-indigo-50 [&>input]:file:text-indigo-700 hover:[&>input]:file:bg-indigo-100 [&>input]:file:transition-colors [&>input]:file:shadow-sm">
                         {{ form.plan_image }}
                     </div>
                 </div>
             </div>
             
-            <div class="pt-4 flex items-center justify-between border-t border-gray-700 mt-6">
+            <div class="pt-4 flex items-center justify-between border-t border-slate-200 mt-6">
                 {% if apt.status == 'AVAILABLE' %}
-                <a href="{% url 'contract:create' %}?apartment={{ apt.pk }}" class="px-3 py-2 text-xs font-semibold text-emerald-300 bg-emerald-900/50 hover:bg-emerald-800 border border-emerald-700 rounded-lg transition inline-flex items-center gap-1.5">
+                <a href="{% url 'contract:create' %}?apartment={{ apt.pk }}" class="px-3 py-2 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 shadow-sm rounded-lg transition inline-flex items-center gap-1.5">
                     📄 {% trans "Create Contract for Apt" %} {{ apt.apartment_number }}
                 </a>
                 {% else %}
@@ -193,7 +193,7 @@
                     <button type="button" 
                             @click="open = false; setTimeout(() => $el.closest('#apartment-modal-{{ apt.pk }}').remove(), 200)"
                             onclick="document.getElementById('apartment-modal-{{ apt.pk }}')?.remove()" 
-                            class="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition">
+                            class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition">
                         {% trans "Cancel" %}
                     </button>
                     <button type="submit" class="px-5 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition shadow-xs">

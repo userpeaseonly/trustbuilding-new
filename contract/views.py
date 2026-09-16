@@ -33,7 +33,6 @@ def contract_list(request):
     
     return render(request, 'contract/list.html', {
         'contracts': contracts,
-        'page_title': _('Contracts'),
     })
 
 
@@ -81,7 +80,6 @@ def contract_detail(request, pk):
         'next_due_record': next_due_record,
         'next_due_amount': next_due_amount,
         'available_templates': available_templates,
-        'page_title': f"{_('Contract')} #{contract.id}",
         'payment_form': PaymentLogForm()
     })
 
@@ -143,7 +141,7 @@ def contract_create(request):
     return render(request, 'contract/form.html', {
         'form': form,
         'initial_apartment': initial_apartment,
-        'page_title': _('Create Contract')
+        
     })
 
 
@@ -491,8 +489,7 @@ def termination_dashboard(request, pk):
         'contract': contract,
         'termination': termination,
         'refund_payments': refund_payments,
-        'remaining_refund': remaining_refund,
-        'page_title': _("Terminated Contract Dashboard")
+        'remaining_refund': remaining_refund
     })
 
 @login_required
@@ -530,8 +527,7 @@ def terminated_contracts_list(request):
     ).order_by('-created_at')
     
     return render(request, 'contract/terminated_list.html', {
-        'terminations': terminations,
-        'page_title': _("Terminated Contracts")
+        'terminations': terminations
     })
 
 
@@ -560,7 +556,6 @@ def staff_quick_payment(request):
         'contracts': contracts,
         'query': query,
         'payment_form': PaymentLogForm(),
-        'page_title': _("Staff Payment Terminal")
     })
 
 

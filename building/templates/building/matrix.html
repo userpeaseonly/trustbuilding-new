@@ -4,73 +4,86 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-700">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
         <div>
             <div class="flex items-center gap-2">
-                <a href="{% url 'building:detail' building.pk %}" class="text-gray-400 hover:text-gray-200 transition">
+                <a href="{% url 'building:detail' building.pk %}" class="text-slate-500 hover:text-slate-800 transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>
-                <h1 class="text-2xl font-bold text-white">{{ building.name }} - {% trans "Apartment Visualizer Matrix" %}</h1>
+                <h1 class="text-2xl font-bold text-slate-900">{{ building.name }} - {% trans "Apartment Visualizer Matrix" %}</h1>
             </div>
-            <p class="text-sm text-gray-400 mt-1">{{ building.address }} | Block: {{ building.block_number }} | {{ building.floor_count }} Floors | {{ building.entrance_count }} Entrances</p>
+            <p class="text-sm text-slate-500 mt-1">{{ building.address }} | Block: {{ building.block_number }} | {{ building.floor_count }} Floors | {{ building.entrance_count }} Entrances</p>
         </div>
         
         <!-- Legend & Stats -->
         <div class="flex items-center gap-4 text-sm font-medium">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-900/50 text-emerald-200 border border-emerald-800">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> {% trans "Available" %}: {{ available_count }}
             </span>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-900/50 text-amber-200 border border-amber-800">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 shadow-sm">
                 <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> {% trans "Reserved" %}: {{ reserved_count }}
             </span>
-            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-900/50 text-rose-200 border border-rose-800">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 shadow-sm">
                 <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> {% trans "Sold" %}: {{ sold_count }}
             </span>
         </div>
     </div>
 
     <!-- Entrance Tabs & Matrix Grid -->
-    <div class="bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-700 space-y-6">
+    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-6">
         {% for entrance_num, floors in matrix.items %}
-        <div class="border border-gray-700 rounded-xl overflow-hidden">
-            <div class="bg-indigo-900 text-white px-5 py-3 font-semibold flex items-center justify-between">
+        <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div class="bg-slate-50 border-b border-slate-200 text-slate-800 px-4 py-2.5 font-bold flex items-center justify-between">
                 <span>Entrance {{ entrance_num }}</span>
-                <span class="text-xs bg-indigo-800 text-indigo-200 px-2.5 py-1 rounded-full font-normal">Floors 1 - {{ building.floor_count }}</span>
+                <span class="text-[11px] bg-white text-slate-500 border border-slate-200 px-2.5 py-1 rounded-full font-semibold shadow-sm">Floors 1 - {{ building.floor_count }}</span>
             </div>
             
-            <div class="p-6 overflow-x-auto">
+            <div class="p-4 overflow-x-auto">
                 <div class="flex flex-col gap-3 min-w-[600px]">
                     {% for floor_num, apartments in floors.items %}
-                    <div class="flex items-center gap-4 border-b border-gray-700 pb-3 last:border-0 last:pb-0">
-                        <div class="w-20 text-xs font-bold uppercase tracking-wider text-gray-400 text-right pr-2">
+                    <div class="flex items-center gap-4 border-b border-slate-200 py-2 last:border-0 last:pb-0 first:pt-2">
+                        <div class="w-16 text-[10px] font-bold uppercase tracking-wider text-slate-400 text-right pr-4">
                             Floor {{ floor_num }}
                         </div>
                         <div class="flex-1 flex flex-wrap gap-3">
                             {% for apt in apartments %}
-                            <div class="group relative p-3 rounded-lg border text-center transition-all duration-200 w-32 cursor-pointer shadow-xs hover:shadow-md
-                                {% if apt.status == 'AVAILABLE' %}bg-emerald-900/50 border-emerald-800 hover:border-emerald-500 text-emerald-100
-                                {% elif apt.status == 'RESERVED' %}bg-amber-900/50 border-amber-800 hover:border-amber-500 text-amber-100
-                                {% else %}bg-rose-900/50 border-rose-800 hover:border-rose-500 text-rose-100{% endif %}"
+                            <div class="group relative p-2.5 bg-white border border-slate-200 rounded-xl transition-all duration-200 w-36 cursor-pointer shadow-sm hover:shadow-md overflow-hidden text-left
+                                {% if apt.status == 'AVAILABLE' %}hover:border-emerald-400
+                                {% elif apt.status == 'RESERVED' %}hover:border-amber-400
+                                {% else %}hover:border-rose-400{% endif %}"
                                 hx-get="{% url 'building:apartment_update' pk=apt.pk %}"
                                 hx-target="body"
                                 hx-swap="beforeend">
                                 
-                                <div class="text-sm font-bold">Apt {{ apt.apartment_number }}</div>
-                                <div class="text-xs text-gray-400 font-medium mt-0.5">{{ apt.total_area }} m² | {{ apt.living_room_count }} Rm</div>
+                                <div class="flex justify-between items-start mt-1">
+                                    <div class="text-[13px] font-extrabold text-slate-900">{% trans "Apt" %} {{ apt.apartment_number }}</div>
+                                    <div class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded
+                                                {% if apt.status == 'AVAILABLE' %}bg-emerald-50 text-emerald-700
+                                                {% elif apt.status == 'RESERVED' %}bg-amber-50 text-amber-700
+                                                {% else %}bg-rose-50 text-rose-700{% endif %}">
+                                        {{ apt.get_status_display|truncatechars:5 }}
+                                    </div>
+                                </div>
                                 
-                                <div class="mt-2">
-                                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full
-                                        {% if apt.status == 'AVAILABLE' %}bg-emerald-800/50 text-emerald-200
-                                        {% elif apt.status == 'RESERVED' %}bg-amber-800/50 text-amber-200
-                                        {% else %}bg-rose-800/50 text-rose-200{% endif %}">
-                                        {{ apt.get_status_display }}
-                                    </span>
+                                <div class="mt-2.5 space-y-1.5">
+                                    <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+                                        <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                                        </svg>
+                                        {{ apt.total_area }} m²
+                                    </div>
+                                    <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
+                                        <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
+                                        </svg>
+                                        {{ apt.living_room_count }} Rooms
+                                    </div>
                                 </div>
 
                                 <!-- Action Buttons on Hover -->
                                 {% if apt.status == 'AVAILABLE' %}
-                                <div class="absolute inset-0 bg-emerald-900/90 rounded-lg flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity p-1">
-                                    <a href="{% url 'contract:create' %}?apartment={{ apt.pk }}" onclick="event.stopPropagation()" class="text-[11px] font-bold bg-white text-emerald-900 px-2 py-1 rounded shadow hover:bg-emerald-50 transition">
+                                <div class="absolute inset-0 bg-white/90 backdrop-blur-[2px] flex items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                                    <a href="{% url 'contract:create' %}?apartment={{ apt.pk }}" onclick="event.stopPropagation()" class="flex-1 text-center text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 py-1.5 rounded-md shadow-sm transition-colors">
                                         + Contract
                                     </a>
                                 </div>

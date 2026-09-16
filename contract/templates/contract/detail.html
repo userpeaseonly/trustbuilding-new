@@ -2,21 +2,21 @@
 {% load i18n dashboard_tags %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-4">
     <!-- Header / Navigation -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-700">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-5 rounded-xl shadow-sm border border-slate-200">
         <div>
-            <div class="flex items-center gap-2 text-xs text-gray-400 mb-1">
-                <a href="{% url 'contract:list' %}" class="hover:text-white transition">{% trans "Contracts" %}</a>
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
+                <a href="{% url 'contract:list' %}" class="hover:text-slate-900 transition">{% trans "Contracts" %}</a>
                 <span>/</span>
-                <span class="text-gray-200">{% trans "Contract" %} #{{ contract.id }}</span>
+                <span class="text-slate-800">{% trans "Contract" %} #{{ contract.id }}</span>
             </div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+            <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
                 {% trans "Real Estate Contract" %} #{{ contract.id }}
                 <span class="text-xs font-semibold px-2.5 py-1 rounded-full border 
-                    {% if contract.status == 'ACTIVE' %}bg-emerald-900/50 text-emerald-300 border-emerald-800
-                    {% elif contract.status == 'TERMINATED' %}bg-red-900/50 text-red-300 border-red-800
-                    {% else %}bg-blue-900/50 text-blue-300 border-blue-800{% endif %}">
+                    {% if contract.status == 'ACTIVE' %}bg-emerald-100 text-emerald-800 border-emerald-200
+                    {% elif contract.status == 'TERMINATED' %}bg-rose-100 text-rose-800 border-rose-200
+                    {% else %}bg-indigo-100 text-indigo-800 border-indigo-200{% endif %}">
                     {{ contract.get_status_display }}
                 </span>
             </h1>
@@ -25,42 +25,42 @@
         <!-- Action Buttons -->
         <div class="flex flex-wrap items-center gap-2">
 
-            <a href="{% url 'contract:download_payments' pk=contract.pk %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-medium transition shadow-xs flex items-center gap-1.5">
+            <a href="{% url 'contract:download_payments' pk=contract.pk %}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-sm rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
                 📊 {% trans "Download Payments (Excel)" %}
             </a>
             {% if available_templates.count > 1 %}
             <div x-data="{ open: false }" class="relative">
-                <button @click="open = !open" @click.away="open = false" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium transition shadow-xs flex items-center gap-1.5">
+                <button @click="open = !open" @click.away="open = false" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-sm rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
                     📥 {% trans "Download Contract" %}
                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
-                <div x-show="open" x-transition.opacity class="absolute z-10 mt-1 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 divide-y divide-gray-700" style="display: none;">
+                <div x-show="open" x-transition.opacity class="absolute z-10 mt-1 w-48 rounded-md shadow-lg bg-white border border-slate-200 divide-y divide-slate-100 shadow-sm" style="display: none;">
                     {% for tmpl in available_templates %}
-                    <a href="{% url 'contract:download_docx' pk=contract.pk %}?template_id={{ tmpl.id }}" class="block px-4 py-2 text-xs text-gray-300 hover:bg-gray-700 hover:text-white">
+                    <a href="{% url 'contract:download_docx' pk=contract.pk %}?template_id={{ tmpl.id }}" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-100 hover:text-slate-900">
                         📄 {{ tmpl.name }} {% if tmpl.is_default %}(Default){% endif %}
                     </a>
                     {% endfor %}
                 </div>
             </div>
             {% else %}
-            <a href="{% url 'contract:download_docx' pk=contract.pk %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium transition shadow-xs flex items-center gap-1.5">
+            <a href="{% url 'contract:download_docx' pk=contract.pk %}" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-sm rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
                 📥 {% trans "📥 Download .DOCX Contract" %}
             </a>
             {% endif %}
             
             {% if contract.status == 'TERMINATED' %}
-            <a href="{% url 'contract:termination_dashboard' pk=contract.pk %}" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-medium transition shadow-xs flex items-center gap-1.5">
+            <a href="{% url 'contract:termination_dashboard' pk=contract.pk %}" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white shadow-sm border-transparent rounded-lg text-xs font-medium transition shadow-xs flex items-center gap-1.5">
                 📊 {% trans "Refund Dashboard" %}
             </a>
             {% endif %}
             
             {% if contract.status == 'ACTIVE' %}
-            <button type="button" @click="$dispatch('open-payment-modal')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium transition shadow-xs flex items-center gap-1.5">
+            <button type="button" @click="$dispatch('open-payment-modal')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5">
                 💳 {% trans "Process Payment" %}
             </button>
             <form action="{% url 'contract:initiate_termination' pk=contract.pk %}" method="post" class="inline">
                 {% csrf_token %}
-                <button type="submit" class="px-4 py-2 bg-red-900/50 hover:bg-red-800/80 text-red-200 border border-red-700 rounded-lg text-xs font-medium transition cursor-pointer">
+                <button type="submit" class="px-4 py-2 bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 shadow-sm rounded-lg text-xs font-semibold transition cursor-pointer">
                     🚫 {% trans "Terminate Contract" %}
                 </button>
             </form>
@@ -69,89 +69,84 @@
     </div>
 
     <!-- Details Summary Cards Grid (Now Top 2 Columns) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
         <!-- Customer Card -->
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-gray-700 pb-3 flex items-center gap-2">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 shadow-sm space-y-4">
+            <h3 class="text-base font-bold text-slate-900 border-b border-slate-200 pb-3 flex items-center gap-2">
                 👤 {% trans "Customer Details" %}
             </h3>
             <div class="space-y-2 text-xs">
                 <div class="flex justify-between">
-                    <span class="text-gray-400">{% trans "Full Name" %}</span>
-                    <span class="text-white font-bold">{{ contract.customer.full_name|default:"N/A" }}</span>
+                    <span class="text-slate-500">{% trans "Full Name" %}</span>
+                    <span class="text-slate-900 font-bold">{{ contract.customer.full_name|default:"N/A" }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-gray-400">{% trans "Phone" %}</span>
-                    <span class="text-indigo-300 font-mono font-medium">{{ contract.customer.phone_number }}</span>
+                    <span class="text-slate-500">{% trans "Phone" %}</span>
+                    <span class="text-slate-500 font-semibold font-medium">{{ contract.customer.phone_number }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-gray-400">{% trans "PINFL / JSHSHR" %}</span>
-                    <span class="text-gray-200 font-mono">{{ contract.customer.passport_jshshr|default:"N/A" }}</span>
+                    <span class="text-slate-500">{% trans "PINFL / JSHSHR" %}</span>
+                    <span class="text-slate-800 font-semibold">{{ contract.customer.passport_jshshr|default:"N/A" }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-gray-400">{% trans "Passport Series" %}</span>
-                    <span class="text-gray-200 font-mono">{{ contract.customer.passport_series|default:"N/A" }}</span>
+                    <span class="text-slate-500">{% trans "Passport Series" %}</span>
+                    <span class="text-slate-800 font-semibold">{{ contract.customer.passport_series|default:"N/A" }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Financial Terms Box -->
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm space-y-4">
-            <h3 class="text-base font-bold text-white border-b border-gray-700 pb-3 flex items-center gap-2">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 shadow-sm space-y-4">
+            <h3 class="text-base font-bold text-slate-900 border-b border-slate-200 pb-3 flex items-center gap-2">
                 🏢 {% trans "Contract Terms" %}
             </h3>
             <div class="space-y-2.5 text-xs">
                 <div class="flex justify-between">
-                    <span class="text-gray-400">{% trans "Apartment" %}</span>
-                    <span class="text-indigo-400 font-medium">#{{ contract.apartment.apartment_number }} ({{ contract.apartment.building.name }})</span>
+                    <span class="text-slate-500">{% trans "Apartment" %}</span>
+                    <span class="text-slate-500 font-medium">#{{ contract.apartment.apartment_number }} ({{ contract.apartment.building.name }})</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-gray-400">{% trans "Total Amount" %}</span>
-                    <span class="text-white font-bold">{{ contract.total_amount|uzs }}</span>
+                    <span class="text-slate-500">{% trans "Total Amount" %}</span>
+                    <span class="text-slate-900 font-bold">{{ contract.total_amount|uzs }}</span>
                 </div>
-                <div class="flex justify-between border-t border-gray-700 pt-2">
-                    <span class="text-gray-400">{% trans "Down Payment" %}</span>
-                    <span class="text-emerald-400 font-medium">{{ contract.down_payment_amount|uzs }}</span>
+                <div class="flex justify-between border-t border-slate-200 pt-2">
+                    <span class="text-slate-500">{% trans "Down Payment" %}</span>
+                    <span class="text-slate-800 font-medium">{{ contract.down_payment_amount|uzs }}</span>
                 </div>
                 <div class="flex justify-between">
-                    <span class="text-gray-400">{% trans "Last Payment" %}</span>
-                    <span class="text-indigo-400 font-medium">{{ contract.last_payment_amount|uzs }}</span>
+                    <span class="text-slate-500">{% trans "Last Payment" %}</span>
+                    <span class="text-slate-500 font-medium">{{ contract.last_payment_amount|uzs }}</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Full Width: Financial Schedule & Logs -->
-    <div class="space-y-6">
+    <div class="space-y-4">
             <!-- Payment Schedule -->
-            <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-sm overflow-hidden">
-                <!-- Header -->
-                <div class="p-5 border-b border-gray-700">
-                    <h3 class="text-base font-bold text-white">{% trans "Installment Schedule Matrix" %}</h3>
-                    <p class="text-xs text-gray-400 mt-0.5">{% trans "Monthly planned installments, payments, and payment receipts" %}</p>
-                </div>
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm shadow-sm overflow-hidden">
 
                 <!-- Global Summary Bar -->
-                <div class="grid grid-cols-3 divide-x divide-gray-700 border-b border-gray-700 text-center">
+                <div class="grid grid-cols-3 divide-x divide-slate-200 border-b border-slate-200 text-center">
                     <div class="py-4 px-4">
-                        <div class="text-[10px] uppercase text-gray-400 font-semibold tracking-wide mb-1">{% trans "Total Paid" %}</div>
-                        <div class="text-emerald-400 font-bold text-sm font-mono">{{ total_paid|formatted_amount }}</div>
+                        <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wide mb-1">{% trans "Total Paid" %}</div>
+                        <div class="text-slate-800 font-bold text-sm font-semibold">{{ total_paid|formatted_amount }}</div>
                     </div>
                     <div class="py-4 px-4">
-                        <div class="text-[10px] uppercase text-gray-400 font-semibold tracking-wide mb-1">{% trans "Total Remaining" %}</div>
-                        <div class="{% if total_remaining_debt > 0 %}text-amber-400{% else %}text-gray-500{% endif %} font-bold text-sm font-mono">{{ total_remaining_debt|formatted_amount }}</div>
+                        <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wide mb-1">{% trans "Total Remaining" %}</div>
+                        <div class="{% if total_remaining_debt > 0 %}text-amber-600{% else %}text-slate-400{% endif %} font-bold text-sm font-semibold">{{ total_remaining_debt|formatted_amount }}</div>
                     </div>
                     <div class="py-4 px-4">
-                        <div class="text-[10px] uppercase text-gray-400 font-semibold tracking-wide mb-1">{% trans "Total Excess" %}</div>
-                        <div class="{% if total_excess > 0 %}text-purple-400{% else %}text-gray-500{% endif %} font-bold text-sm font-mono">{% if total_excess > 0 %}+{% endif %}{{ total_excess|formatted_amount }}</div>
+                        <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wide mb-1">{% trans "Total Excess" %}</div>
+                        <div class="{% if total_excess > 0 %}text-indigo-600{% else %}text-slate-400{% endif %} font-bold text-sm font-semibold">{% if total_excess > 0 %}+{% endif %}{{ total_excess|formatted_amount }}</div>
                     </div>
                 </div>
 
                 <!-- Schedule Table -->
-                <div class="overflow-x-auto scroll-fade" style="content-visibility: auto; contain-intrinsic-size: 500px;">
+                <div class="overflow-x-auto " style="content-visibility: auto; contain-intrinsic-size: 500px;">
                     <table class="w-full text-left border-collapse text-xs whitespace-nowrap">
                         <thead>
-                            <tr class="bg-gray-900/70 border-b border-gray-700 text-gray-400 uppercase font-semibold text-[11px]">
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-semibold text-[11px]">
                                 <th class="py-3 px-3">#</th>
                                 <th class="py-3 px-3">{% trans "Due Date" %}</th>
                                 <th class="py-3 px-3">{% trans "Planned Amount" %}</th>
@@ -161,58 +156,58 @@
                                 <th class="py-3 px-3">{% trans "Status" %}</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-700" x-data="{ expandedRows: [] }">
+                        <tbody class="divide-y divide-slate-200" x-data="{ expandedRows: [] }">
                             {% for record in records %}
                             <!-- Schedule Row -->
-                            <tr class="hover:bg-gray-700/30 transition cursor-pointer" @click="expandedRows.includes('{{ record.id }}') ? expandedRows = expandedRows.filter(id => id !== '{{ record.id }}') : expandedRows.push('{{ record.id }}')">
-                                <td class="py-3.5 px-3 font-bold text-white flex items-center gap-1">
-                                    <svg class="w-3 h-3 text-gray-500 transition-transform duration-200" :class="expandedRows.includes('{{ record.id }}') ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            <tr class="hover:bg-slate-100/30 transition cursor-pointer" @click="expandedRows.includes('{{ record.id }}') ? expandedRows = expandedRows.filter(id => id !== '{{ record.id }}') : expandedRows.push('{{ record.id }}')">
+                                <td class="py-3.5 px-3 font-bold text-slate-900 flex items-center gap-1">
+                                    <svg class="w-3 h-3 text-slate-400 transition-transform duration-200" :class="expandedRows.includes('{{ record.id }}') ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                                     {{ record.month_number }}
                                 </td>
-                                <td class="py-3.5 px-3 font-mono text-gray-300">{{ record.due_date|date:"d/m/Y" }}</td>
-                                <td class="py-3.5 px-3 font-mono font-medium text-white">{{ record.plan_amount|formatted_amount }}</td>
-                                <td class="py-3.5 px-3 font-mono text-emerald-400 font-semibold">
-                                    {% if record.paid_amount > 0 %}{{ record.paid_amount|formatted_amount }}{% else %}<span class="text-gray-500">0</span>{% endif %}
+                                <td class="py-3.5 px-3 font-semibold text-slate-700">{{ record.due_date|date:"d/m/Y" }}</td>
+                                <td class="py-3.5 px-3 font-semibold font-medium text-slate-900">{{ record.plan_amount|formatted_amount }}</td>
+                                <td class="py-3.5 px-3 font-semibold text-slate-800 font-semibold">
+                                    {% if record.paid_amount > 0 %}{{ record.paid_amount|formatted_amount }}{% else %}<span class="text-slate-400">0</span>{% endif %}
                                 </td>
-                                <td class="py-3.5 px-3 font-mono">
+                                <td class="py-3.5 px-3 font-semibold">
                                     {% if record.is_running_debt %}
-                                    <span class="text-amber-400 font-semibold">{{ record.running_balance_abs|formatted_amount }}</span>
+                                    <span class="text-slate-800 font-semibold">{{ record.running_balance_abs|formatted_amount }}</span>
                                     {% else %}
-                                    <span class="text-gray-500">0</span>
+                                    <span class="text-slate-400">0</span>
                                     {% endif %}
                                 </td>
-                                <td class="py-3.5 px-3 font-mono">
+                                <td class="py-3.5 px-3 font-semibold">
                                     {% if record.is_running_credit %}
-                                    <span class="text-purple-400 font-bold bg-purple-900/40 px-2 py-0.5 rounded border border-purple-800">+{{ record.running_balance_abs|formatted_amount }}</span>
+                                    <span class="text-indigo-700 font-semibold bg-indigo-50 px-2 py-0.5 rounded">+{{ record.running_balance_abs|formatted_amount }}</span>
                                     {% else %}
-                                    <span class="text-gray-500">0</span>
+                                    <span class="text-slate-400">0</span>
                                     {% endif %}
                                 </td>
                                 <td class="py-3.5 px-3">
                                     {% if record.status == 'PAID' %}
-                                    <span class="px-2 py-0.5 bg-emerald-900/40 text-emerald-300 border border-emerald-800 rounded text-[10px] font-bold">{% trans "Paid" %}</span>
+                                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border-emerald-200 rounded text-[10px] font-bold">{% trans "Paid" %}</span>
                                     {% elif record.status == 'PARTIAL' %}
-                                    <span class="px-2 py-0.5 bg-amber-900/40 text-amber-300 border border-amber-800 rounded text-[10px] font-bold">{% trans "Partially Paid" %}</span>
+                                    <span class="px-2 py-0.5 bg-amber-50 text-amber-700 border-amber-200 rounded text-[10px] font-bold">{% trans "Partially Paid" %}</span>
                                     {% elif record.status == 'OVERDUE' %}
-                                    <span class="px-2 py-0.5 bg-red-900/40 text-red-300 border border-red-800 rounded text-[10px] font-bold">{% trans "Overdue" %}</span>
+                                    <span class="px-2 py-0.5 bg-rose-50 text-rose-700 border-rose-200 rounded text-[10px] font-bold">{% trans "Overdue" %}</span>
                                     {% else %}
-                                    <span class="px-2 py-0.5 bg-gray-700 text-gray-300 border border-gray-600 rounded text-[10px]">{% trans "Pending" %}</span>
+                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-700 border border-slate-300 rounded text-[10px]">{% trans "Pending" %}</span>
                                     {% endif %}
                                 </td>
                             </tr>
 
                             <!-- Nested Payment Receipt Sub-Rows -->
                             {% for log in record.payment_logs.all %}
-                            <tr class="bg-gray-900/90 border-t border-gray-700/60 text-[11px]" 
+                            <tr class="bg-slate-50/90 border-t border-slate-200/60 text-[11px]" 
                                 x-show="expandedRows.includes('{{ record.id }}')" 
                                 style="display: none;">
-                                <td colspan="3" class="py-2 px-3 pl-6 text-gray-300 font-mono">
-                                    └─ 🧾 <a href="{% url 'contract:receipt' payment_id=log.pk %}" class="text-indigo-400 hover:text-indigo-300 font-bold underline">{% trans "Receipt" %} #{{ log.transaction_id|slice:"-6:" }}</a>
-                                    <span class="ml-2 text-gray-500">{{ log.date_paid|date:"d/m/Y H:i" }}</span>
+                                <td colspan="3" class="py-2 px-3 pl-6 text-slate-700 font-semibold">
+                                    └─ 🧾 <a href="{% url 'contract:receipt' payment_id=log.pk %}" class="text-slate-500 hover:text-slate-500 font-bold underline">{% trans "Receipt" %} #{{ log.transaction_id|slice:"-6:" }}</a>
+                                    <span class="ml-2 text-slate-400">{{ log.date_paid|date:"d/m/Y H:i" }}</span>
                                 </td>
-                                <td class="py-2 px-3 text-emerald-400 font-mono font-bold">{{ log.amount|formatted_amount }}</td>
-                                <td colspan="2" class="py-2 px-3 text-gray-300">
-                                    <span class="px-2 py-0.5 bg-gray-800 text-indigo-300 border border-gray-700 rounded font-semibold text-[10px]">{{ log.get_payment_type_display }}</span>
+                                <td class="py-2 px-3 text-slate-800 font-semibold font-bold">{{ log.amount|formatted_amount }}</td>
+                                <td colspan="2" class="py-2 px-3 text-slate-700">
+                                    <span class="px-2 py-0.5 bg-white text-slate-500 border border-slate-200 rounded font-semibold text-[10px]">{{ log.get_payment_type_display }}</span>
                                 </td>
                                 <td class="py-2 px-3 text-right">
                                     <a href="{% url 'contract:receipt' payment_id=log.pk %}" class="px-2 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[10px] font-medium transition inline-flex items-center gap-1">
@@ -229,34 +224,34 @@
             </div>
 
             <!-- Payment Logs Summary History -->
-            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm space-y-4">
-                <h3 class="text-base font-bold text-white border-b border-gray-700 pb-3">{% trans "Payment History Logs" %}</h3>
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-5 shadow-sm space-y-4">
+                <h3 class="text-base font-bold text-slate-900 border-b border-slate-200 pb-3">{% trans "Payment History Logs" %}</h3>
                 
                 <div class="space-y-3">
                     {% for log in payment_logs %}
-                    <div class="p-3 bg-gray-900/40 border border-gray-700 rounded-lg flex justify-between items-center text-xs">
+                    <div class="p-3 bg-slate-50/40 border border-slate-200 rounded-lg flex justify-between items-center text-xs">
                         <div>
-                            <div class="font-bold text-white text-sm">{{ log.amount|uzs }}</div>
-                            <div class="text-[11px] text-gray-400 mt-0.5">
-                                {{ log.date_paid|date:"d/m/Y H:i" }} | <span class="text-indigo-300">{{ log.get_payment_type_display }}</span>
+                            <div class="font-bold text-slate-900 text-sm">{{ log.amount|uzs }}</div>
+                            <div class="text-[11px] text-slate-500 mt-0.5">
+                                {{ log.date_paid|date:"d/m/Y H:i" }} | <span class="text-slate-500">{{ log.get_payment_type_display }}</span>
                             </div>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="font-mono text-[10px] text-gray-400 bg-gray-800 px-2 py-1 rounded border border-gray-700">{{ log.transaction_id }}</span>
+                            <span class="font-semibold text-[10px] text-slate-500 bg-white px-2 py-1 rounded border border-slate-200">{{ log.transaction_id }}</span>
                             <a href="{% url 'contract:receipt' payment_id=log.pk %}" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-[11px] font-medium transition">
                                 🖨️ {% trans "Receipt" %}
                             </a>
                         </div>
                     </div>
                     {% empty %}
-                    <div class="text-center py-6 bg-gray-900/40 border border-gray-700 border-dashed rounded-lg" x-data="{ isImportModalOpen: false }">
-                        <svg class="w-8 h-8 text-gray-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="text-center py-6 bg-slate-50/40 border border-slate-200 border-dashed rounded-lg" x-data="{ isImportModalOpen: false }">
+                        <svg class="w-8 h-8 text-slate-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p class="text-xs text-gray-400 italic mb-4">{% trans "No payments recorded yet." %}</p>
+                        <p class="text-xs text-slate-500 italic mb-4">{% trans "No payments recorded yet." %}</p>
                         
                         {% if contract.status == 'ACTIVE' %}
-                        <button @click="isImportModalOpen = true" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium transition shadow-xs inline-flex items-center gap-2">
+                        <button @click="isImportModalOpen = true" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-sm rounded-lg text-xs font-medium transition-all inline-flex items-center gap-2">
                             📥 {% trans "Import Payments (Excel)" %}
                         </button>
                         {% endif %}
@@ -266,33 +261,33 @@
                                 x-init="$watch('isImportModalOpen', val => val ? $el.showModal() : $el.close())"
                                 @close="isImportModalOpen = false"
                                 @click="if($event.target === $el) isImportModalOpen = false"
-                                class="bg-gray-800 rounded-2xl shadow-xl w-full max-w-md overflow-hidden ring-1 ring-gray-700 text-left backdrop:bg-black/60 backdrop:backdrop-blur-md m-auto p-0 text-white"
-                                style="display: none;"
+                                class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden ring-1 ring-slate-200 text-left backdrop:bg-slate-900/40 backdrop:backdrop-blur-md m-auto p-0 text-slate-900"
+                                
                                 x-cloak>
                             <div class="w-full">
-                                <div class="px-6 py-4 border-b border-gray-700 bg-gray-800 flex justify-between items-center">
-                                    <h3 class="text-sm font-bold text-white">{% trans "Import Payments" %}</h3>
-                                    <button @click="isImportModalOpen = false" class="text-gray-400 hover:text-white transition">
+                                <div class="px-6 py-4 border-b border-slate-200 bg-white flex justify-between items-center">
+                                    <h3 class="text-sm font-bold text-slate-900">{% trans "Import Payments" %}</h3>
+                                    <button @click="isImportModalOpen = false" class="text-slate-500 hover:text-slate-900 transition">
                                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                     </button>
                                 </div>
-                                <div class="p-6 space-y-6">
+                                <div class="p-5 space-y-4">
                                     
-                                    <div class="bg-indigo-900/30 border border-indigo-800 rounded-xl p-4 text-center">
-                                        <h4 class="text-xs font-semibold text-indigo-300 mb-1">{% trans "Step 1: Download Template" %}</h4>
-                                        <p class="text-[11px] text-gray-400 mb-3">{% trans "Download the pre-formatted Excel template and fill in the payment details." %}</p>
+                                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-center">
+                                        <h4 class="text-xs font-semibold text-slate-500 mb-1">{% trans "Step 1: Download Template" %}</h4>
+                                        <p class="text-[11px] text-slate-500 mb-3">{% trans "Download the pre-formatted Excel template and fill in the payment details." %}</p>
                                         <a href="{% url 'contract:download_import_template' %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition inline-flex items-center gap-1.5 w-full justify-center">
                                             📄 {% trans "Download Template" %}
                                         </a>
                                     </div>
                                     
-                                    <div class="bg-gray-900/50 border border-gray-700 rounded-xl p-4">
-                                        <h4 class="text-xs font-semibold text-gray-300 mb-1 text-center">{% trans "Step 2: Upload Data" %}</h4>
-                                        <p class="text-[11px] text-gray-400 mb-3 text-center">{% trans "Upload the filled Excel file." %}</p>
+                                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                                        <h4 class="text-xs font-semibold text-slate-700 mb-1 text-center">{% trans "Step 2: Upload Data" %}</h4>
+                                        <p class="text-[11px] text-slate-500 mb-3 text-center">{% trans "Upload the filled Excel file." %}</p>
                                         <form action="{% url 'contract:import_payments' pk=contract.pk %}" method="post" enctype="multipart/form-data" class="space-y-4">
                                             {% csrf_token %}
-                                            <input type="file" name="file" accept=".xlsx" required class="block w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 transition">
-                                            <button type="submit" class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium transition shadow-xs flex justify-center items-center gap-1.5">
+                                            <input type="file" name="file" accept=".xlsx" required class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 transition">
+                                            <button type="submit" class="w-full px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm border-transparent rounded-lg text-xs font-medium transition-all flex justify-center items-center gap-1.5">
                                                 ✅ {% trans "Upload and Process" %}
                                             </button>
                                         </form>
@@ -314,8 +309,8 @@
          x-init="$watch('isPaymentModalOpen', val => val ? $el.showModal() : $el.close())"
          @close="isPaymentModalOpen = false"
          @click="if($event.target === $el) isPaymentModalOpen = false"
-         class="bg-gray-800 border border-gray-700 rounded-xl w-full max-w-md shadow-2xl overflow-hidden m-auto p-0 text-white backdrop:bg-black/60 backdrop:backdrop-blur-md"
-         style="display: none;"
+         class="bg-white border border-slate-200 rounded-2xl shadow-sm w-full max-w-md shadow-2xl overflow-hidden m-auto p-0 text-slate-900 backdrop:bg-slate-900/40 backdrop:backdrop-blur-md"
+         
          x-cloak>
         
         <div x-data="{ 
@@ -337,28 +332,28 @@
              }">
              
             <!-- Modal Header -->
-            <div class="flex items-center justify-between p-5 border-b border-gray-700 bg-gray-900/50">
+            <div class="flex items-center justify-between p-5 border-b border-slate-200 bg-slate-50">
                 <div>
-                    <h3 class="text-base font-bold text-white flex items-center gap-2">
+                    <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                         💳 {% trans "Process Payment" %}
                     </h3>
-                    <p class="text-[11px] text-indigo-400 font-medium mt-0.5">{% trans "Instant Recalculation" %}</p>
+                    <p class="text-[11px] text-slate-500 font-medium mt-0.5">{% trans "Instant Recalculation" %}</p>
                 </div>
-                <button type="button" @click="isPaymentModalOpen = false" class="text-gray-400 hover:text-white transition rounded-lg hover:bg-gray-700 p-1">
+                <button type="button" @click="isPaymentModalOpen = false" class="text-slate-500 hover:text-slate-900 transition rounded-lg hover:bg-slate-100 p-1">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             
             <!-- Modal Body -->
-            <div class="p-6">
+            <div class="p-5">
                 <form action="{% url 'contract:process_payment' pk=contract.pk %}" method="post" enctype="multipart/form-data" class="space-y-4">
                     {% csrf_token %}
                     
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <label class="block text-xs font-semibold text-gray-300 uppercase">{{ payment_form.amount.label }} (UZS)</label>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase">{{ payment_form.amount.label }} (UZS)</label>
                             {% if next_due_amount > 0 %}
-                            <span class="text-[11px] text-amber-400">{% trans "Next Due:" %} {{ next_due_amount|uzs }}</span>
+                            <span class="text-[11px] text-amber-600">{% trans "Next Due:" %} {{ next_due_amount|uzs }}</span>
                             {% endif %}
                         </div>
                         
@@ -367,21 +362,21 @@
                                x-model="displayAmount" 
                                @input="setAmount($event.target.value)"
                                placeholder="0 UZS" 
-                               class="w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono font-bold text-lg">
+                               class="w-full px-4 py-2.5 bg-slate-100 border border-slate-300 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500 font-semibold font-bold text-lg">
 
                         <!-- Quick Fill Helpers -->
                         <div class="flex flex-wrap gap-2 mt-2">
                             {% if next_due_amount > 0 %}
                             <button type="button" 
                                     @click="setAmount('{{ next_due_amount|stringformat:".2f" }}')" 
-                                    class="px-2.5 py-1 bg-amber-900/40 border border-amber-700/60 hover:bg-amber-800/60 text-amber-200 text-[11px] rounded-md transition flex items-center gap-1 font-medium">
+                                    class="px-2.5 py-1 bg-white hover:bg-amber-50 border border-slate-200 text-amber-700 text-[11px] shadow-sm rounded-md transition flex items-center gap-1 font-medium">
                                 ⚡ {% trans "Fill Next Due" %} ({{ next_due_amount|uzs }})
                             </button>
                             {% endif %}
                             {% if total_remaining_debt > 0 %}
                             <button type="button" 
                                     @click="setAmount('{{ total_remaining_debt|stringformat:".2f" }}')" 
-                                    class="px-2.5 py-1 bg-indigo-900/40 border border-indigo-700/60 hover:bg-indigo-800/60 text-indigo-200 text-[11px] rounded-md transition flex items-center gap-1 font-medium">
+                                    class="px-2.5 py-1 bg-white hover:bg-indigo-50 border border-slate-200 text-indigo-700 text-[11px] shadow-sm rounded-md transition flex items-center gap-1 font-medium">
                                 ⚡ {% trans "Fill Full Debt" %} ({{ total_remaining_debt|uzs }})
                             </button>
                             {% endif %}
@@ -390,34 +385,34 @@
                     
                     <!-- Payment Method Visual Selector -->
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 uppercase mb-2">{% trans "Select Payment Method" %}</label>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-2">{% trans "Select Payment Method" %}</label>
                         <input type="hidden" name="payment_type" :value="paymentType">
                         
                         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
                             <button type="button" 
                                     @click="paymentType = 'CASH'" 
-                                    :class="paymentType === 'CASH' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                    :class="paymentType === 'CASH' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-slate-100/70 border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900'"
                                     class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
                                 <span class="text-base">💵</span>
                                 <span>{% trans "Cash" %}</span>
                             </button>
                             <button type="button" 
                                     @click="paymentType = 'CARD'" 
-                                    :class="paymentType === 'CARD' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                    :class="paymentType === 'CARD' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-slate-100/70 border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900'"
                                     class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
                                 <span class="text-base">💳</span>
                                 <span>{% trans "Card" %}</span>
                             </button>
                             <button type="button" 
                                     @click="paymentType = 'BANK'" 
-                                    :class="paymentType === 'BANK' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                    :class="paymentType === 'BANK' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-slate-100/70 border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900'"
                                     class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
                                 <span class="text-base">🏦</span>
                                 <span>{% trans "Bank Transfer" %}</span>
                             </button>
                             <button type="button" 
                                     @click="paymentType = 'MATERIAL'" 
-                                    :class="paymentType === 'MATERIAL' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-gray-700/70 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white'"
+                                    :class="paymentType === 'MATERIAL' ? 'bg-indigo-600 border-indigo-500 text-white font-bold ring-2 ring-indigo-400 shadow-md' : 'bg-slate-100/70 border-slate-300 text-slate-700 hover:bg-slate-100 hover:text-slate-900'"
                                     class="p-2.5 rounded-lg border text-xs flex flex-col items-center gap-1.5 transition">
                                 <span class="text-base">📦</span>
                                 <span>{% trans "Material" %}</span>
@@ -426,13 +421,13 @@
                     </div>
                     
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">{{ payment_form.date_paid.label }}</label>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">{{ payment_form.date_paid.label }}</label>
                         {{ payment_form.date_paid }}
-                        <p class="text-[10px] text-gray-400 mt-0.5">{% trans "Leave blank for current date/time, or enter custom payment date." %}</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">{% trans "Leave blank for current date/time, or enter custom payment date." %}</p>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 uppercase mb-1">{{ payment_form.receipt_image.label }}</label>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">{{ payment_form.receipt_image.label }}</label>
                         {{ payment_form.receipt_image }}
                     </div>
                     
@@ -455,3 +450,4 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 {% endblock %}
+

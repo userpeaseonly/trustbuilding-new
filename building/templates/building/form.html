@@ -5,14 +5,14 @@
 <div class="max-w-xl mx-auto space-y-6 mt-8" x-data="buildingForm()">
     <!-- SheetJS for Excel generation and parsing -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-    <div class="bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-700 space-y-6">
-        <div class="flex items-center gap-3 border-b border-gray-700 pb-4">
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex items-center gap-3 border-b border-slate-200 pb-4">
             <div class="w-10 h-10 rounded-full bg-indigo-900/50 text-indigo-400 flex items-center justify-center font-bold text-xl">
                 🏢
             </div>
             <div>
-                <h1 class="text-xl font-bold text-white">{% trans "New Building Project" %}</h1>
-                <p class="text-xs text-gray-400">{% trans "Define structural parameters to auto-generate the apartment matrix" %}</p>
+                <h1 class="text-xl font-bold text-slate-900">{% trans "New Building Project" %}</h1>
+                <p class="text-xs text-slate-500">{% trans "Define structural parameters to auto-generate the apartment matrix" %}</p>
             </div>
         </div>
 
@@ -27,31 +27,31 @@
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Building Name" %}</label>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Building Name" %}</label>
                     {{ form.name }}
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Block Number" %}</label>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Block Number" %}</label>
                     {{ form.block_number }}
                 </div>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Address" %}</label>
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Address" %}</label>
                 {{ form.address }}
             </div>
 
-            <div class="grid grid-cols-3 gap-4 border-t border-gray-700 pt-4">
+            <div class="grid grid-cols-3 gap-4 border-t border-slate-200 pt-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Number of Entrances" %}</label>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Number of Entrances" %}</label>
                     {{ form.entrance_count }}
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Number of Floors" %}</label>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Number of Floors" %}</label>
                     {{ form.floor_count }}
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Apts Per Floor" %}</label>
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Apts Per Floor" %}</label>
                     {{ form.apartments_per_floor }}
                 </div>
             </div>
@@ -61,27 +61,27 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <h4 class="text-sm font-bold text-indigo-300">📊 {% trans "Advanced: Excel Import" %}</h4>
-                        <p class="text-xs text-gray-400 mt-1">{% trans "Download a template, customize apartment details, and upload it back." %}</p>
+                        <p class="text-xs text-slate-500 mt-1">{% trans "Download a template, customize apartment details, and upload it back." %}</p>
                     </div>
-                    <button type="button" @click="downloadTemplate" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 border border-gray-600 text-white text-xs font-semibold rounded-lg transition flex items-center gap-2">
+                    <button type="button" @click="downloadTemplate" class="px-4 py-2 bg-slate-100 hover:bg-gray-600 border border-slate-300 text-slate-900 text-xs font-semibold rounded-lg transition flex items-center gap-2">
                         ⬇️ {% trans "Download Template" %}
                     </button>
                 </div>
 
-                <div class="border-t border-gray-700/50 pt-4">
-                    <label class="block text-xs font-semibold text-gray-400 uppercase mb-2">{% trans "Upload Customized Excel" %}</label>
-                    <input type="file" accept=".xlsx, .xls" @change="handleFileUpload" class="w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
-                    <p x-show="uploadError" class="text-red-400 text-xs mt-2" x-text="uploadError"></p>
+                <div class="border-t border-slate-200/50 pt-4">
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">{% trans "Upload Customized Excel" %}</label>
+                    <input type="file" accept=".xlsx, .xls" @change="handleFileUpload" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
+                    <p x-show="uploadError" class="text-rose-700 text-xs mt-2" x-text="uploadError"></p>
                 </div>
 
                 <!-- Excel Preview -->
-                <div x-show="parsedApartments.length > 0" class="mt-4 border border-gray-700 rounded-lg overflow-hidden bg-gray-900/50">
-                    <div class="px-3 py-2 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
+                <div x-show="parsedApartments.length > 0" class="mt-4 border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                    <div class="px-3 py-2 bg-white border-b border-slate-200 flex justify-between items-center">
                         <span class="text-xs font-bold text-emerald-400">✅ <span x-text="parsedApartments.length"></span> {% trans "apartments parsed" %}</span>
-                        <span class="text-[10px] text-gray-400">{% trans "Showing first 5 rows" %}</span>
+                        <span class="text-[10px] text-slate-500">{% trans "Showing first 5 rows" %}</span>
                     </div>
                     <table class="w-full text-left text-xs whitespace-nowrap">
-                        <thead class="bg-gray-800/50 text-gray-400 uppercase font-semibold text-[10px]">
+                        <thead class="bg-white/50 text-slate-500 uppercase font-semibold text-[10px]">
                             <tr>
                                 <th class="py-2 px-3">Ent</th>
                                 <th class="py-2 px-3">Floor</th>
@@ -92,10 +92,10 @@
                         </thead>
                         <tbody class="divide-y divide-gray-700/60 font-mono">
                             <template x-for="apt in parsedApartments.slice(0, 5)">
-                                <tr class="hover:bg-gray-800/40 text-gray-300">
+                                <tr class="hover:bg-white/40 text-slate-700">
                                     <td class="py-1.5 px-3" x-text="apt['Entrance Number']"></td>
                                     <td class="py-1.5 px-3" x-text="apt['Floor Number']"></td>
-                                    <td class="py-1.5 px-3 font-bold text-white" x-text="apt['Apartment Number']"></td>
+                                    <td class="py-1.5 px-3 font-bold text-slate-900" x-text="apt['Apartment Number']"></td>
                                     <td class="py-1.5 px-3" x-text="apt['Total Area (m2)'] + ' m²'"></td>
                                     <td class="py-1.5 px-3" x-text="apt['Rooms Count']"></td>
                                 </tr>
@@ -108,12 +108,12 @@
             <!-- Hidden JSON payload -->
             <input type="hidden" name="apartments_json" :value="JSON.stringify(parsedApartments)">
 
-            <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-xs text-gray-400" x-show="parsedApartments.length === 0">
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-3 text-xs text-slate-500" x-show="parsedApartments.length === 0">
                 💡 <strong>{% trans "Automated Grid:" %}</strong> {% trans "If no Excel is uploaded, an entrance-by-floor matrix will be automatically generated." %}
             </div>
 
-            <div class="pt-4 flex justify-between items-center border-t border-gray-700">
-                <a href="{% url 'building:list' %}" class="text-sm font-medium text-gray-400 hover:text-white transition">
+            <div class="pt-4 flex justify-between items-center border-t border-slate-200">
+                <a href="{% url 'building:list' %}" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition">
                     {% trans "Cancel" %}
                 </a>
                 <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-lg transition shadow-xs">

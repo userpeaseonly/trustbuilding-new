@@ -3,14 +3,14 @@
 
 {% block content %}
 <div class="max-w-xl mx-auto space-y-6 mt-8" x-data="{ fine: 0, totalPaid: {{ total_paid|default:0|stringformat:'f' }} }">
-    <div class="bg-gray-800 p-8 rounded-xl shadow-sm border border-rose-900/50 space-y-6">
-        <div class="flex items-center gap-3 border-b pb-4 border-gray-700">
+    <div class="bg-white p-8 rounded-xl shadow-sm border border-rose-900/50 space-y-6">
+        <div class="flex items-center gap-3 border-b pb-4 border-slate-200">
             <div class="w-10 h-10 rounded-full bg-rose-900/50 text-rose-400 flex items-center justify-center font-bold">
                 ⚠️
             </div>
             <div>
-                <h1 class="text-xl font-bold text-white">{% trans "Confirm Contract Termination" %}</h1>
-                <p class="text-xs text-gray-400">{% trans "Contract" %} #{{ contract.id }} - {{ contract.customer.full_name|default:contract.customer.phone_number }}</p>
+                <h1 class="text-xl font-bold text-slate-900">{% trans "Confirm Contract Termination" %}</h1>
+                <p class="text-xs text-slate-500">{% trans "Contract" %} #{{ contract.id }} - {{ contract.customer.full_name|default:contract.customer.phone_number }}</p>
             </div>
         </div>
 
@@ -22,41 +22,41 @@
         <form method="post" action="{% url 'contract:confirm_termination' contract.pk %}" class="space-y-4">
             {% csrf_token %}
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "6-Digit OTP Code" %}</label>
-                <input type="text" name="otp_code" maxlength="6" required placeholder="123456" class="w-full px-4 py-3 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-lg font-mono text-center text-xl tracking-widest focus:ring-2 focus:ring-rose-500">
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "6-Digit OTP Code" %}</label>
+                <input type="text" name="otp_code" maxlength="6" required placeholder="123456" class="w-full px-4 py-3 border border-slate-300 bg-slate-100 text-slate-900 placeholder-gray-400 rounded-lg font-mono text-center text-xl tracking-widest focus:ring-2 focus:ring-rose-500">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Termination Reason" %}</label>
-                <textarea name="reason" rows="3" placeholder="{% trans 'State the reason for contract termination...' %}" class="w-full px-4 py-2.5 border border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-lg text-sm"></textarea>
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Termination Reason" %}</label>
+                <textarea name="reason" rows="3" placeholder="{% trans 'State the reason for contract termination...' %}" class="w-full px-4 py-2.5 border border-slate-300 bg-slate-100 text-slate-900 placeholder-gray-400 rounded-lg text-sm"></textarea>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-gray-400 uppercase mb-1">{% trans "Fine Penalty Amount (UZS)" %}</label>
-                <input type="number" step="0.01" name="fine_amount" x-model.number="fine" class="w-full px-4 py-2.5 border border-gray-600 bg-gray-700 text-white rounded-lg text-sm">
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Fine Penalty Amount (UZS)" %}</label>
+                <input type="number" step="0.01" name="fine_amount" x-model.number="fine" class="w-full px-4 py-2.5 border border-slate-300 bg-slate-100 text-slate-900 rounded-lg text-sm">
             </div>
 
             
-            <div class="bg-gray-700/50 rounded-lg p-4 space-y-2 text-sm border border-gray-600">
-                <div class="flex justify-between text-gray-300">
+            <div class="bg-slate-100/50 rounded-lg p-4 space-y-2 text-sm border border-slate-300">
+                <div class="flex justify-between text-slate-700">
                     <span>{% trans "Total Amount Paid by Customer:" %}</span>
-                    <span class="font-bold text-white">{{ total_paid|formatted_amount }} UZS</span>
+                    <span class="font-bold text-slate-900">{{ total_paid|formatted_amount }} UZS</span>
                 </div>
                 <div class="flex justify-between text-rose-300">
                     <span>{% trans "- Fine Penalty:" %}</span>
                     <span class="font-bold" x-text="fine.toLocaleString('ru-RU') + ' UZS'"></span>
                 </div>
-                <div class="flex justify-between border-t border-gray-600 pt-2 text-emerald-300 font-bold">
+                <div class="flex justify-between border-t border-slate-300 pt-2 text-emerald-300 font-bold">
                     <span>{% trans "= Total Refund Owed to Customer:" %}</span>
                     <span x-text="Math.max(0, totalPaid - fine).toLocaleString('ru-RU') + ' UZS'"></span>
                 </div>
             </div>
 
-            <div class="pt-4 flex justify-between items-center border-t border-gray-700">
-                <a href="{% url 'contract:detail' contract.pk %}" class="text-sm font-medium text-gray-400 hover:text-white transition">
+            <div class="pt-4 flex justify-between items-center border-t border-slate-200">
+                <a href="{% url 'contract:detail' contract.pk %}" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition">
                     {% trans "Cancel" %}
                 </a>
-                <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-medium text-sm rounded-lg transition shadow-xs">
+                <button type="submit" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-slate-900 font-medium text-sm rounded-lg transition shadow-xs">
                     {% trans "Authorize & Terminate Contract" %}
                 </button>
             </div>

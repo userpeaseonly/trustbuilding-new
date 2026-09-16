@@ -2,54 +2,47 @@
 {% load i18n dashboard_tags %}
 
 {% block content %}
-<div class="space-y-6">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-700">
-        <div>
-            <h1 class="text-2xl font-bold text-white">{% trans "Terminated Contracts Archive" %}</h1>
-            <p class="text-sm text-gray-400 mt-1">{% trans "View terminated contracts, penalty fines, and refund ledgers" %}</p>
-        </div>
-    </div>
+<div class="space-y-4">
 
     <!-- Terminated Contracts Table -->
-    <div class="bg-gray-800 rounded-xl shadow-sm border border-gray-700 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="bg-gray-900/50 border-b border-gray-700 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                        <th class="px-6 py-4">{% trans "Contract ID" %}</th>
-                        <th class="px-6 py-4">{% trans "Customer" %}</th>
-                        <th class="px-6 py-4">{% trans "Termination Date" %}</th>
-                        <th class="px-6 py-4">{% trans "Fine Penalty" %}</th>
-                        <th class="px-6 py-4">{% trans "Planned Refund" %}</th>
-                        <th class="px-6 py-4">{% trans "Paid Refund" %}</th>
-                        <th class="px-6 py-4">{% trans "Reason" %}</th>
-                        <th class="px-6 py-4 text-right">{% trans "Actions" %}</th>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        <th class="px-4 py-3">{% trans "Contract ID" %}</th>
+                        <th class="px-4 py-3">{% trans "Customer" %}</th>
+                        <th class="px-4 py-3">{% trans "Termination Date" %}</th>
+                        <th class="px-4 py-3">{% trans "Fine Penalty" %}</th>
+                        <th class="px-4 py-3">{% trans "Planned Refund" %}</th>
+                        <th class="px-4 py-3">{% trans "Paid Refund" %}</th>
+                        <th class="px-4 py-3">{% trans "Reason" %}</th>
+                        <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-700 text-sm">
+                <tbody class="divide-y divide-slate-200 text-sm">
                     {% for term in terminations %}
-                    <tr class="hover:bg-gray-700/50 transition">
-                        <td class="px-6 py-4 font-mono font-bold text-rose-400">
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-4 py-3 font-mono font-bold text-rose-600">
                             #{{ term.contract.id }}
                         </td>
-                        <td class="px-6 py-4 font-semibold text-white">
+                        <td class="px-4 py-3 font-semibold text-slate-900">
                             {{ term.contract.customer.full_name|default:term.contract.customer.phone_number }}
                         </td>
-                        <td class="px-6 py-4 text-gray-300">{{ term.termination_date|date:"d.m.Y" }}</td>
-                        <td class="px-6 py-4 font-mono text-rose-300 font-medium">{{ term.fine_amount|uzs }}</td>
-                        <td class="px-6 py-4 font-mono text-gray-200">{{ term.planned_refund|uzs }}</td>
-                        <td class="px-6 py-4 font-mono text-emerald-400 font-medium">{{ term.paid_refund|uzs }}</td>
-                        <td class="px-6 py-4 text-xs text-gray-400 max-w-xs truncate">{{ term.termination_reason|default:"-" }}</td>
-                        <td class="px-6 py-4 text-right">
-                            <a href="{% url 'contract:termination_dashboard' term.contract.pk %}" class="px-3 py-1.5 bg-gray-600 hover:bg-gray-500 text-white rounded text-xs font-medium transition inline-flex items-center gap-1">
+                        <td class="px-4 py-3 text-slate-700">{{ term.termination_date|date:"d.m.Y" }}</td>
+                        <td class="px-4 py-3 font-mono text-rose-600 font-medium">{{ term.fine_amount|uzs }}</td>
+                        <td class="px-4 py-3 font-mono text-slate-900">{{ term.planned_refund|uzs }}</td>
+                        <td class="px-4 py-3 font-mono text-emerald-600 font-medium">{{ term.paid_refund|uzs }}</td>
+                        <td class="px-4 py-3 text-xs text-slate-500 max-w-xs truncate">{{ term.termination_reason|default:"-" }}</td>
+                        <td class="px-4 py-3 text-right">
+                            <a href="{% url 'contract:termination_dashboard' term.contract.pk %}" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 shadow-sm rounded text-xs font-medium transition inline-flex items-center gap-1">
                                 📊 {% trans "Dashboard" %}
                             </a>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="8" class="px-6 py-12 text-center text-gray-400 italic">
+                        <td colspan="8" class="px-4 py-8 text-center text-slate-500 italic">
                             {% trans "No terminated contracts found." %}
                         </td>
                     </tr>

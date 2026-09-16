@@ -51,7 +51,7 @@ def home(request):
     ).select_related('contract__customer', 'contract__apartment').order_by('-date_paid')[:10]
 
     context = {
-        'page_title': 'Company Overview',
+        
         'stats': {
             'total_apartments': total_apartments,
             'sold_apartments': sold_apartments,

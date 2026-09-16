@@ -21,64 +21,64 @@ class ContractWizardForm(forms.ModelForm):
         label=_("Select Customer"),
         queryset=CustomUser.objects.none(),
         required=False,
-        widget=forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500'})
+        widget=forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500'})
     )
     
     # New Customer Fields
     new_customer_phone = forms.CharField(
         label=_("Phone Number"),
         required=False,
-        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': '+998901234567'})
+        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': '+998901234567'})
     )
     new_customer_name = forms.CharField(
         label=_("Full Name"),
         required=False,
-        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. Alisher Tursunov')})
+        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. Alisher Tursunov')})
     )
     new_customer_gender = forms.ChoiceField(
         label=_("Gender"),
         choices=[('', '----'), ('M', _('Male')), ('F', _('Female'))],
         required=False,
-        widget=forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500'})
+        widget=forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500'})
     )
     new_customer_passport_series = forms.CharField(
         label=_("Passport Series"),
         required=False,
-        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': 'AA1234567'})
+        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': 'AA1234567'})
     )
     new_customer_passport_jshshr = forms.CharField(
         label=_("PINFL (JSHSHR)"),
         required=False,
-        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': '31204951820042'})
+        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': '31204951820042'})
     )
     new_customer_passport_issued_by = forms.CharField(
         label=_("Passport Issued By"),
         required=False,
-        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. Toshkent sh. Yunusobod tuman IIB')})
+        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. Toshkent sh. Yunusobod tuman IIB')})
     )
     new_customer_passport_date_of_issue = forms.DateField(
         label=_("Passport Date of Issue"),
         required=False,
         input_formats=['%d/%m/%Y', '%d.%m.%Y', '%Y-%m-%d'],
-        widget=forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY'})
+        widget=forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY'})
     )
     new_customer_passport_scan = forms.ImageField(
         label=_("Passport Scan File"),
         required=False,
-        widget=forms.FileInput(attrs={'class': 'w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700'})
+        widget=forms.FileInput(attrs={'class': 'w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-indigo-100 file:shadow-sm file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 file:transition-colors'})
     )
     
     class Meta:
         model = Contract
         fields = ['apartment', 'contract_date', 'price_per_square', 'down_payment_amount', 'down_payment_date', 'last_payment_amount', 'payment_months']
         widgets = {
-            'apartment': forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500'}),
-            'contract_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY', 'x-model': 'contractDate'}),
-            'price_per_square': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
-            'down_payment_amount': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
-            'down_payment_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY (Optional)', 'x-model': 'downPaymentDate'}),
-            'last_payment_amount': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
-            'payment_months': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': '12'}),
+            'apartment': forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500'}),
+            'contract_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY', 'x-model': 'contractDate'}),
+            'price_per_square': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
+            'down_payment_amount': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
+            'down_payment_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY (Optional)', 'x-model': 'downPaymentDate'}),
+            'last_payment_amount': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
+            'payment_months': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': '12'}),
         }
         
     def __init__(self, *args, **kwargs):
@@ -137,7 +137,7 @@ class PaymentLogForm(forms.ModelForm):
         label=_("Payment Date (d/m/Y)"),
         input_formats=['%d/%m/%Y %H:%M', '%d/%m/%Y', '%d.%m.%Y %H:%M', '%d.%m.%Y', '%Y-%m-%d %H:%M:%S', '%Y-%m-%d'],
         widget=forms.TextInput(attrs={
-            'class': 'datepicker-dmy w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono',
+            'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500 font-mono',
             'placeholder': 'DD/MM/YYYY'
         })
     )
@@ -147,16 +147,16 @@ class PaymentLogForm(forms.ModelForm):
         fields = ['amount', 'payment_type', 'date_paid', 'receipt_image']
         widgets = {
             'amount': forms.NumberInput(attrs={
-                'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500 font-mono font-bold text-lg',
+                'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500 font-mono font-bold text-lg',
                 'step': '0.01',
                 'placeholder': '0.00',
                 'id': 'payment-amount-input'
             }),
             'payment_type': forms.Select(attrs={
-                'class': 'w-full px-4 py-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white text-sm focus:ring-2 focus:ring-indigo-500'
+                'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500'
             }),
             'receipt_image': forms.FileInput(attrs={
-                'class': 'w-full text-xs text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700'
+                'class': 'w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-indigo-100 file:shadow-sm file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 file:transition-colors'
             }),
         }
 

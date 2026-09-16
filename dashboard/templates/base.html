@@ -187,11 +187,11 @@
                     // prefix links: match if path starts with href (for namespace grouping)
                     var active = href && (href === path || (!exact && href.length > 1 && path.startsWith(href)));
                     if (active) {
-                        a.classList.add('bg-blue-600', 'text-white');
-                        a.classList.remove('text-gray-400', 'hover:bg-[#252938]', 'hover:text-white');
+                        a.classList.add('bg-indigo-600', 'text-white');
+                        a.classList.remove('text-slate-500', 'hover:bg-[#252938]', 'hover:text-slate-900');
                     } else {
-                        a.classList.remove('bg-blue-600', 'text-white');
-                        a.classList.add('text-gray-400');
+                        a.classList.remove('bg-indigo-600', 'text-white');
+                        a.classList.add('text-slate-500');
                     }
                 });
             }
@@ -207,11 +207,11 @@
                 if (el.closest && el.closest('#sidebar-nav')) {
                     // 1. Immediately highlight the clicked link
                     document.querySelectorAll('#sidebar-nav a[hx-get]').forEach(function (a) {
-                        a.classList.remove('bg-blue-600', 'text-white');
-                        a.classList.add('text-gray-400');
+                        a.classList.remove('bg-indigo-600', 'text-white');
+                        a.classList.add('text-slate-500');
                     });
-                    el.classList.add('bg-blue-600', 'text-white');
-                    el.classList.remove('text-gray-400');
+                    el.classList.add('bg-indigo-600', 'text-white');
+                    el.classList.remove('text-slate-500');
 
                     // 2. Dim the current page content so user sees it's loading
                     if (mainContent) mainContent.style.opacity = '0.35';

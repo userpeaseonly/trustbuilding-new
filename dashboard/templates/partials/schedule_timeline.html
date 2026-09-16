@@ -37,7 +37,7 @@
                     
                     <!-- Schedule Blocks -->
                     {% for schedule in row.schedules %}
-                    <div class="{{ schedule.color }} text-white rounded-lg shadow-md hover:shadow-xl transition-all cursor-pointer absolute overflow-hidden border-white"
+                    <div class="{{ schedule.color }} text-slate-900 rounded-lg shadow-md hover:shadow-xl transition-all cursor-pointer absolute overflow-hidden border-white"
                             style="left: calc({{ schedule.left_percent|unlocalize }}% + 2px); width: calc({{ schedule.width_percent|unlocalize }}% - 4px); top: 2px; bottom: 2px;">
                         <div class="h-full p-1 px-2 flex flex-col justify-between">
                             <div class="flex items-start justify-between gap-2">
@@ -66,8 +66,8 @@
                 </div>
             </div>
             {% empty %}
-            <div class="text-center py-12 text-gray-500">
-                <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="text-center py-12 text-slate-400">
+                <svg class="w-16 h-16 mx-auto mb-4 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                 </svg>
                 <p class="text-lg font-medium">{% trans "No schedules for this day type" %}</p>

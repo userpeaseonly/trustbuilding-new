@@ -1,6 +1,6 @@
 {% load static tailwind_tags i18n %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:'en' }}" class="dark">
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +8,7 @@
     <title>{% block title %}TrustBuilding{% endblock %}</title>
     {% tailwind_css %}
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
@@ -23,25 +24,28 @@
         });
     </script>
 </head>
-<body x-data="{ sidebarOpen: false }" class="bg-gray-900 text-gray-100 font-sans antialiased min-h-screen flex flex-col">
+<body x-data="{ sidebarOpen: false }" class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
 
     <!-- Topbar -->
-    <header class="bg-gray-800 border-b border-gray-700 h-16 flex items-center justify-between px-6 shrink-0 z-10 sticky top-0 shadow-sm">
+    <header class="bg-white backdrop-blur-xl border-b border-slate-200 h-16 flex items-center justify-between px-6 shrink-0 z-10 sticky top-0 shadow-sm">
         <div class="flex items-center space-x-4">
             <!-- Mobile Menu Toggle -->
             {% if request.user.is_authenticated %}
-            <button @click="sidebarOpen = !sidebarOpen" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
+            <button @click="sidebarOpen = !sidebarOpen" class="md:hidden text-slate-500 hover:text-slate-900 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
             {% endif %}
-            <a href="{% url 'dashboard:home' %}" class="text-xl font-bold text-white tracking-wide">Trust<span class="text-blue-500">Building</span></a>
+            <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2 text-xl font-bold text-slate-900 tracking-tight">
+                <img src="{% static 'images/logo_icon.png' %}" alt="TrustBuilding Logo" class="h-8 w-auto object-contain">
+                <span>Trust<span class="text-emerald-500">Building</span></span>
+            </a>
         </div>
         <div class="flex items-center space-x-4">
             <!-- Language Switcher -->
             <form action="{% url 'set_language' %}" method="post" class="inline-block">
                 {% csrf_token %}
                 <input name="next" type="hidden" value="{{ request.get_full_path }}">
-                <select name="language" onchange="this.form.submit()" class="bg-gray-700 hover:bg-gray-600 border border-gray-600 text-gray-200 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 focus:outline-none transition cursor-pointer">
+                <select name="language" onchange="this.form.submit()" class="bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 focus:outline-none transition cursor-pointer">
                     {% get_current_language as LANGUAGE_CODE %}
                     {% get_available_languages as LANGUAGES %}
                     {% get_language_info_list for LANGUAGES as languages %}
@@ -54,9 +58,9 @@
             </form>
 
             {% if request.user.is_authenticated %}
-                <span class="text-sm text-gray-400">{% trans "Welcome" %}, {{ request.user.phone_number }}</span>
-                <form action="{% url 'otp:request_otp' %}" method="get" class="inline">
-                    <button type="submit" class="text-sm text-red-400 hover:text-red-300">{% trans "Logout" %}</button>
+                <span class="text-sm text-slate-500">{% trans "Welcome" %}, {{ request.user.phone_number }}</span>
+                <form action="{% url 'users:logout' %}" method="get" class="inline">
+                    <button type="submit" class="text-sm text-rose-600 hover:text-rose-700">{% trans "Logout" %}</button>
                 </form>
             {% endif %}
         </div>
@@ -64,42 +68,53 @@
 
     <div class="flex flex-1 overflow-hidden relative">
         <!-- Sidebar Backdrop (Mobile) -->
-        <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 bg-gray-900/80 z-20 md:hidden backdrop-blur-sm" @click="sidebarOpen = false" x-cloak></div>
+        <div x-show="sidebarOpen" x-transition.opacity class="fixed inset-0 bg-slate-50/80 z-20 md:hidden backdrop-blur-sm" @click="sidebarOpen = false" x-cloak></div>
 
         <!-- Sidebar -->
         {% if request.user.is_authenticated %}
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed md:static inset-y-0 left-0 z-30 w-64 bg-gray-800 border-r border-gray-700 shrink-0 transform transition-transform duration-300 md:translate-x-0 overflow-y-auto">
-            <div class="h-16 flex items-center px-6 border-b border-gray-700 md:hidden bg-gray-900">
-                <a href="{% url 'dashboard:home' %}" class="text-xl font-bold text-white tracking-wide">Trust<span class="text-blue-500">Building</span></a>
-                <button @click="sidebarOpen = false" class="ml-auto text-gray-400 hover:text-white">
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed md:static inset-y-0 left-0 z-30 w-64 bg-white backdrop-blur-xl border-r border-slate-200 shrink-0 transform transition-transform duration-300 md:translate-x-0 overflow-y-auto">
+            <div class="h-16 flex items-center px-6 border-b border-slate-200 md:hidden bg-white">
+                <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2 text-xl font-bold text-slate-900 tracking-tight">
+                <img src="{% static 'images/logo_icon.png' %}" alt="TrustBuilding Logo" class="h-8 w-auto object-contain">
+                <span>Trust<span class="text-emerald-500">Building</span></span>
+            </a>
+                <button @click="sidebarOpen = false" class="ml-auto text-slate-500 hover:text-slate-900">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
             <nav class="p-4 space-y-1 text-sm">
-                <a href="{% url 'dashboard:home' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'dashboard' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    📊 {% trans "Dashboard" %}
+                <a href="{% url 'dashboard:home' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'dashboard' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+                    {% trans "Dashboard" %}
                 </a>
-                <a href="{% url 'building:list' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'building' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    🏢 {% trans "Buildings Inventory" %}
+                <a href="{% url 'building:list' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'building' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                    {% trans "Buildings Inventory" %}
                 </a>
-                <a href="{% url 'contract:list' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'list' or request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'detail' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    📄 {% trans "Active Contracts" %}
+                <a href="{% url 'contract:list' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'list' or request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'detail' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    {% trans "Active Contracts" %}
                 </a>
-                <a href="{% url 'contract:quick_payment' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'quick_payment' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    💳 {% trans "Payment Terminal" %}
+                <a href="{% url 'contract:quick_payment' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'quick_payment' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                    {% trans "Payment Terminal" %}
                 </a>
-                <a href="{% url 'contract:terminated_list' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'terminated_list' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    🛑 {% trans "Terminated Archive" %}
+                <a href="{% url 'contract:terminated_list' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'terminated_list' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
+                    {% trans "Terminated Archive" %}
                 </a>
-                <a href="{% url 'users:customer_list' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'users' and request.resolver_match.url_name == 'customer_list' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    👥 {% trans "Customer Directory" %}
+                <a href="{% url 'users:customer_list' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'users' and request.resolver_match.url_name == 'customer_list' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    {% trans "Customer Directory" %}
                 </a>
                 {% if request.user.is_company %}
-                <a href="{% url 'contract:template_list' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'template_list' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    📝 {% trans "Contract Templates" %}
+                <a href="{% url 'contract:template_list' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'template_list' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+                    {% trans "Contract Templates" %}
                 </a>
-                <a href="{% url 'users:staff_list' %}" class="block px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'users' and request.resolver_match.url_name == 'staff_list' %}bg-blue-600 text-white{% else %}text-gray-300 hover:bg-gray-700 hover:text-white{% endif %}">
-                    👔 {% trans "Manage Staff" %}
+                <a href="{% url 'users:staff_list' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'users' and request.resolver_match.url_name == 'staff_list' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                    {% trans "Manage Staff" %}
                 </a>
                 {% endif %}
             </nav>
@@ -107,7 +122,7 @@
         {% endif %}
 
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto bg-gray-900 p-6">
+        <main class="flex-1 overflow-y-auto bg-slate-50 p-6">
             {% include 'partials/toast_notifications.html' %}
             {% if messages %}
             <script>
@@ -129,7 +144,7 @@
             <!-- Page Header -->
             {% if page_title %}
             <div class="mb-6 flex items-center justify-between">
-                <h1 class="text-2xl font-semibold text-white">{{ page_title }}</h1>
+                <h1 class="text-2xl font-semibold text-slate-900">{{ page_title }}</h1>
                 {% block page_actions %}{% endblock %}
             </div>
             {% endif %}

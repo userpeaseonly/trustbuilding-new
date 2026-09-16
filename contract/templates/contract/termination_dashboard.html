@@ -3,82 +3,82 @@
 {% load dashboard_tags %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-4">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <div>
-            <h1 class="text-2xl font-bold text-white">{% trans "Terminated Contract Dashboard" %}</h1>
-            <p class="text-gray-400 text-sm mt-1">{% trans "Contract" %} #{{ contract.id }} • {% trans "Terminated on" %} {{ termination.termination_date|date:"d.m.Y" }}</p>
+            <h1 class="text-xl font-bold text-slate-900">{% trans "Terminated Contract Dashboard" %}</h1>
+            <p class="text-slate-500 text-sm mt-1">{% trans "Contract" %} #{{ contract.id }} • {% trans "Terminated on" %} {{ termination.termination_date|date:"d.m.Y" }}</p>
         </div>
         <div class="flex gap-3">
-            <a href="{% url 'contract:detail' contract.pk %}?view=schedule" class="px-4 py-2 bg-indigo-900/50 hover:bg-indigo-800/80 text-indigo-200 border border-indigo-700 rounded-lg text-sm font-medium transition">
+            <a href="{% url 'contract:detail' contract.pk %}?view=schedule" class="px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 shadow-sm rounded-lg text-sm font-medium transition">
                 📅 {% trans "View Original Schedule" %}
             </a>
-            <a href="{% url 'contract:list' %}" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg text-sm font-medium transition">
+            <a href="{% url 'contract:list' %}" class="px-4 py-2 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 shadow-sm rounded-lg text-sm font-medium transition">
                 {% trans "Back to Contracts" %}
             </a>
         </div>
     </div>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
-            <p class="text-sm font-medium text-gray-400 mb-1">{% trans "Fine Amount" %}</p>
-            <p class="text-2xl font-bold text-red-400">{{ termination.fine_amount|formatted_amount }} UZS</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-3 shadow-sm">
+            <p class="text-sm font-medium text-slate-500 mb-1">{% trans "Fine Amount" %}</p>
+            <p class="text-2xl font-bold text-rose-700">{{ termination.fine_amount|formatted_amount }} UZS</p>
         </div>
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
-            <p class="text-sm font-medium text-gray-400 mb-1">{% trans "Total Refund Planned" %}</p>
-            <p class="text-2xl font-bold text-white">{{ termination.planned_refund|formatted_amount }} UZS</p>
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-3 shadow-sm">
+            <p class="text-sm font-medium text-slate-500 mb-1">{% trans "Total Refund Planned" %}</p>
+            <p class="text-xl font-bold text-slate-900">{{ termination.planned_refund|formatted_amount }} UZS</p>
         </div>
-        <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
-            <p class="text-sm font-medium text-gray-400 mb-1">{% trans "Refund Paid So Far" %}</p>
-            <p class="text-2xl font-bold text-emerald-400">{{ termination.paid_refund|formatted_amount }} UZS</p>
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-3 shadow-sm">
+            <p class="text-sm font-medium text-slate-500 mb-1">{% trans "Refund Paid So Far" %}</p>
+            <p class="text-2xl font-bold text-emerald-600">{{ termination.paid_refund|formatted_amount }} UZS</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <!-- Details -->
-        <div class="lg:col-span-2 space-y-6">
-            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
-                <h3 class="text-lg font-bold text-white border-b border-gray-700 pb-3 mb-4">{% trans "Refund History" %}</h3>
+        <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-3 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-3 mb-4">{% trans "Refund History" %}</h3>
                 {% if refund_payments %}
                 <div class="space-y-3">
                     {% for payment in refund_payments %}
-                    <div class="p-4 bg-gray-900/50 border border-gray-700 rounded-lg flex justify-between items-center">
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg flex justify-between items-center">
                         <div>
-                            <p class="text-lg font-bold text-emerald-400">{{ payment.amount|formatted_amount }} UZS</p>
-                            <p class="text-xs text-gray-400 mt-1">{{ payment.payment_date|date:"d.m.Y" }} • {{ payment.get_payment_type_display }}</p>
+                            <p class="text-lg font-bold text-emerald-600">{{ payment.amount|formatted_amount }} UZS</p>
+                            <p class="text-xs text-slate-500 mt-1">{{ payment.payment_date|date:"d.m.Y" }} • {{ payment.get_payment_type_display }}</p>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
-                <p class="text-gray-400 text-sm py-4">{% trans "No refunds paid yet." %}</p>
+                <p class="text-slate-500 text-sm py-4">{% trans "No refunds paid yet." %}</p>
                 {% endif %}
             </div>
         </div>
 
         <!-- Sidebar Actions -->
-        <div class="space-y-6">
-            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
-                <h3 class="text-lg font-bold text-white border-b border-gray-700 pb-3 mb-4">{% trans "Process Refund" %}</h3>
+        <div class="space-y-4">
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-3 shadow-sm">
+                <h3 class="text-lg font-bold text-slate-900 border-b border-slate-200 pb-3 mb-4">{% trans "Process Refund" %}</h3>
                 
                 {% if termination.paid_refund >= termination.planned_refund %}
-                <div class="p-4 bg-emerald-900/30 border border-emerald-800 rounded-lg text-center">
-                    <p class="text-emerald-400 font-bold mb-1">✅ {% trans "Refund Settled" %}</p>
-                    <p class="text-xs text-emerald-200/70">{% trans "The customer has been fully refunded." %}</p>
+                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-center">
+                    <p class="text-emerald-600 font-bold mb-1">✅ {% trans "Refund Settled" %}</p>
+                    <p class="text-xs text-emerald-600/70">{% trans "The customer has been fully refunded." %}</p>
                 </div>
                 {% else %}
                 <form action="{% url 'contract:process_refund' pk=contract.pk %}" method="post" class="space-y-4">
                     {% csrf_token %}
                     <div>
-                        <label class="block text-xs font-medium text-gray-400 mb-1">{% trans "Amount" %}</label>
-                        <input type="number" step="0.01" name="amount" required max="{{ remaining_refund }}" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 user-invalid user-valid">
-                        <p class="text-[10px] text-gray-500 mt-1">{% trans "Max remaining:" %} {{ remaining_refund|formatted_amount }} UZS</p>
+                        <label class="block text-xs font-medium text-slate-500 mb-1">{% trans "Amount" %}</label>
+                        <input type="number" step="0.01" name="amount" required max="{{ remaining_refund }}" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 user-invalid user-valid">
+                        <p class="text-[10px] text-slate-400 mt-1">{% trans "Max remaining:" %} {{ remaining_refund|formatted_amount }} UZS</p>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-400 mb-1">{% trans "Payment Method" %}</label>
-                        <select name="payment_method" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 user-invalid user-valid">
+                        <label class="block text-xs font-medium text-slate-500 mb-1">{% trans "Payment Method" %}</label>
+                        <select name="payment_method" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 user-invalid user-valid">
                             <option value="CASH">{% trans "Cash" %}</option>
                             <option value="CARD">{% trans "Card" %}</option>
                             <option value="BANK">{% trans "Bank Transfer" %}</option>
@@ -91,9 +91,9 @@
                 {% endif %}
             </div>
             
-            <div class="bg-gray-800 border border-gray-700 rounded-xl p-6 shadow-sm">
-                <h3 class="text-sm font-bold text-white mb-2">{% trans "Termination Reason" %}</h3>
-                <p class="text-sm text-gray-400">{{ termination.termination_reason }}</p>
+            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm p-3 shadow-sm">
+                <h3 class="text-sm font-bold text-slate-900 mb-2">{% trans "Termination Reason" %}</h3>
+                <p class="text-sm text-slate-500">{{ termination.termination_reason }}</p>
             </div>
         </div>
     </div>

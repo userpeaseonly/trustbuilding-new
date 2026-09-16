@@ -18,8 +18,7 @@ def building_list(request):
     context = {
         'buildings': buildings,
         'form': BuildingForm(),
-        'page_title': _('Buildings'),
-    }
+        }
     return render(request, 'building/list.html', context)
 
 
@@ -72,7 +71,7 @@ def building_create(request):
                             )
                         )
                 except Exception as e:
-                    messages.error(request, f"Error parsing apartments JSON: {e}")
+                    messages.error(request, _("Error parsing apartments JSON: {error}").format(error=e))
                     # fallback to default generation
                     apts_to_create = []
             
@@ -183,6 +182,6 @@ def building_matrix_view(request, pk):
         'available_count': available_count,
         'reserved_count': reserved_count,
         'sold_count': sold_count,
-        'page_title': f"{building.name} - Visualizer Matrix"
+        
     })
 
