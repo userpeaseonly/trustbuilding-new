@@ -182,8 +182,8 @@ def generate_contract_docx_response(contract_id, template_id=None):
 
     template.render(context)
     
-    temp_file_path = os.path.join(settings.MEDIA_ROOT, f"generated_contract_{contract_id}.docx")
-    os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+    temp_file_path = os.path.join(settings.MEDIA_ROOT, "generated_contracts", f"generated_contract_{contract_id}.docx")
+    os.makedirs(os.path.dirname(temp_file_path), exist_ok=True)
     template.save(temp_file_path)
 
     response = FileResponse(

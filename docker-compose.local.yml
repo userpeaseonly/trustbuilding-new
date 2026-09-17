@@ -45,7 +45,7 @@ services:
       context: .
       dockerfile: ./compose/local/django/Dockerfile
     image: trustbuilding_celery_beat_local
-    command: celery -A application beat -l info
+    command: celery -A application beat -l info -s /tmp/celerybeat-schedule
     volumes:
       - .:/app
     env_file:
