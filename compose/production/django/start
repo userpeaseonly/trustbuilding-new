@@ -1,64 +1,32 @@
 #!/bin/bash
+set -euo pipefail
 
-set -o errexit
-set -o pipefail
-set -o nounset
+: "${ADMIN_PHONE:?Set ADMIN_PHONE in env/.production}"
+: "${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in env/.production}"
 
 echo "Running database migrations..."
-python manage.py migrate --settings=application.settings.production
+python manage.py migrate --noinput
 
-echo "Creating cache table if it doesn't exist..."
-python manage.py createcachetable --settings=application.settings.production
+echo "Creating the shared cache table..."
+python manage.py createcachetable
 
-echo "Creating superuser if none exists..."
-python manage.py createsuperuserifnone --settings=application.settings.production
+echo "Creating the initial administrator if none exists..."
+python manage.py createsuperuserifnone
 
-echo "Compiling translation messages..."
-# Check if locale directory exists
-if [ -d "locale" ] && [ -n "$(find locale -name '*.po' 2>/dev/null)" ]; then
-    python manage.py compilemessages --settings=application.settings.production
-    echo "✅ Translations compiled successfully"
-else
-    echo "⚠️  No translation files found, skipping compilemessages"
-fi
+echo "Collecting prebuilt static files..."
+python manage.py collectstatic --noinput
 
-echo "Installing Tailwind dependencies..."
-# Check if theme app exists and install npm dependencies
-if [ -d "theme/static_src" ]; then
-    cd theme/static_src
-    if [ -f "package.json" ]; then
-        npm install
-        cd /app
-        echo "✅ Tailwind dependencies installed"
-    else
-        cd /app
-        echo "⚠️  No package.json found in theme/static_src"
-    fi
-else
-    echo "⚠️  Theme app not initialized yet"
-fi
-
-echo "Building Tailwind CSS..."
-# Build Tailwind for production
-python manage.py tailwind build || echo "⚠️  Tailwind build skipped"
-
-echo "Collecting static files..."
-python manage.py collectstatic --noinput --settings=application.settings.production
-
-echo "Starting Gunicorn server..."
-# Workers: (2 * CPU cores) + 1  — auto-detected at runtime
-WORKERS=$(( 2 * $(nproc) + 1 ))
+echo "Starting Gunicorn..."
 exec gunicorn application.wsgi:application \
     --bind 0.0.0.0:8000 \
-    --workers "$WORKERS" \
+    --workers "${GUNICORN_WORKERS:-3}" \
     --worker-class gthread \
-    --threads 4 \
+    --threads "${GUNICORN_THREADS:-2}" \
     --worker-tmp-dir /dev/shm \
-    --preload \
     --max-requests 1000 \
     --max-requests-jitter 100 \
-    --timeout 120 \
+    --timeout "${GUNICORN_TIMEOUT:-120}" \
+    --graceful-timeout 30 \
     --keep-alive 5 \
     --access-logfile - \
-    --error-logfile - \
-    --env DJANGO_SETTINGS_MODULE=application.settings.production
+    --error-logfile -

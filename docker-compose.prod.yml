@@ -1,39 +1,116 @@
+name: trustbuilding_production
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-app: &app
+  build:
+    context: .
+    dockerfile: ./compose/production/django/Dockerfile
+  image: trustbuilding_web_prod
+  env_file:
+    - ./env/.production
+  restart: unless-stopped
+  init: true
+  logging: *logging
+
 services:
   web:
-    build:
-      context: .
-      dockerfile: ./compose/production/django/Dockerfile
-    image: trustbuilding_web_prod
+    <<: *app
     command: /start
     volumes:
-      - static_files:/app/static
-      - media_files:/app/media
+      - type: bind
+        source: /var/www/trustbuilding/static
+        target: /app/static
+        bind:
+          create_host_path: false
+      - type: bind
+        source: /var/www/trustbuilding/media
+        target: /app/media
+        bind:
+          create_host_path: false
     ports:
-      - 8010:8000
-    env_file:
-      - ./env/.production
+      - "127.0.0.1:8010:8000"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/', timeout=5).close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    stop_grace_period: 45s
 
   db:
-    image: postgres:18
+    image: postgres:18-bookworm
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in env/.production}
+      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in env/.production}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in env/.production}
+      PGDATA: /var/lib/postgresql/18/docker
     volumes:
-      - trustbuilding_prod_data:/var/lib/postgresql/18/data/
-    env_file:
-      - ./env/.production
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+    stop_grace_period: 60s
+    shm_size: 128mb
+    logging: *logging
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    logging: *logging
+
+  celery_worker:
+    <<: *app
+    command: ["celery", "-A", "application", "worker", "--loglevel=info", "--concurrency=${CELERY_WORKER_CONCURRENCY:-2}"]
+    depends_on:
+      web:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A application inspect ping --destination celery@\"$${HOSTNAME}\" --timeout 5"]
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 30s
+    stop_grace_period: 120s
+
+  celery_beat:
+    <<: *app
+    command: ["celery", "-A", "application", "beat", "--loglevel=info", "--schedule=/var/lib/celery/celerybeat-schedule", "--pidfile=/tmp/celerybeat.pid"]
+    volumes:
+      - celery_beat_data:/var/lib/celery
+    depends_on:
+      web:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      celery_worker:
+        condition: service_healthy
+    stop_grace_period: 30s
 
 volumes:
-  trustbuilding_prod_data:
-  static_files:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/www/trustbuilding/static
-  media_files:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /var/www/trustbuilding/media
-
+  postgres_data:
+  redis_data:
+  celery_beat_data:

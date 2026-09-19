@@ -7,8 +7,10 @@ from django.urls import include
 from django.urls import path
 from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from .views import health
 
 urlpatterns = [
+    path('health/', health, name='health'),
     path('', RedirectView.as_view(url='/dashboard/', permanent=False), name='root'),
     path('admin/', admin.site.urls),
     
