@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eu
 cd "$(CDPATH= cd -- "$(dirname -- "$0")/../.." && pwd)"
-exec docker compose --env-file env/.production -f docker-compose.prod.yml "$@"
+exec docker compose -f docker-compose.prod.yml "$@"

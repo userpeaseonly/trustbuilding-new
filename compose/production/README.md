@@ -82,10 +82,16 @@ and recreate the application services using the command in section 5.
 curl --fail https://trust-building.uz/health/
 ```
 
-The helper always supplies `--env-file env/.production` and
-`-f docker-compose.prod.yml`. Use it consistently: Compose interpolation needs
-the CLI env file as well as the services' `env_file` declarations. Avoid printing
-the expanded Compose configuration because it contains credentials.
+The helper supplies `-f docker-compose.prod.yml`. Each application service and
+PostgreSQL load `env/.production` through `env_file`; worker concurrency is
+expanded inside the container. No CLI `--env-file` option or exported shell
+variables are required. The direct command also works:
+
+```bash
+docker compose -f docker-compose.prod.yml up --build
+```
+
+Avoid printing the expanded Compose configuration because it contains credentials.
 
 The image builds CSS and translations in advance. Web startup runs migrations,
 creates the shared cache table, creates the initial administrator if none exists,

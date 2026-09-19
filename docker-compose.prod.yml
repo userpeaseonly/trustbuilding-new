@@ -49,10 +49,9 @@ services:
 
   db:
     image: postgres:18-bookworm
+    env_file:
+      - ./env/.production
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:?Set POSTGRES_DB in env/.production}
-      POSTGRES_USER: ${POSTGRES_USER:?Set POSTGRES_USER in env/.production}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in env/.production}
       PGDATA: /var/lib/postgresql/18/docker
     volumes:
       - postgres_data:/var/lib/postgresql
@@ -82,7 +81,8 @@ services:
 
   celery_worker:
     <<: *app
-    command: ["celery", "-A", "application", "worker", "--loglevel=info", "--concurrency=${CELERY_WORKER_CONCURRENCY:-2}"]
+    # Expand the service's env_file inside the container, not in the Compose CLI.
+    command: ["sh", "-c", "exec celery -A application worker --loglevel=info --concurrency=\"$${CELERY_WORKER_CONCURRENCY:-2}\""]
     depends_on:
       web:
         condition: service_healthy
