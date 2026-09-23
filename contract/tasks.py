@@ -33,7 +33,7 @@ def process_daily_payment_reminders():
         customer_phone = str(record.contract.customer.phone_number)
         message = (
             f"Hurmatli {record.contract.customer.full_name or 'Mijoz'}, "
-            f"sizning №{record.contract.id} sonli shartnomangiz bo'yicha {record.due_date.strftime('%d.%m.%Y')} "
+            f"sizning No{record.contract.id} sonli shartnomangiz bo'yicha {record.due_date.strftime('%d.%m.%Y')} "
             f"kunidagi {formatted_debt} UZS to'lovingiz kechikmoqda. Iltimos to'lovni amalga oshiring."
         )
         try:
@@ -54,7 +54,7 @@ def process_daily_payment_reminders():
         formatted_debt = f"{record.debt:,.2f}".replace(",", " ")
         customer_phone = str(record.contract.customer.phone_number)
         message = (
-            f"Eslatma: №{record.contract.id} sonli shartnoma bo'yicha "
+            f"Eslatma: No{record.contract.id} sonli shartnoma bo'yicha "
             f"{record.due_date.strftime('%d.%m.%Y')} kuni {formatted_debt} UZS "
             f"to'lov muddati kelmoqda."
         )

@@ -409,7 +409,7 @@ def initiate_termination(request, pk):
         
         # Send SMS to company user
         company_phone = str(contract.company.phone_number)
-        msg = f"TrustBuilding: №{contract.id} shartnomani bekor qilish uchun tasdiqlash kodi: {otp_code}"
+        msg = f"TrustBuilding: No{contract.id} shartnomani bekor qilish uchun tasdiqlash kodi: {otp_code}"
         try:
             send_sms(company_phone, msg)
             messages.info(request, _("A 6-digit OTP code has been sent to your phone for verification."))

@@ -34,7 +34,7 @@ def request_otp_view(request):
         token = OTPToken.objects.create(phone_number=phone_number)
         
         # Send SMS via Eskiz
-        message = _(f"TrustBuilding: Your login code is {token.code}")
+        message = f"TrustBuilding: Tizimga kirish uchun tasdiqlash kodi: {token.code}"
         success = EskizSMS.send_sms(phone_number, message)
         
         if success or True:  # Fallback to True for development without Eskiz credentials
