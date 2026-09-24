@@ -1,14 +1,22 @@
-{% load i18n %}
+{% load static i18n %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon-256x256.png' %}?v=2">
     <title>404 — {% trans "Page Not Found" %} | TrustBuilding</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-900 min-h-screen flex items-center justify-center px-4 text-white">
     <div class="text-center max-w-md">
+        <div class="flex items-center justify-center gap-2.5 mb-8">
+            <img src="{% static 'images/logo_icon.png' %}" alt="TrustBuilding" class="h-10 w-auto object-contain">
+            <span class="text-2xl font-extrabold tracking-tight text-white">Trust<span class="text-emerald-500">Building</span></span>
+        </div>
         <div class="mb-6">
             <span class="text-8xl font-extrabold text-indigo-500">404</span>
         </div>

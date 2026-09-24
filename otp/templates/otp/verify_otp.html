@@ -5,106 +5,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon-256x256.png' %}?v=2">
     <title>{% trans "Verify Code" %} — TrustBuilding</title>
     <style>
-        /* Login page styles — self-contained, no Tailwind build dependency */
         body.login-page {
-            background-color: #08090f;
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
+            background-size: 24px 24px;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
-            font-family: ui-sans-serif, system-ui, sans-serif;
+            padding: 1.5rem;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
+            color: #0f172a;
+            position: relative;
+        }
+        .lang-switch {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+        }
+        .lang-select {
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.15s ease;
+        }
+        .lang-select:hover {
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
         }
         .login-wrap {
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
         }
         .login-logo {
             display: flex;
+            align-items: center;
             justify-content: center;
+            gap: 0.75rem;
             margin-bottom: 2rem;
+            text-decoration: none;
         }
         .login-logo h1 {
-            color: #fff;
-            font-size: 1.75rem;
+            color: #0f172a;
+            font-size: 1.85rem;
+            font-weight: 800;
             margin: 0;
+            letter-spacing: -0.03em;
+        }
+        .login-logo span.accent {
+            color: #10b981;
         }
         .login-card {
-            background-color: #12131a;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.25rem;
+            padding: 2.25rem;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 10px -6px rgba(15, 23, 42, 0.02);
         }
-        .login-card h1 {
-            color: #fff;
-            font-size: 1.25rem;
+        .login-card h2 {
+            color: #0f172a;
+            font-size: 1.35rem;
             font-weight: 700;
-            margin: 0 0 0.25rem 0;
+            margin: 0 0 0.35rem 0;
+            letter-spacing: -0.02em;
         }
         .login-card p.subtitle {
-            color: #6b7280;
+            color: #64748b;
             font-size: 0.875rem;
             margin: 0 0 1.75rem 0;
+            line-height: 1.4;
         }
         .login-label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
-            color: #9ca3af;
+            color: #475569;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.05em;
             margin-bottom: 0.5rem;
         }
-        .login-input {
+        .otp-input {
             width: 100%;
             box-sizing: border-box;
-            padding: 0.75rem 1rem;
-            background-color: #1e2030 !important;
-            color: #f9fafb !important;
-            border: 1px solid rgba(255,255,255,0.12);
-            border-radius: 0.625rem;
-            font-size: 1.5rem;
-            letter-spacing: 0.5em;
+            padding: 0.85rem 1rem;
+            background-color: #f8fafc !important;
+            color: #0f172a !important;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.75rem;
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: 0.35em;
             text-align: center;
             outline: none;
-            transition: border-color 0.15s;
-            caret-color: #60a5fa;
+            transition: all 0.15s ease-in-out;
+            caret-color: #10b981;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         }
-        .login-input::placeholder { color: #4b5563; font-size: 1rem; letter-spacing: normal;}
-        .login-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); }
+        .otp-input::placeholder { color: #cbd5e1; font-size: 1.25rem; letter-spacing: 0.2em; font-weight: normal; }
+        .otp-input:focus {
+            background-color: #ffffff !important;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+        }
         .login-field { margin-bottom: 1.25rem; }
-        .alert { padding: 0.75rem 1rem; border-radius: 0.625rem; font-size: 0.875rem; font-weight: 500; margin-bottom: 1.25rem; }
-        .alert-error { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
-        .alert-success { background: rgba(16,185,129,0.1); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.2); }
-        .alert-info { background: rgba(59,130,246,0.1); color: #93c5fd; border: 1px solid rgba(59,130,246,0.2); }
-        .login-btn {
-            width: 100%; padding: 0.8125rem 1rem; background-color: #2563eb; color: #fff;
-            font-size: 0.875rem; font-weight: 600; border: none; border-radius: 0.625rem;
-            cursor: pointer; transition: background-color 0.15s, transform 0.1s;
-            box-shadow: 0 4px 14px rgba(37,99,235,0.35); margin-top: 0.5rem;
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
         }
-        .login-btn:hover { background-color: #1d4ed8; }
-        .login-btn:active { transform: scale(0.98); }
-        .login-footer { text-align: center; font-size: 0.75rem; color: #374151; margin-top: 1.5rem; }
-        .resend-link { display: block; text-align: center; margin-top: 1rem; font-size: 0.875rem; color: #60a5fa; text-decoration: none; }
-        .resend-link:hover { color: #3b82f6; text-decoration: underline; }
+        .alert-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+        .alert-success { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .alert-info { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+        .login-btn {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background-color: #059669;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 4px 0 rgba(5, 150, 105, 0.2);
+            margin-top: 0.5rem;
+        }
+        .login-btn:hover {
+            background-color: #047857;
+            box-shadow: 0 4px 10px 0 rgba(5, 150, 105, 0.25);
+            transform: translateY(-1px);
+        }
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        .resend-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #059669;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .resend-link:hover {
+            color: #047857;
+            text-decoration: underline;
+        }
+        .login-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body class="login-page">
 
+    <!-- Language Switcher in Header -->
+    <div class="lang-switch">
+        <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+            <select name="language" onchange="this.form.submit()" class="lang-select">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                    <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                        {% if language.code == 'uz' %}🇺🇿 O'zbekcha{% elif language.code == 'ru' %}🇷🇺 Русский{% else %}🇬🇧 English{% endif %}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+
     <div class="login-wrap">
         <!-- Logo -->
         <div class="login-logo">
-            <h1>TrustBuilding</h1>
+            <img src="{% static 'images/logo_icon.png' %}" alt="TrustBuilding Logo" style="height: 2.75rem; width: auto; object-fit: contain;">
+            <h1>Trust<span class="accent">Building</span></h1>
         </div>
 
         <!-- Card -->
         <div class="login-card">
-            <h1>{% trans "Verify Code" %}</h1>
+            <h2>{% trans "Verify Code" %}</h2>
             <p class="subtitle">{% trans "We sent a 6-digit code to" %} <strong>{{ phone_number }}</strong>.</p>
 
             <!-- Django messages -->
@@ -132,7 +234,7 @@
                            maxlength="6"
                            autofocus
                            required
-                           class="login-input">
+                           class="otp-input">
                 </div>
 
                 <button type="submit" class="login-btn">{% trans "Verify & Login" %}</button>
@@ -141,7 +243,7 @@
             <a href="{% url 'otp:request_otp' %}" class="resend-link">{% trans "Didn't receive code? Try again" %}</a>
         </div>
 
-        <p class="login-footer">TrustBuilding &copy; {% now "Y" %}</p>
+        <p class="login-footer">&copy; {% now "Y" %} TrustBuilding. {% trans "All rights reserved." %}</p>
     </div>
 
 </body>

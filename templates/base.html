@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="view-transition" content="same-origin">
+        <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}?v=2">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}?v=2">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon-256x256.png' %}?v=2">
     <title>{% block title %}TrustBuilding{% endblock %}</title>
     {% tailwind_css %}
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
@@ -150,7 +154,19 @@
             {% endif %}
 
             {% block content %}{% endblock %}
+
+            <!-- Footer -->
+            <footer class="mt-auto pt-8 pb-4 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+                <div class="flex items-center gap-2">
+                    <img src="{% static 'images/logo_icon.png' %}" alt="TrustBuilding" class="h-4 w-auto grayscale opacity-50">
+                    <span>&copy; {% now "Y" %} TrustBuilding. {% trans "All rights reserved." %}</span>
+                </div>
+                <div class="text-[11px] text-slate-400">
+                    CRM v1.0
+                </div>
+            </footer>
         </main>
+
     </div>
 
 </body>

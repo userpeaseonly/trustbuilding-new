@@ -2078,7 +2078,7 @@ msgstr "No results found"
 
 #: otp/models.py:11 otp/templates/otp/verify_otp.html:126
 msgid "OTP Code"
-msgstr "Код OTP"
+msgstr "Код подтверждения"
 
 #: otp/models.py:13
 msgid "Expires At"
@@ -2099,31 +2099,31 @@ msgstr "OTP Tokens"
 #: otp/templates/otp/request_otp.html:8 otp/templates/otp/request_otp.html:103
 #: users/templates/users/login.html:9 users/templates/users/login.html:238
 msgid "Sign In"
-msgstr "Войти"
+msgstr "Вход в систему"
 
 #: otp/templates/otp/request_otp.html:104
 msgid "Enter your phone number to receive a login code."
-msgstr "Enter your phone number to receive a login code."
+msgstr "Введите номер телефона для получения кода входа."
 
 #: otp/templates/otp/request_otp.html:133
 msgid "Send Code"
-msgstr "Send Code"
+msgstr "Отправить код"
 
 #: otp/templates/otp/verify_otp.html:8 otp/templates/otp/verify_otp.html:107
 msgid "Verify Code"
-msgstr "Verify Code"
+msgstr "Подтверждение кода"
 
 #: otp/templates/otp/verify_otp.html:108
 msgid "We sent a 6-digit code to"
-msgstr "We sent a 6-digit code to"
+msgstr "Мы отправили 6-значный код на"
 
 #: otp/templates/otp/verify_otp.html:138
 msgid "Verify & Login"
-msgstr "Verify & Login"
+msgstr "Подтвердить и войти"
 
 #: otp/templates/otp/verify_otp.html:141
 msgid "Didn't receive code? Try again"
-msgstr "Didn't receive code? Try again"
+msgstr "Не получили код? Попробовать снова"
 
 #: otp/views.py:19
 msgid "Phone number is required."
@@ -2430,7 +2430,7 @@ msgstr "Please correct the errors below."
 
 #: users/views.py:42
 msgid "You have been logged out successfully."
-msgstr "You have been logged out successfully."
+msgstr "Вы успешно вышли из системы."
 
 #: users/views.py:79
 msgid "Staff member added successfully!"
@@ -2445,6 +2445,9 @@ msgstr "Просмотр графика"
 
 msgid "Attendance History"
 msgstr "История возвратов"
+
+msgid "All rights reserved."
+msgstr "Все права защищены."
 
 #~ msgid "rooms"
 #~ msgstr "rooms"

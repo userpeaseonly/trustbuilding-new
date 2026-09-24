@@ -2105,7 +2105,7 @@ msgstr "Hech qanday natija topilmadi"
 
 #: otp/models.py:11 otp/templates/otp/verify_otp.html:126
 msgid "OTP Code"
-msgstr "OTP kodi"
+msgstr "Tasdiqlash kodi"
 
 #: otp/models.py:13
 msgid "Expires At"
@@ -2138,11 +2138,11 @@ msgstr "Kodni yuborish"
 
 #: otp/templates/otp/verify_otp.html:8 otp/templates/otp/verify_otp.html:107
 msgid "Verify Code"
-msgstr "Kodni tekshiring"
+msgstr "Kodni tasdiqlash"
 
 #: otp/templates/otp/verify_otp.html:108
 msgid "We sent a 6-digit code to"
-msgstr "Biz 6 xonali kodni yubordik"
+msgstr "Biz 6 xonali kodni yubordik:"
 
 #: otp/templates/otp/verify_otp.html:138
 msgid "Verify & Login"
@@ -2150,7 +2150,7 @@ msgstr "Tasdiqlash va kirish"
 
 #: otp/templates/otp/verify_otp.html:141
 msgid "Didn't receive code? Try again"
-msgstr "Kodni olmadingizmi?Qayta urinib ko'ring"
+msgstr "Kodni olmadingizmi? Qaytadan urinib ko'ring"
 
 #: otp/views.py:19
 msgid "Phone number is required."
@@ -2459,7 +2459,7 @@ msgstr "Quyidagi xatolarni tuzating."
 
 #: users/views.py:42
 msgid "You have been logged out successfully."
-msgstr "Siz tizimdan muvaffaqiyatli chiqdingiz."
+msgstr "Tizimdan muvaffaqiyatli chiqdingiz."
 
 #: users/views.py:79
 msgid "Staff member added successfully!"
@@ -2474,6 +2474,9 @@ msgstr "Jadvalni ko'rish"
 
 msgid "Attendance History"
 msgstr "Qaytarishlar tarixi"
+
+msgid "All rights reserved."
+msgstr "Barcha huquqlar himoyalangan."
 
 #~ msgid "rooms"
 #~ msgstr "xonalar"
