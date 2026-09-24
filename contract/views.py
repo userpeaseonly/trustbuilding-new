@@ -21,7 +21,7 @@ def contract_list(request):
     if not request.user.is_company:
         return redirect('dashboard:home')
         
-    contracts = Contract.objects.filter(company=request.user).order_by('-created_at')
+    contracts = Contract.objects.filter(company=request.user).select_related('customer', 'apartment__building').order_by('-created_at')
     
     query = request.GET.get('q', '').strip()
     if query:
@@ -548,7 +548,7 @@ def staff_quick_payment(request):
     contracts = []
     if selected_customer_id:
         selected_customer = get_object_or_404(CustomUser, pk=selected_customer_id, is_customer=True)
-        contracts = Contract.objects.filter(customer=selected_customer, company=company, status=Contract.STATUS_ACTIVE)
+        contracts = Contract.objects.filter(customer=selected_customer, company=company, status=Contract.STATUS_ACTIVE).select_related('apartment__building')
         
     return render(request, 'contract/quick_payment.html', {
         'customers': customers[:15],

@@ -160,21 +160,25 @@ def building_matrix_view(request, pk):
     if request.user.is_company and building.company != request.user:
         return redirect('dashboard:home')
 
-    apartments = building.apartments.filter(is_real=True)
+    # Fetch all active apartments in 1 single optimized database query
+    all_apts = list(building.apartments.filter(is_real=True).order_by('apartment_number'))
     
-    # Stats
-    available_count = apartments.filter(status='AVAILABLE').count()
-    reserved_count = apartments.filter(status='RESERVED').count()
-    sold_count = apartments.filter(status='SOLD').count()
+    # Calculate stats in memory (0 extra queries)
+    available_count = sum(1 for a in all_apts if a.status == 'AVAILABLE')
+    reserved_count = sum(1 for a in all_apts if a.status == 'RESERVED')
+    sold_count = sum(1 for a in all_apts if a.status == 'SOLD')
     
-    # Structure matrix dict: matrix[entrance][floor] = list_of_apartments
+    # Map apartments in Python memory (0 extra queries)
+    from collections import defaultdict
+    apt_map = defaultdict(lambda: defaultdict(list))
+    for a in all_apts:
+        apt_map[a.entrance_number][a.floor_number].append(a)
+        
     matrix = {}
     for entrance in range(1, building.entrance_count + 1):
         matrix[entrance] = {}
-        for floor in range(building.floor_count, 0, -1):  # Top floor down to floor 1
-            matrix[entrance][floor] = apartments.filter(
-                entrance_number=entrance, floor_number=floor
-            ).order_by('apartment_number')
+        for floor in range(building.floor_count, 0, -1):
+            matrix[entrance][floor] = apt_map[entrance][floor]
             
     return render(request, 'building/matrix.html', {
         'building': building,

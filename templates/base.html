@@ -11,12 +11,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/favicon-256x256.png' %}?v=2">
     <title>{% block title %}TrustBuilding{% endblock %}</title>
     {% tailwind_css %}
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{% static 'vendor/js/htmx.min.js' %}"></script>
+    <script defer src="{% static 'vendor/js/alpine-collapse.min.js' %}"></script>
+    <script defer src="{% static 'vendor/js/alpine.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'vendor/css/flatpickr.min.css' %}">
+    <script defer src="{% static 'vendor/js/flatpickr.min.js' %}"></script>
     <style>
         [x-cloak] { display: none !important; }
     </style>

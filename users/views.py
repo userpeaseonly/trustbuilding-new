@@ -46,7 +46,7 @@ def logout_view(request):
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser, StaffProfile
 from .forms import StaffCreationForm, CustomerRegistrationForm
-from django.db.models import Q
+from django.db.models import Q, Count
 
 @login_required
 def staff_list_view(request):
@@ -91,7 +91,7 @@ def staff_list_view(request):
 def customer_list_view(request):
     """Customer directory listing & customer registration"""
     query = request.GET.get('q', '').strip()
-    customers = CustomUser.objects.filter(is_customer=True).order_by('-created_at')
+    customers = CustomUser.objects.filter(is_customer=True).annotate(contract_count=Count('customer_contracts')).order_by('-created_at')
     
     if query:
         customers = customers.filter(
