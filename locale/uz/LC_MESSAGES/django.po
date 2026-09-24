@@ -57,7 +57,6 @@ msgid "Entrance Count"
 msgstr "Podezdlar soni"
 
 #: building/models.py:13
-#, fuzzy
 #| msgid "Apartments"
 msgid "Apartments per Floor"
 msgstr "Xonadonlar"
@@ -213,7 +212,6 @@ msgstr "Har bir qavat uchun kvartiralar"
 
 #: building/templates/building/form.html:63
 #: building/templates/building/list.html:132 raw_html.txt:2 raw_html.txt:52
-#, fuzzy
 #| msgid "Attendance Report"
 msgid "Advanced: Excel Import"
 msgstr "Attendance Report"
@@ -237,7 +235,6 @@ msgstr "Shaxsiylashtirilgan Excelni yuklang"
 
 #: building/templates/building/form.html:80
 #: building/templates/building/list.html:149
-#, fuzzy
 #| msgid "Apartment updated!"
 msgid "apartments parsed"
 msgstr "Apartment updated!"
@@ -254,7 +251,6 @@ msgstr "Avtomatlashtirilgan tarmoq:"
 
 #: building/templates/building/form.html:112
 #: building/templates/building/list.html:182
-#, fuzzy
 #| msgid ""
 #| "An entrance-by-floor apartment matrix will be automatically generated "
 #| "upon creation."
@@ -314,10 +310,9 @@ msgid "Entrances"
 msgstr "Kirishlar"
 
 #: building/templates/building/list.html:58
-#, fuzzy
 #| msgid "Apartment Visualizer Matrix"
 msgid "Visualizer Matrix"
-msgstr "Apartment Visualizer Matrix"
+msgstr "Matritsa vizualizatori"
 
 #: building/templates/building/list.html:68
 msgid "No residential buildings yet"
@@ -346,14 +341,13 @@ msgid "Download template, customize apartments, and upload back."
 msgstr "Shablonni yuklab oling, kvartiralarni sozlang va qayta yuklang."
 
 #: building/templates/building/list.html:156
-#, fuzzy
 #| msgid "Events"
 msgid "Ent"
 msgstr "Voqealar"
 
 #: building/templates/building/list.html:158
 msgid "Apt #"
-msgstr ""
+msgstr "Kvartira raqami"
 
 #: building/templates/building/matrix.html:13
 msgid "Apartment Visualizer Matrix"
@@ -367,10 +361,9 @@ msgstr "Kvartira vizualizator matritsasi"
 #: contract/templates/contract/partials/apartment_search_results.html:7
 #: contract/templates/contract/quick_payment.html:58
 #: dashboard/templates/dashboard/home.html:108
-#, fuzzy
 #| msgid "Apts"
 msgid "Apt"
-msgstr "Kv."
+msgstr "Kvartira"
 
 #: building/templates/building/partials/apartment_card.html:31
 #: building/templates/building/partials/apartment_modal.html:50
@@ -803,7 +796,6 @@ msgid "Payment Records"
 msgstr "To'lov yozuvlari"
 
 #: contract/models.py:345 contract/templates/contract/template_list.html:160
-#, fuzzy
 #| msgid "Company Name"
 msgid "Template Name"
 msgstr "Company Name"
@@ -821,17 +813,15 @@ msgid "Is Default"
 msgstr "Standart"
 
 #: contract/models.py:354
-#, fuzzy
 #| msgid "Contract Date"
 msgid "Contract Template"
 msgstr "Shartnoma sanasi"
 
 #: contract/models.py:355 contract/templates/contract/template_list.html:8
 #: raw_html.txt:938 templates/base.html:116
-#, fuzzy
 #| msgid "Contract Terms"
 msgid "Contract Templates"
-msgstr "Contract Terms"
+msgstr "Shartnoma shablonlari"
 
 #: contract/templates/contract/confirm_termination.html:12
 #: contract/views.py:423 contract/views.py:470
@@ -863,13 +853,11 @@ msgid "Fine Penalty Amount (UZS)"
 msgstr "Jarima / Penya summasi (UZS)"
 
 #: contract/templates/contract/confirm_termination.html:42
-#, fuzzy
 #| msgid "Total Amount:"
 msgid "Total Amount Paid by Customer:"
 msgstr "Total Amount:"
 
 #: contract/templates/contract/confirm_termination.html:46
-#, fuzzy
 #| msgid "Fine Penalty"
 msgid "- Fine Penalty:"
 msgstr "Fine Penalty"
@@ -887,25 +875,21 @@ msgid "Real Estate Contract"
 msgstr "Ko'chmas mulk shartnomasi"
 
 #: contract/templates/contract/detail.html:29 raw_html.txt:840
-#, fuzzy
 #| msgid "Down Payment Date"
 msgid "Download Payments (Excel)"
 msgstr "Boshlang'ich to'lov"
 
 #: contract/templates/contract/detail.html:34 raw_html.txt:841
-#, fuzzy
 #| msgid "Download .DOCX Contract"
 msgid "Download Contract"
 msgstr ".DOCX Shartnomani yuklab olish"
 
 #: contract/templates/contract/detail.html:47 raw_html.txt:843
-#, fuzzy
 #| msgid "Download .DOCX Contract"
 msgid "📥 Download .DOCX Contract"
 msgstr ".DOCX Shartnomani yuklab olish"
 
 #: contract/templates/contract/detail.html:53 raw_html.txt:844
-#, fuzzy
 #| msgid "Dashboard"
 msgid "Refund Dashboard"
 msgstr "Boshqaruv paneli"
@@ -999,7 +983,6 @@ msgid "Import Payments (Excel)"
 msgstr "Import to'lovlari (Excel)"
 
 #: contract/templates/contract/detail.html:269
-#, fuzzy
 #| msgid "Late Payments"
 msgid "Import Payments"
 msgstr "Kechikkan to'lovlar"
@@ -1276,10 +1259,9 @@ msgid "Active Contracts & Log Payment"
 msgstr "Faol shartnomalar va to'lov jurnali"
 
 #: contract/templates/contract/quick_payment.html:69
-#, fuzzy
 #| msgid "View Schedule"
 msgid "View Full Schedule"
-msgstr "View Schedule"
+msgstr "To'liq jadvalni ko'rish"
 
 #: contract/templates/contract/quick_payment.html:75
 msgid "Total Value"
@@ -1294,13 +1276,11 @@ msgid "Log Payment & Print Receipt"
 msgstr "To'lov va kvitansiyani chop etish jurnali"
 
 #: contract/templates/contract/quick_payment.html:169
-#, fuzzy
 #| msgid "Active Contracts"
 msgid "No Active Contracts"
 msgstr "Faol shartnomalar"
 
 #: contract/templates/contract/quick_payment.html:170
-#, fuzzy
 #| msgid ""
 #| "Select a customer from the left panel to display active contracts and log "
 #| "payments."
@@ -1310,7 +1290,6 @@ msgstr ""
 "payments."
 
 #: contract/templates/contract/quick_payment.html:177
-#, fuzzy
 #| msgid "Select Customer"
 msgid "Select a Customer"
 msgstr "Mijozni tanlang"
@@ -1347,13 +1326,11 @@ msgid "Make Default"
 msgstr "Standart qilish"
 
 #: contract/templates/contract/template_list.html:49 raw_html.txt:887
-#, fuzzy
 #| msgid "Active Employee"
 msgid "Active Template"
 msgstr "Active Employee"
 
 #: contract/templates/contract/template_list.html:55
-#, fuzzy
 #| msgid "Download .DOCX Contract"
 msgid "Download Original"
 msgstr ".DOCX Shartnomani yuklab olish"
@@ -1363,7 +1340,6 @@ msgid "Are you sure you want to delete this template?"
 msgstr "Haqiqatan ham bu shablonni oʻchirib tashlamoqchimisiz?"
 
 #: contract/templates/contract/template_list.html:60
-#, fuzzy
 #| msgid "Delete Group"
 msgid "Delete"
 msgstr "Delete Group"
@@ -1398,7 +1374,6 @@ msgid "Show / Hide"
 msgstr "Ko'rsatish / yashirish"
 
 #: contract/templates/contract/template_list.html:94
-#, fuzzy
 #| msgid "Notes"
 msgid "Note:"
 msgstr "Izoh / Qaydlar"
@@ -1430,7 +1405,6 @@ msgstr ""
 "shablonlaringizni yangilashingiz shart emas."
 
 #: contract/templates/contract/template_list.html:107
-#, fuzzy
 #| msgid "Contract ID"
 msgid "Contract Info"
 msgstr "Contract ID"
@@ -1453,7 +1427,6 @@ msgid "Year"
 msgstr "Yil"
 
 #: contract/templates/contract/template_list.html:114
-#, fuzzy
 #| msgid "Customer Directory"
 msgid "Company Director"
 msgstr "Mijozlar bazasi"
@@ -1463,19 +1436,16 @@ msgid "Director Short Name"
 msgstr "Rejissyorning qisqa nomi"
 
 #: contract/templates/contract/template_list.html:116
-#, fuzzy
 #| msgid "Customer"
 msgid "Customer Info"
 msgstr "Mijoz"
 
 #: contract/templates/contract/template_list.html:118
-#, fuzzy
 #| msgid "Customer Name"
 msgid "Short Name"
 msgstr "Customer Name"
 
 #: contract/templates/contract/template_list.html:120
-#, fuzzy
 #| msgid "Passport Scan"
 msgid "Passport Date"
 msgstr "Passport Scan"
@@ -1485,37 +1455,31 @@ msgid "Given By"
 msgstr "tomonidan berilgan"
 
 #: contract/templates/contract/template_list.html:126
-#, fuzzy
 #| msgid "Finance"
 msgid "Financials"
 msgstr "Moliya"
 
 #: contract/templates/contract/template_list.html:128
-#, fuzzy
 #| msgid "Total Paid"
 msgid "Total in Words"
 msgstr "Jami to'langan"
 
 #: contract/templates/contract/template_list.html:130
-#, fuzzy
 #| msgid "Intermediate Monthly Installment:"
 msgid "Monthly Installment"
 msgstr "Intermediate Monthly Installment:"
 
 #: contract/templates/contract/template_list.html:132
-#, fuzzy
 #| msgid "Apartment"
 msgid "Apartment Info"
 msgstr "Xonadon"
 
 #: contract/templates/contract/template_list.html:136
-#, fuzzy
 #| msgid "Apartment"
 msgid "Apartment No"
 msgstr "Xonadon"
 
 #: contract/templates/contract/template_list.html:138
-#, fuzzy
 #| msgid "Total Area (m²)"
 msgid "Area (m²)"
 msgstr "Total Area (m²)"
@@ -1529,7 +1493,6 @@ msgid "1 m² Price Words"
 msgstr "1 m² Narx so'zlari"
 
 #: contract/templates/contract/template_list.html:151
-#, fuzzy
 #| msgid "Contract Date"
 msgid "Upload Contract Template"
 msgstr "Shartnoma sanasi"
@@ -1574,31 +1537,26 @@ msgid "No terminated contracts found."
 msgstr "Hech qanday bekor qilingan shartnomalar topilmadi."
 
 #: contract/templates/contract/termination_dashboard.html:10
-#, fuzzy
 #| msgid "Terminated Contracts"
 msgid "Terminated Contract Dashboard"
 msgstr "Terminated Contracts"
 
 #: contract/templates/contract/termination_dashboard.html:11
-#, fuzzy
 #| msgid "Terminated"
 msgid "Terminated on"
 msgstr "Bekor qilingan"
 
 #: contract/templates/contract/termination_dashboard.html:15 raw_html.txt:884
-#, fuzzy
 #| msgid "View Schedule"
 msgid "View Original Schedule"
-msgstr "View Schedule"
+msgstr "Asl jadvalni ko'rish"
 
 #: contract/templates/contract/termination_dashboard.html:18
-#, fuzzy
 #| msgid "Back to Contract"
 msgid "Back to Contracts"
 msgstr "Shartnomaga qaytish"
 
 #: contract/templates/contract/termination_dashboard.html:30
-#, fuzzy
 #| msgid "Total Remaining"
 msgid "Total Refund Planned"
 msgstr "Umumiy qoldiq"
@@ -1608,19 +1566,16 @@ msgid "Refund Paid So Far"
 msgstr "Hozirgacha to'langan pul"
 
 #: contract/templates/contract/termination_dashboard.html:43
-#, fuzzy
 #| msgid "Attendance History"
 msgid "Refund History"
 msgstr "Attendance History"
 
 #: contract/templates/contract/termination_dashboard.html:56
-#, fuzzy
 #| msgid "No recent payments."
 msgid "No refunds paid yet."
 msgstr "No recent payments."
 
 #: contract/templates/contract/termination_dashboard.html:64
-#, fuzzy
 #| msgid "Process Payment"
 msgid "Process Refund"
 msgstr "Process Payment"
@@ -1639,19 +1594,16 @@ msgid "Amount"
 msgstr "Miqdori"
 
 #: contract/templates/contract/termination_dashboard.html:77
-#, fuzzy
 #| msgid "Total Remaining"
 msgid "Max remaining:"
 msgstr "Umumiy qoldiq"
 
 #: contract/templates/contract/termination_dashboard.html:80
-#, fuzzy
 #| msgid "Select Payment Method"
 msgid "Payment Method"
 msgstr "Select Payment Method"
 
 #: contract/templates/contract/termination_dashboard.html:88
-#, fuzzy
 #| msgid "Planned Refund"
 msgid "Record Refund"
 msgstr "Planned Refund"
@@ -1708,19 +1660,16 @@ msgid "Invalid or expired OTP code."
 msgstr "Yaroqsiz yoki muddati o‘tgan OTP kodi."
 
 #: contract/views.py:515
-#, fuzzy
 #| msgid "Payment logged successfully!"
 msgid "Refund payment recorded successfully!"
 msgstr "Payment logged successfully!"
 
 #: contract/views.py:517
-#, fuzzy
 #| msgid "Payment amount must be greater than zero."
 msgid "Amount must be greater than 0."
 msgstr "Payment amount must be greater than zero."
 
 #: contract/views.py:691
-#, fuzzy
 #| msgid "Payment logged successfully!"
 msgid "Template uploaded successfully."
 msgstr "Payment logged successfully!"
@@ -1810,7 +1759,6 @@ msgid "Date"
 msgstr "Sana"
 
 #: dashboard/templates/dashboard/home.html:129
-#, fuzzy
 #| msgid "No recent payments."
 msgid "No recent payments"
 msgstr "No recent payments."
@@ -1828,23 +1776,20 @@ msgid "Late Payments"
 msgstr "Kechikkan to'lovlar"
 
 #: dashboard/templates/dashboard/home.html:162
-#, fuzzy
 #| msgid "Clients who have missed their scheduled due date."
 msgid "Clients who have missed their scheduled due date require attention."
-msgstr "Clients who have missed their scheduled due date."
+msgstr "To'lov muddatini o'tkazib yuborgan mijozlar e'tiborni talab qiladi."
 
 #: dashboard/templates/dashboard/home.html:166
-#, fuzzy
 #| msgid "Review Contracts &rarr;"
 msgid "Review Contracts"
-msgstr "Review Contracts &rarr;"
+msgstr "Shartnomalarni ko'rish"
 
 #: dashboard/templates/dashboard/home.html:179
 msgid "All Caught Up"
 msgstr "Hammasi ushlandi"
 
 #: dashboard/templates/dashboard/home.html:180
-#, fuzzy
 #| msgid "All accounts are up to date."
 msgid "All accounts are currently up to date."
 msgstr "All accounts are up to date."
@@ -2357,7 +2302,6 @@ msgid "Company Name"
 msgstr "Shirkat nomi"
 
 #: users/models.py:55
-#, fuzzy
 #| msgid "Full Name"
 msgid "Director Full Name"
 msgstr "F.I.SH. (To'liq ismi)"
@@ -2404,7 +2348,6 @@ msgid "Search by phone number, name, or PINFL..."
 msgstr "Telefon raqami, ism yoki PINFL boʻyicha qidirish..."
 
 #: users/templates/users/customer_list.html:27
-#, fuzzy
 #| msgid "Customer"
 msgid "New Customer"
 msgstr "Mijoz"
@@ -3277,3 +3220,7 @@ msgstr "Mijoz profili ro'yxatdan o'tdi!"
 
 #~ msgid "User avatar"
 #~ msgstr "Foydalanuvchi avatari"
+
+
+msgid "View Schedule"
+msgstr "Jadvalni ko'rish"

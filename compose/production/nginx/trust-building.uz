@@ -1,3 +1,11 @@
+# Catch-all server block to drop requests with unrecognized Host headers (bot scanners)
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+    return 444;
+}
+
 # HTTP bootstrap site. Certbot --nginx adds TLS and the HTTPS redirect in place.
 # Install as /etc/nginx/sites-available/trust-building.uz on the host.
 upstream trustbuilding {

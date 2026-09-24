@@ -54,7 +54,7 @@
                     
                     <div class="flex justify-between items-center p-3 cursor-pointer" @click="activeContract = activeContract == '{{ contract.pk }}' ? '' : '{{ contract.pk }}'">
                         <div>
-                            <span class="font-bold text-base text-slate-900">Contract #{{ contract.id }}</span>
+                            <span class="font-bold text-base text-slate-900">{% trans "Contract" %} #{{ contract.id }}</span>
                             <span class="text-xs text-slate-500 block font-normal">{{ contract.apartment.building.name }} - {% trans "Apt" %} {{ contract.apartment.apartment_number }}</span>
                         </div>
                         <div class="flex items-center gap-3">

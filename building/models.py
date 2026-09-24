@@ -59,4 +59,4 @@ class Apartment(models.Model):
         ordering = ['entrance_number', 'floor_number', 'apartment_number']
 
     def __str__(self):
-        return f"Apt {self.apartment_number} ({self.building.name})"
+        return f"{_('Apt')} {self.apartment_number} ({self.building.name})"
