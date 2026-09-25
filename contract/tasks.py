@@ -31,11 +31,7 @@ def process_daily_payment_reminders():
         
         formatted_debt = f"{record.debt:,.2f}".replace(",", " ")
         customer_phone = str(record.contract.customer.phone_number)
-        message = (
-            f"Hurmatli {record.contract.customer.full_name or 'Mijoz'}, "
-            f"sizning No{record.contract.id} sonli shartnomangiz bo'yicha {record.due_date.strftime('%d.%m.%Y')} "
-            f"kunidagi {formatted_debt} UZS to'lovingiz kechikmoqda. Iltimos to'lovni amalga oshiring."
-        )
+        message = f"Hurmatli {record.contract.customer.full_name or 'Mijoz'}, No{record.contract.id} shartnomangiz bo'yicha {record.due_date.strftime('%d.%m.%Y')} kungi {formatted_debt} UZS to'lovingiz kechikmoqda. Iltimos, to'lovni amalga oshiring." 
         try:
             send_sms(customer_phone, message)
             overdue_count += 1

@@ -37,7 +37,8 @@ def request_otp_view(request):
         message = f"TrustBuilding: Tizimga kirish uchun tasdiqlash kodi: {token.code}"
         success = EskizSMS.send_sms(phone_number, message)
         
-        if success or True:  # Fallback to True for development without Eskiz credentials
+        from django.conf import settings
+        if success or settings.DEBUG:  # Only fallback in DEBUG mode
             if not success:
                 print(f"--- DEV MODE: SMS failed. The OTP for {phone_number} is {token.code} ---")
             # Store phone number in session for verification step

@@ -92,8 +92,8 @@ AUTH_USER_MODEL = "users.CustomUser"
 LOGIN_URL = 'otp:request_otp'
 LOGIN_REDIRECT_URL = 'dashboard:home'
 LOGOUT_REDIRECT_URL = 'otp:request_otp'
-SESSION_COOKIE_AGE = 86400  # 1 day (24 hours in seconds)
-SESSION_SAVE_EVERY_REQUEST = True  # Resets the 1-day expiration timer on user activity
+SESSION_COOKIE_AGE = 604800  # 1 week (7 days in seconds)
+SESSION_SAVE_EVERY_REQUEST = True  # Resets the expiration timer on user activity
 
 ROOT_URLCONF = 'application.urls'
 
@@ -222,7 +222,7 @@ REST_FRAMEWORK = {
 
 # SimpleJWT Configuration
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
 }
 
