@@ -227,8 +227,9 @@
                     <label for="code" class="login-label">
                         {% trans "OTP Code" %}
                     </label>
-                    <input type="text"
+                    <input type="tel"
                            name="code"
+                           autocomplete="one-time-code"
                            id="code"
                            placeholder="••••••"
                            maxlength="6"

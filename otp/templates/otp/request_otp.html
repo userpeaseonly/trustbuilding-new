@@ -210,8 +210,10 @@
                     <label for="phone_number" class="login-label">
                         {% trans "Phone Number" %}
                     </label>
-                    <input type="text"
+                    <input type="tel"
                            name="phone_number"
+                           maxlength="20"
+                           autocomplete="tel"
                            id="phone_number"
                            placeholder="+998 90 123 45 67"
                            autofocus
