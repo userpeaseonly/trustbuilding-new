@@ -24,6 +24,7 @@ class Contract(models.Model):
     apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, related_name='contracts')
     customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='customer_contracts', limit_choices_to={'is_customer': True})
     company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='company_contracts', limit_choices_to={'is_company': True})
+    staff_member = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='staff_contracts', limit_choices_to={'is_staff_member': True})
     
     contract_date = models.DateField(_("Contract Date"))
     down_payment_date = models.DateField(_("Down Payment Date"), null=True, blank=True)
@@ -80,6 +81,7 @@ class PaymentLog(models.Model):
     ]
 
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_logs')
+    staff_member = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='staff_payments', limit_choices_to={'is_staff_member': True})
     payment_record = models.ForeignKey('PaymentRecord', on_delete=models.SET_NULL, null=True, blank=True, related_name='payment_logs')
     amount = models.DecimalField(_("Payment Amount"), max_digits=15, decimal_places=2)
     payment_type = models.CharField(_("Payment Type"), max_length=20, choices=PAYMENT_TYPE_CHOICES)

@@ -51,10 +51,12 @@ from django.db.models import Q, Count
 @login_required
 def staff_list_view(request):
     """Company staff management view"""
-    if not request.user.is_company:
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
         return redirect('dashboard:home')
         
-    staff_profiles = StaffProfile.objects.filter(company=request.user).select_related('user')
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+    staff_profiles = StaffProfile.objects.filter(company=company).select_related('user')
     
     if request.method == 'POST':
         form = StaffCreationForm(request.POST)
@@ -75,7 +77,7 @@ def staff_list_view(request):
                 user.full_name = full_name
                 user.save(update_fields=['is_staff_member', 'full_name'])
                 
-            StaffProfile.objects.get_or_create(user=user, company=request.user, defaults={'position': position})
+            StaffProfile.objects.get_or_create(user=user, company=company, defaults={'position': position})
             messages.success(request, _("Staff member added successfully!"))
             return redirect('users:staff_list')
     else:
@@ -127,3 +129,68 @@ def customer_list_view(request):
 
 
 
+
+@login_required
+def staff_edit(request, pk):
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+        return redirect('dashboard:home')
+    
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+    staff_profile = get_object_or_404(StaffProfile, pk=pk, company=company)
+    user = staff_profile.user
+    
+    if request.method == 'POST':
+        full_name = request.POST.get('full_name', '').strip()
+        position = request.POST.get('position', '').strip()
+        phone_number = request.POST.get('phone_number', '').strip()
+        
+        if full_name:
+            user.full_name = full_name
+        if phone_number:
+            # Need basic validation
+            user.phone_number = phone_number
+        user.save(update_fields=['full_name', 'phone_number'])
+        
+        staff_profile.position = position
+        staff_profile.save(update_fields=['position'])
+        
+        messages.success(request, _("Staff member updated successfully."))
+    return redirect('users:staff_list')
+
+@login_required
+def staff_toggle_active(request, pk):
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+        return redirect('dashboard:home')
+        
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+    staff_profile = get_object_or_404(StaffProfile, pk=pk, company=company)
+    user = staff_profile.user
+    
+    if request.method == 'POST':
+        user.is_active = not user.is_active
+        user.status = user.is_active
+        user.save(update_fields=['is_active', 'status'])
+        state = _("activated") if user.is_active else _("deactivated")
+        messages.success(request, _("Staff member has been {}.").format(state))
+        
+    return redirect('users:staff_list')
+
+@login_required
+def staff_delete(request, pk):
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+        return redirect('dashboard:home')
+        
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+    staff_profile = get_object_or_404(StaffProfile, pk=pk, company=company)
+    user = staff_profile.user
+    
+    if request.method == 'POST':
+        user.is_staff_member = False
+        user.save(update_fields=['is_staff_member'])
+        staff_profile.delete()
+        messages.success(request, _("Staff member deleted successfully. Their past sales remain intact."))
+        
+    return redirect('users:staff_list')

@@ -18,10 +18,11 @@ from .utils.utils import number_to_words, amount_to_words_ru, MONTHS_UZ
 @login_required
 def contract_list(request):
     """List all active contracts for the company"""
-    if not request.user.is_company:
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
         return redirect('dashboard:home')
         
-    contracts = Contract.objects.filter(company=request.user).select_related('customer', 'apartment__building').order_by('-created_at')
+    company = get_user_company(request.user)
+    contracts = Contract.objects.filter(company=company).select_related('customer', 'apartment__building').order_by('-created_at')
     
     query = request.GET.get('q', '').strip()
     if query:
@@ -115,6 +116,8 @@ def contract_create(request):
             contract = form.save(commit=False)
             contract.company = company
             contract.customer = customer
+            if getattr(request.user, 'is_staff_member', False):
+                contract.staff_member = request.user
             contract.save()  # Signal generates PaymentRecords here!
             
             # 3. Mark Apartment as Sold
@@ -161,6 +164,8 @@ def process_payment(request, pk):
         if form.is_valid():
             payment = form.save(commit=False)
             payment.contract = contract
+            if getattr(request.user, 'is_staff_member', False):
+                payment.staff_member = request.user
             payment.save()  # Signal cascades debt recalculation
             
             messages.success(request, _("Payment logged successfully!"))
@@ -333,20 +338,17 @@ def download_payments_excel(request, pk):
     payment_logs = contract.payment_logs.all().order_by('-date_paid')
     
     for log in payment_logs:
-        staff_name = "Noma'lum"
-        try:
-            # We assume added_by or similar exists, otherwise leave blank
-            pass
-        except:
-            pass
+        staff_name = "Kompaniya"
+        if getattr(log, 'staff_member', None):
+            staff_name = log.staff_member.full_name or str(log.staff_member.phone_number)
             
         ws.append([
             log.id,
             log.date_paid.strftime("%d.%m.%Y"),
             float(log.amount),
-            log.get_payment_type_display(),
+            str(log.get_payment_type_display()),
             log.transaction_id or '',
-            ''
+            str(staff_name)
         ])
         
     # Return response
@@ -602,17 +604,18 @@ def search_apartments_api(request):
 @login_required
 def template_list(request):
     """List all contract templates for the company."""
-    if not getattr(request.user, 'is_company', False):
+    if not (getattr(request.user, 'is_company', False) or getattr(request.user, 'is_staff_member', False)):
         messages.error(request, _("Access denied."))
         return redirect('dashboard:home')
         
-    templates = ContractTemplate.objects.filter(company=request.user)
+    company = get_user_company(request.user)
+    templates = ContractTemplate.objects.filter(company=company)
     return render(request, 'contract/template_list.html', {'templates': templates})
 
 @login_required
 def template_create(request):
     """Upload a new contract template."""
-    if not getattr(request.user, 'is_company', False):
+    if not (getattr(request.user, 'is_company', False) or getattr(request.user, 'is_staff_member', False)):
         messages.error(request, _("Access denied."))
         return redirect('dashboard:home')
         
@@ -697,10 +700,10 @@ def template_create(request):
 
 @login_required
 def template_delete(request, pk):
-    if not getattr(request.user, 'is_company', False):
+    if not (getattr(request.user, 'is_company', False) or getattr(request.user, 'is_staff_member', False)):
         return redirect('dashboard:home')
         
-    template = get_object_or_404(ContractTemplate, pk=pk, company=request.user)
+    template = get_object_or_404(ContractTemplate, pk=pk, company=get_user_company(request.user))
     if request.method == 'POST':
         template.delete()
         messages.success(request, _("Template deleted."))
@@ -708,10 +711,10 @@ def template_delete(request, pk):
 
 @login_required
 def template_set_default(request, pk):
-    if not getattr(request.user, 'is_company', False):
+    if not (getattr(request.user, 'is_company', False) or getattr(request.user, 'is_staff_member', False)):
         return redirect('dashboard:home')
         
-    template = get_object_or_404(ContractTemplate, pk=pk, company=request.user)
+    template = get_object_or_404(ContractTemplate, pk=pk, company=get_user_company(request.user))
     if request.method == 'POST':
         template.is_default = True
         template.save()

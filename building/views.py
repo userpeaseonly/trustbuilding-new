@@ -9,11 +9,12 @@ from decimal import Decimal
 @login_required
 def building_list(request):
     """List all buildings for the company"""
-    if not request.user.is_company:
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
         messages.error(request, _("Access denied."))
         return redirect('dashboard:home')
         
-    buildings = Building.objects.filter(company=request.user).order_by('-created_at')
+    company = get_user_company(request.user)
+    buildings = Building.objects.filter(company=company).order_by('-created_at')
     
     context = {
         'buildings': buildings,
@@ -38,14 +39,14 @@ def building_detail(request, pk):
 @login_required
 def building_create(request):
     """Create a building and auto-generate the apartment grid"""
-    if not request.user.is_company:
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
         return redirect('dashboard:home')
         
     if request.method == 'POST':
         form = BuildingForm(request.POST)
         if form.is_valid():
             building = form.save(commit=False)
-            building.company = request.user
+            building.company = get_user_company(request.user)
             building.save()
             
             # Check if JSON apartments data was provided via Excel upload
@@ -156,8 +157,9 @@ def building_matrix_view(request, pk):
     """Interactive visual floor-by-entrance matrix layout for building apartments"""
     building = get_object_or_404(Building, pk=pk)
     
-    # Permission check: company owner or assigned staff
-    if request.user.is_company and building.company != request.user:
+    # Permission check: enforce company silos
+    company = get_user_company(request.user)
+    if building.company != company:
         return redirect('dashboard:home')
 
     # Fetch all active apartments in 1 single optimized database query
