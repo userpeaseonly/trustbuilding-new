@@ -132,7 +132,8 @@ def customer_list_view(request):
 
 @login_required
 def staff_edit(request, pk):
-    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+    if not request.user.is_company:
+        messages.error(request, _("Access denied. Only company admins can edit staff."))
         return redirect('dashboard:home')
     
     from building.views import get_user_company
@@ -160,7 +161,8 @@ def staff_edit(request, pk):
 
 @login_required
 def staff_toggle_active(request, pk):
-    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+    if not request.user.is_company:
+        messages.error(request, _("Access denied. Only company admins can deactivate staff."))
         return redirect('dashboard:home')
         
     from building.views import get_user_company
@@ -179,7 +181,8 @@ def staff_toggle_active(request, pk):
 
 @login_required
 def staff_delete(request, pk):
-    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+    if not request.user.is_company:
+        messages.error(request, _("Access denied. Only company admins can delete staff."))
         return redirect('dashboard:home')
         
     from building.views import get_user_company

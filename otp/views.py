@@ -14,7 +14,16 @@ def request_otp_view(request):
         return redirect('dashboard:home')
         
     if request.method == 'POST':
-        phone_number = request.POST.get('phone_number')
+        raw_phone = request.POST.get('phone_number', '')
+        # Normalize phone number to E.164 format for database consistency
+        import re
+        phone_number = re.sub(r'[^0-9+]', '', raw_phone)
+        if phone_number and not phone_number.startswith('+'):
+            if phone_number.startswith('998'):
+                phone_number = '+' + phone_number
+            else:
+                phone_number = '+998' + phone_number[-9:]
+                
         if not phone_number:
             messages.error(request, _("Phone number is required."))
             return redirect('otp:request_otp')
