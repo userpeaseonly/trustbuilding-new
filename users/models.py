@@ -81,3 +81,19 @@ class StaffProfile(models.Model):
     def __str__(self):
         return f"{self.user.full_name or self.user.phone_number} ({self.company})"
 
+
+class SMSLog(models.Model):
+    company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sms_logs', null=True, blank=True, limit_choices_to={'is_company': True})
+    phone_number = models.CharField(max_length=20)
+    message = models.TextField()
+    status = models.CharField(max_length=20, default='SENT')
+    cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    parts = models.IntegerField(default=1)
+    operator = models.CharField(max_length=50, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        
+    def __str__(self):
+        return f"{self.phone_number} - {self.cost} UZS"
