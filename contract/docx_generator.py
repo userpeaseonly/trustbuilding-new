@@ -136,6 +136,8 @@ def generate_contract_docx_response(contract_id, template_id=None):
         'M_1_кв_метр_нархи': f"{contract.price_per_square:,.0f}".replace(",", " "),
         'M_1_кв_нархи_сўз_билан': amount_to_words_ru(contract.price_per_square).replace(" сумов 00 тийин, без НДС", ""),
         'Бошланғич_тўлов': f"{down_payment:,.0f}".replace(",", " "),
+        'Бошланғич_тўлов_фоизи': f"{(down_payment / total_amount * 100) if total_amount else 0:.0f}",
+        'Қолган_тўлов_фоизи': f"{((total_amount - down_payment) / total_amount * 100) if total_amount else 0:.0f}",
         'График_бўйича_ойлик_тўлов': f"{monthly_payment:,.0f}".replace(",", " ") if monthly_payment else "",
         'Сотиб_олувчи_паспорт_серияси': contract.customer.passport_series or '',
         'Паспорти_берилган_вақти': contract.customer.passport_given_date.strftime("%d.%m.%Y") if hasattr(contract.customer, 'passport_given_date') and contract.customer.passport_given_date else '',

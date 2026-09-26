@@ -685,8 +685,12 @@ def template_create(request):
                 import logging
                 logging.getLogger(__name__).error(f"Error parsing table: {e}")
                 
+            company = get_user_company(request.user)
+            if is_default:
+                ContractTemplate.objects.filter(company=company).update(is_default=False)
+                
             ContractTemplate.objects.create(
-                company=request.user,
+                company=company,
                 name=name,
                 file=file,
                 is_default=is_default
@@ -714,8 +718,10 @@ def template_set_default(request, pk):
     if not (getattr(request.user, 'is_company', False) or getattr(request.user, 'is_staff_member', False)):
         return redirect('dashboard:home')
         
-    template = get_object_or_404(ContractTemplate, pk=pk, company=get_user_company(request.user))
+    company = get_user_company(request.user)
+    template = get_object_or_404(ContractTemplate, pk=pk, company=company)
     if request.method == 'POST':
+        ContractTemplate.objects.filter(company=company).update(is_default=False)
         template.is_default = True
         template.save()
         messages.success(request, _("Default template updated."))
