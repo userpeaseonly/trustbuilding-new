@@ -63,20 +63,20 @@
                                 <button @click="open = !open" @click.away="open = false" class="text-slate-400 hover:text-slate-600 transition">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
                                 </button>
-                                <div x-show="open" style="display: none;" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                <div x-show="open" style="display: none;" class="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
                                     <div class="py-1" role="menu" aria-orientation="vertical">
-                                        <button @click="open = false; $dispatch('open-edit', { id: '{{ profile.id }}', name: '{{ profile.user.full_name }}', phone: '{{ profile.user.phone_number }}', position: '{{ profile.position }}' })" class="text-left w-full block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem">
+                                        <button @click="open = false; $dispatch('open-edit', { id: '{{ profile.id }}', name: '{{ profile.user.full_name }}', phone: '{{ profile.user.phone_number }}', position: '{{ profile.position }}' })" class="text-left w-full block px-4 py-1.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors" role="menuitem">
                                             {% trans "Edit" %}
                                         </button>
                                         <form action="{% url 'users:staff_toggle_active' profile.id %}" method="post" class="m-0">
                                             {% csrf_token %}
-                                            <button type="submit" class="text-left w-full block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100" role="menuitem">
+                                            <button type="submit" class="text-left w-full block px-4 py-1.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors" role="menuitem">
                                                 {% if profile.user.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}
                                             </button>
                                         </form>
                                         <form action="{% url 'users:staff_delete' profile.id %}" method="post" class="m-0" onsubmit="return confirm('{% trans "Are you sure you want to delete this staff member?" %}');">
                                             {% csrf_token %}
-                                            <button type="submit" class="text-left w-full block px-4 py-2 text-sm text-red-600 hover:bg-red-50" role="menuitem">
+                                            <button type="submit" class="text-left w-full block px-4 py-1.5 text-xs text-red-600 hover:bg-red-50 transition-colors" role="menuitem">
                                                 {% trans "Delete" %}
                                             </button>
                                         </form>
