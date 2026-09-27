@@ -32,8 +32,20 @@ def contract_list(request):
             Q(id__icontains=query)
         )
     
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    
+    paginator = Paginator(contracts, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+    
     return render(request, 'contract/list.html', {
-        'contracts': contracts,
+        'page_obj': page_obj,
+        'query': query,
     })
 
 
