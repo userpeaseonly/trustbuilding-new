@@ -99,13 +99,16 @@ def customer_list_view(request):
             Q(phone_number__icontains=query) | Q(full_name__icontains=query) | Q(passport_jshshr__icontains=query)
         )
         
-    from application.pagination import paginate_queryset
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     
-    # CustomUser.objects.filter(...) is ordered by '-created_at' in the queryset above.
-    # Order by '-id' to guarantee cursor uniqueness
-    customers = customers.order_by('-id')
-    
-    page_data = paginate_queryset(request, customers, cursor_key='id', limit=10, is_desc=True)
+    paginator = Paginator(customers, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
         
     if request.method == 'POST':
         form = CustomerRegistrationForm(request.POST, request.FILES)
@@ -119,8 +122,8 @@ def customer_list_view(request):
         form = CustomerRegistrationForm()
         
     return render(request, 'users/customer_list.html', {
-        'customers': page_data['items'],
-        'page_data': page_data,
+        'customers': page_obj.object_list,
+        'page_obj': page_obj,
         'form': form,
         'query': query
     })

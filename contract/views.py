@@ -32,17 +32,19 @@ def contract_list(request):
             Q(id__icontains=query)
         )
     
-    from application.pagination import paginate_queryset
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     
-    # Contract.objects.filter(...) is ordered by '-created_at' in the queryset above.
-    # We can use 'created_at' as cursor, but it must be unique. Let's use 'id' instead to guarantee uniqueness,
-    # so we should order by '-id' instead of '-created_at'.
-    contracts = contracts.order_by('-id')
-    
-    page_data = paginate_queryset(request, contracts, cursor_key='id', limit=10, is_desc=True)
+    paginator = Paginator(contracts, 10)
+    page_number = request.GET.get('page')
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
     
     return render(request, 'contract/list.html', {
-        'page_data': page_data,
+        'page_obj': page_obj,
         'query': query,
     })
 
