@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 20:08+0500\n"
+"POT-Creation-Date: 2026-09-27 15:06+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,12 +47,12 @@ msgid "Building Name / Number"
 msgstr "Building Name / Number"
 
 #: building/models.py:9 building/templates/building/form.html:34
-#: building/templates/building/list.html:103
+#: building/templates/building/list.html:99
 msgid "Block Number"
 msgstr "Block Number"
 
 #: building/models.py:10 building/templates/building/form.html:40
-#: building/templates/building/list.html:109
+#: building/templates/building/list.html:105
 msgid "Address"
 msgstr "Address"
 
@@ -65,24 +65,23 @@ msgid "Entrance Count"
 msgstr "Entrance Count"
 
 #: building/models.py:13
-#, fuzzy
 #| msgid "Apartments"
 msgid "Apartments per Floor"
-msgstr "Apartments"
+msgstr "Apartments per Floor"
 
 #: building/models.py:14
 msgid "Apartment Count"
 msgstr "Apartment Count"
 
-#: building/models.py:16 building/models.py:53 contract/models.py:39
-#: contract/models.py:90 contract/models.py:117 contract/models.py:136
-#: contract/models.py:162 otp/models.py:12 users/models.py:36
-#: users/models.py:60 users/models.py:75
+#: building/models.py:16 building/models.py:53 contract/models.py:40
+#: contract/models.py:92 contract/models.py:119 contract/models.py:138
+#: contract/models.py:164 otp/models.py:12 users/models.py:36
+#: users/models.py:60 users/models.py:75 users/models.py:91
 msgid "Created At"
 msgstr "Created At"
 
-#: building/models.py:17 building/models.py:54 contract/models.py:40
-#: contract/models.py:118 contract/models.py:163 users/models.py:37
+#: building/models.py:17 building/models.py:54 contract/models.py:41
+#: contract/models.py:120 contract/models.py:165 users/models.py:37
 #: users/models.py:61
 msgid "Updated At"
 msgstr "Updated At"
@@ -91,7 +90,7 @@ msgstr "Updated At"
 msgid "Building"
 msgstr "Building"
 
-#: building/models.py:21 users/templates/users/staff_list.html:48
+#: building/models.py:21 users/templates/users/staff_list.html:84
 msgid "Buildings"
 msgstr "Buildings"
 
@@ -152,8 +151,9 @@ msgstr "Set to False if cloned/archived for a terminated contract."
 
 #: building/models.py:51
 #: building/templates/building/partials/apartment_modal.html:136
-#: contract/models.py:34 contract/templates/contract/detail.html:156
-#: contract/templates/contract/list.html:54 users/models.py:34
+#: contract/models.py:35 contract/templates/contract/detail.html:156
+#: contract/templates/contract/list.html:54
+#: dashboard/templates/dashboard/sms_usage.html:75 users/models.py:34
 msgid "Status"
 msgstr "Status"
 
@@ -169,7 +169,20 @@ msgstr "Apartment"
 msgid "Apartments"
 msgstr "Apartments"
 
+#: building/models.py:62 building/templates/building/matrix.html:59
+#: building/templates/building/partials/apartment_card.html:11
+#: contract/templates/contract/form.html:12
+#: contract/templates/contract/list.html:69
+#: contract/templates/contract/partials/apartment_search_results.html:4
+#: contract/templates/contract/partials/apartment_search_results.html:7
+#: contract/templates/contract/quick_payment.html:58
+#: dashboard/templates/dashboard/home.html:108
+#| msgid "Apts"
+msgid "Apt"
+msgstr "Apt"
+
 #: building/templates/building/detail.html:27
+#: building/templates/building/matrix.html:37
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
@@ -178,6 +191,9 @@ msgid "Entrance"
 msgstr "Entrance"
 
 #: building/templates/building/detail.html:35
+#: building/templates/building/form.html:87
+#: building/templates/building/list.html:153
+#: building/templates/building/matrix.html:46
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
@@ -186,8 +202,8 @@ msgid "Floor"
 msgstr "Floor"
 
 #: building/templates/building/form.html:14
-#: building/templates/building/list.html:11
-#: building/templates/building/list.html:86
+#: building/templates/building/list.html:10
+#: building/templates/building/list.html:82
 msgid "New Building Project"
 msgstr "New Building Project"
 
@@ -196,27 +212,27 @@ msgid "Define structural parameters to auto-generate the apartment matrix"
 msgstr "Define structural parameters to auto-generate the apartment matrix"
 
 #: building/templates/building/form.html:30
-#: building/templates/building/list.html:99
+#: building/templates/building/list.html:95
 msgid "Building Name"
 msgstr "Building Name"
 
 #: building/templates/building/form.html:46
-#: building/templates/building/list.html:115
+#: building/templates/building/list.html:111
 msgid "Number of Entrances"
 msgstr "Number of Entrances"
 
 #: building/templates/building/form.html:50
-#: building/templates/building/list.html:119
+#: building/templates/building/list.html:115
 msgid "Number of Floors"
 msgstr "Number of Floors"
 
 #: building/templates/building/form.html:54
-#: building/templates/building/list.html:123
+#: building/templates/building/list.html:119
 msgid "Apts Per Floor"
 msgstr "Apts Per Floor"
 
 #: building/templates/building/form.html:63
-#: building/templates/building/list.html:132
+#: building/templates/building/list.html:128
 msgid "Advanced: Excel Import"
 msgstr "Advanced: Excel Import"
 
@@ -225,36 +241,60 @@ msgid "Download a template, customize apartment details, and upload it back."
 msgstr "Download a template, customize apartment details, and upload it back."
 
 #: building/templates/building/form.html:67
-#: building/templates/building/list.html:136
+#: building/templates/building/list.html:132
 #: contract/templates/contract/detail.html:280
 msgid "Download Template"
 msgstr "Download Template"
 
 #: building/templates/building/form.html:72
-#: building/templates/building/list.html:141
+#: building/templates/building/list.html:137
 msgid "Upload Customized Excel"
 msgstr "Upload Customized Excel"
 
 #: building/templates/building/form.html:80
-#: building/templates/building/list.html:149
-#, fuzzy
+#: building/templates/building/list.html:145
 #| msgid "Apartment updated!"
 msgid "apartments parsed"
-msgstr "Apartment updated!"
+msgstr "apartments parsed"
 
 #: building/templates/building/form.html:81
-#: building/templates/building/list.html:150
+#: building/templates/building/list.html:146
 msgid "Showing first 5 rows"
 msgstr "Showing first 5 rows"
 
+#: building/templates/building/form.html:86
+#: building/templates/building/list.html:152
+msgid "Ent"
+msgstr "Ent"
+
+#: building/templates/building/form.html:88
+#: building/templates/building/list.html:154
+msgid "Apt #"
+msgstr "Apt #"
+
+#: building/templates/building/form.html:89
+#: building/templates/building/list.html:155
+msgid "Area"
+msgstr "Area"
+
+#: building/templates/building/form.html:90
+#: building/templates/building/list.html:156
+#: building/templates/building/matrix.html:79
+#: building/templates/building/partials/apartment_card.html:31
+#: building/templates/building/partials/apartment_modal.html:50
+#: building/templates/building/partials/apartment_modal.html:142
+#: contract/templates/contract/partials/apartment_search_results.html:8
+#: contract/templates/contract/template_list.html:137
+msgid "Rooms"
+msgstr "Rooms"
+
 #: building/templates/building/form.html:112
-#: building/templates/building/list.html:182
+#: building/templates/building/list.html:178
 msgid "Automated Grid:"
 msgstr "Automated Grid:"
 
 #: building/templates/building/form.html:112
-#: building/templates/building/list.html:182
-#, fuzzy
+#: building/templates/building/list.html:178
 #| msgid ""
 #| "An entrance-by-floor apartment matrix will be automatically generated upon "
 #| "creation."
@@ -262,68 +302,71 @@ msgid ""
 "If no Excel is uploaded, an entrance-by-floor matrix will be automatically "
 "generated."
 msgstr ""
-"An entrance-by-floor apartment matrix will be automatically generated upon "
-"creation."
+"If no Excel is uploaded, an entrance-by-floor matrix will be automatically "
+"generated."
 
 #: building/templates/building/form.html:117
-#: building/templates/building/list.html:187
+#: building/templates/building/list.html:183
 #: building/templates/building/partials/apartment_modal.html:197
-#: contract/templates/contract/confirm_termination.html:57
+#: contract/templates/contract/confirm_termination.html:56
 #: contract/templates/contract/form.html:490
 #: contract/templates/contract/template_list.html:176
 #: users/templates/users/customer_list.html:172
-#: users/templates/users/staff_list.html:97
+#: users/templates/users/role_form.html:19
+#: users/templates/users/role_form.html:63
+#: users/templates/users/staff_list.html:213
+#: users/templates/users/staff_list.html:276
 msgid "Cancel"
 msgstr "Cancel"
 
 #: building/templates/building/form.html:120
-#: building/templates/building/list.html:190
+#: building/templates/building/list.html:186
 msgid "Generate Building Project"
 msgstr "Generate Building Project"
 
 #: building/templates/building/form.html:193
-#: building/templates/building/list.html:264
+#: building/templates/building/list.html:260
 msgid "Invalid template structure. Missing required columns."
 msgstr "Invalid template structure. Missing required columns."
 
 #: building/templates/building/form.html:200
-#: building/templates/building/list.html:271
+#: building/templates/building/list.html:267
 msgid "Failed to parse Excel file."
 msgstr "Failed to parse Excel file."
 
-#: building/templates/building/list.html:26
+#: building/templates/building/list.html:24
 #: contract/templates/contract/template_list.html:133
 msgid "Block"
 msgstr "Block"
 
-#: building/templates/building/list.html:29
+#: building/templates/building/list.html:27
 #: dashboard/templates/dashboard/home.html:55
 msgid "Apts"
 msgstr "Apts"
 
-#: building/templates/building/list.html:38
+#: building/templates/building/list.html:36
 msgid "No address specified"
 msgstr "No address specified"
 
-#: building/templates/building/list.html:44
+#: building/templates/building/list.html:42
+#: building/templates/building/matrix.html:38
 msgid "Floors"
 msgstr "Floors"
 
-#: building/templates/building/list.html:48
+#: building/templates/building/list.html:46
 msgid "Entrances"
 msgstr "Entrances"
 
-#: building/templates/building/list.html:58
-#, fuzzy
+#: building/templates/building/list.html:56
 #| msgid "Apartment Visualizer Matrix"
 msgid "Visualizer Matrix"
-msgstr "Apartment Visualizer Matrix"
+msgstr "Visualizer Matrix"
 
-#: building/templates/building/list.html:68
+#: building/templates/building/list.html:66
 msgid "No residential buildings yet"
 msgstr "No residential buildings yet"
 
-#: building/templates/building/list.html:69
+#: building/templates/building/list.html:67
 msgid ""
 "Create your first residential project to generate visual apartment grids and"
 " sales schedules."
@@ -331,25 +374,21 @@ msgstr ""
 "Create your first residential project to generate visual apartment grids and"
 " sales schedules."
 
-#: building/templates/building/list.html:73
+#: building/templates/building/list.html:70
 msgid "Create First Building Project"
 msgstr "Create First Building Project"
 
-#: building/templates/building/list.html:87
+#: building/templates/building/list.html:83
 msgid "Define structural parameters to auto-generate the apartment grid"
 msgstr "Define structural parameters to auto-generate the apartment grid"
 
-#: building/templates/building/list.html:133
+#: building/templates/building/list.html:129
 msgid "Download template, customize apartments, and upload back."
 msgstr "Download template, customize apartments, and upload back."
 
 #: building/templates/building/matrix.html:13
 msgid "Apartment Visualizer Matrix"
 msgstr "Apartment Visualizer Matrix"
-
-#: building/templates/building/partials/apartment_card.html:19
-msgid "rooms"
-msgstr "rooms"
 
 #: building/templates/building/partials/apartment_modal.html:23
 msgid "SOLD (Read Only)"
@@ -370,13 +409,6 @@ msgstr ""
 #: building/templates/building/partials/apartment_modal.html:49
 msgid "Living Rooms"
 msgstr "Living Rooms"
-
-#: building/templates/building/partials/apartment_modal.html:50
-#: building/templates/building/partials/apartment_modal.html:142
-#: contract/templates/contract/partials/apartment_search_results.html:8
-#: contract/templates/contract/template_list.html:137
-msgid "Rooms"
-msgstr "Rooms"
 
 #: building/templates/building/partials/apartment_modal.html:53
 msgid "Total Area"
@@ -404,7 +436,7 @@ msgid "Customer"
 msgstr "Customer"
 
 #: building/templates/building/partials/apartment_modal.html:81
-#: contract/models.py:28
+#: contract/models.py:29
 msgid "Contract Date"
 msgstr "Contract Date"
 
@@ -441,23 +473,28 @@ msgstr "Create Contract for Apt"
 msgid "Save changes"
 msgstr "Save changes"
 
-#: building/views.py:13 contract/views.py:606 contract/views.py:616
+#: building/views.py:15 contract/views.py:625 contract/views.py:636
 msgid "Access denied."
 msgstr "Access denied."
 
-#: building/views.py:103
+#: building/views.py:78
+#, python-brace-format
+msgid "Error parsing apartments JSON: {error}"
+msgstr "Error parsing apartments JSON: {error}"
+
+#: building/views.py:107
 msgid "Building created successfully! Apartments grid generated."
 msgstr "Building created successfully! Apartments grid generated."
 
-#: building/views.py:108
+#: building/views.py:112
 msgid "Add Building"
 msgstr "Add Building"
 
-#: building/views.py:121 building/views.py:127
+#: building/views.py:125 building/views.py:131
 msgid "Sold apartments cannot be modified."
 msgstr "Sold apartments cannot be modified."
 
-#: building/views.py:137
+#: building/views.py:141
 msgid "Apartment updated!"
 msgstr "Apartment updated!"
 
@@ -474,19 +511,21 @@ msgid "Select Customer"
 msgstr "Select Customer"
 
 #: contract/forms.py:29 otp/models.py:10
-#: otp/templates/otp/request_otp.html:122
+#: otp/templates/otp/request_otp.html:211 users/forms.py:11
 #: users/templates/users/customer_list.html:38
 #: users/templates/users/customer_list.html:136
 #: users/templates/users/login.html:188
-#: users/templates/users/staff_list.html:26
-#: users/templates/users/staff_list.html:79
+#: users/templates/users/staff_list.html:44
+#: users/templates/users/staff_list.html:191
+#: users/templates/users/staff_list.html:253
 msgid "Phone Number"
 msgstr "Phone Number"
 
 #: contract/forms.py:34 contract/templates/contract/detail.html:80
-#: contract/templates/contract/template_list.html:117
+#: contract/templates/contract/template_list.html:117 users/forms.py:83
 #: users/templates/users/customer_list.html:140
-#: users/templates/users/staff_list.html:83
+#: users/templates/users/staff_list.html:195
+#: users/templates/users/staff_list.html:257
 msgid "Full Name"
 msgstr "Full Name"
 
@@ -496,7 +535,7 @@ msgstr "e.g. Alisher Tursunov"
 
 #: contract/forms.py:39 users/models.py:18
 #: users/templates/users/customer_list.html:144
-#: users/templates/users/staff_list.html:87
+#: users/templates/users/staff_list.html:199
 msgid "Gender"
 msgstr "Gender"
 
@@ -584,226 +623,224 @@ msgstr "Terminated"
 msgid "Completed"
 msgstr "Completed"
 
-#: contract/models.py:29
+#: contract/models.py:30
 msgid "Down Payment Date"
 msgstr "Down Payment Date"
 
-#: contract/models.py:30
+#: contract/models.py:31
 msgid "Price per m2"
 msgstr "Price per m2"
 
-#: contract/models.py:31 contract/templates/contract/detail.html:113
+#: contract/models.py:32 contract/templates/contract/detail.html:113
 #: contract/templates/contract/quick_payment.html:79
 #: contract/templates/contract/template_list.html:129
 msgid "Down Payment"
 msgstr "Down Payment"
 
-#: contract/models.py:32 contract/templates/contract/detail.html:117
+#: contract/models.py:33 contract/templates/contract/detail.html:117
 #: contract/templates/contract/quick_payment.html:83
 msgid "Last Payment"
 msgstr "Last Payment"
 
-#: contract/models.py:33
+#: contract/models.py:34
 msgid "Payment Duration (Months)"
 msgstr "Payment Duration (Months)"
 
-#: contract/models.py:37
+#: contract/models.py:38
 msgid "Total Contract Amount"
 msgstr "Total Contract Amount"
 
-#: contract/models.py:43
+#: contract/models.py:44
 #: contract/templates/contract/confirm_termination.html:13
 #: contract/templates/contract/detail.html:12
+#: contract/templates/contract/quick_payment.html:57
 #: contract/templates/contract/termination_dashboard.html:11
 msgid "Contract"
 msgstr "Contract"
 
-#: contract/models.py:44 contract/templates/contract/detail.html:10
-#: users/templates/users/customer_list.html:56
+#: contract/models.py:45 contract/templates/contract/detail.html:10
+#: users/permissions.py:28 users/templates/users/customer_list.html:56
 msgid "Contracts"
 msgstr "Contracts"
 
-#: contract/models.py:76 contract/templates/contract/detail.html:397
+#: contract/models.py:77 contract/templates/contract/detail.html:397
 #: contract/templates/contract/quick_payment.html:129
 #: contract/templates/contract/termination_dashboard.html:82
 msgid "Cash"
 msgstr "Cash"
 
-#: contract/models.py:77 contract/templates/contract/detail.html:404
+#: contract/models.py:78 contract/templates/contract/detail.html:404
 #: contract/templates/contract/quick_payment.html:136
 #: contract/templates/contract/termination_dashboard.html:83
 msgid "Card"
 msgstr "Card"
 
-#: contract/models.py:78 contract/templates/contract/detail.html:411
+#: contract/models.py:79 contract/templates/contract/detail.html:411
 #: contract/templates/contract/quick_payment.html:143
 #: contract/templates/contract/termination_dashboard.html:84
 msgid "Bank Transfer"
 msgstr "Bank Transfer"
 
-#: contract/models.py:79 contract/templates/contract/detail.html:418
+#: contract/models.py:80 contract/templates/contract/detail.html:418
 #: contract/templates/contract/quick_payment.html:150
 msgid "Material"
 msgstr "Material"
 
-#: contract/models.py:84 contract/models.py:131
+#: contract/models.py:86 contract/models.py:133
 msgid "Payment Amount"
 msgstr "Payment Amount"
 
-#: contract/models.py:85 contract/models.py:132
+#: contract/models.py:87 contract/models.py:134
 msgid "Payment Type"
 msgstr "Payment Type"
 
-#: contract/models.py:86 contract/models.py:133
+#: contract/models.py:88 contract/models.py:135
 msgid "Transaction ID"
 msgstr "Transaction ID"
 
-#: contract/models.py:86
+#: contract/models.py:88
 msgid "For bank transfers/terminal"
 msgstr "For bank transfers/terminal"
 
-#: contract/models.py:87
+#: contract/models.py:89
 msgid "Receipt Image"
 msgstr "Receipt Image"
 
-#: contract/models.py:88
+#: contract/models.py:90
 msgid "Date Paid"
 msgstr "Date Paid"
 
-#: contract/models.py:93
+#: contract/models.py:95
 msgid "Payment Log"
 msgstr "Payment Log"
 
-#: contract/models.py:94
+#: contract/models.py:96
 msgid "Payment Logs"
 msgstr "Payment Logs"
 
-#: contract/models.py:110 contract/templates/contract/terminated_list.html:15
+#: contract/models.py:112 contract/templates/contract/terminated_list.html:15
 msgid "Termination Date"
 msgstr "Termination Date"
 
-#: contract/models.py:111
+#: contract/models.py:113
 #: contract/templates/contract/confirm_termination.html:30
 #: contract/templates/contract/termination_dashboard.html:95
 msgid "Termination Reason"
 msgstr "Termination Reason"
 
-#: contract/models.py:112
+#: contract/models.py:114
 #: contract/templates/contract/termination_dashboard.html:26
 msgid "Fine Amount"
 msgstr "Fine Amount"
 
-#: contract/models.py:113
+#: contract/models.py:115
 msgid "Fine Paid"
 msgstr "Fine Paid"
 
-#: contract/models.py:114
+#: contract/models.py:116
 msgid "Planned Refund Amount"
 msgstr "Planned Refund Amount"
 
-#: contract/models.py:115
+#: contract/models.py:117
 msgid "Paid Refund Amount"
 msgstr "Paid Refund Amount"
 
-#: contract/models.py:121
+#: contract/models.py:123
 msgid "Terminated Contract"
 msgstr "Terminated Contract"
 
-#: contract/models.py:122
+#: contract/models.py:124
 msgid "Terminated Contracts"
 msgstr "Terminated Contracts"
 
-#: contract/models.py:130
+#: contract/models.py:132
 msgid "Payment Date"
 msgstr "Payment Date"
 
-#: contract/models.py:134
+#: contract/models.py:136
 msgid "Notes"
 msgstr "Notes"
 
-#: contract/models.py:139
+#: contract/models.py:141
 msgid "Termination Payment"
 msgstr "Termination Payment"
 
-#: contract/models.py:140
+#: contract/models.py:142
 msgid "Termination Payments"
 msgstr "Termination Payments"
 
-#: contract/models.py:153
+#: contract/models.py:155
 msgid "Month Number"
 msgstr "Month Number"
 
-#: contract/models.py:154 contract/templates/contract/detail.html:151
+#: contract/models.py:156 contract/templates/contract/detail.html:151
 #: contract/templates/contract/form.html:462
 msgid "Due Date"
 msgstr "Due Date"
 
-#: contract/models.py:155 contract/templates/contract/detail.html:152
+#: contract/models.py:157 contract/templates/contract/detail.html:152
 #: contract/templates/contract/form.html:463
 msgid "Planned Amount"
 msgstr "Planned Amount"
 
-#: contract/models.py:156 contract/templates/contract/detail.html:153
+#: contract/models.py:158 contract/templates/contract/detail.html:153
 msgid "Paid Amount"
 msgstr "Paid Amount"
 
-#: contract/models.py:157
+#: contract/models.py:159
 msgid "Debt"
 msgstr "Debt"
 
-#: contract/models.py:158
+#: contract/models.py:160
 msgid "Excess / Overpayment"
 msgstr "Excess / Overpayment"
 
-#: contract/models.py:159
+#: contract/models.py:161
 msgid "Debt Carried Over"
 msgstr "Debt Carried Over"
 
-#: contract/models.py:160
+#: contract/models.py:162
 msgid "Is Late"
 msgstr "Is Late"
 
-#: contract/models.py:166
+#: contract/models.py:168
 msgid "Payment Record"
 msgstr "Payment Record"
 
-#: contract/models.py:167
+#: contract/models.py:169
 msgid "Payment Records"
 msgstr "Payment Records"
 
-#: contract/models.py:345 contract/templates/contract/template_list.html:160
-#, fuzzy
+#: contract/models.py:347 contract/templates/contract/template_list.html:160
 #| msgid "Company Name"
 msgid "Template Name"
-msgstr "Company Name"
+msgstr "Template Name"
 
-#: contract/models.py:346
+#: contract/models.py:348
 msgid "Template File (.docx)"
 msgstr "Template File (.docx)"
 
-#: contract/models.py:347
+#: contract/models.py:349
 msgid "HTML Content"
 msgstr "HTML Content"
 
-#: contract/models.py:348
+#: contract/models.py:350
 msgid "Is Default"
 msgstr "Is Default"
 
-#: contract/models.py:354
-#, fuzzy
+#: contract/models.py:356
 #| msgid "Contract Date"
 msgid "Contract Template"
-msgstr "Contract Date"
+msgstr "Contract Template"
 
-#: contract/models.py:355 contract/templates/contract/template_list.html:8
-#: templates/base.html:116
-#, fuzzy
+#: contract/models.py:357 contract/templates/contract/template_list.html:8
+#: templates/base.html:134
 #| msgid "Contract Terms"
 msgid "Contract Templates"
-msgstr "Contract Terms"
+msgstr "Contract Templates"
 
 #: contract/templates/contract/confirm_termination.html:12
-#: contract/views.py:423 contract/views.py:470
+#: contract/views.py:441 contract/views.py:488
 msgid "Confirm Contract Termination"
 msgstr "Confirm Contract Termination"
 
@@ -831,23 +868,21 @@ msgstr "State the reason for contract termination..."
 msgid "Fine Penalty Amount (UZS)"
 msgstr "Fine Penalty Amount (UZS)"
 
-#: contract/templates/contract/confirm_termination.html:42
-#, fuzzy
+#: contract/templates/contract/confirm_termination.html:41
 #| msgid "Total Amount:"
 msgid "Total Amount Paid by Customer:"
-msgstr "Total Amount:"
+msgstr "Total Amount Paid by Customer:"
 
-#: contract/templates/contract/confirm_termination.html:46
-#, fuzzy
+#: contract/templates/contract/confirm_termination.html:45
 #| msgid "Fine Penalty"
 msgid "- Fine Penalty:"
-msgstr "Fine Penalty"
+msgstr "- Fine Penalty:"
 
-#: contract/templates/contract/confirm_termination.html:50
+#: contract/templates/contract/confirm_termination.html:49
 msgid "= Total Refund Owed to Customer:"
 msgstr "= Total Refund Owed to Customer:"
 
-#: contract/templates/contract/confirm_termination.html:60
+#: contract/templates/contract/confirm_termination.html:59
 msgid "Authorize & Terminate Contract"
 msgstr "Authorize & Terminate Contract"
 
@@ -856,28 +891,24 @@ msgid "Real Estate Contract"
 msgstr "Real Estate Contract"
 
 #: contract/templates/contract/detail.html:29
-#, fuzzy
 #| msgid "Down Payment Date"
 msgid "Download Payments (Excel)"
-msgstr "Down Payment Date"
+msgstr "Download Payments (Excel)"
 
 #: contract/templates/contract/detail.html:34
-#, fuzzy
 #| msgid "Download .DOCX Contract"
 msgid "Download Contract"
-msgstr "Download .DOCX Contract"
+msgstr "Download Contract"
 
 #: contract/templates/contract/detail.html:47
-#, fuzzy
 #| msgid "Download .DOCX Contract"
 msgid "📥 Download .DOCX Contract"
-msgstr "Download .DOCX Contract"
+msgstr "📥 Download .DOCX Contract"
 
 #: contract/templates/contract/detail.html:53
-#, fuzzy
 #| msgid "Dashboard"
 msgid "Refund Dashboard"
-msgstr "Dashboard"
+msgstr "Refund Dashboard"
 
 #: contract/templates/contract/detail.html:59
 #: contract/templates/contract/detail.html:338
@@ -894,6 +925,7 @@ msgstr "Customer Details"
 
 #: contract/templates/contract/detail.html:84
 #: contract/templates/contract/template_list.html:122
+#: dashboard/templates/dashboard/sms_usage.html:74
 msgid "Phone"
 msgstr "Phone"
 
@@ -966,10 +998,9 @@ msgid "Import Payments (Excel)"
 msgstr "Import Payments (Excel)"
 
 #: contract/templates/contract/detail.html:269
-#, fuzzy
 #| msgid "Late Payments"
 msgid "Import Payments"
-msgstr "Late Payments"
+msgstr "Import Payments"
 
 #: contract/templates/contract/detail.html:277
 msgid "Step 1: Download Template"
@@ -1197,6 +1228,17 @@ msgstr "ID / Date"
 msgid "No contracts found."
 msgstr "No contracts found."
 
+#: contract/templates/contract/list.html:97
+#: users/templates/users/customer_list.html:87
+msgid "Previous"
+msgstr "Previous"
+
+#: contract/templates/contract/list.html:120
+#: users/templates/users/customer_list.html:110
+#| msgid "Next Due:"
+msgid "Next"
+msgstr "Next"
+
 #: contract/templates/contract/partials/apartment_search_results.html:12
 msgid "Select Unit"
 msgstr "Select Unit"
@@ -1230,10 +1272,9 @@ msgid "Active Contracts & Log Payment"
 msgstr "Active Contracts & Log Payment"
 
 #: contract/templates/contract/quick_payment.html:69
-#, fuzzy
 #| msgid "View Schedule"
 msgid "View Full Schedule"
-msgstr "View Schedule"
+msgstr "View Full Schedule"
 
 #: contract/templates/contract/quick_payment.html:75
 msgid "Total Value"
@@ -1248,26 +1289,21 @@ msgid "Log Payment & Print Receipt"
 msgstr "Log Payment & Print Receipt"
 
 #: contract/templates/contract/quick_payment.html:169
-#, fuzzy
 #| msgid "Active Contracts"
 msgid "No Active Contracts"
-msgstr "Active Contracts"
+msgstr "No Active Contracts"
 
 #: contract/templates/contract/quick_payment.html:170
-#, fuzzy
 #| msgid ""
 #| "Select a customer from the left panel to display active contracts and log "
 #| "payments."
 msgid "This customer doesn't have any active contracts to pay."
-msgstr ""
-"Select a customer from the left panel to display active contracts and log "
-"payments."
+msgstr "This customer doesn't have any active contracts to pay."
 
 #: contract/templates/contract/quick_payment.html:177
-#, fuzzy
 #| msgid "Select Customer"
 msgid "Select a Customer"
-msgstr "Select Customer"
+msgstr "Select a Customer"
 
 #: contract/templates/contract/quick_payment.html:178
 msgid ""
@@ -1299,22 +1335,22 @@ msgid "Make Default"
 msgstr "Make Default"
 
 #: contract/templates/contract/template_list.html:49
-#, fuzzy
 #| msgid "Active Students"
 msgid "Active Template"
-msgstr "Active Students"
+msgstr "Active Template"
 
 #: contract/templates/contract/template_list.html:55
-#, fuzzy
 #| msgid "Download .DOCX Contract"
 msgid "Download Original"
-msgstr "Download .DOCX Contract"
+msgstr "Download Original"
 
 #: contract/templates/contract/template_list.html:58
 msgid "Are you sure you want to delete this template?"
 msgstr "Are you sure you want to delete this template?"
 
-#: contract/templates/contract/template_list.html:60
+#: contract/templates/contract/template_list.html:60 users/permissions.py:15
+#: users/permissions.py:24 users/permissions.py:33 users/permissions.py:42
+#: users/permissions.py:64 users/templates/users/staff_list.html:108
 msgid "Delete"
 msgstr "Delete"
 
@@ -1347,10 +1383,9 @@ msgid "Show / Hide"
 msgstr "Show / Hide"
 
 #: contract/templates/contract/template_list.html:94
-#, fuzzy
 #| msgid "Notes"
 msgid "Note:"
-msgstr "Notes"
+msgstr "Note:"
 
 #: contract/templates/contract/template_list.html:94
 msgid ""
@@ -1379,10 +1414,9 @@ msgstr ""
 " your existing templates."
 
 #: contract/templates/contract/template_list.html:107
-#, fuzzy
 #| msgid "Contract ID"
 msgid "Contract Info"
-msgstr "Contract ID"
+msgstr "Contract Info"
 
 #: contract/templates/contract/template_list.html:108
 #: contract/templates/contract/terminated_list.html:13
@@ -1402,72 +1436,62 @@ msgid "Year"
 msgstr "Year"
 
 #: contract/templates/contract/template_list.html:114
-#, fuzzy
 #| msgid "Customer Directory"
 msgid "Company Director"
-msgstr "Customer Directory"
+msgstr "Company Director"
 
 #: contract/templates/contract/template_list.html:115 users/models.py:56
 msgid "Director Short Name"
 msgstr "Director Short Name"
 
 #: contract/templates/contract/template_list.html:116
-#, fuzzy
 #| msgid "Customer"
 msgid "Customer Info"
-msgstr "Customer"
+msgstr "Customer Info"
 
 #: contract/templates/contract/template_list.html:118
-#, fuzzy
 #| msgid "Customer Name"
 msgid "Short Name"
-msgstr "Customer Name"
+msgstr "Short Name"
 
 #: contract/templates/contract/template_list.html:120
-#, fuzzy
 #| msgid "Passport Scan"
 msgid "Passport Date"
-msgstr "Passport Scan"
+msgstr "Passport Date"
 
 #: contract/templates/contract/template_list.html:121
 msgid "Given By"
 msgstr "Given By"
 
 #: contract/templates/contract/template_list.html:126
-#, fuzzy
 #| msgid "Finance"
 msgid "Financials"
-msgstr "Finance"
+msgstr "Financials"
 
 #: contract/templates/contract/template_list.html:128
-#, fuzzy
 #| msgid "Total Paid"
 msgid "Total in Words"
-msgstr "Total Paid"
+msgstr "Total in Words"
 
 #: contract/templates/contract/template_list.html:130
-#, fuzzy
 #| msgid "Intermediate Monthly Installment:"
 msgid "Monthly Installment"
-msgstr "Intermediate Monthly Installment:"
+msgstr "Monthly Installment"
 
 #: contract/templates/contract/template_list.html:132
-#, fuzzy
 #| msgid "Apartment"
 msgid "Apartment Info"
-msgstr "Apartment"
+msgstr "Apartment Info"
 
 #: contract/templates/contract/template_list.html:136
-#, fuzzy
 #| msgid "Apartment"
 msgid "Apartment No"
-msgstr "Apartment"
+msgstr "Apartment No"
 
 #: contract/templates/contract/template_list.html:138
-#, fuzzy
 #| msgid "Total Area (m²)"
 msgid "Area (m²)"
-msgstr "Total Area (m²)"
+msgstr "Area (m²)"
 
 #: contract/templates/contract/template_list.html:139
 msgid "1 m² Price"
@@ -1478,10 +1502,9 @@ msgid "1 m² Price Words"
 msgstr "1 m² Price Words"
 
 #: contract/templates/contract/template_list.html:151
-#, fuzzy
 #| msgid "Contract Date"
 msgid "Upload Contract Template"
-msgstr "Contract Date"
+msgstr "Upload Contract Template"
 
 #: contract/templates/contract/template_list.html:165
 msgid "Document File (.docx)"
@@ -1508,12 +1531,14 @@ msgid "Reason"
 msgstr "Reason"
 
 #: contract/templates/contract/terminated_list.html:20
+#: users/templates/users/staff_list.html:49
+#: users/templates/users/staff_list.html:138
 msgid "Actions"
 msgstr "Actions"
 
 #: contract/templates/contract/terminated_list.html:39
 #: dashboard/templates/base.html:10
-#: dashboard/templates/partials/_nav_items.html:16 templates/base.html:97
+#: dashboard/templates/partials/_nav_items.html:16 templates/base.html:92
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -1522,34 +1547,29 @@ msgid "No terminated contracts found."
 msgstr "No terminated contracts found."
 
 #: contract/templates/contract/termination_dashboard.html:10
-#, fuzzy
 #| msgid "Terminated Contracts"
 msgid "Terminated Contract Dashboard"
-msgstr "Terminated Contracts"
+msgstr "Terminated Contract Dashboard"
 
 #: contract/templates/contract/termination_dashboard.html:11
-#, fuzzy
 #| msgid "Terminated"
 msgid "Terminated on"
-msgstr "Terminated"
+msgstr "Terminated on"
 
 #: contract/templates/contract/termination_dashboard.html:15
-#, fuzzy
 #| msgid "View Schedule"
 msgid "View Original Schedule"
-msgstr "View Schedule"
+msgstr "View Original Schedule"
 
 #: contract/templates/contract/termination_dashboard.html:18
-#, fuzzy
 #| msgid "Back to Contract"
 msgid "Back to Contracts"
-msgstr "Back to Contract"
+msgstr "Back to Contracts"
 
 #: contract/templates/contract/termination_dashboard.html:30
-#, fuzzy
 #| msgid "Total Remaining"
 msgid "Total Refund Planned"
-msgstr "Total Remaining"
+msgstr "Total Refund Planned"
 
 #: contract/templates/contract/termination_dashboard.html:34
 msgid "Refund Paid So Far"
@@ -1560,16 +1580,14 @@ msgid "Refund History"
 msgstr "Refund History"
 
 #: contract/templates/contract/termination_dashboard.html:56
-#, fuzzy
 #| msgid "No recent payments."
 msgid "No refunds paid yet."
-msgstr "No recent payments."
+msgstr "No refunds paid yet."
 
 #: contract/templates/contract/termination_dashboard.html:64
-#, fuzzy
 #| msgid "Process Payment"
 msgid "Process Refund"
-msgstr "Process Payment"
+msgstr "Process Refund"
 
 #: contract/templates/contract/termination_dashboard.html:68
 msgid "Refund Settled"
@@ -1585,95 +1603,84 @@ msgid "Amount"
 msgstr "Amount"
 
 #: contract/templates/contract/termination_dashboard.html:77
-#, fuzzy
 #| msgid "Total Remaining"
 msgid "Max remaining:"
-msgstr "Total Remaining"
+msgstr "Max remaining:"
 
 #: contract/templates/contract/termination_dashboard.html:80
-#, fuzzy
 #| msgid "Select Payment Method"
 msgid "Payment Method"
-msgstr "Select Payment Method"
+msgstr "Payment Method"
 
 #: contract/templates/contract/termination_dashboard.html:88
-#, fuzzy
 #| msgid "Planned Refund"
 msgid "Record Refund"
-msgstr "Planned Refund"
+msgstr "Record Refund"
 
-#: contract/views.py:125
+#: contract/views.py:143
 msgid "Contract successfully generated for {}!"
 msgstr "Contract successfully generated for {}!"
 
-#: contract/views.py:166
+#: contract/views.py:187
 msgid "Payment logged successfully!"
 msgstr "Payment logged successfully!"
 
-#: contract/views.py:169
+#: contract/views.py:190
 msgid "Invalid payment data. Please check the entered amount."
 msgstr "Invalid payment data. Please check the entered amount."
 
-#: contract/views.py:240
+#: contract/views.py:261
 msgid "Cannot import payments: Contract already has existing payments."
 msgstr "Cannot import payments: Contract already has existing payments."
 
-#: contract/views.py:245
+#: contract/views.py:266
 msgid "Please upload a valid .xlsx file."
 msgstr "Please upload a valid .xlsx file."
 
-#: contract/views.py:299
-#, python-brace-format
-msgid "Successfully imported {payments_created} payments!"
-msgstr "Successfully imported {payments_created} payments!"
-
-#: contract/views.py:303
+#: contract/views.py:324
 msgid "Failed to process Excel file. Please ensure it matches the template."
 msgstr "Failed to process Excel file. Please ensure it matches the template."
 
-#: contract/views.py:415
+#: contract/views.py:433
 msgid "A 6-digit OTP code has been sent to your phone for verification."
 msgstr "A 6-digit OTP code has been sent to your phone for verification."
 
-#: contract/views.py:417
+#: contract/views.py:435
 msgid "OTP generated ({}) but SMS failed: {}"
 msgstr "OTP generated ({}) but SMS failed: {}"
 
-#: contract/views.py:462
+#: contract/views.py:480
 msgid "Contract #{} terminated successfully! Apartment reset to AVAILABLE."
 msgstr "Contract #{} terminated successfully! Apartment reset to AVAILABLE."
 
-#: contract/views.py:465
+#: contract/views.py:483
 msgid "Invalid or expired OTP code."
 msgstr "Invalid or expired OTP code."
 
-#: contract/views.py:515
-#, fuzzy
+#: contract/views.py:533
 #| msgid "Payment logged successfully!"
 msgid "Refund payment recorded successfully!"
-msgstr "Payment logged successfully!"
+msgstr "Refund payment recorded successfully!"
 
-#: contract/views.py:517
-#, fuzzy
+#: contract/views.py:535
 #| msgid "Payment amount must be greater than zero."
 msgid "Amount must be greater than 0."
-msgstr "Payment amount must be greater than zero."
+msgstr "Amount must be greater than 0."
 
-#: contract/views.py:691
-#, fuzzy
+#: contract/views.py:715
 #| msgid "Payment logged successfully!"
 msgid "Template uploaded successfully."
-msgstr "Payment logged successfully!"
+msgstr "Template uploaded successfully."
 
-#: contract/views.py:694
+#: contract/views.py:718
 msgid "Please provide a name and a valid .docx file."
 msgstr "Please provide a name and a valid .docx file."
 
-#: contract/views.py:706
+#: contract/views.py:730
 msgid "Template deleted."
 msgstr "Template deleted."
 
-#: contract/views.py:718
+#: contract/views.py:744
 msgid "Default template updated."
 msgstr "Default template updated."
 
@@ -1719,7 +1726,7 @@ msgstr "Last Updated"
 msgid "Dashboard Settings"
 msgstr "Dashboard Settings"
 
-#: dashboard/templates/dashboard/home.html:13 templates/base.html:103
+#: dashboard/templates/dashboard/home.html:13 templates/base.html:106
 #: users/templates/users/customer_list.html:41
 msgid "Active Contracts"
 msgstr "Active Contracts"
@@ -1745,14 +1752,14 @@ msgid "View all contracts"
 msgstr "View all contracts"
 
 #: dashboard/templates/dashboard/home.html:89
+#: dashboard/templates/dashboard/sms_usage.html:73
 msgid "Date"
 msgstr "Date"
 
 #: dashboard/templates/dashboard/home.html:129
-#, fuzzy
 #| msgid "No recent payments."
 msgid "No recent payments"
-msgstr "No recent payments."
+msgstr "No recent payments"
 
 #: dashboard/templates/dashboard/home.html:130
 msgid "Payments will appear here once processed."
@@ -1767,26 +1774,23 @@ msgid "Late Payments"
 msgstr "Late Payments"
 
 #: dashboard/templates/dashboard/home.html:162
-#, fuzzy
 #| msgid "Clients who have missed their scheduled due date."
 msgid "Clients who have missed their scheduled due date require attention."
-msgstr "Clients who have missed their scheduled due date."
+msgstr "Clients who have missed their scheduled due date require attention."
 
 #: dashboard/templates/dashboard/home.html:166
-#, fuzzy
 #| msgid "Review Contracts &rarr;"
 msgid "Review Contracts"
-msgstr "Review Contracts &rarr;"
+msgstr "Review Contracts"
 
 #: dashboard/templates/dashboard/home.html:179
 msgid "All Caught Up"
 msgstr "All Caught Up"
 
 #: dashboard/templates/dashboard/home.html:180
-#, fuzzy
 #| msgid "All accounts are up to date."
 msgid "All accounts are currently up to date."
-msgstr "All accounts are up to date."
+msgstr "All accounts are currently up to date."
 
 #: dashboard/templates/dashboard/partials/home_content.html:8
 #: dashboard/templates/partials/_nav_items.html:32
@@ -1910,6 +1914,65 @@ msgstr ""
 "Students who completed their course this month, counted from their exact "
 "graduation date."
 
+#: dashboard/templates/dashboard/sms_usage.html:5
+#: dashboard/templates/dashboard/sms_usage.html:10
+msgid "SMS Usage & Billing"
+msgstr "SMS Usage & Billing"
+
+#: dashboard/templates/dashboard/sms_usage.html:11
+msgid "Monitor your SMS notifications and estimated costs."
+msgstr "Monitor your SMS notifications and estimated costs."
+
+#: dashboard/templates/dashboard/sms_usage.html:18
+msgid "This Month's Cost"
+msgstr "This Month's Cost"
+
+#: dashboard/templates/dashboard/sms_usage.html:22
+msgid "Messages This Month"
+msgstr "Messages This Month"
+
+#: dashboard/templates/dashboard/sms_usage.html:26
+msgid "All Time Cost"
+msgstr "All Time Cost"
+
+#: dashboard/templates/dashboard/sms_usage.html:30
+msgid "All Time Messages"
+msgstr "All Time Messages"
+
+#: dashboard/templates/dashboard/sms_usage.html:40
+msgid "Monthly Operator Breakdown"
+msgstr "Monthly Operator Breakdown"
+
+#: dashboard/templates/dashboard/sms_usage.html:48
+msgid "messages"
+msgstr "messages"
+
+#: dashboard/templates/dashboard/sms_usage.html:55
+msgid "No SMS sent this month."
+msgstr "No SMS sent this month."
+
+#: dashboard/templates/dashboard/sms_usage.html:66
+msgid "Recent SMS Logs"
+msgstr "Recent SMS Logs"
+
+#: dashboard/templates/dashboard/sms_usage.html:76
+msgid "Cost"
+msgstr "Cost"
+
+#: dashboard/templates/dashboard/sms_usage.html:84
+#| msgid "Apartments"
+msgid "parts"
+msgstr "parts"
+
+#: dashboard/templates/dashboard/sms_usage.html:88
+msgid "Sent"
+msgstr "Sent"
+
+#: dashboard/templates/dashboard/sms_usage.html:98
+#| msgid "No contracts found."
+msgid "No SMS logs found."
+msgstr "No SMS logs found."
+
 #: dashboard/templates/partials/_nav_items.html:50
 #: dashboard/templates/partials/topbar_search_results.html:6
 msgid "Students"
@@ -1928,7 +1991,7 @@ msgstr "Courses"
 msgid "Finance"
 msgstr "Finance"
 
-#: dashboard/templates/partials/_nav_items.html:115
+#: dashboard/templates/partials/_nav_items.html:115 users/permissions.py:37
 msgid "Payments"
 msgstr "Payments"
 
@@ -2095,7 +2158,7 @@ msgstr "More groups — refine your search"
 msgid "No results found"
 msgstr "No results found"
 
-#: otp/models.py:11 otp/templates/otp/verify_otp.html:126
+#: otp/models.py:11 otp/templates/otp/verify_otp.html:228
 msgid "OTP Code"
 msgstr "OTP Code"
 
@@ -2115,89 +2178,90 @@ msgstr "OTP Token"
 msgid "OTP Tokens"
 msgstr "OTP Tokens"
 
-#: otp/templates/otp/request_otp.html:8 otp/templates/otp/request_otp.html:103
-#: users/templates/users/login.html:9 users/templates/users/login.html:238
+#: otp/templates/otp/request_otp.html:12
+#: otp/templates/otp/request_otp.html:192 users/templates/users/login.html:9
+#: users/templates/users/login.html:242
 msgid "Sign In"
 msgstr "Sign In"
 
-#: otp/templates/otp/request_otp.html:104
+#: otp/templates/otp/request_otp.html:193
 msgid "Enter your phone number to receive a login code."
 msgstr "Enter your phone number to receive a login code."
 
-#: otp/templates/otp/request_otp.html:133
+#: otp/templates/otp/request_otp.html:224
 msgid "Send Code"
 msgstr "Send Code"
 
-#: otp/templates/otp/verify_otp.html:8 otp/templates/otp/verify_otp.html:107
+#: otp/templates/otp/request_otp.html:228
+#: otp/templates/otp/verify_otp.html:247 templates/base.html:189
+msgid "All rights reserved."
+msgstr "All rights reserved."
+
+#: otp/templates/otp/verify_otp.html:12 otp/templates/otp/verify_otp.html:209
 msgid "Verify Code"
 msgstr "Verify Code"
 
-#: otp/templates/otp/verify_otp.html:108
+#: otp/templates/otp/verify_otp.html:210
 msgid "We sent a 6-digit code to"
 msgstr "We sent a 6-digit code to"
 
-#: otp/templates/otp/verify_otp.html:138
+#: otp/templates/otp/verify_otp.html:241
 msgid "Verify & Login"
 msgstr "Verify & Login"
 
-#: otp/templates/otp/verify_otp.html:141
+#: otp/templates/otp/verify_otp.html:244
 msgid "Didn't receive code? Try again"
 msgstr "Didn't receive code? Try again"
 
-#: otp/views.py:19
+#: otp/views.py:28
 msgid "Phone number is required."
 msgstr "Phone number is required."
 
-#: otp/views.py:30
+#: otp/views.py:39
 msgid "Too many OTP requests. Please wait."
 msgstr "Too many OTP requests. Please wait."
 
-#: otp/views.py:37
-#, python-brace-format
-msgid "TrustBuilding: Your login code is {token.code}"
-msgstr "TrustBuilding: Your login code is {token.code}"
-
-#: otp/views.py:45
+#: otp/views.py:55
 msgid "OTP sent to your phone."
 msgstr "OTP sent to your phone."
 
-#: otp/views.py:48
+#: otp/views.py:58
 msgid "Failed to send SMS. Please try again."
 msgstr "Failed to send SMS. Please try again."
 
-#: otp/views.py:61
+#: otp/views.py:71
 msgid "Session expired. Please request a new code."
 msgstr "Session expired. Please request a new code."
 
-#: otp/views.py:67
+#: otp/views.py:77
 msgid "Code is required."
 msgstr "Code is required."
 
-#: otp/views.py:96
+#: otp/views.py:106
 msgid "Successfully logged in!"
 msgstr "Successfully logged in!"
 
-#: otp/views.py:99
+#: otp/views.py:109
 msgid "Invalid or expired code."
 msgstr "Invalid or expired code."
 
-#: templates/404.html:7 templates/404.html:15
+#: templates/404.html:11 templates/404.html:23
 msgid "Page Not Found"
 msgstr "Page Not Found"
 
-#: templates/404.html:17
+#: templates/404.html:25
 msgid "The page you are looking for doesn't exist or has been moved."
 msgstr "The page you are looking for doesn't exist or has been moved."
 
-#: templates/404.html:21 templates/500.html:21
+#: templates/404.html:29 templates/500.html:29
 msgid "Back to Dashboard"
 msgstr "Back to Dashboard"
 
-#: templates/500.html:7 templates/500.html:15
+#: templates/500.html:11 templates/500.html:23
 msgid "Server Error"
 msgstr "Server Error"
 
-#: templates/500.html:17
+#: templates/500.html:25
 msgid ""
 "Something went wrong on our end. Please try again later or contact your "
 "administrator if the problem persists."
@@ -2205,39 +2269,43 @@ msgstr ""
 "Something went wrong on our end. Please try again later or contact your "
 "administrator if the problem persists."
 
-#: templates/base.html:66
+#: templates/base.html:64
 msgid "Welcome"
 msgstr "Welcome"
 
-#: templates/base.html:68
+#: templates/base.html:66
 msgid "Logout"
 msgstr "Logout"
 
-#: templates/base.html:100
+#: templates/base.html:99
 msgid "Buildings Inventory"
 msgstr "Buildings Inventory"
 
-#: templates/base.html:106
+#: templates/base.html:113
 msgid "Payment Terminal"
 msgstr "Payment Terminal"
 
-#: templates/base.html:109
+#: templates/base.html:120
 msgid "Terminated Archive"
 msgstr "Terminated Archive"
 
-#: templates/base.html:112
+#: templates/base.html:127
 msgid "Customer Directory"
 msgstr "Customer Directory"
 
-#: templates/base.html:119
+#: templates/base.html:141
 msgid "Manage Staff"
 msgstr "Manage Staff"
+
+#: templates/base.html:148
+msgid "SMS Usage"
+msgstr "SMS Usage"
 
 #: users/admin.py:17
 msgid "Personal info"
 msgstr "Personal info"
 
-#: users/admin.py:18
+#: users/admin.py:18 users/models.py:79
 msgid "Roles"
 msgstr "Roles"
 
@@ -2245,13 +2313,58 @@ msgstr "Roles"
 msgid "Identity / Passport"
 msgstr "Identity / Passport"
 
-#: users/admin.py:20
+#: users/admin.py:20 users/models.py:74
 msgid "Permissions"
 msgstr "Permissions"
 
 #: users/admin.py:21
 msgid "Important dates"
 msgstr "Important dates"
+
+#: users/forms.py:20 users/templates/users/login.html:208
+msgid "Password"
+msgstr "Password"
+
+#: users/forms.py:24
+msgid "Enter your password"
+msgstr "Enter your password"
+
+#: users/forms.py:44 users/models.py:89
+#: users/templates/users/staff_list.html:45
+#: users/templates/users/staff_list.html:203
+#: users/templates/users/staff_list.html:261
+msgid "Position"
+msgstr "Position"
+
+#: users/forms.py:46
+msgid "Sales Manager"
+msgstr "Sales Manager"
+
+#: users/forms.py:52 users/templates/users/staff_list.html:79
+#: users/templates/users/staff_list.html:267
+#| msgid "Roles"
+msgid "No Role"
+msgstr "No Role"
+
+#: users/forms.py:68
+msgid "John Doe"
+msgstr "John Doe"
+
+#: users/forms.py:85
+msgid "AA1234567"
+msgstr "AA1234567"
+
+#: users/forms.py:86
+msgid "14-digit PINFL"
+msgstr "14-digit PINFL"
+
+#: users/forms.py:87
+msgid "IIB / Police Department"
+msgstr "IIB / Police Department"
+
+#: users/forms.py:99
+msgid "e.g. Senior Sales"
+msgstr "e.g. Senior Sales"
 
 #: users/models.py:11
 msgid "Phone number"
@@ -2298,10 +2411,9 @@ msgid "Company Name"
 msgstr "Company Name"
 
 #: users/models.py:55
-#, fuzzy
 #| msgid "Full Name"
 msgid "Director Full Name"
-msgstr "Full Name"
+msgstr "Director Full Name"
 
 #: users/models.py:55
 msgid "e.g. Arslanov Axror Jamolovich"
@@ -2327,28 +2439,93 @@ msgstr "Company Profile"
 msgid "Company Profiles"
 msgstr "Company Profiles"
 
-#: users/models.py:74 users/templates/users/staff_list.html:27
-#: users/templates/users/staff_list.html:91
-msgid "Position"
-msgstr "Position"
+#: users/models.py:73 users/templates/users/role_form.html:28
+#: users/templates/users/staff_list.html:135
+#| msgid "Full Name"
+msgid "Role Name"
+msgstr "Role Name"
 
-#: users/models.py:78
+#: users/models.py:78 users/templates/users/staff_list.html:46
+#: users/templates/users/staff_list.html:207
+#: users/templates/users/staff_list.html:265
+#| msgid "Roles"
+msgid "Role"
+msgstr "Role"
+
+#: users/models.py:94
 msgid "Staff Profile"
 msgstr "Staff Profile"
 
-#: users/models.py:79
+#: users/models.py:95
 msgid "Staff Profiles"
 msgstr "Staff Profiles"
+
+#: users/permissions.py:10
+#| msgid "Building Name"
+msgid "Buildings & Apartments"
+msgstr "Buildings & Apartments"
+
+#: users/permissions.py:12 users/permissions.py:21 users/permissions.py:30
+#: users/permissions.py:39 users/permissions.py:61
+#| msgid "View by:"
+msgid "View"
+msgstr "View"
+
+#: users/permissions.py:13 users/permissions.py:22 users/permissions.py:31
+#: users/permissions.py:40 users/permissions.py:62
+#| msgid "Created At"
+msgid "Create"
+msgstr "Create"
+
+#: users/permissions.py:14 users/permissions.py:23 users/permissions.py:32
+#: users/permissions.py:41 users/permissions.py:63
+#: users/templates/users/staff_list.html:97
+msgid "Edit"
+msgstr "Edit"
+
+#: users/permissions.py:19
+#| msgid "Customer"
+msgid "Customers"
+msgstr "Customers"
+
+#: users/permissions.py:46
+#| msgid "Analytics"
+msgid "Reports & Analytics"
+msgstr "Reports & Analytics"
+
+#: users/permissions.py:48
+msgid "View Dashboard & Financials"
+msgstr "View Dashboard & Financials"
+
+#: users/permissions.py:52
+msgid "SMS Marketing"
+msgstr "SMS Marketing"
+
+#: users/permissions.py:54
+msgid "View Log & Cost"
+msgstr "View Log & Cost"
+
+#: users/permissions.py:55
+msgid "Send SMS"
+msgstr "Send SMS"
+
+#: users/permissions.py:59
+#| msgid "Staff Profiles"
+msgid "Staff & Roles"
+msgstr "Staff & Roles"
+
+#: users/permissions.py:101
+msgid "You don't have permission to perform this action."
+msgstr "You don't have permission to perform this action."
 
 #: users/templates/users/customer_list.html:14
 msgid "Search by phone number, name, or PINFL..."
 msgstr "Search by phone number, name, or PINFL..."
 
 #: users/templates/users/customer_list.html:27
-#, fuzzy
 #| msgid "Customer"
 msgid "New Customer"
-msgstr "Customer"
+msgstr "New Customer"
 
 #: users/templates/users/customer_list.html:37
 msgid "Customer Name"
@@ -2394,71 +2571,243 @@ msgstr "Welcome back"
 msgid "Sign in to your account to continue."
 msgstr "Sign in to your account to continue."
 
-#: users/templates/users/login.html:206
-msgid "Password"
-msgstr "Password"
+#: users/templates/users/role_form.html:11
+msgid "Edit Role"
+msgstr "Edit Role"
+
+#: users/templates/users/role_form.html:13
+#: users/templates/users/staff_list.html:20
+#| msgid "Change Customer"
+msgid "Create Custom Role"
+msgstr "Create Custom Role"
+
+#: users/templates/users/role_form.html:16
+msgid "Define specific permissions for staff members."
+msgstr "Define specific permissions for staff members."
+
+#: users/templates/users/role_form.html:30
+msgid "Example: Senior Sales Manager, Call Center Agent, Accountant"
+msgstr "Example: Senior Sales Manager, Call Center Agent, Accountant"
+
+#: users/templates/users/role_form.html:36
+#| msgid "Permissions"
+msgid "Permissions Checklist"
+msgstr "Permissions Checklist"
+
+#: users/templates/users/role_form.html:37
+msgid ""
+"Select the specific actions this role can perform across different modules."
+msgstr ""
+"Select the specific actions this role can perform across different modules."
+
+#: users/templates/users/role_form.html:67
+msgid "Save Role"
+msgstr "Save Role"
 
 #: users/templates/users/staff_list.html:9
-msgid "Manage Sales Staff"
-msgstr "Manage Sales Staff"
+#| msgid "Manage Sales Staff"
+msgid "Manage Sales Staff & Roles"
+msgstr "Manage Sales Staff & Roles"
 
 #: users/templates/users/staff_list.html:10
-msgid "Add and assign sales managers to company buildings"
-msgstr "Add and assign sales managers to company buildings"
+msgid "Add staff members and configure their roles and permissions"
+msgstr "Add staff members and configure their roles and permissions"
 
-#: users/templates/users/staff_list.html:15
+#: users/templates/users/staff_list.html:16
 msgid "Add New Staff Member"
 msgstr "Add New Staff Member"
 
-#: users/templates/users/staff_list.html:25
+#: users/templates/users/staff_list.html:29
+#| msgid "Staff Member"
+msgid "Staff Members"
+msgstr "Staff Members"
+
+#: users/templates/users/staff_list.html:32
+#| msgid "Permissions"
+msgid "Roles & Permissions"
+msgstr "Roles & Permissions"
+
+#: users/templates/users/staff_list.html:43
 msgid "Staff Member"
 msgstr "Staff Member"
 
-#: users/templates/users/staff_list.html:28
+#: users/templates/users/staff_list.html:47
 msgid "Assigned Buildings"
 msgstr "Assigned Buildings"
 
-#: users/templates/users/staff_list.html:29
+#: users/templates/users/staff_list.html:48
 msgid "Added Date"
 msgstr "Added Date"
 
-#: users/templates/users/staff_list.html:56
+#: users/templates/users/staff_list.html:64
+msgid "Deactivated"
+msgstr "Deactivated"
+
+#: users/templates/users/staff_list.html:102
+#| msgid "Active"
+msgid "Deactivate"
+msgstr "Deactivate"
+
+#: users/templates/users/staff_list.html:102
+#| msgid "Active"
+msgid "Activate"
+msgstr "Activate"
+
+#: users/templates/users/staff_list.html:105
+#| msgid "Are you sure you want to delete this template?"
+msgid "Are you sure you want to delete this staff member?"
+msgstr "Are you sure you want to delete this staff member?"
+
+#: users/templates/users/staff_list.html:120
 msgid ""
 "No staff members added yet. Click 'Add New Staff Member' to get started."
 msgstr ""
 "No staff members added yet. Click 'Add New Staff Member' to get started."
 
-#: users/templates/users/staff_list.html:70
+#: users/templates/users/staff_list.html:136
+#| msgid "Permissions"
+msgid "Permissions Count"
+msgstr "Permissions Count"
+
+#: users/templates/users/staff_list.html:137
+#| msgid "Manage Staff"
+msgid "Assigned Staff"
+msgstr "Assigned Staff"
+
+#: users/templates/users/staff_list.html:146
+#| msgid "Permissions"
+msgid "permissions"
+msgstr "permissions"
+
+#: users/templates/users/staff_list.html:150
+msgid "Staff"
+msgstr "Staff"
+
+#: users/templates/users/staff_list.html:157
+#| msgid "Are you sure you want to delete this template?"
+msgid "Are you sure you want to delete this role?"
+msgstr "Are you sure you want to delete this role?"
+
+#: users/templates/users/staff_list.html:168
+#| msgid ""
+#| "No staff members added yet. Click 'Add New Staff Member' to get started."
+msgid "No roles added yet. Click 'Create Custom Role' to get started."
+msgstr "No roles added yet. Click 'Create Custom Role' to get started."
+
+#: users/templates/users/staff_list.html:182
 msgid "Add Sales Staff Member"
 msgstr "Add Sales Staff Member"
 
-#: users/templates/users/staff_list.html:100
+#: users/templates/users/staff_list.html:216
 msgid "Save Staff Member"
 msgstr "Save Staff Member"
 
-#: users/views.py:25
+#: users/templates/users/staff_list.html:244
+#| msgid "Staff Member"
+msgid "Edit Staff Member"
+msgstr "Edit Staff Member"
+
+#: users/templates/users/staff_list.html:279
+#| msgid "Save changes"
+msgid "Save Changes"
+msgstr "Save Changes"
+
+#: users/views.py:26
 msgid "Welcome back, {}!"
 msgstr "Welcome back, {}!"
 
-#: users/views.py:30
+#: users/views.py:31
 msgid "Invalid phone number or password."
 msgstr "Invalid phone number or password."
 
-#: users/views.py:32
+#: users/views.py:33
 msgid "Please correct the errors below."
 msgstr "Please correct the errors below."
 
-#: users/views.py:42
+#: users/views.py:43
 msgid "You have been logged out successfully."
 msgstr "You have been logged out successfully."
 
-#: users/views.py:79
+#: users/views.py:88
 msgid "Staff member added successfully!"
 msgstr "Staff member added successfully!"
 
-#: users/views.py:116
+#: users/views.py:133
 msgid "Customer profile registered successfully!"
 msgstr "Customer profile registered successfully!"
+
+#: users/views.py:151
+msgid "Access denied. Only company admins can edit staff."
+msgstr "Access denied. Only company admins can edit staff."
+
+#: users/views.py:186
+#| msgid "Staff member added successfully!"
+msgid "Staff member updated successfully."
+msgstr "Staff member updated successfully."
+
+#: users/views.py:192
+msgid "Access denied. Only company admins can deactivate staff."
+msgstr "Access denied. Only company admins can deactivate staff."
+
+#: users/views.py:204
+#| msgid "Active"
+msgid "activated"
+msgstr "activated"
+
+#: users/views.py:204
+msgid "deactivated"
+msgstr "deactivated"
+
+#: users/views.py:205
+msgid "Staff member has been {}."
+msgstr "Staff member has been {}."
+
+#: users/views.py:212
+msgid "Access denied. Only company admins can delete staff."
+msgstr "Access denied. Only company admins can delete staff."
+
+#: users/views.py:224
+msgid "Staff member deleted successfully. Their past sales remain intact."
+msgstr "Staff member deleted successfully. Their past sales remain intact."
+
+#: users/views.py:257
+#| msgid "Customer profile registered successfully!"
+msgid "Role created successfully!"
+msgstr "Role created successfully!"
+
+#: users/views.py:260 users/views.py:300
+msgid "A role with this name already exists."
+msgstr "A role with this name already exists."
+
+#: users/views.py:297
+#| msgid "Payment logged successfully!"
+msgid "Role updated successfully!"
+msgstr "Role updated successfully!"
+
+#: users/views.py:327
+#| msgid "Payment logged successfully!"
+msgid "Role deleted successfully!"
+msgstr "Role deleted successfully!"
+
+#: users/views.py:329
+msgid ""
+"Cannot delete this role because it is assigned to one or more staff members."
+msgstr ""
+"Cannot delete this role because it is assigned to one or more staff members."
+
+#~ msgid "rooms"
+#~ msgstr "rooms"
+
+#, python-brace-format
+#~ msgid "Successfully imported {payments_created} payments!"
+#~ msgstr "Successfully imported {payments_created} payments!"
+
+#, python-brace-format
+#~ msgid "TrustBuilding: Your login code is {token.code}"
+#~ msgstr "TrustBuilding: Your login code is {token.code}"
+
+#~ msgid "Add and assign sales managers to company buildings"
+#~ msgstr "Add and assign sales managers to company buildings"
 
 #~ msgid "View Apartment Visualizer Matrix"
 #~ msgstr "View Apartment Visualizer Matrix"
@@ -2495,9 +2844,6 @@ msgstr "Customer profile registered successfully!"
 
 #~ msgid "Company"
 #~ msgstr "Company"
-
-#~ msgid "Area"
-#~ msgstr "Area"
 
 #~ msgid "Received by"
 #~ msgstr "Received by"

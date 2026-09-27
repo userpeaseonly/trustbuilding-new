@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="space-y-6 max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <div>
+            <h1 class="text-xl font-bold text-slate-900">
+                {% if is_edit %}
+                    {% trans "Edit Role" %}: {{ role.name }}
+                {% else %}
+                    {% trans "Create Custom Role" %}
+                {% endif %}
+            </h1>
+            <p class="text-sm text-slate-500 mt-1">{% trans "Define specific permissions for staff members." %}</p>
+        </div>
+        <a href="{% url 'users:staff_list' %}" class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition shadow-sm">
+            {% trans "Cancel" %}
+        </a>
+    </div>
+
+    <form method="post" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Role Name -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <label class="block text-sm font-bold text-slate-700 mb-2">{% trans "Role Name" %}</label>
+            {{ form.name }}
+            <p class="text-xs text-slate-500 mt-2">{% trans "Example: Senior Sales Manager, Call Center Agent, Accountant" %}</p>
+        </div>
+
+        <!-- Permissions Grid -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b border-slate-200 bg-slate-50">
+                <h3 class="text-base font-bold text-slate-800">{% trans "Permissions Checklist" %}</h3>
+                <p class="text-xs text-slate-500">{% trans "Select the specific actions this role can perform across different modules." %}</p>
+            </div>
+            
+            <div class="divide-y divide-slate-100">
+                {% for module_key, module_data in available_permissions.items %}
+                <div class="p-5 flex flex-col md:flex-row md:items-center gap-4 hover:bg-slate-50 transition-colors">
+                    <div class="w-full md:w-1/3">
+                        <h4 class="font-bold text-slate-700">{{ module_data.label }}</h4>
+                    </div>
+                    <div class="w-full md:w-2/3 flex flex-wrap gap-4">
+                        {% for perm_code, perm_name in module_data.actions %}
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="perm_{{ perm_code }}" class="w-4 h-4 text-emerald-600 bg-white border-slate-300 rounded focus:ring-emerald-500 focus:ring-2"
+                                {% if perm_code in role_permissions %}checked{% endif %}>
+                            <span class="ml-2 text-sm font-medium text-slate-700">{{ perm_name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="flex justify-end gap-3">
+            <a href="{% url 'users:staff_list' %}" class="px-5 py-2.5 text-sm font-medium text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition shadow-sm">
+                {% trans "Cancel" %}
+            </a>
+            <button type="submit" class="px-5 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg transition shadow-sm flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                {% trans "Save Role" %}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

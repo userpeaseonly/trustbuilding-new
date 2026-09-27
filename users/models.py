@@ -68,10 +68,26 @@ class CompanyProfile(models.Model):
         return self.company_name
 
 
+class Role(models.Model):
+    company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='company_roles', limit_choices_to={'is_company': True})
+    name = models.CharField(_("Role Name"), max_length=255)
+    permissions = models.JSONField(_("Permissions"), default=list, blank=True)
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Role")
+        verbose_name_plural = _("Roles")
+        unique_together = ('company', 'name')
+
+    def __str__(self):
+        return self.name
+
+
 class StaffProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='staff_profile')
     company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='company_staff_members', limit_choices_to={'is_company': True})
     position = models.CharField(_("Position"), max_length=255, blank=True)
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, null=True, blank=True, related_name='staff_members')
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
 
     class Meta:

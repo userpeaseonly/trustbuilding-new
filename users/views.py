@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+from django.db import IntegrityError
 from django.utils.translation import gettext as _
 
 from .forms import PhoneAuthenticationForm
+from users.permissions import require_permission
 
 
 def login_view(request):
@@ -48,6 +50,7 @@ from .forms import StaffCreationForm, CustomerRegistrationForm
 from django.db.models import Q, Count
 
 @login_required
+@require_permission('view_staff')
 def staff_list_view(request):
     """Company staff management view"""
     if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
@@ -58,11 +61,12 @@ def staff_list_view(request):
     staff_profiles = StaffProfile.objects.filter(company=company).select_related('user')
     
     if request.method == 'POST':
-        form = StaffCreationForm(request.POST)
+        form = StaffCreationForm(request.POST, company=company)
         if form.is_valid():
             phone = form.cleaned_data['phone_number']
             full_name = form.cleaned_data['full_name']
             position = form.cleaned_data.get('position', '')
+            role = form.cleaned_data.get('role', None)
             
             user, created = CustomUser.objects.get_or_create(
                 phone_number=phone,
@@ -76,19 +80,29 @@ def staff_list_view(request):
                 user.full_name = full_name
                 user.save(update_fields=['is_staff_member', 'full_name'])
                 
-            StaffProfile.objects.get_or_create(user=user, company=company, defaults={'position': position})
+            profile, profile_created = StaffProfile.objects.get_or_create(user=user, company=company)
+            profile.position = position
+            profile.role = role
+            profile.save(update_fields=['position', 'role'])
+            
             messages.success(request, _("Staff member added successfully!"))
             return redirect('users:staff_list')
     else:
-        form = StaffCreationForm()
+        form = StaffCreationForm(company=company)
+        
+    # Also fetch roles for the Roles tab
+    from .models import Role
+    roles = Role.objects.filter(company=company)
         
     return render(request, 'users/staff_list.html', {
         'staff_profiles': staff_profiles,
-        'form': form
+        'roles': roles,
+        'form': form,
     })
 
 
 @login_required
+@require_permission('view_customers')
 def customer_list_view(request):
     """Customer directory listing & customer registration"""
     query = request.GET.get('q', '').strip()
@@ -155,7 +169,19 @@ def staff_edit(request, pk):
         user.save(update_fields=['full_name', 'phone_number'])
         
         staff_profile.position = position
-        staff_profile.save(update_fields=['position'])
+        
+        role_id = request.POST.get('role', '')
+        if role_id:
+            from .models import Role
+            try:
+                role = Role.objects.get(pk=role_id, company=company)
+                staff_profile.role = role
+            except Role.DoesNotExist:
+                pass
+        else:
+            staff_profile.role = None
+            
+        staff_profile.save(update_fields=['position', 'role'])
         
         messages.success(request, _("Staff member updated successfully."))
     return redirect('users:staff_list')
@@ -197,4 +223,109 @@ def staff_delete(request, pk):
         staff_profile.delete()
         messages.success(request, _("Staff member deleted successfully. Their past sales remain intact."))
         
+    return redirect('users:staff_list')
+
+from .models import Role
+from .forms import RoleForm
+from .permissions import AVAILABLE_PERMISSIONS
+
+@login_required
+def role_create_view(request):
+    """View to create a custom role"""
+    if not request.user.is_company:
+        return redirect('dashboard:home')
+    
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+    
+    if request.method == 'POST':
+        form = RoleForm(request.POST)
+        if form.is_valid():
+            role = form.save(commit=False)
+            role.company = company
+            
+            # Extract permissions from POST
+            selected_permissions = []
+            for module_key, module_data in AVAILABLE_PERMISSIONS.items():
+                for perm_code, perm_name in module_data['actions']:
+                    if request.POST.get(f'perm_{perm_code}') == 'on':
+                        selected_permissions.append(perm_code)
+            
+            role.permissions = selected_permissions
+            try:
+                role.save()
+                messages.success(request, _("Role created successfully!"))
+                return redirect('users:staff_list')
+            except IntegrityError:
+                messages.error(request, _("A role with this name already exists."))
+    else:
+        form = RoleForm()
+        
+    return render(request, 'users/role_form.html', {
+        'form': form,
+        'available_permissions': AVAILABLE_PERMISSIONS,
+        'role_permissions': [],
+        'is_edit': False
+    })
+
+
+@login_required
+def role_edit_view(request, pk):
+    """View to edit a custom role"""
+    if not request.user.is_company:
+        return redirect('dashboard:home')
+    
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+    role = get_object_or_404(Role, pk=pk, company=company)
+    
+    if request.method == 'POST':
+        form = RoleForm(request.POST, instance=role)
+        if form.is_valid():
+            role = form.save(commit=False)
+            
+            # Extract permissions from POST
+            selected_permissions = []
+            for module_key, module_data in AVAILABLE_PERMISSIONS.items():
+                for perm_code, perm_name in module_data['actions']:
+                    if request.POST.get(f'perm_{perm_code}') == 'on':
+                        selected_permissions.append(perm_code)
+            
+            role.permissions = selected_permissions
+            try:
+                role.save()
+                messages.success(request, _("Role updated successfully!"))
+                return redirect('users:staff_list')
+            except IntegrityError:
+                messages.error(request, _("A role with this name already exists."))
+    else:
+        form = RoleForm(instance=role)
+        
+    return render(request, 'users/role_form.html', {
+        'form': form,
+        'available_permissions': AVAILABLE_PERMISSIONS,
+        'role_permissions': role.permissions or [],
+        'is_edit': True,
+        'role': role
+    })
+
+
+@login_required
+def role_delete_view(request, pk):
+    """View to delete a custom role"""
+    if not request.user.is_company:
+        return redirect('dashboard:home')
+        
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+    role = get_object_or_404(Role, pk=pk, company=company)
+    
+    if request.method == 'POST':
+        from django.db.models import ProtectedError
+        try:
+            role.delete()
+            messages.success(request, _("Role deleted successfully!"))
+        except ProtectedError:
+            messages.error(request, _("Cannot delete this role because it is assigned to one or more staff members."))
+            
     return redirect('users:staff_list')

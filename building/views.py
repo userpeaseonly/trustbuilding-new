@@ -5,8 +5,10 @@ from django.utils.translation import gettext as _
 from .models import Building, Apartment
 from .forms import BuildingForm, ApartmentUpdateForm
 from decimal import Decimal
+from users.permissions import require_permission
 
 @login_required
+@require_permission('view_buildings')
 def building_list(request):
     """List all buildings for the company"""
     if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
@@ -37,6 +39,7 @@ def building_detail(request, pk):
 
 
 @login_required
+@require_permission('create_buildings')
 def building_create(request):
     """Create a building and auto-generate the apartment grid"""
     if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):

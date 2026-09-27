@@ -14,8 +14,10 @@ from users.models import CustomUser
 from building.models import Apartment
 from building.views import get_user_company
 from .utils.utils import number_to_words, amount_to_words_ru, MONTHS_UZ
+from users.permissions import require_permission
 
 @login_required
+@require_permission('view_contracts')
 def contract_list(request):
     """List all active contracts for the company"""
     if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
@@ -98,6 +100,7 @@ def contract_detail(request, pk):
 
 
 @login_required
+@require_permission('create_contracts')
 @transaction.atomic
 def contract_create(request):
     """Wizard to create a new contract"""
@@ -161,6 +164,7 @@ def contract_create(request):
 
 
 @login_required
+@require_permission('create_payments')
 def process_payment(request, pk):
     """Process a payment for a contract"""
     company = get_user_company(request.user)
@@ -546,6 +550,7 @@ def terminated_contracts_list(request):
 
 
 @login_required
+@require_permission('create_payments')
 def staff_quick_payment(request):
     """Quick payment terminal view for sales staff"""
     company = get_user_company(request.user)

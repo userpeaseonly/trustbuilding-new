@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imaan\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-16 22:04+0500\n"
+"POT-Creation-Date: 2026-09-27 15:06+0500\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,12 +39,12 @@ msgid "Building Name / Number"
 msgstr "Bino nomi / raqami"
 
 #: building/models.py:9 building/templates/building/form.html:34
-#: building/templates/building/list.html:103
+#: building/templates/building/list.html:99
 msgid "Block Number"
 msgstr "Blok raqami"
 
 #: building/models.py:10 building/templates/building/form.html:40
-#: building/templates/building/list.html:109
+#: building/templates/building/list.html:105
 msgid "Address"
 msgstr "Manzil"
 
@@ -57,7 +57,6 @@ msgid "Entrance Count"
 msgstr "Podezdlar soni"
 
 #: building/models.py:13
-#| msgid "Apartments"
 msgid "Apartments per Floor"
 msgstr "Xonadonlar"
 
@@ -65,15 +64,15 @@ msgstr "Xonadonlar"
 msgid "Apartment Count"
 msgstr "Xonadonlar soni"
 
-#: building/models.py:16 building/models.py:53 contract/models.py:39
-#: contract/models.py:90 contract/models.py:117 contract/models.py:136
-#: contract/models.py:162 otp/models.py:12 users/models.py:36
-#: users/models.py:60 users/models.py:75
+#: building/models.py:16 building/models.py:53 contract/models.py:40
+#: contract/models.py:92 contract/models.py:119 contract/models.py:138
+#: contract/models.py:164 otp/models.py:12 users/models.py:36
+#: users/models.py:60 users/models.py:75 users/models.py:91
 msgid "Created At"
 msgstr "Yaratilgan vaqti"
 
-#: building/models.py:17 building/models.py:54 contract/models.py:40
-#: contract/models.py:118 contract/models.py:163 users/models.py:37
+#: building/models.py:17 building/models.py:54 contract/models.py:41
+#: contract/models.py:120 contract/models.py:165 users/models.py:37
 #: users/models.py:61
 msgid "Updated At"
 msgstr "Yangilangan vaqti"
@@ -82,7 +81,7 @@ msgstr "Yangilangan vaqti"
 msgid "Building"
 msgstr "Bino"
 
-#: building/models.py:21 users/templates/users/staff_list.html:48
+#: building/models.py:21 users/templates/users/staff_list.html:84
 msgid "Buildings"
 msgstr "Binolar"
 
@@ -145,8 +144,9 @@ msgstr ""
 
 #: building/models.py:51
 #: building/templates/building/partials/apartment_modal.html:136
-#: contract/models.py:34 contract/templates/contract/detail.html:156
-#: contract/templates/contract/list.html:54 users/models.py:34
+#: contract/models.py:35 contract/templates/contract/detail.html:156
+#: contract/templates/contract/list.html:54
+#: dashboard/templates/dashboard/sms_usage.html:75 users/models.py:34
 msgid "Status"
 msgstr "Holati"
 
@@ -162,7 +162,19 @@ msgstr "Xonadon"
 msgid "Apartments"
 msgstr "Xonadonlar"
 
+#: building/models.py:62 building/templates/building/matrix.html:59
+#: building/templates/building/partials/apartment_card.html:11
+#: contract/templates/contract/form.html:12
+#: contract/templates/contract/list.html:69
+#: contract/templates/contract/partials/apartment_search_results.html:4
+#: contract/templates/contract/partials/apartment_search_results.html:7
+#: contract/templates/contract/quick_payment.html:58
+#: dashboard/templates/dashboard/home.html:108
+msgid "Apt"
+msgstr "Kvartira"
+
 #: building/templates/building/detail.html:27
+#: building/templates/building/matrix.html:37
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
@@ -171,7 +183,9 @@ msgid "Entrance"
 msgstr "Kirish"
 
 #: building/templates/building/detail.html:35
-#: building/templates/building/list.html:157
+#: building/templates/building/form.html:87
+#: building/templates/building/list.html:153
+#: building/templates/building/matrix.html:46
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
@@ -180,8 +194,8 @@ msgid "Floor"
 msgstr "Qavat"
 
 #: building/templates/building/form.html:14
-#: building/templates/building/list.html:11
-#: building/templates/building/list.html:86
+#: building/templates/building/list.html:10
+#: building/templates/building/list.html:82
 msgid "New Building Project"
 msgstr "Yangi qurilish loyihasi"
 
@@ -192,28 +206,27 @@ msgstr ""
 "aniqlang"
 
 #: building/templates/building/form.html:30
-#: building/templates/building/list.html:99
+#: building/templates/building/list.html:95
 msgid "Building Name"
 msgstr "Bino nomi"
 
 #: building/templates/building/form.html:46
-#: building/templates/building/list.html:115
+#: building/templates/building/list.html:111
 msgid "Number of Entrances"
 msgstr "Podezdlar soni"
 
 #: building/templates/building/form.html:50
-#: building/templates/building/list.html:119
+#: building/templates/building/list.html:115
 msgid "Number of Floors"
 msgstr "Qavatlar soni"
 
 #: building/templates/building/form.html:54
-#: building/templates/building/list.html:123
+#: building/templates/building/list.html:119
 msgid "Apts Per Floor"
 msgstr "Har bir qavat uchun kvartiralar"
 
 #: building/templates/building/form.html:63
-#: building/templates/building/list.html:132 raw_html.txt:2 raw_html.txt:52
-#| msgid "Attendance Report"
+#: building/templates/building/list.html:128
 msgid "Advanced: Excel Import"
 msgstr "Attendance Report"
 
@@ -224,149 +237,44 @@ msgstr ""
 "yuklang."
 
 #: building/templates/building/form.html:67
-#: building/templates/building/list.html:136
-#: contract/templates/contract/detail.html:280 raw_html.txt:3 raw_html.txt:53
-#: raw_html.txt:863
+#: building/templates/building/list.html:132
+#: contract/templates/contract/detail.html:280
 msgid "Download Template"
 msgstr "Shablonni yuklab olish"
 
 #: building/templates/building/form.html:72
-#: building/templates/building/list.html:141
+#: building/templates/building/list.html:137
 msgid "Upload Customized Excel"
 msgstr "Shaxsiylashtirilgan Excelni yuklang"
 
 #: building/templates/building/form.html:80
-#: building/templates/building/list.html:149
-#| msgid "Apartment updated!"
+#: building/templates/building/list.html:145
 msgid "apartments parsed"
 msgstr "Apartment updated!"
 
 #: building/templates/building/form.html:81
-#: building/templates/building/list.html:150
+#: building/templates/building/list.html:146
 msgid "Showing first 5 rows"
 msgstr "Birinchi 5 qator ko'rsatilmoqda"
 
-#: building/templates/building/form.html:112
-#: building/templates/building/list.html:182
-msgid "Automated Grid:"
-msgstr "Avtomatlashtirilgan tarmoq:"
-
-#: building/templates/building/form.html:112
-#: building/templates/building/list.html:182
-#| msgid ""
-#| "An entrance-by-floor apartment matrix will be automatically generated upon "
-#| "creation."
-msgid ""
-"If no Excel is uploaded, an entrance-by-floor matrix will be automatically "
-"generated."
-msgstr ""
-"An entrance-by-floor apartment matrix will be automatically generated upon "
-"creation."
-
-#: building/templates/building/form.html:117
-#: building/templates/building/list.html:187
-#: building/templates/building/partials/apartment_modal.html:197
-#: contract/templates/contract/confirm_termination.html:57
-#: contract/templates/contract/form.html:490
-#: contract/templates/contract/template_list.html:176 raw_html.txt:140
-#: users/templates/users/customer_list.html:172
-#: users/templates/users/staff_list.html:97
-msgid "Cancel"
-msgstr "Bekor qilish"
-
-#: building/templates/building/form.html:120
-#: building/templates/building/list.html:190
-msgid "Generate Building Project"
-msgstr "Bino loyihasini yaratish"
-
-#: building/templates/building/form.html:193
-#: building/templates/building/list.html:264 raw_html.txt:38 raw_html.txt:92
-msgid "Invalid template structure. Missing required columns."
-msgstr "Shablon tuzilishi yaroqsiz.Kerakli ustunlar etishmayapti."
-
-#: building/templates/building/form.html:200
-#: building/templates/building/list.html:271 raw_html.txt:45 raw_html.txt:99
-msgid "Failed to parse Excel file."
-msgstr "Excel faylini tahlil qilib boʻlmadi."
-
-#: building/templates/building/list.html:26
-#: contract/templates/contract/template_list.html:133
-msgid "Block"
-msgstr "Blok"
-
-#: building/templates/building/list.html:29
-#: dashboard/templates/dashboard/home.html:55
-msgid "Apts"
-msgstr "Kvartiralar"
-
-#: building/templates/building/list.html:38
-msgid "No address specified"
-msgstr "Hech qanday manzil ko'rsatilmagan"
-
-#: building/templates/building/list.html:44
-msgid "Floors"
-msgstr "Qavatlar"
-
-#: building/templates/building/list.html:48
-msgid "Entrances"
-msgstr "Kirishlar"
-
-#: building/templates/building/list.html:58
-#| msgid "Apartment Visualizer Matrix"
-msgid "Visualizer Matrix"
-msgstr "Matritsa vizualizatori"
-
-#: building/templates/building/list.html:68
-msgid "No residential buildings yet"
-msgstr "Hozircha turar-joy binolari yo'q"
-
-#: building/templates/building/list.html:69
-msgid ""
-"Create your first residential project to generate visual apartment grids and"
-" sales schedules."
-msgstr ""
-"Vizual kvartira tarmoqlari va savdo jadvallarini yaratish uchun birinchi "
-"turar joy loyihangizni yarating."
-
-#: building/templates/building/list.html:73 raw_html.txt:1
-msgid "Create First Building Project"
-msgstr "Birinchi qurilish loyihasini yarating"
-
-#: building/templates/building/list.html:87
-msgid "Define structural parameters to auto-generate the apartment grid"
-msgstr ""
-"Kvartiralar tarmog'ini avtomatik yaratish uchun tizimli parametrlarni "
-"aniqlang"
-
-#: building/templates/building/list.html:133
-msgid "Download template, customize apartments, and upload back."
-msgstr "Shablonni yuklab oling, kvartiralarni sozlang va qayta yuklang."
-
-#: building/templates/building/list.html:156
-#| msgid "Events"
+#: building/templates/building/form.html:86
+#: building/templates/building/list.html:152
 msgid "Ent"
 msgstr "Voqealar"
 
-#: building/templates/building/list.html:158
+#: building/templates/building/form.html:88
+#: building/templates/building/list.html:154
 msgid "Apt #"
 msgstr "Kvartira raqami"
 
-#: building/templates/building/matrix.html:13
-msgid "Apartment Visualizer Matrix"
-msgstr "Kvartira vizualizator matritsasi"
+#: building/templates/building/form.html:89
+#: building/templates/building/list.html:155
+msgid "Area"
+msgstr "Maydoni"
 
-#: building/templates/building/matrix.html:59
-#: building/templates/building/partials/apartment_card.html:11
-#: contract/templates/contract/form.html:12
-#: contract/templates/contract/list.html:69
-#: contract/templates/contract/partials/apartment_search_results.html:4
-#: contract/templates/contract/partials/apartment_search_results.html:7
-#: contract/templates/contract/quick_payment.html:58
-#: dashboard/templates/dashboard/home.html:108
-#| msgid "Apts"
-msgid "Apt"
-msgstr "Kvartira"
-
+#: building/templates/building/form.html:90
+#: building/templates/building/list.html:156
+#: building/templates/building/matrix.html:79
 #: building/templates/building/partials/apartment_card.html:31
 #: building/templates/building/partials/apartment_modal.html:50
 #: building/templates/building/partials/apartment_modal.html:142
@@ -375,8 +283,107 @@ msgstr "Kvartira"
 msgid "Rooms"
 msgstr "xona"
 
+#: building/templates/building/form.html:112
+#: building/templates/building/list.html:178
+msgid "Automated Grid:"
+msgstr "Avtomatlashtirilgan tarmoq:"
+
+#: building/templates/building/form.html:112
+#: building/templates/building/list.html:178
+msgid ""
+"If no Excel is uploaded, an entrance-by-floor matrix will be automatically "
+"generated."
+msgstr ""
+"An entrance-by-floor apartment matrix will be automatically generated upon "
+"creation."
+
+#: building/templates/building/form.html:117
+#: building/templates/building/list.html:183
+#: building/templates/building/partials/apartment_modal.html:197
+#: contract/templates/contract/confirm_termination.html:56
+#: contract/templates/contract/form.html:490
+#: contract/templates/contract/template_list.html:176
+#: users/templates/users/customer_list.html:172
+#: users/templates/users/role_form.html:19
+#: users/templates/users/role_form.html:63
+#: users/templates/users/staff_list.html:213
+#: users/templates/users/staff_list.html:276
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#: building/templates/building/form.html:120
+#: building/templates/building/list.html:186
+msgid "Generate Building Project"
+msgstr "Bino loyihasini yaratish"
+
+#: building/templates/building/form.html:193
+#: building/templates/building/list.html:260
+msgid "Invalid template structure. Missing required columns."
+msgstr "Shablon tuzilishi yaroqsiz.Kerakli ustunlar etishmayapti."
+
+#: building/templates/building/form.html:200
+#: building/templates/building/list.html:267
+msgid "Failed to parse Excel file."
+msgstr "Excel faylini tahlil qilib boʻlmadi."
+
+#: building/templates/building/list.html:24
+#: contract/templates/contract/template_list.html:133
+msgid "Block"
+msgstr "Blok"
+
+#: building/templates/building/list.html:27
+#: dashboard/templates/dashboard/home.html:55
+msgid "Apts"
+msgstr "Kvartiralar"
+
+#: building/templates/building/list.html:36
+msgid "No address specified"
+msgstr "Hech qanday manzil ko'rsatilmagan"
+
+#: building/templates/building/list.html:42
+#: building/templates/building/matrix.html:38
+msgid "Floors"
+msgstr "Qavatlar"
+
+#: building/templates/building/list.html:46
+msgid "Entrances"
+msgstr "Kirishlar"
+
+#: building/templates/building/list.html:56
+msgid "Visualizer Matrix"
+msgstr "Matritsa vizualizatori"
+
+#: building/templates/building/list.html:66
+msgid "No residential buildings yet"
+msgstr "Hozircha turar-joy binolari yo'q"
+
+#: building/templates/building/list.html:67
+msgid ""
+"Create your first residential project to generate visual apartment grids and"
+" sales schedules."
+msgstr ""
+"Vizual kvartira tarmoqlari va savdo jadvallarini yaratish uchun birinchi "
+"turar joy loyihangizni yarating."
+
+#: building/templates/building/list.html:70
+msgid "Create First Building Project"
+msgstr "Birinchi qurilish loyihasini yarating"
+
+#: building/templates/building/list.html:83
+msgid "Define structural parameters to auto-generate the apartment grid"
+msgstr ""
+"Kvartiralar tarmog'ini avtomatik yaratish uchun tizimli parametrlarni "
+"aniqlang"
+
+#: building/templates/building/list.html:129
+msgid "Download template, customize apartments, and upload back."
+msgstr "Shablonni yuklab oling, kvartiralarni sozlang va qayta yuklang."
+
+#: building/templates/building/matrix.html:13
+msgid "Apartment Visualizer Matrix"
+msgstr "Kvartira vizualizator matritsasi"
+
 #: building/templates/building/partials/apartment_modal.html:23
-#: raw_html.txt:114
 msgid "SOLD (Read Only)"
 msgstr "SOTILGAN (Faqat o'qish)"
 
@@ -422,7 +429,7 @@ msgid "Customer"
 msgstr "Mijoz"
 
 #: building/templates/building/partials/apartment_modal.html:81
-#: contract/models.py:28
+#: contract/models.py:29
 msgid "Contract Date"
 msgstr "Shartnoma sanasi"
 
@@ -440,7 +447,6 @@ msgid "Blueprint Image"
 msgstr "Xonadon chizmasi"
 
 #: building/templates/building/partials/apartment_modal.html:107
-#: raw_html.txt:121
 msgid "Close"
 msgstr "Yopish"
 
@@ -453,7 +459,6 @@ msgid "Total Area (m²)"
 msgstr "Umumiy maydon (m²)"
 
 #: building/templates/building/partials/apartment_modal.html:186
-#: raw_html.txt:136
 msgid "Create Contract for Apt"
 msgstr "Xonadon uchun shartnoma tuzish"
 
@@ -461,28 +466,28 @@ msgstr "Xonadon uchun shartnoma tuzish"
 msgid "Save changes"
 msgstr "O'zgarishlarni saqlash"
 
-#: building/views.py:13 contract/views.py:606 contract/views.py:616
+#: building/views.py:15 contract/views.py:625 contract/views.py:636
 msgid "Access denied."
 msgstr "Ruxsat berilmadi."
 
-#: building/views.py:74
+#: building/views.py:78
 #, python-brace-format
 msgid "Error parsing apartments JSON: {error}"
-msgstr ""
+msgstr "Kvartiralar JSON faylini o'qishda xatolik: {error}"
 
-#: building/views.py:103
+#: building/views.py:107
 msgid "Building created successfully! Apartments grid generated."
 msgstr "Bino muvaffaqiyatli yaratildi!Kvartiralar tarmog'i yaratildi."
 
-#: building/views.py:108
+#: building/views.py:112
 msgid "Add Building"
 msgstr "Yangi bino qo'shish"
 
-#: building/views.py:121 building/views.py:127
+#: building/views.py:125 building/views.py:131
 msgid "Sold apartments cannot be modified."
 msgstr "Sotilgan kvartiralarni o'zgartirish mumkin emas."
 
-#: building/views.py:137
+#: building/views.py:141
 msgid "Apartment updated!"
 msgstr "Apartment updated!"
 
@@ -491,7 +496,6 @@ msgid "Select Existing Customer"
 msgstr "Mavjud mijozni tanlang"
 
 #: contract/forms.py:12 contract/templates/contract/form.html:217
-#: raw_html.txt:731
 msgid "Register New Customer"
 msgstr "Yangi mijozni ro'yxatdan o'tkazish"
 
@@ -500,19 +504,21 @@ msgid "Select Customer"
 msgstr "Mijozni tanlang"
 
 #: contract/forms.py:29 otp/models.py:10
-#: otp/templates/otp/request_otp.html:122
+#: otp/templates/otp/request_otp.html:211 users/forms.py:11
 #: users/templates/users/customer_list.html:38
 #: users/templates/users/customer_list.html:136
 #: users/templates/users/login.html:188
-#: users/templates/users/staff_list.html:26
-#: users/templates/users/staff_list.html:79
+#: users/templates/users/staff_list.html:44
+#: users/templates/users/staff_list.html:191
+#: users/templates/users/staff_list.html:253
 msgid "Phone Number"
 msgstr "Telefon raqami"
 
 #: contract/forms.py:34 contract/templates/contract/detail.html:80
-#: contract/templates/contract/template_list.html:117
+#: contract/templates/contract/template_list.html:117 users/forms.py:83
 #: users/templates/users/customer_list.html:140
-#: users/templates/users/staff_list.html:83
+#: users/templates/users/staff_list.html:195
+#: users/templates/users/staff_list.html:257
 msgid "Full Name"
 msgstr "F.I.SH. (To'liq ismi)"
 
@@ -522,7 +528,7 @@ msgstr "masalanAlisher Tursunov"
 
 #: contract/forms.py:39 users/models.py:18
 #: users/templates/users/customer_list.html:144
-#: users/templates/users/staff_list.html:87
+#: users/templates/users/staff_list.html:199
 msgid "Gender"
 msgstr "Jinsi"
 
@@ -611,223 +617,221 @@ msgstr "Bekor qilingan"
 msgid "Completed"
 msgstr "Yakunlangan"
 
-#: contract/models.py:29
+#: contract/models.py:30
 msgid "Down Payment Date"
 msgstr "Boshlang'ich to'lov"
 
-#: contract/models.py:30
+#: contract/models.py:31
 msgid "Price per m2"
 msgstr "1 m² narxi"
 
-#: contract/models.py:31 contract/templates/contract/detail.html:113
+#: contract/models.py:32 contract/templates/contract/detail.html:113
 #: contract/templates/contract/quick_payment.html:79
 #: contract/templates/contract/template_list.html:129
 msgid "Down Payment"
 msgstr "Boshlang'ich to'lov"
 
-#: contract/models.py:32 contract/templates/contract/detail.html:117
+#: contract/models.py:33 contract/templates/contract/detail.html:117
 #: contract/templates/contract/quick_payment.html:83
 msgid "Last Payment"
 msgstr "Oxirgi to'lov"
 
-#: contract/models.py:33
+#: contract/models.py:34
 msgid "Payment Duration (Months)"
 msgstr "To'lov muddati (Oy)"
 
-#: contract/models.py:37
+#: contract/models.py:38
 msgid "Total Contract Amount"
 msgstr "Shartnomaning umumiy summasi"
 
-#: contract/models.py:43
+#: contract/models.py:44
 #: contract/templates/contract/confirm_termination.html:13
 #: contract/templates/contract/detail.html:12
+#: contract/templates/contract/quick_payment.html:57
 #: contract/templates/contract/termination_dashboard.html:11
 msgid "Contract"
 msgstr "Shartnoma"
 
-#: contract/models.py:44 contract/templates/contract/detail.html:10
-#: users/templates/users/customer_list.html:56
+#: contract/models.py:45 contract/templates/contract/detail.html:10
+#: users/permissions.py:28 users/templates/users/customer_list.html:56
 msgid "Contracts"
 msgstr "Shartnomalar"
 
-#: contract/models.py:76 contract/templates/contract/detail.html:397
+#: contract/models.py:77 contract/templates/contract/detail.html:397
 #: contract/templates/contract/quick_payment.html:129
 #: contract/templates/contract/termination_dashboard.html:82
 msgid "Cash"
 msgstr "Naqd pul"
 
-#: contract/models.py:77 contract/templates/contract/detail.html:404
+#: contract/models.py:78 contract/templates/contract/detail.html:404
 #: contract/templates/contract/quick_payment.html:136
 #: contract/templates/contract/termination_dashboard.html:83
 msgid "Card"
 msgstr "Plastik karta"
 
-#: contract/models.py:78 contract/templates/contract/detail.html:411
+#: contract/models.py:79 contract/templates/contract/detail.html:411
 #: contract/templates/contract/quick_payment.html:143
 #: contract/templates/contract/termination_dashboard.html:84
 msgid "Bank Transfer"
 msgstr "Bank o'tkazmasi"
 
-#: contract/models.py:79 contract/templates/contract/detail.html:418
+#: contract/models.py:80 contract/templates/contract/detail.html:418
 #: contract/templates/contract/quick_payment.html:150
 msgid "Material"
 msgstr "Material / Boshqa"
 
-#: contract/models.py:84 contract/models.py:131
+#: contract/models.py:86 contract/models.py:133
 msgid "Payment Amount"
 msgstr "To'lov summasi"
 
-#: contract/models.py:85 contract/models.py:132
+#: contract/models.py:87 contract/models.py:134
 msgid "Payment Type"
 msgstr "To'lov turi"
 
-#: contract/models.py:86 contract/models.py:133
+#: contract/models.py:88 contract/models.py:135
 msgid "Transaction ID"
 msgstr "Tranzaksiya ID"
 
-#: contract/models.py:86
+#: contract/models.py:88
 msgid "For bank transfers/terminal"
 msgstr "Bank o'tkazmalari/terminal uchun"
 
-#: contract/models.py:87
+#: contract/models.py:89
 msgid "Receipt Image"
 msgstr "Kvitansiya rasmi"
 
-#: contract/models.py:88
+#: contract/models.py:90
 msgid "Date Paid"
 msgstr "To'langan sana"
 
-#: contract/models.py:93
+#: contract/models.py:95
 msgid "Payment Log"
 msgstr "To'lov jurnali"
 
-#: contract/models.py:94
+#: contract/models.py:96
 msgid "Payment Logs"
 msgstr "To'lov jurnallari"
 
-#: contract/models.py:110 contract/templates/contract/terminated_list.html:15
+#: contract/models.py:112 contract/templates/contract/terminated_list.html:15
 msgid "Termination Date"
 msgstr "Tugatish sanasi"
 
-#: contract/models.py:111
+#: contract/models.py:113
 #: contract/templates/contract/confirm_termination.html:30
 #: contract/templates/contract/termination_dashboard.html:95
 msgid "Termination Reason"
 msgstr "Bekor qilish sababi"
 
-#: contract/models.py:112
+#: contract/models.py:114
 #: contract/templates/contract/termination_dashboard.html:26
 msgid "Fine Amount"
 msgstr "Jarima miqdori"
 
-#: contract/models.py:113
+#: contract/models.py:115
 msgid "Fine Paid"
 msgstr "Jarima to'langan"
 
-#: contract/models.py:114
+#: contract/models.py:116
 msgid "Planned Refund Amount"
 msgstr "Rejalashtirilgan to'lov miqdori"
 
-#: contract/models.py:115
+#: contract/models.py:117
 msgid "Paid Refund Amount"
 msgstr "To'langan to'lov miqdori"
 
-#: contract/models.py:121
+#: contract/models.py:123
 msgid "Terminated Contract"
 msgstr "Tugatilgan shartnoma"
 
-#: contract/models.py:122
+#: contract/models.py:124
 msgid "Terminated Contracts"
 msgstr "Bekor qilingan shartnomalar"
 
-#: contract/models.py:130
+#: contract/models.py:132
 msgid "Payment Date"
 msgstr "To'lov sanasi"
 
-#: contract/models.py:134
+#: contract/models.py:136
 msgid "Notes"
 msgstr "Izoh / Qaydlar"
 
-#: contract/models.py:139
+#: contract/models.py:141
 msgid "Termination Payment"
 msgstr "Tugatish to'lovi"
 
-#: contract/models.py:140
+#: contract/models.py:142
 msgid "Termination Payments"
 msgstr "Tugatish to'lovlari"
 
-#: contract/models.py:153
+#: contract/models.py:155
 msgid "Month Number"
 msgstr "Oy raqami"
 
-#: contract/models.py:154 contract/templates/contract/detail.html:151
+#: contract/models.py:156 contract/templates/contract/detail.html:151
 #: contract/templates/contract/form.html:462
 msgid "Due Date"
 msgstr "To'lov muddati"
 
-#: contract/models.py:155 contract/templates/contract/detail.html:152
+#: contract/models.py:157 contract/templates/contract/detail.html:152
 #: contract/templates/contract/form.html:463
 msgid "Planned Amount"
 msgstr "Rejalashtirilgan summa"
 
-#: contract/models.py:156 contract/templates/contract/detail.html:153
+#: contract/models.py:158 contract/templates/contract/detail.html:153
 msgid "Paid Amount"
 msgstr "To'langan summa"
 
-#: contract/models.py:157
+#: contract/models.py:159
 msgid "Debt"
 msgstr "Qarzdorlik"
 
-#: contract/models.py:158
+#: contract/models.py:160
 msgid "Excess / Overpayment"
 msgstr "Ortiqcha to'lov"
 
-#: contract/models.py:159
+#: contract/models.py:161
 msgid "Debt Carried Over"
 msgstr "Qarzdorlik keyingi oyga o'tkazildi"
 
-#: contract/models.py:160
+#: contract/models.py:162
 msgid "Is Late"
 msgstr "Kechikdi"
 
-#: contract/models.py:166
+#: contract/models.py:168
 msgid "Payment Record"
 msgstr "To'lov yozuvi"
 
-#: contract/models.py:167
+#: contract/models.py:169
 msgid "Payment Records"
 msgstr "To'lov yozuvlari"
 
-#: contract/models.py:345 contract/templates/contract/template_list.html:160
-#| msgid "Company Name"
+#: contract/models.py:347 contract/templates/contract/template_list.html:160
 msgid "Template Name"
 msgstr "Company Name"
 
-#: contract/models.py:346
+#: contract/models.py:348
 msgid "Template File (.docx)"
 msgstr "Andoza fayli (.docx)"
 
-#: contract/models.py:347
+#: contract/models.py:349
 msgid "HTML Content"
 msgstr "HTML tarkibi"
 
-#: contract/models.py:348
+#: contract/models.py:350
 msgid "Is Default"
 msgstr "Standart"
 
-#: contract/models.py:354
-#| msgid "Contract Date"
+#: contract/models.py:356
 msgid "Contract Template"
 msgstr "Shartnoma sanasi"
 
-#: contract/models.py:355 contract/templates/contract/template_list.html:8
-#: raw_html.txt:938 templates/base.html:116
-#| msgid "Contract Terms"
+#: contract/models.py:357 contract/templates/contract/template_list.html:8
+#: templates/base.html:134
 msgid "Contract Templates"
 msgstr "Shartnoma shablonlari"
 
 #: contract/templates/contract/confirm_termination.html:12
-#: contract/views.py:423 contract/views.py:470
+#: contract/views.py:441 contract/views.py:488
 msgid "Confirm Contract Termination"
 msgstr "Shartnomani bekor qilishni tasdiqlash"
 
@@ -855,21 +859,19 @@ msgstr "Shartnomani bekor qilish sababini ko'rsating ..."
 msgid "Fine Penalty Amount (UZS)"
 msgstr "Jarima / Penya summasi (UZS)"
 
-#: contract/templates/contract/confirm_termination.html:42
-#| msgid "Total Amount:"
+#: contract/templates/contract/confirm_termination.html:41
 msgid "Total Amount Paid by Customer:"
 msgstr "Total Amount:"
 
-#: contract/templates/contract/confirm_termination.html:46
-#| msgid "Fine Penalty"
+#: contract/templates/contract/confirm_termination.html:45
 msgid "- Fine Penalty:"
 msgstr "- Jarima / Penya:"
 
-#: contract/templates/contract/confirm_termination.html:50
+#: contract/templates/contract/confirm_termination.html:49
 msgid "= Total Refund Owed to Customer:"
 msgstr "= Xaridorga to'lanadigan umumiy to'lov:"
 
-#: contract/templates/contract/confirm_termination.html:60
+#: contract/templates/contract/confirm_termination.html:59
 msgid "Authorize & Terminate Contract"
 msgstr "Tasdiqlash va Shartnomani bekor qilish"
 
@@ -877,42 +879,38 @@ msgstr "Tasdiqlash va Shartnomani bekor qilish"
 msgid "Real Estate Contract"
 msgstr "Ko'chmas mulk shartnomasi"
 
-#: contract/templates/contract/detail.html:29 raw_html.txt:840
-#| msgid "Down Payment Date"
+#: contract/templates/contract/detail.html:29
 msgid "Download Payments (Excel)"
 msgstr "To'lovlarni yuklab olish (Excel)"
 
-#: contract/templates/contract/detail.html:34 raw_html.txt:841
-#| msgid "Download .DOCX Contract"
+#: contract/templates/contract/detail.html:34
 msgid "Download Contract"
 msgstr "Shartnomani yuklab olish"
 
-#: contract/templates/contract/detail.html:47 raw_html.txt:843
-#| msgid "Download .DOCX Contract"
+#: contract/templates/contract/detail.html:47
 msgid "📥 Download .DOCX Contract"
 msgstr "📥 .DOCX shartnomani yuklab olish"
 
-#: contract/templates/contract/detail.html:53 raw_html.txt:844
-#| msgid "Dashboard"
+#: contract/templates/contract/detail.html:53
 msgid "Refund Dashboard"
 msgstr "Qaytarish paneli"
 
 #: contract/templates/contract/detail.html:59
-#: contract/templates/contract/detail.html:338 raw_html.txt:845
-#: raw_html.txt:871
+#: contract/templates/contract/detail.html:338
 msgid "Process Payment"
 msgstr "To'lov qabul qilish"
 
-#: contract/templates/contract/detail.html:64 raw_html.txt:846
+#: contract/templates/contract/detail.html:64
 msgid "Terminate Contract"
 msgstr "Shartnomani bekor qilish"
 
-#: contract/templates/contract/detail.html:76 raw_html.txt:847
+#: contract/templates/contract/detail.html:76
 msgid "Customer Details"
 msgstr "Mijoz ma'lumotlari"
 
 #: contract/templates/contract/detail.html:84
 #: contract/templates/contract/template_list.html:122
+#: dashboard/templates/dashboard/sms_usage.html:74
 msgid "Phone"
 msgstr "Tel"
 
@@ -920,7 +918,7 @@ msgstr "Tel"
 msgid "PINFL / JSHSHR"
 msgstr "PINFL / JSHSHR"
 
-#: contract/templates/contract/detail.html:101 raw_html.txt:848
+#: contract/templates/contract/detail.html:101
 msgid "Contract Terms"
 msgstr "Shartnoma shartlari"
 
@@ -968,8 +966,7 @@ msgstr "Kutilmoqda"
 
 #: contract/templates/contract/detail.html:205
 #: contract/templates/contract/detail.html:214
-#: contract/templates/contract/detail.html:242 raw_html.txt:854
-#: raw_html.txt:855
+#: contract/templates/contract/detail.html:242
 msgid "Receipt"
 msgstr "Kvitansiya"
 
@@ -981,12 +978,11 @@ msgstr "To'lovlar tarixi"
 msgid "No payments recorded yet."
 msgstr "Hozircha hech qanday toʻlov qayd etilmagan."
 
-#: contract/templates/contract/detail.html:255 raw_html.txt:856
+#: contract/templates/contract/detail.html:255
 msgid "Import Payments (Excel)"
 msgstr "Import to'lovlari (Excel)"
 
 #: contract/templates/contract/detail.html:269
-#| msgid "Late Payments"
 msgid "Import Payments"
 msgstr "Kechikkan to'lovlar"
 
@@ -1007,9 +1003,9 @@ msgstr "2-qadam: Ma'lumotlarni yuklash"
 
 #: contract/templates/contract/detail.html:286
 msgid "Upload the filled Excel file."
-msgstr ""
+msgstr "To'ldirilgan Excel faylini yuklang."
 
-#: contract/templates/contract/detail.html:291 raw_html.txt:864
+#: contract/templates/contract/detail.html:291
 msgid "Upload and Process"
 msgstr "Yuklash va qayta ishlash"
 
@@ -1021,11 +1017,11 @@ msgstr "Tezkor qayta hisoblash"
 msgid "Next Due:"
 msgstr "Navbatdagi to'lov:"
 
-#: contract/templates/contract/detail.html:373 raw_html.txt:872
+#: contract/templates/contract/detail.html:373
 msgid "Fill Next Due"
 msgstr "Navbatdagini kiritish"
 
-#: contract/templates/contract/detail.html:380 raw_html.txt:873
+#: contract/templates/contract/detail.html:380
 msgid "Fill Full Debt"
 msgstr "To'liq qarzni kiritish"
 
@@ -1041,7 +1037,7 @@ msgstr ""
 "Joriy sana va vaqt uchun bo'sh qoldiring yoki boshqa to'lov sanasini "
 "kiriting."
 
-#: contract/templates/contract/detail.html:435 raw_html.txt:874
+#: contract/templates/contract/detail.html:435
 msgid "Register Payment & Issue Receipt"
 msgstr "To'lovni kiritish va kvitansiya berish"
 
@@ -1060,7 +1056,7 @@ msgstr ""
 msgid "1. Customer Identity"
 msgstr "1. Mijoz ma'lumotlari"
 
-#: contract/templates/contract/form.html:211 raw_html.txt:730
+#: contract/templates/contract/form.html:211
 msgid "Search Existing Customer"
 msgstr "Mijozlar bazasidan qidirish"
 
@@ -1073,7 +1069,7 @@ msgstr "Mijozni qidirish (Ism, Telefon yoki JSHSHIR)"
 msgid "Selected Customer:"
 msgstr "Tanlangan mijoz:"
 
-#: contract/templates/contract/form.html:235 raw_html.txt:732
+#: contract/templates/contract/form.html:235
 msgid "Change Customer"
 msgstr "Mijozni o'zgartirish"
 
@@ -1094,7 +1090,7 @@ msgstr "2. Tanlangan xonadon"
 msgid "Selected Apartment Unit:"
 msgstr "Tanlangan kvartira:"
 
-#: contract/templates/contract/form.html:326 raw_html.txt:733
+#: contract/templates/contract/form.html:326
 msgid "Search & Change Unit"
 msgstr "Qidiruv va birlikni o'zgartirish"
 
@@ -1127,8 +1123,7 @@ msgstr "Oraliq oylik to'lovlar (DP va LP oylari bundan mustasno)."
 #: contract/templates/contract/form.html:385
 #: contract/templates/contract/form.html:391
 #: contract/templates/contract/form.html:397
-#: contract/templates/contract/form.html:402 raw_html.txt:734 raw_html.txt:735
-#: raw_html.txt:736
+#: contract/templates/contract/form.html:402
 msgid "optional"
 msgstr "ixtiyoriy"
 
@@ -1150,7 +1145,7 @@ msgstr ""
 "Majburiy emas oxirgi oy rejalashtirilgan miqdor.Agar oxirgi to'lov bo'lmasa,"
 " bo'sh qoldiring."
 
-#: contract/templates/contract/form.html:413 raw_html.txt:737
+#: contract/templates/contract/form.html:413
 msgid "Live Schedule Calculation Preview"
 msgstr "Jadvalni jonli hisoblash ko'rinishi"
 
@@ -1174,7 +1169,7 @@ msgstr "1-oy (avval toʻlov)"
 msgid "Final Month (Last Payment)"
 msgstr "Yakuniy oy (oxirgi to'lov)"
 
-#: contract/templates/contract/form.html:445 raw_html.txt:738
+#: contract/templates/contract/form.html:445
 msgid "Intermediate Monthly Installment:"
 msgstr "Oraliq oylik to'lov:"
 
@@ -1190,7 +1185,7 @@ msgstr "oraliq oylar"
 msgid "per month"
 msgstr "oyiga"
 
-#: contract/templates/contract/form.html:483 raw_html.txt:740
+#: contract/templates/contract/form.html:483
 msgid "Automatic Schedule Generation:"
 msgstr "Jadvalni avtomatik yaratish:"
 
@@ -1198,7 +1193,7 @@ msgstr "Jadvalni avtomatik yaratish:"
 msgid "Payment schedule generated based on intermediate months & terms"
 msgstr "Oraliq oylar va shartlar asosida tuzilgan toʻlov jadvali"
 
-#: contract/templates/contract/form.html:493 raw_html.txt:741
+#: contract/templates/contract/form.html:493
 msgid "Generate Contract & Schedule"
 msgstr "Shartnoma va jadvalni shakllantirish"
 
@@ -1229,6 +1224,17 @@ msgstr "ID / Sana"
 msgid "No contracts found."
 msgstr "Hech qanday shartnoma topilmadi."
 
+#: contract/templates/contract/list.html:97
+#: users/templates/users/customer_list.html:87
+msgid "Previous"
+msgstr "Oldingi"
+
+#: contract/templates/contract/list.html:120
+#: users/templates/users/customer_list.html:110
+#| msgid "Next Due:"
+msgid "Next"
+msgstr "Keyingi"
+
 #: contract/templates/contract/partials/apartment_search_results.html:12
 msgid "Select Unit"
 msgstr "Xonadonni tanlash"
@@ -1247,7 +1253,7 @@ msgstr ""
 "Hech qanday mijoz topilmadi.Ularni qo'shish uchun yuqoridagi \"Yangi mijozni"
 " ro'yxatdan o'tkazish\" tugmasini bosing."
 
-#: contract/templates/contract/quick_payment.html:10 raw_html.txt:626
+#: contract/templates/contract/quick_payment.html:10
 msgid "Search & Select Customer"
 msgstr "Mijozni qidiring va tanlang"
 
@@ -1259,12 +1265,11 @@ msgstr "Mijozni telefon, ism yoki PINFL orqali qidiring..."
 msgid "No customers found."
 msgstr "Hech qanday mijoz topilmadi."
 
-#: contract/templates/contract/quick_payment.html:39 raw_html.txt:627
+#: contract/templates/contract/quick_payment.html:39
 msgid "Active Contracts & Log Payment"
 msgstr "Faol shartnomalar va to'lov jurnali"
 
 #: contract/templates/contract/quick_payment.html:69
-#| msgid "View Schedule"
 msgid "View Full Schedule"
 msgstr "To'liq jadvalni ko'rish"
 
@@ -1276,26 +1281,21 @@ msgstr "Umumiy qiymat"
 msgid "Amount (UZS)"
 msgstr "Miqdori (so‘m)"
 
-#: contract/templates/contract/quick_payment.html:162 raw_html.txt:629
+#: contract/templates/contract/quick_payment.html:162
 msgid "Log Payment & Print Receipt"
 msgstr "To'lov va kvitansiyani chop etish jurnali"
 
 #: contract/templates/contract/quick_payment.html:169
-#| msgid "Active Contracts"
 msgid "No Active Contracts"
 msgstr "Faol shartnomalar"
 
 #: contract/templates/contract/quick_payment.html:170
-#| msgid ""
-#| "Select a customer from the left panel to display active contracts and log "
-#| "payments."
 msgid "This customer doesn't have any active contracts to pay."
 msgstr ""
 "Select a customer from the left panel to display active contracts and log "
 "payments."
 
 #: contract/templates/contract/quick_payment.html:177
-#| msgid "Select Customer"
 msgid "Select a Customer"
 msgstr "Mijozni tanlang"
 
@@ -1326,17 +1326,15 @@ msgstr "Asosiy"
 msgid "Set as Default"
 msgstr "Asosiy sifatida belgilash"
 
-#: contract/templates/contract/template_list.html:44 raw_html.txt:886
+#: contract/templates/contract/template_list.html:44
 msgid "Make Default"
 msgstr "Asosiy qilish"
 
-#: contract/templates/contract/template_list.html:49 raw_html.txt:887
-#| msgid "Active Employee"
+#: contract/templates/contract/template_list.html:49
 msgid "Active Template"
 msgstr "Faol shablon"
 
 #: contract/templates/contract/template_list.html:55
-#| msgid "Download .DOCX Contract"
 msgid "Download Original"
 msgstr "Asl nusxani yuklab olish"
 
@@ -1344,8 +1342,9 @@ msgstr "Asl nusxani yuklab olish"
 msgid "Are you sure you want to delete this template?"
 msgstr "Haqiqatan ham bu shablonni oʻchirib tashlamoqchimisiz?"
 
-#: contract/templates/contract/template_list.html:60
-#| msgid "Delete Group"
+#: contract/templates/contract/template_list.html:60 users/permissions.py:15
+#: users/permissions.py:24 users/permissions.py:33 users/permissions.py:42
+#: users/permissions.py:64 users/templates/users/staff_list.html:108
 msgid "Delete"
 msgstr "O'chirish"
 
@@ -1361,11 +1360,11 @@ msgstr ""
 "Mijozlaringiz uchun avtomatik ravishda shartnomalar yaratish uchun "
 "kompaniyangizning rasmiy MS Word shartnoma shablonlarini yuklang."
 
-#: contract/templates/contract/template_list.html:75 raw_html.txt:888
+#: contract/templates/contract/template_list.html:75
 msgid "Upload First Template"
 msgstr "Birinchi shablonni yuklang"
 
-#: contract/templates/contract/template_list.html:85 raw_html.txt:889
+#: contract/templates/contract/template_list.html:85
 msgid "Template Variables Cheat Sheet"
 msgstr "Shablon o'zgaruvchilari bo'yicha qo'llanma"
 
@@ -1378,7 +1377,6 @@ msgid "Show / Hide"
 msgstr "Ko'rsatish / Yashirish"
 
 #: contract/templates/contract/template_list.html:94
-#| msgid "Notes"
 msgid "Note:"
 msgstr "Izoh / Qaydlar"
 
@@ -1409,7 +1407,6 @@ msgstr ""
 "shablonlaringizni yangilashingiz shart emas."
 
 #: contract/templates/contract/template_list.html:107
-#| msgid "Contract ID"
 msgid "Contract Info"
 msgstr "Contract ID"
 
@@ -1431,7 +1428,6 @@ msgid "Year"
 msgstr "Yil"
 
 #: contract/templates/contract/template_list.html:114
-#| msgid "Customer Directory"
 msgid "Company Director"
 msgstr "Mijozlar bazasi"
 
@@ -1440,17 +1436,14 @@ msgid "Director Short Name"
 msgstr "Rejissyorning qisqa nomi"
 
 #: contract/templates/contract/template_list.html:116
-#| msgid "Customer"
 msgid "Customer Info"
 msgstr "Mijoz"
 
 #: contract/templates/contract/template_list.html:118
-#| msgid "Customer Name"
 msgid "Short Name"
 msgstr "Customer Name"
 
 #: contract/templates/contract/template_list.html:120
-#| msgid "Passport Scan"
 msgid "Passport Date"
 msgstr "Passport Scan"
 
@@ -1459,32 +1452,26 @@ msgid "Given By"
 msgstr "tomonidan berilgan"
 
 #: contract/templates/contract/template_list.html:126
-#| msgid "Finance"
 msgid "Financials"
 msgstr "Moliya"
 
 #: contract/templates/contract/template_list.html:128
-#| msgid "Total Paid"
 msgid "Total in Words"
 msgstr "Jami to'langan"
 
 #: contract/templates/contract/template_list.html:130
-#| msgid "Intermediate Monthly Installment:"
 msgid "Monthly Installment"
 msgstr "Intermediate Monthly Installment:"
 
 #: contract/templates/contract/template_list.html:132
-#| msgid "Apartment"
 msgid "Apartment Info"
 msgstr "Xonadon"
 
 #: contract/templates/contract/template_list.html:136
-#| msgid "Apartment"
 msgid "Apartment No"
 msgstr "Xonadon"
 
 #: contract/templates/contract/template_list.html:138
-#| msgid "Total Area (m²)"
 msgid "Area (m²)"
 msgstr "Total Area (m²)"
 
@@ -1497,7 +1484,6 @@ msgid "1 m² Price Words"
 msgstr "1 m² Narx so'zlari"
 
 #: contract/templates/contract/template_list.html:151
-#| msgid "Contract Date"
 msgid "Upload Contract Template"
 msgstr "Shartnoma sanasi"
 
@@ -1526,13 +1512,14 @@ msgid "Reason"
 msgstr "Sabab"
 
 #: contract/templates/contract/terminated_list.html:20
+#: users/templates/users/staff_list.html:49
+#: users/templates/users/staff_list.html:138
 msgid "Actions"
 msgstr "Amallar"
 
 #: contract/templates/contract/terminated_list.html:39
 #: dashboard/templates/base.html:10
-#: dashboard/templates/partials/_nav_items.html:16 raw_html.txt:883
-#: raw_html.txt:932 templates/base.html:97
+#: dashboard/templates/partials/_nav_items.html:16 templates/base.html:92
 msgid "Dashboard"
 msgstr "Boshqaruv paneli"
 
@@ -1541,27 +1528,22 @@ msgid "No terminated contracts found."
 msgstr "Hech qanday bekor qilingan shartnomalar topilmadi."
 
 #: contract/templates/contract/termination_dashboard.html:10
-#| msgid "Terminated Contracts"
 msgid "Terminated Contract Dashboard"
 msgstr "Bekor qilingan shartnoma paneli"
 
 #: contract/templates/contract/termination_dashboard.html:11
-#| msgid "Terminated"
 msgid "Terminated on"
 msgstr "Bekor qilingan sana"
 
-#: contract/templates/contract/termination_dashboard.html:15 raw_html.txt:884
-#| msgid "View Schedule"
+#: contract/templates/contract/termination_dashboard.html:15
 msgid "View Original Schedule"
 msgstr "Asl jadvalni ko'rish"
 
 #: contract/templates/contract/termination_dashboard.html:18
-#| msgid "Back to Contract"
 msgid "Back to Contracts"
 msgstr "Shartnomalarga qaytish"
 
 #: contract/templates/contract/termination_dashboard.html:30
-#| msgid "Total Remaining"
 msgid "Total Refund Planned"
 msgstr "Rejalashtirilgan umumiy qaytarish"
 
@@ -1570,21 +1552,18 @@ msgid "Refund Paid So Far"
 msgstr "To'lab berilgan qism"
 
 #: contract/templates/contract/termination_dashboard.html:43
-#| msgid "Attendance History"
 msgid "Refund History"
 msgstr "Qaytarishlar tarixi"
 
 #: contract/templates/contract/termination_dashboard.html:56
-#| msgid "No recent payments."
 msgid "No refunds paid yet."
 msgstr "Hali mablag' qaytarilmadi."
 
 #: contract/templates/contract/termination_dashboard.html:64
-#| msgid "Process Payment"
 msgid "Process Refund"
 msgstr "Qaytarishni rasmiylashtirish"
 
-#: contract/templates/contract/termination_dashboard.html:68 raw_html.txt:885
+#: contract/templates/contract/termination_dashboard.html:68
 msgid "Refund Settled"
 msgstr "Qaytarish yakunlandi"
 
@@ -1598,95 +1577,84 @@ msgid "Amount"
 msgstr "Miqdori"
 
 #: contract/templates/contract/termination_dashboard.html:77
-#| msgid "Total Remaining"
 msgid "Max remaining:"
 msgstr "Maks. qoldiq:"
 
 #: contract/templates/contract/termination_dashboard.html:80
-#| msgid "Select Payment Method"
 msgid "Payment Method"
 msgstr "To'lov turi"
 
 #: contract/templates/contract/termination_dashboard.html:88
-#| msgid "Planned Refund"
 msgid "Record Refund"
 msgstr "Qaytarishni qayd etish"
 
-#: contract/views.py:125
+#: contract/views.py:143
 msgid "Contract successfully generated for {}!"
 msgstr "{} uchun shartnoma muvaffaqiyatli tuzildi!"
 
-#: contract/views.py:166
+#: contract/views.py:187
 msgid "Payment logged successfully!"
 msgstr "Toʻlov muvaffaqiyatli qayd etildi!"
 
-#: contract/views.py:169
+#: contract/views.py:190
 msgid "Invalid payment data. Please check the entered amount."
 msgstr "Toʻlov maʼlumotlari notoʻgʻri.Kiritilgan miqdorni tekshiring."
 
-#: contract/views.py:240
+#: contract/views.py:261
 msgid "Cannot import payments: Contract already has existing payments."
 msgstr ""
 "Toʻlovlarni import qilib boʻlmaydi: Shartnomada allaqachon mavjud toʻlovlar "
 "mavjud."
 
-#: contract/views.py:245
+#: contract/views.py:266
 msgid "Please upload a valid .xlsx file."
 msgstr "Yaroqli .xlsx faylini yuklang."
 
-#: contract/views.py:299
-#, python-brace-format
-msgid "Successfully imported {payments_created} payments!"
-msgstr "{payments_created} toʻlov muvaffaqiyatli import qilindi!"
-
-#: contract/views.py:303
+#: contract/views.py:324
 msgid "Failed to process Excel file. Please ensure it matches the template."
 msgstr ""
 "Excel faylini qayta ishlash amalga oshmadi.Iltimos, uning shablonga mos "
 "kelishiga ishonch hosil qiling."
 
-#: contract/views.py:415
+#: contract/views.py:433
 msgid "A 6-digit OTP code has been sent to your phone for verification."
 msgstr "Tasdiqlash uchun telefoningizga 6 xonali OTP kodi yuborildi."
 
-#: contract/views.py:417
+#: contract/views.py:435
 msgid "OTP generated ({}) but SMS failed: {}"
 msgstr "OTP yaratildi ({}), lekin SMS amalga oshmadi: {}"
 
-#: contract/views.py:462
+#: contract/views.py:480
 msgid "Contract #{} terminated successfully! Apartment reset to AVAILABLE."
 msgstr ""
 "№{}-shartnoma muvaffaqiyatli bekor qilindi!Kvartira AVAILABLE qiymatiga "
 "qaytarildi."
 
-#: contract/views.py:465
+#: contract/views.py:483
 msgid "Invalid or expired OTP code."
 msgstr "Yaroqsiz yoki muddati o‘tgan OTP kodi."
 
-#: contract/views.py:515
-#| msgid "Payment logged successfully!"
+#: contract/views.py:533
 msgid "Refund payment recorded successfully!"
 msgstr "Payment logged successfully!"
 
-#: contract/views.py:517
-#| msgid "Payment amount must be greater than zero."
+#: contract/views.py:535
 msgid "Amount must be greater than 0."
 msgstr "Payment amount must be greater than zero."
 
-#: contract/views.py:691
-#| msgid "Payment logged successfully!"
+#: contract/views.py:715
 msgid "Template uploaded successfully."
 msgstr "Payment logged successfully!"
 
-#: contract/views.py:694
+#: contract/views.py:718
 msgid "Please provide a name and a valid .docx file."
 msgstr "Iltimos, nom va yaroqli .docx faylini kiriting."
 
-#: contract/views.py:706
+#: contract/views.py:730
 msgid "Template deleted."
 msgstr "Shablon oʻchirildi."
 
-#: contract/views.py:718
+#: contract/views.py:744
 msgid "Default template updated."
 msgstr "Standart shablon yangilandi."
 
@@ -1733,8 +1701,8 @@ msgstr "Oxirgi yangilangan"
 msgid "Dashboard Settings"
 msgstr "Boshqaruv paneli sozlamalari"
 
-#: dashboard/templates/dashboard/home.html:13 raw_html.txt:934
-#: templates/base.html:103 users/templates/users/customer_list.html:41
+#: dashboard/templates/dashboard/home.html:13 templates/base.html:106
+#: users/templates/users/customer_list.html:41
 msgid "Active Contracts"
 msgstr "Faol shartnomalar"
 
@@ -1759,11 +1727,11 @@ msgid "View all contracts"
 msgstr "Barcha shartnomalarni ko'ring"
 
 #: dashboard/templates/dashboard/home.html:89
+#: dashboard/templates/dashboard/sms_usage.html:73
 msgid "Date"
 msgstr "Sana"
 
 #: dashboard/templates/dashboard/home.html:129
-#| msgid "No recent payments."
 msgid "No recent payments"
 msgstr "No recent payments."
 
@@ -1780,12 +1748,10 @@ msgid "Late Payments"
 msgstr "Kechikkan to'lovlar"
 
 #: dashboard/templates/dashboard/home.html:162
-#| msgid "Clients who have missed their scheduled due date."
 msgid "Clients who have missed their scheduled due date require attention."
 msgstr "To'lov muddatini o'tkazib yuborgan mijozlar e'tiborni talab qiladi."
 
 #: dashboard/templates/dashboard/home.html:166
-#| msgid "Review Contracts &rarr;"
 msgid "Review Contracts"
 msgstr "Shartnomalarni ko'rish"
 
@@ -1794,7 +1760,6 @@ msgid "All Caught Up"
 msgstr "Hammasi ushlandi"
 
 #: dashboard/templates/dashboard/home.html:180
-#| msgid "All accounts are up to date."
 msgid "All accounts are currently up to date."
 msgstr "All accounts are up to date."
 
@@ -1918,6 +1883,69 @@ msgstr ""
 "Kursni shu oyda tamomlagan talabalar aniq bitiruv sanasidan boshlab "
 "hisoblangan."
 
+#: dashboard/templates/dashboard/sms_usage.html:5
+#: dashboard/templates/dashboard/sms_usage.html:10
+msgid "SMS Usage & Billing"
+msgstr "SMS sarfi va hisobi"
+
+#: dashboard/templates/dashboard/sms_usage.html:11
+msgid "Monitor your SMS notifications and estimated costs."
+msgstr ""
+"Sizning SMS xabarlaringiz va taxminiy xarajatlaringizni kuzatib boring."
+
+#: dashboard/templates/dashboard/sms_usage.html:18
+msgid "This Month's Cost"
+msgstr "Joriy oy xarajatlari"
+
+#: dashboard/templates/dashboard/sms_usage.html:22
+msgid "Messages This Month"
+msgstr "Joriy oydagi xabarlar"
+
+#: dashboard/templates/dashboard/sms_usage.html:26
+#| msgid "Full Time"
+msgid "All Time Cost"
+msgstr "Jami xarajat"
+
+#: dashboard/templates/dashboard/sms_usage.html:30
+#| msgid "All Teachers"
+msgid "All Time Messages"
+msgstr "Jami xabarlar"
+
+#: dashboard/templates/dashboard/sms_usage.html:40
+msgid "Monthly Operator Breakdown"
+msgstr "Operatorlar bo'yicha oylik taqsimot"
+
+#: dashboard/templates/dashboard/sms_usage.html:48
+msgid "messages"
+msgstr "xabarlar"
+
+#: dashboard/templates/dashboard/sms_usage.html:55
+#| msgid "No discounts for this month."
+msgid "No SMS sent this month."
+msgstr "Bu oyda SMS yuborilmagan."
+
+#: dashboard/templates/dashboard/sms_usage.html:66
+msgid "Recent SMS Logs"
+msgstr "So'nggi SMS jurnali"
+
+#: dashboard/templates/dashboard/sms_usage.html:76
+msgid "Cost"
+msgstr "Narx"
+
+#: dashboard/templates/dashboard/sms_usage.html:84
+#| msgid "Apartments"
+msgid "parts"
+msgstr "qismlar"
+
+#: dashboard/templates/dashboard/sms_usage.html:88
+msgid "Sent"
+msgstr "Yuborildi"
+
+#: dashboard/templates/dashboard/sms_usage.html:98
+#| msgid "No contracts found."
+msgid "No SMS logs found."
+msgstr "SMS jurnallari topilmadi."
+
 #: dashboard/templates/partials/_nav_items.html:50
 #: dashboard/templates/partials/topbar_search_results.html:6
 msgid "Students"
@@ -1936,7 +1964,7 @@ msgstr "Kurslar"
 msgid "Finance"
 msgstr "Moliya"
 
-#: dashboard/templates/partials/_nav_items.html:115
+#: dashboard/templates/partials/_nav_items.html:115 users/permissions.py:37
 msgid "Payments"
 msgstr "To'lovlar"
 
@@ -2103,7 +2131,7 @@ msgstr "Koʻproq guruhlar — qidiruvingizni aniqlang"
 msgid "No results found"
 msgstr "Hech qanday natija topilmadi"
 
-#: otp/models.py:11 otp/templates/otp/verify_otp.html:126
+#: otp/models.py:11 otp/templates/otp/verify_otp.html:228
 msgid "OTP Code"
 msgstr "Tasdiqlash kodi"
 
@@ -2123,111 +2151,91 @@ msgstr "OTP tokeni"
 msgid "OTP Tokens"
 msgstr "OTP tokenlari"
 
-#: otp/templates/otp/request_otp.html:8 otp/templates/otp/request_otp.html:103
-#: users/templates/users/login.html:9 users/templates/users/login.html:238
+#: otp/templates/otp/request_otp.html:12
+#: otp/templates/otp/request_otp.html:192 users/templates/users/login.html:9
+#: users/templates/users/login.html:242
 msgid "Sign In"
 msgstr "Tizimga kirish"
 
-#: otp/templates/otp/request_otp.html:104
+#: otp/templates/otp/request_otp.html:193
 msgid "Enter your phone number to receive a login code."
 msgstr "Kirish kodini olish uchun telefon raqamingizni kiriting."
 
-#: otp/templates/otp/request_otp.html:133
+#: otp/templates/otp/request_otp.html:224
 msgid "Send Code"
 msgstr "Kodni yuborish"
 
-#: otp/templates/otp/verify_otp.html:8 otp/templates/otp/verify_otp.html:107
+#: otp/templates/otp/request_otp.html:228
+#: otp/templates/otp/verify_otp.html:247 templates/base.html:189
+msgid "All rights reserved."
+msgstr "Barcha huquqlar himoyalangan."
+
+#: otp/templates/otp/verify_otp.html:12 otp/templates/otp/verify_otp.html:209
 msgid "Verify Code"
 msgstr "Kodni tasdiqlash"
 
-#: otp/templates/otp/verify_otp.html:108
+#: otp/templates/otp/verify_otp.html:210
 msgid "We sent a 6-digit code to"
 msgstr "Biz 6 xonali kodni yubordik:"
 
-#: otp/templates/otp/verify_otp.html:138
+#: otp/templates/otp/verify_otp.html:241
 msgid "Verify & Login"
 msgstr "Tasdiqlash va kirish"
 
-#: otp/templates/otp/verify_otp.html:141
+#: otp/templates/otp/verify_otp.html:244
 msgid "Didn't receive code? Try again"
 msgstr "Kodni olmadingizmi? Qaytadan urinib ko'ring"
 
-#: otp/views.py:19
+#: otp/views.py:28
 msgid "Phone number is required."
 msgstr "Telefon raqami talab qilinadi."
 
-#: otp/views.py:30
+#: otp/views.py:39
 msgid "Too many OTP requests. Please wait."
 msgstr "OTP soʻrovlari juda koʻp.Iltimos kuting."
 
-#: otp/views.py:37
-#, python-brace-format
-msgid "TrustBuilding: Your login code is {token.code}"
-msgstr "TrustBuilding: Sizning login kodingiz: {token.code}"
-
-#: otp/views.py:45
+#: otp/views.py:55
 msgid "OTP sent to your phone."
 msgstr "OTP telefoningizga yuborildi."
 
-#: otp/views.py:48
+#: otp/views.py:58
 msgid "Failed to send SMS. Please try again."
 msgstr "SMS yuborib bo‘lmadi.Iltimos, qayta urinib koʻring."
 
-#: otp/views.py:61
+#: otp/views.py:71
 msgid "Session expired. Please request a new code."
 msgstr "Seans muddati tugadi.Iltimos, yangi kod so'rang."
 
-#: otp/views.py:67
+#: otp/views.py:77
 msgid "Code is required."
 msgstr "Kod talab qilinadi."
 
-#: otp/views.py:96
+#: otp/views.py:106
 msgid "Successfully logged in!"
 msgstr "Muvaffaqiyatli tizimga kirdingiz!"
 
-#: otp/views.py:99
+#: otp/views.py:109
 msgid "Invalid or expired code."
 msgstr "Yaroqsiz yoki muddati o‘tgan kod."
 
-#: raw_html.txt:920 templates/500.html:7 templates/500.html:15
-msgid "Server Error"
-msgstr "Tizim xatoligi"
-
-#: raw_html.txt:921 raw_html.txt:953 templates/404.html:21
-#: templates/500.html:21
-msgid "Back to Dashboard"
-msgstr "Boshqaruv paneliga qaytish"
-
-#: raw_html.txt:933 templates/base.html:100
-msgid "Buildings Inventory"
-msgstr "Bino va xonadonlar"
-
-#: raw_html.txt:935 templates/base.html:106
-msgid "Payment Terminal"
-msgstr "To'lov terminali"
-
-#: raw_html.txt:936 templates/base.html:109
-msgid "Terminated Archive"
-msgstr "Bekor qilingan shartnomalar"
-
-#: raw_html.txt:937 templates/base.html:112
-msgid "Customer Directory"
-msgstr "Mijozlar bazasi"
-
-#: raw_html.txt:939 templates/base.html:119
-msgid "Manage Staff"
-msgstr "Xodimlarni boshqarish"
-
-#: raw_html.txt:952 templates/404.html:7 templates/404.html:15
+#: templates/404.html:11 templates/404.html:23
 msgid "Page Not Found"
 msgstr "Sahifa topilmadi"
 
-#: templates/404.html:17
+#: templates/404.html:25
 msgid "The page you are looking for doesn't exist or has been moved."
 msgstr ""
 "Siz qidirayotgan sahifa mavjud emas yoki boshqa manzilga ko'chirilgan."
 
-#: templates/500.html:17
+#: templates/404.html:29 templates/500.html:29
+msgid "Back to Dashboard"
+msgstr "Boshqaruv paneliga qaytish"
+
+#: templates/500.html:11 templates/500.html:23
+msgid "Server Error"
+msgstr "Tizim xatoligi"
+
+#: templates/500.html:25
 msgid ""
 "Something went wrong on our end. Please try again later or contact your "
 "administrator if the problem persists."
@@ -2235,19 +2243,43 @@ msgstr ""
 "Tizimda xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring yoki "
 "administratorga murojaat qiling."
 
-#: templates/base.html:66
+#: templates/base.html:64
 msgid "Welcome"
 msgstr "Xush kelibsiz"
 
-#: templates/base.html:68
+#: templates/base.html:66
 msgid "Logout"
 msgstr "Tizimdan chiqish"
+
+#: templates/base.html:99
+msgid "Buildings Inventory"
+msgstr "Bino va xonadonlar"
+
+#: templates/base.html:113
+msgid "Payment Terminal"
+msgstr "To'lov terminali"
+
+#: templates/base.html:120
+msgid "Terminated Archive"
+msgstr "Bekor qilingan shartnomalar"
+
+#: templates/base.html:127
+msgid "Customer Directory"
+msgstr "Mijozlar bazasi"
+
+#: templates/base.html:141
+msgid "Manage Staff"
+msgstr "Xodimlarni boshqarish"
+
+#: templates/base.html:148
+msgid "SMS Usage"
+msgstr "SMS sarfi"
 
 #: users/admin.py:17
 msgid "Personal info"
 msgstr "Shaxsiy ma'lumotlar"
 
-#: users/admin.py:18
+#: users/admin.py:18 users/models.py:79
 msgid "Roles"
 msgstr "Rollar"
 
@@ -2255,13 +2287,58 @@ msgstr "Rollar"
 msgid "Identity / Passport"
 msgstr "Shaxs / Pasport"
 
-#: users/admin.py:20
+#: users/admin.py:20 users/models.py:74
 msgid "Permissions"
 msgstr "Ruxsatnomalar"
 
 #: users/admin.py:21
 msgid "Important dates"
 msgstr "Muhim sanalar"
+
+#: users/forms.py:20 users/templates/users/login.html:208
+msgid "Password"
+msgstr "Parol"
+
+#: users/forms.py:24
+msgid "Enter your password"
+msgstr "Parolingizni kiriting"
+
+#: users/forms.py:44 users/models.py:89
+#: users/templates/users/staff_list.html:45
+#: users/templates/users/staff_list.html:203
+#: users/templates/users/staff_list.html:261
+msgid "Position"
+msgstr "Lavozim"
+
+#: users/forms.py:46
+msgid "Sales Manager"
+msgstr "Sotuv menejeri"
+
+#: users/forms.py:52 users/templates/users/staff_list.html:79
+#: users/templates/users/staff_list.html:267
+#| msgid "Roles"
+msgid "No Role"
+msgstr "Rol yo'q"
+
+#: users/forms.py:68
+msgid "John Doe"
+msgstr "Eshmat Toshmatov"
+
+#: users/forms.py:85
+msgid "AA1234567"
+msgstr "AA1234567"
+
+#: users/forms.py:86
+msgid "14-digit PINFL"
+msgstr "14 xonali JSHSHIR"
+
+#: users/forms.py:87
+msgid "IIB / Police Department"
+msgstr "IIB / Politsiya"
+
+#: users/forms.py:99
+msgid "e.g. Senior Sales"
+msgstr "Masalan: Katta Sotuvchi"
 
 #: users/models.py:11
 msgid "Phone number"
@@ -2308,7 +2385,6 @@ msgid "Company Name"
 msgstr "Shirkat nomi"
 
 #: users/models.py:55
-#| msgid "Full Name"
 msgid "Director Full Name"
 msgstr "F.I.SH. (To'liq ismi)"
 
@@ -2336,25 +2412,90 @@ msgstr "Kompaniya profili"
 msgid "Company Profiles"
 msgstr "Kompaniya profillari"
 
-#: users/models.py:74 users/templates/users/staff_list.html:27
-#: users/templates/users/staff_list.html:91
-msgid "Position"
-msgstr "Lavozim"
+#: users/models.py:73 users/templates/users/role_form.html:28
+#: users/templates/users/staff_list.html:135
+#| msgid "Full Name"
+msgid "Role Name"
+msgstr "Rol nomi"
 
-#: users/models.py:78
+#: users/models.py:78 users/templates/users/staff_list.html:46
+#: users/templates/users/staff_list.html:207
+#: users/templates/users/staff_list.html:265
+#| msgid "Roles"
+msgid "Role"
+msgstr "Rol"
+
+#: users/models.py:94
 msgid "Staff Profile"
 msgstr "Xodimlar profili"
 
-#: users/models.py:79
+#: users/models.py:95
 msgid "Staff Profiles"
 msgstr "Xodimlar profili"
+
+#: users/permissions.py:10
+#| msgid "Building Name"
+msgid "Buildings & Apartments"
+msgstr "Binolar va Kvartiralar"
+
+#: users/permissions.py:12 users/permissions.py:21 users/permissions.py:30
+#: users/permissions.py:39 users/permissions.py:61
+#| msgid "View by:"
+msgid "View"
+msgstr "Ko'rish"
+
+#: users/permissions.py:13 users/permissions.py:22 users/permissions.py:31
+#: users/permissions.py:40 users/permissions.py:62
+msgid "Create"
+msgstr "Yaratish"
+
+#: users/permissions.py:14 users/permissions.py:23 users/permissions.py:32
+#: users/permissions.py:41 users/permissions.py:63
+#: users/templates/users/staff_list.html:97
+msgid "Edit"
+msgstr "Tahrirlash"
+
+#: users/permissions.py:19
+#| msgid "Customer"
+msgid "Customers"
+msgstr "Mijozlar"
+
+#: users/permissions.py:46
+#| msgid "Analytics"
+msgid "Reports & Analytics"
+msgstr "Hisobotlar va Analitika"
+
+#: users/permissions.py:48
+msgid "View Dashboard & Financials"
+msgstr "Boshqaruv paneli va moliyani ko'rish"
+
+#: users/permissions.py:52
+#| msgid "Meeting"
+msgid "SMS Marketing"
+msgstr "SMS Marketing"
+
+#: users/permissions.py:54
+msgid "View Log & Cost"
+msgstr "Jurnal va xarajatni ko'rish"
+
+#: users/permissions.py:55
+msgid "Send SMS"
+msgstr "SMS yuborish"
+
+#: users/permissions.py:59
+#| msgid "Staff Profiles"
+msgid "Staff & Roles"
+msgstr "Xodimlar va rollar"
+
+#: users/permissions.py:101
+msgid "You don't have permission to perform this action."
+msgstr "Sizda bu amalni bajarish uchun ruxsat yo'q."
 
 #: users/templates/users/customer_list.html:14
 msgid "Search by phone number, name, or PINFL..."
 msgstr "Telefon raqami, ism yoki JSHSHR bo'yicha qidirish..."
 
 #: users/templates/users/customer_list.html:27
-#| msgid "Customer"
 msgid "New Customer"
 msgstr "Yangi mijoz"
 
@@ -2402,81 +2543,257 @@ msgstr "qaytib kelganingizdan xursandmiz"
 msgid "Sign in to your account to continue."
 msgstr "Davom etish uchun hisobingizga kiring."
 
-#: users/templates/users/login.html:206
-msgid "Password"
-msgstr "Parol"
+#: users/templates/users/role_form.html:11
+#| msgid "Update Role"
+msgid "Edit Role"
+msgstr "Rolni tahrirlash"
+
+#: users/templates/users/role_form.html:13
+#: users/templates/users/staff_list.html:20
+#| msgid "Create Role"
+msgid "Create Custom Role"
+msgstr "Maxsus rol yaratish"
+
+#: users/templates/users/role_form.html:16
+msgid "Define specific permissions for staff members."
+msgstr "Xodimlar uchun maxsus ruxsatlarni belgilang."
+
+#: users/templates/users/role_form.html:30
+msgid "Example: Senior Sales Manager, Call Center Agent, Accountant"
+msgstr "Masalan: Katta sotuv menejeri, Call markaz xodimi, Hisobchi"
+
+#: users/templates/users/role_form.html:36
+#| msgid "Permissions"
+msgid "Permissions Checklist"
+msgstr "Ruxsatlar ro'yxati"
+
+#: users/templates/users/role_form.html:37
+msgid ""
+"Select the specific actions this role can perform across different modules."
+msgstr ""
+"Bu rol turli modullarda qanday amallarni bajarishi mumkinligini tanlang."
+
+#: users/templates/users/role_form.html:67
+#| msgid "Active Role"
+msgid "Save Role"
+msgstr "Rolni saqlash"
 
 #: users/templates/users/staff_list.html:9
-msgid "Manage Sales Staff"
-msgstr "Sotuv bo'limini boshqarish"
+#| msgid "Manage Sales Staff"
+msgid "Manage Sales Staff & Roles"
+msgstr "Sotuv xodimlari va rollarni boshqarish"
 
 #: users/templates/users/staff_list.html:10
-msgid "Add and assign sales managers to company buildings"
-msgstr "Kompaniya binolariga sotuv menejerlarini qo'shish va biriktirish"
+msgid "Add staff members and configure their roles and permissions"
+msgstr "Xodimlarni qo'shish va ularning rollari hamda ruxsatlarini sozlash"
 
-#: users/templates/users/staff_list.html:15
+#: users/templates/users/staff_list.html:16
 msgid "Add New Staff Member"
 msgstr "Yangi xodim qo'shish"
 
-#: users/templates/users/staff_list.html:25
+#: users/templates/users/staff_list.html:29
+#| msgid "Staff Member"
+msgid "Staff Members"
+msgstr "Xodimlar"
+
+#: users/templates/users/staff_list.html:32
+#| msgid "Save Permissions"
+msgid "Roles & Permissions"
+msgstr "Rollar va ruxsatlar"
+
+#: users/templates/users/staff_list.html:43
 msgid "Staff Member"
 msgstr "Xodim"
 
-#: users/templates/users/staff_list.html:28
+#: users/templates/users/staff_list.html:47
 msgid "Assigned Buildings"
 msgstr "Biriktirilgan binolar"
 
-#: users/templates/users/staff_list.html:29
+#: users/templates/users/staff_list.html:48
 msgid "Added Date"
 msgstr "Qo'shilgan sana"
 
-#: users/templates/users/staff_list.html:56
+#: users/templates/users/staff_list.html:64
+msgid "Deactivated"
+msgstr "Faolsizlantirilgan"
+
+#: users/templates/users/staff_list.html:102
+#| msgid "Active"
+msgid "Deactivate"
+msgstr "Faolsizlantirish"
+
+#: users/templates/users/staff_list.html:102
+#| msgid "Active"
+msgid "Activate"
+msgstr "Faollashtirish"
+
+#: users/templates/users/staff_list.html:105
+#| msgid "Are you sure you want to delete this template?"
+msgid "Are you sure you want to delete this staff member?"
+msgstr "Haqiqatan ham bu xodimni o'chirib tashlamoqchimisiz?"
+
+#: users/templates/users/staff_list.html:120
 msgid ""
 "No staff members added yet. Click 'Add New Staff Member' to get started."
 msgstr ""
 "Xodimlar hali qo‘shilmagan.Ishni boshlash uchun \"Yangi xodim qo'shish\" "
 "tugmasini bosing."
 
-#: users/templates/users/staff_list.html:70
+#: users/templates/users/staff_list.html:136
+#| msgid "Permissions"
+msgid "Permissions Count"
+msgstr "Ruxsatlar soni"
+
+#: users/templates/users/staff_list.html:137
+#| msgid "Manage Staff"
+msgid "Assigned Staff"
+msgstr "Biriktirilgan xodimlar"
+
+#: users/templates/users/staff_list.html:146
+msgid "permissions"
+msgstr "ruxsatlar"
+
+#: users/templates/users/staff_list.html:150
+msgid "Staff"
+msgstr "Xodim"
+
+#: users/templates/users/staff_list.html:157
+#| msgid "Are you sure you want to delete this template?"
+msgid "Are you sure you want to delete this role?"
+msgstr "Haqiqatan ham bu rolni o'chirib tashlamoqchimisiz?"
+
+#: users/templates/users/staff_list.html:168
+#| msgid ""
+#| "No staff members added yet. Click 'Add New Staff Member' to get started."
+msgid "No roles added yet. Click 'Create Custom Role' to get started."
+msgstr ""
+"Hali hech qanday rol qo'shilmagan. Boshlash uchun \"Maxsus rol yaratish\" "
+"tugmasini bosing."
+
+#: users/templates/users/staff_list.html:182
 msgid "Add Sales Staff Member"
 msgstr "Savdo bo'limi xodimini qo'shing"
 
-#: users/templates/users/staff_list.html:100
+#: users/templates/users/staff_list.html:216
 msgid "Save Staff Member"
 msgstr "Xodimni saqlash"
 
-#: users/views.py:25
+#: users/templates/users/staff_list.html:244
+#| msgid "Staff Member"
+msgid "Edit Staff Member"
+msgstr "Xodimni tahrirlash"
+
+#: users/templates/users/staff_list.html:279
+#| msgid "Save changes"
+msgid "Save Changes"
+msgstr "O'zgarishlarni saqlash"
+
+#: users/views.py:26
 msgid "Welcome back, {}!"
 msgstr "Qaytib kelganingizdan xursandmiz, {}!"
 
-#: users/views.py:30
+#: users/views.py:31
 msgid "Invalid phone number or password."
 msgstr "Telefon raqami yoki parol noto‘g‘ri."
 
-#: users/views.py:32
+#: users/views.py:33
 msgid "Please correct the errors below."
 msgstr "Quyidagi xatolarni tuzating."
 
-#: users/views.py:42
+#: users/views.py:43
 msgid "You have been logged out successfully."
 msgstr "Tizimdan muvaffaqiyatli chiqdingiz."
 
-#: users/views.py:79
+#: users/views.py:88
 msgid "Staff member added successfully!"
 msgstr "Xodim muvaffaqiyatli qo'shildi!"
 
-#: users/views.py:116
+#: users/views.py:133
 msgid "Customer profile registered successfully!"
 msgstr "Mijoz profili ro'yxatdan o'tdi!"
 
-msgid "View Schedule"
-msgstr "Jadvalni ko'rish"
+#: users/views.py:151
+msgid "Access denied. Only company admins can edit staff."
+msgstr ""
+"Ruxsat etilmagan. Faqat kompaniya ma'murlari xodimlarni tahrirlashi mumkin."
 
-msgid "Attendance History"
-msgstr "Qaytarishlar tarixi"
+#: users/views.py:186
+#| msgid "Staff member added successfully!"
+msgid "Staff member updated successfully."
+msgstr "Xodim muvaffaqiyatli yangilandi."
 
-msgid "All rights reserved."
-msgstr "Barcha huquqlar himoyalangan."
+#: users/views.py:192
+msgid "Access denied. Only company admins can deactivate staff."
+msgstr ""
+"Ruxsat etilmagan. Faqat kompaniya ma'murlari xodimlarni faolsizlantirishi "
+"mumkin."
+
+#: users/views.py:204
+#| msgid "Active"
+msgid "activated"
+msgstr "faollashtirildi"
+
+#: users/views.py:204
+msgid "deactivated"
+msgstr "faolsizlantirildi"
+
+#: users/views.py:205
+msgid "Staff member has been {}."
+msgstr "Xodim {}"
+
+#: users/views.py:212
+msgid "Access denied. Only company admins can delete staff."
+msgstr ""
+"Ruxsat etilmagan. Faqat kompaniya ma'murlari xodimlarni o'chirib tashlashi "
+"mumkin."
+
+#: users/views.py:224
+msgid "Staff member deleted successfully. Their past sales remain intact."
+msgstr ""
+"Xodim muvaffaqiyatli o'chirildi. Ularning oldingi savdolari saqlanib qoladi."
+
+#: users/views.py:257
+#| msgid "Customer profile registered successfully!"
+msgid "Role created successfully!"
+msgstr "Rol muvaffaqiyatli yaratildi!"
+
+#: users/views.py:260 users/views.py:300
+msgid "A role with this name already exists."
+msgstr "Bu nomdagi rol allaqachon mavjud."
+
+#: users/views.py:297
+#| msgid "Template uploaded successfully."
+msgid "Role updated successfully!"
+msgstr "Rol muvaffaqiyatli yangilandi!"
+
+#: users/views.py:327
+#| msgid "Payment logged successfully!"
+msgid "Role deleted successfully!"
+msgstr "Rol muvaffaqiyatli o'chirildi!"
+
+#: users/views.py:329
+msgid ""
+"Cannot delete this role because it is assigned to one or more staff members."
+msgstr ""
+"Ushbu rolni o'chirib bo'lmaydi, chunki u bir yoki bir nechta xodimlarga "
+"biriktirilgan."
+
+#, python-brace-format
+#~ msgid "Successfully imported {payments_created} payments!"
+#~ msgstr "{payments_created} toʻlov muvaffaqiyatli import qilindi!"
+
+#, python-brace-format
+#~ msgid "TrustBuilding: Your login code is {token.code}"
+#~ msgstr "TrustBuilding: Sizning login kodingiz: {token.code}"
+
+#~ msgid "Add and assign sales managers to company buildings"
+#~ msgstr "Kompaniya binolariga sotuv menejerlarini qo'shish va biriktirish"
+
+#~ msgid "View Schedule"
+#~ msgstr "Jadvalni ko'rish"
+
+#~ msgid "Attendance History"
+#~ msgstr "Qaytarishlar tarixi"
 
 #~ msgid "rooms"
 #~ msgstr "xonalar"
@@ -2516,9 +2833,6 @@ msgstr "Barcha huquqlar himoyalangan."
 
 #~ msgid "Company"
 #~ msgstr "Kompaniya"
-
-#~ msgid "Area"
-#~ msgstr "Maydoni"
 
 #~ msgid "Received by"
 #~ msgstr "Qabul qildi"
@@ -2640,9 +2954,6 @@ msgstr "Barcha huquqlar himoyalangan."
 
 #~ msgid "Top Groups"
 #~ msgstr "Eng yaxshi guruhlar"
-
-#~ msgid "No discounts for this month."
-#~ msgstr "Bu oy uchun chegirmalar yo'q."
 
 #~ msgid "Due sessions"
 #~ msgstr "Kerakli sessiyalar"
@@ -2788,9 +3099,6 @@ msgstr "Barcha huquqlar himoyalangan."
 #~ msgid "Permission"
 #~ msgstr "Ruxsat"
 
-#~ msgid "Full Time"
-#~ msgstr "To'liq stavka"
-
 #~ msgid "Refreshed At"
 #~ msgstr "Yangilangan"
 
@@ -2845,12 +3153,6 @@ msgstr "Barcha huquqlar himoyalangan."
 #~ msgid "Inactive Employee"
 #~ msgstr "Faol bo'lmagan xodim"
 
-#~ msgid "Active Role"
-#~ msgstr "Faol rol"
-
-#~ msgid "Update Role"
-#~ msgstr "Rolni yangilash"
-
 #~ msgid "Employee ID"
 #~ msgstr "Xodim identifikatori"
 
@@ -2890,17 +3192,8 @@ msgstr "Barcha huquqlar himoyalangan."
 #~ msgid "Debtor"
 #~ msgstr "Qarzdor"
 
-#~ msgid "Create Role"
-#~ msgstr "Rol yaratish"
-
 #~ msgid "employees"
 #~ msgstr "xodimlar"
-
-#~ msgid "permissions"
-#~ msgstr "ruxsatlar"
-
-#~ msgid "Save Permissions"
-#~ msgstr "Ruxsatlarni saqlash"
 
 #~ msgid "Attended"
 #~ msgstr "ishtirok etdi"
@@ -2922,9 +3215,6 @@ msgstr "Barcha huquqlar himoyalangan."
 
 #~ msgid "Group / Course"
 #~ msgstr "Guruh / Kurs"
-
-#~ msgid "Create"
-#~ msgstr "Yaratish"
 
 #~ msgid "Finance Overview"
 #~ msgstr "Moliyaga umumiy nuqtai"
@@ -2949,9 +3239,6 @@ msgstr "Barcha huquqlar himoyalangan."
 
 #~ msgid "All Statuses"
 #~ msgstr "Barcha Statuslar"
-
-#~ msgid "All Teachers"
-#~ msgstr "Barcha O'qituvchilar"
 
 #~ msgid "Segment Order"
 #~ msgstr "Segment Order"
@@ -3033,9 +3320,6 @@ msgstr "Barcha huquqlar himoyalangan."
 
 #~ msgid "Lead Labels"
 #~ msgstr "Lead Labels"
-
-#~ msgid "Meeting"
-#~ msgstr "Meeting"
 
 #~ msgid "Lead"
 #~ msgstr "Lead"

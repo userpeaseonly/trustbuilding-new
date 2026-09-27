@@ -5,8 +5,10 @@ from django.utils import timezone
 from contract.models import Contract, PaymentRecord, PaymentLog
 from building.models import Apartment
 from building.views import get_user_company
+from users.permissions import require_permission
 
 @login_required
+@require_permission('view_reports')
 def home(request):
     """Main KPI Dashboard for the Company"""
     # If the user is a customer, redirect to a customer view (to be built later)
@@ -82,6 +84,7 @@ def topbar_search(request):
     })
 
 @login_required
+@require_permission('view_sms')
 def sms_usage_view(request):
     """View to show SMS usage and calculated costs"""
     if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
@@ -110,9 +113,16 @@ def sms_usage_view(request):
         count=Count('id'),
         total_cost=Sum('cost')
     ).order_by('-count')
+
+    # Paginate sms_logs
+    from django.core.paginator import Paginator
+    paginator = Paginator(sms_logs, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     
     context = {
-        'sms_logs': sms_logs[:50], # Last 50 messages
+        'page_obj': page_obj,
+        'paginator': paginator,
         'monthly_cost': monthly_cost,
         'monthly_count': monthly_count,
         'all_time_cost': all_time_cost,

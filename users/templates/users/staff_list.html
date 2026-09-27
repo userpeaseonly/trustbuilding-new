@@ -2,22 +2,40 @@
 {% load i18n %}
 
 {% block content %}
-<div class="space-y-3">
+<div x-data="{ activeTab: 'staff' }" class="space-y-4">
     <!-- Header -->
     <div class="flex items-center justify-between gap-4 bg-white p-3 px-4 rounded-xl shadow-sm border border-slate-200">
         <div>
-            <h1 class="text-lg font-bold text-slate-900">{% trans "Manage Sales Staff" %}</h1>
-            <p class="text-xs text-slate-500 mt-0.5">{% trans "Add and assign sales managers to company buildings" %}</p>
+            <h1 class="text-lg font-bold text-slate-900">{% trans "Manage Sales Staff & Roles" %}</h1>
+            <p class="text-xs text-slate-500 mt-0.5">{% trans "Add staff members and configure their roles and permissions" %}</p>
         </div>
         
-        <button onclick="document.getElementById('staffModal').classList.remove('hidden')" class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg transition shadow-sm flex items-center gap-2 whitespace-nowrap">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-            {% trans "Add New Staff Member" %}
-        </button>
+        <div>
+            <button x-show="activeTab === 'staff'" onclick="document.getElementById('staffModal').classList.remove('hidden')" class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg transition shadow-sm flex items-center gap-2 whitespace-nowrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                {% trans "Add New Staff Member" %}
+            </button>
+            <a x-show="activeTab === 'roles'" href="{% url 'users:role_create' %}" class="inline-flex items-center gap-2 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold rounded-lg transition shadow-sm flex items-center gap-2 whitespace-nowrap">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                {% trans "Create Custom Role" %}
+            </a>
+        </div>
     </div>
 
-    <!-- Staff Table -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Tabs -->
+    <div class="border-b border-slate-200">
+        <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+            <button @click="activeTab = 'staff'" :class="{'border-emerald-500 text-emerald-600': activeTab === 'staff', 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300': activeTab !== 'staff'}" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium text-sm transition-colors">
+                {% trans "Staff Members" %}
+            </button>
+            <button @click="activeTab = 'roles'" :class="{'border-emerald-500 text-emerald-600': activeTab === 'roles', 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300': activeTab !== 'roles'}" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium text-sm transition-colors">
+                {% trans "Roles & Permissions" %}
+            </button>
+        </nav>
+    </div>
+
+    <!-- Staff Tab -->
+    <div x-show="activeTab === 'staff'" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -25,6 +43,7 @@
                         <th class="px-4 py-3">{% trans "Staff Member" %}</th>
                         <th class="px-4 py-3">{% trans "Phone Number" %}</th>
                         <th class="px-4 py-3">{% trans "Position" %}</th>
+                        <th class="px-4 py-3">{% trans "Role" %}</th>
                         <th class="px-4 py-3">{% trans "Assigned Buildings" %}</th>
                         <th class="px-4 py-3">{% trans "Added Date" %}</th>
                         <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
@@ -52,45 +71,99 @@
                         <td class="px-4 py-3 font-mono text-slate-700">{{ profile.user.phone_number }}</td>
                         <td class="px-4 py-3 font-medium text-slate-700">{{ profile.position|default:"Sales Representative" }}</td>
                         <td class="px-4 py-3">
+                            {% if profile.role %}
+                                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                    {{ profile.role.name }}
+                                </span>
+                            {% else %}
+                                <span class="text-slate-400 text-xs">{% trans "No Role" %}</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3">
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
                                 {{ profile.user.assigned_buildings.count }} {% trans "Buildings" %}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-slate-400">{{ profile.created_at|date:"d.m.Y" }}</td>
                         <td class="px-4 py-3 text-right">
-                            {% if request.user.is_company %}
-                            <div x-data="{ open: false }" class="relative inline-block text-left">
-                                <button @click="open = !open" @click.away="open = false" class="text-slate-400 hover:text-slate-600 transition">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                            {% if user.is_company %}
+                            <div class="flex items-center justify-end gap-1">
+                                <!-- Edit Button -->
+                                <button @click="$dispatch('open-edit', { id: '{{ profile.id }}', name: '{{ profile.user.full_name }}', phone: '{{ profile.user.phone_number }}', position: '{{ profile.position }}', role: '{{ profile.role.id|default:"" }}' })" class="inline-flex items-center justify-center p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors" title="{% trans 'Edit' %}">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </button>
-                                <div x-show="open" style="display: none;" class="origin-top-right absolute right-0 mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-                                    <div class="py-1" role="menu" aria-orientation="vertical">
-                                        <button @click="open = false; $dispatch('open-edit', { id: '{{ profile.id }}', name: '{{ profile.user.full_name }}', phone: '{{ profile.user.phone_number }}', position: '{{ profile.position }}' })" class="text-left w-full block px-4 py-1.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors" role="menuitem">
-                                            {% trans "Edit" %}
-                                        </button>
-                                        <form action="{% url 'users:staff_toggle_active' profile.id %}" method="post" class="m-0">
-                                            {% csrf_token %}
-                                            <button type="submit" class="text-left w-full block px-4 py-1.5 text-xs text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition-colors" role="menuitem">
-                                                {% if profile.user.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}
-                                            </button>
-                                        </form>
-                                        <form action="{% url 'users:staff_delete' profile.id %}" method="post" class="m-0" onsubmit="return confirm('{% trans "Are you sure you want to delete this staff member?" %}');">
-                                            {% csrf_token %}
-                                            <button type="submit" class="text-left w-full block px-4 py-1.5 text-xs text-red-600 hover:bg-red-50 transition-colors" role="menuitem">
-                                                {% trans "Delete" %}
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+                                
+                                <!-- Toggle Active Button -->
+                                <form action="{% url 'users:staff_toggle_active' profile.id %}" method="post" class="m-0 inline-block">
+                                    {% csrf_token %}
+                                    <button type="submit" class="inline-flex items-center justify-center p-1.5 rounded-lg text-slate-400 {% if profile.user.is_active %}hover:text-amber-600 hover:bg-amber-50{% else %}hover:text-emerald-600 hover:bg-emerald-50{% endif %} transition-colors" title="{% if profile.user.is_active %}{% trans 'Deactivate' %}{% else %}{% trans 'Activate' %}{% endif %}">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 11-12.728 0M12 3v9"></path></svg>
+                                    </button>
+                                </form>
+                                
+                                <!-- Delete Button -->
+                                <form action="{% url 'users:staff_delete' profile.id %}" method="post" class="m-0 inline-block" onsubmit="return confirm('{% trans "Are you sure you want to delete this staff member?" %}');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="inline-flex items-center justify-center p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="{% trans 'Delete' %}">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    </button>
+                                </form>
                             </div>
                             {% endif %}
                         </td>
-
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="px-4 py-8 text-center text-slate-500 italic">
+                        <td colspan="7" class="px-4 py-8 text-center text-slate-500 italic">
                             {% trans "No staff members added yet. Click 'Add New Staff Member' to get started." %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Roles Tab -->
+    <div x-show="activeTab === 'roles'" style="display: none;" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                        <th class="px-4 py-3">{% trans "Role Name" %}</th>
+                        <th class="px-4 py-3">{% trans "Permissions Count" %}</th>
+                        <th class="px-4 py-3">{% trans "Assigned Staff" %}</th>
+                        <th class="px-4 py-3 text-right">{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 text-sm">
+                    {% for role in roles %}
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-4 py-3 font-semibold text-slate-900">{{ role.name }}</td>
+                        <td class="px-4 py-3 font-medium text-slate-700">
+                            {{ role.permissions|length }} {% trans "permissions" %}
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
+                                {{ role.staff_members.count }} {% trans "Staff" %}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-right">
+                            <a href="{% url 'users:role_edit' role.pk %}" class="inline-flex items-center justify-center p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                            </a>
+                            <form action="{% url 'users:role_delete' role.pk %}" method="post" class="inline-block m-0" onsubmit="return confirm('{% trans "Are you sure you want to delete this role?" %}');">
+                                {% csrf_token %}
+                                <button type="submit" class="inline-flex items-center justify-center p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-8 text-center text-slate-500 italic">
+                            {% trans "No roles added yet. Click 'Create Custom Role' to get started." %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -100,7 +173,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Add Modal -->
 <div id="staffModal" class="hidden fixed inset-0 bg-slate-50/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
     <div class="bg-white rounded-xl shadow-xl border border-slate-200 max-w-md w-full p-6 space-y-6">
         <div class="flex items-center justify-between border-b border-slate-200 pb-3">
@@ -128,6 +201,10 @@
                 <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Position" %}</label>
                 {{ form.position }}
             </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Role" %}</label>
+                {{ form.role }}
+            </div>
             
             <div class="pt-4 flex justify-end gap-3 border-t border-slate-200">
                 <button type="button" onclick="document.getElementById('staffModal').classList.add('hidden')" class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition">
@@ -147,7 +224,8 @@
     id: '', 
     name: '', 
     phone: '', 
-    position: '' 
+    position: '',
+    role: ''
 }" 
 @open-edit.window="
     open = true; 
@@ -155,6 +233,7 @@
     name = $event.detail.name;
     phone = $event.detail.phone;
     position = $event.detail.position;
+    role = $event.detail.role;
     $refs.editForm.action = '/users/staff/' + id + '/edit/';
 " 
 x-show="open" style="display: none;" class="fixed inset-0 bg-slate-50/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -170,15 +249,24 @@ x-show="open" style="display: none;" class="fixed inset-0 bg-slate-50/80 backdro
             {% csrf_token %}
             <div>
                 <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Phone Number" %}</label>
-                <input type="text" name="phone_number" x-model="phone" class="w-full rounded-lg border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                <input type="text" name="phone_number" x-model="phone" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:border-emerald-500 focus:ring-emerald-500">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Full Name" %}</label>
-                <input type="text" name="full_name" x-model="name" class="w-full rounded-lg border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                <input type="text" name="full_name" x-model="name" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:border-emerald-500 focus:ring-emerald-500">
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Position" %}</label>
-                <input type="text" name="position" x-model="position" class="w-full rounded-lg border-slate-300 text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                <input type="text" name="position" x-model="position" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:border-emerald-500 focus:ring-emerald-500">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Role" %}</label>
+                <select name="role" x-model="role" class="w-full px-4 py-2 border border-slate-300 rounded-lg text-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    <option value="">{% trans "No Role" %}</option>
+                    {% for r in roles %}
+                    <option value="{{ r.id }}">{{ r.name }}</option>
+                    {% endfor %}
+                </select>
             </div>
             
             <div class="pt-4 flex justify-end gap-3 border-t border-slate-200">
