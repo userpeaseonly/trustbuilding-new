@@ -95,3 +95,4 @@ redis==5.2.1
 docxtpl==0.17.0
 
 mammoth==1.8.0
+django-hijack==3.7.8

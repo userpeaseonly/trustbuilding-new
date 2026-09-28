@@ -22,6 +22,7 @@ urlpatterns = [
     # API — auth & public
     # Legacy APIs removed. New endpoints will be added as needed.
     # App URLs
+    path('hijack/', include('hijack.urls')),
     path('i18n/', include('django.conf.urls.i18n')),  # Language switching
     path('dashboard/', include('dashboard.urls')),  # Dashboard app
     path('users/', include('users.urls')),  # Users app

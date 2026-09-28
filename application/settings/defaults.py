@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # modeltranslation must come before admin
     'modeltranslation',
     
+    'hijack',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -83,6 +84,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'hijack.middleware.HijackUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -306,3 +308,8 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+# Hijack Settings
+HIJACK_LOGIN_REDIRECT_URL = '/dashboard/'
+HIJACK_LOGOUT_REDIRECT_URL = '/admin/users/customuser/'
+HIJACK_INSERT_BEFORE = '</body>'
