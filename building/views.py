@@ -179,10 +179,22 @@ def building_matrix_view(request, pk):
     for a in all_apts:
         apt_map[a.entrance_number][a.floor_number].append(a)
         
+    # Dynamically determine ranges to prevent hiding apartments if an uploaded template mismatched building counts
+    if all_apts:
+        max_entrance = max(building.entrance_count, max(a.entrance_number for a in all_apts))
+        max_floor = max(building.floor_count, max(a.floor_number for a in all_apts))
+        min_entrance = min(1, min(a.entrance_number for a in all_apts))
+        min_floor = min(1, min(a.floor_number for a in all_apts))
+    else:
+        max_entrance = building.entrance_count
+        max_floor = building.floor_count
+        min_entrance = 1
+        min_floor = 1
+        
     matrix = {}
-    for entrance in range(1, building.entrance_count + 1):
+    for entrance in range(min_entrance, max_entrance + 1):
         matrix[entrance] = {}
-        for floor in range(building.floor_count, 0, -1):
+        for floor in range(max_floor, min_floor - 1, -1):
             matrix[entrance][floor] = apt_map[entrance][floor]
             
     return render(request, 'building/matrix.html', {
