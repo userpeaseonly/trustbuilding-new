@@ -11,7 +11,7 @@ class CustomUserAdmin(HijackUserAdminMixin, UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ("phone_number", "full_name", "is_company", "is_customer", "is_staff", "is_active", "hijack_button")
+    list_display = ("phone_number", "full_name", "is_company", "is_customer", "is_staff", "is_active")
     list_filter = ("is_staff", "is_active", "is_company", "is_customer", "gender", "created_at")
     fieldsets = (
         (None, {"fields": ("phone_number", "password")}),

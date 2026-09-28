@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'modeltranslation',
     
     'hijack',
+    'hijack.contrib.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
