@@ -122,32 +122,32 @@
             </div>
 
             <!-- Excel Integration Section -->
-            <div class="bg-indigo-900/20 border border-indigo-800/50 rounded-xl p-4 space-y-4">
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 space-y-4">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h4 class="text-sm font-bold text-indigo-300">📊 {% trans "Advanced: Excel Import" %}</h4>
+                        <h4 class="text-sm font-bold text-indigo-700">📊 {% trans "Advanced: Excel Import" %}</h4>
                         <p class="text-[10px] text-slate-500 mt-1">{% trans "Download template, customize apartments, and upload back." %}</p>
                     </div>
-                    <button type="button" @click="downloadTemplate" class="px-3 py-1.5 bg-slate-100 hover:bg-gray-600 border border-slate-300 text-slate-900 text-xs font-semibold rounded-lg transition flex items-center gap-2 whitespace-nowrap shrink-0 ml-2">
+                    <button type="button" @click="downloadTemplate" class="px-3 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition flex items-center gap-2 whitespace-nowrap shrink-0 ml-2 shadow-sm">
                         ⬇️ {% trans "Download Template" %}
                     </button>
                 </div>
 
-                <div class="border-t border-slate-200/50 pt-4">
+                <div class="border-t border-indigo-100 pt-4">
                     <label class="block text-xs font-semibold text-slate-500 uppercase mb-2">{% trans "Upload Customized Excel" %}</label>
-                    <input type="file" accept=".xlsx, .xls" @change="handleFileUpload" class="w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
-                    <p x-show="uploadError" class="text-rose-700 text-xs mt-2" x-text="uploadError"></p>
+                    <input type="file" accept=".xlsx, .xls" @change="handleFileUpload" class="w-full text-xs text-slate-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200">
+                    <p x-show="uploadError" class="text-rose-600 text-xs mt-2" x-text="uploadError"></p>
                 </div>
 
                 <!-- Excel Preview -->
-                <div x-show="parsedApartments.length > 0" class="mt-4 border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
-                    <div class="px-3 py-2 bg-white border-b border-slate-200 flex justify-between items-center">
-                        <span class="text-xs font-bold text-emerald-400">✅ <span x-text="parsedApartments.length"></span> {% trans "apartments parsed" %}</span>
+                <div x-show="parsedApartments.length > 0" class="mt-4 border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                    <div class="px-3 py-2 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                        <span class="text-xs font-bold text-emerald-600">✅ <span x-text="parsedApartments.length"></span> {% trans "apartments parsed" %}</span>
                         <span class="text-[10px] text-slate-500">{% trans "Showing first 5 rows" %}</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-xs whitespace-nowrap">
-                            <thead class="bg-white/50 text-slate-500 uppercase font-semibold text-[10px]">
+                            <thead class="bg-slate-50 text-slate-500 uppercase font-semibold text-[10px]">
                                 <tr>
                                     <th class="py-2 px-3">{% trans "Ent" %}</th>
                                     <th class="py-2 px-3">{% trans "Floor" %}</th>
@@ -156,9 +156,9 @@
                                     <th class="py-2 px-3">{% trans "Rooms" %}</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-700/60 font-mono">
+                            <tbody class="divide-y divide-slate-100 font-mono">
                                 <template x-for="apt in parsedApartments.slice(0, 5)">
-                                    <tr class="hover:bg-white/40 text-slate-700">
+                                    <tr class="hover:bg-slate-50 text-slate-600">
                                         <td class="py-1.5 px-3" x-text="apt['Entrance Number']"></td>
                                         <td class="py-1.5 px-3" x-text="apt['Floor Number']"></td>
                                         <td class="py-1.5 px-3 font-bold text-slate-900" x-text="apt['Apartment Number']"></td>

@@ -197,11 +197,11 @@ msgstr "Qavat"
 #: building/templates/building/list.html:10
 #: building/templates/building/list.html:82
 msgid "New Building Project"
-msgstr "Yangi qurilish loyihasi"
+msgstr "Yangi bino loyihasi"
 
 #: building/templates/building/form.html:15
 msgid "Define structural parameters to auto-generate the apartment matrix"
-msgstr ""
+msgstr "Kvartiralar to'rini avtomatik yaratish uchun tuzilmaviy parametrlarni kiriting"
 "Kvartira matritsasini avtomatik yaratish uchun tizimli parametrlarni "
 "aniqlang"
 
@@ -228,11 +228,11 @@ msgstr "Har bir qavat uchun kvartiralar"
 #: building/templates/building/form.html:63
 #: building/templates/building/list.html:128
 msgid "Advanced: Excel Import"
-msgstr "Attendance Report"
+msgstr "Kengaytirilgan: Excel-dan import"
 
 #: building/templates/building/form.html:64
 msgid "Download a template, customize apartment details, and upload it back."
-msgstr ""
+msgstr "Shablonni yuklab oling, kvartira ma'lumotlarini to'ldiring va uni qayta yuklang."
 "Shablonni yuklab oling, kvartira tafsilotlarini sozlang va uni qayta "
 "yuklang."
 
@@ -245,27 +245,27 @@ msgstr "Shablonni yuklab olish"
 #: building/templates/building/form.html:72
 #: building/templates/building/list.html:137
 msgid "Upload Customized Excel"
-msgstr "Shaxsiylashtirilgan Excelni yuklang"
+msgstr "To'ldirilgan Excelni yuklash"
 
 #: building/templates/building/form.html:80
 #: building/templates/building/list.html:145
 msgid "apartments parsed"
-msgstr "Apartment updated!"
+msgstr "kvartira tahlil qilindi"
 
 #: building/templates/building/form.html:81
 #: building/templates/building/list.html:146
 msgid "Showing first 5 rows"
-msgstr "Birinchi 5 qator ko'rsatilmoqda"
+msgstr "Dastlabki 5 qator ko'rsatilmoqda"
 
 #: building/templates/building/form.html:86
 #: building/templates/building/list.html:152
 msgid "Ent"
-msgstr "Voqealar"
+msgstr "Podyezd"
 
 #: building/templates/building/form.html:88
 #: building/templates/building/list.html:154
 msgid "Apt #"
-msgstr "Kvartira raqami"
+msgstr "Kv #"
 
 #: building/templates/building/form.html:89
 #: building/templates/building/list.html:155
@@ -281,33 +281,15 @@ msgstr "Maydoni"
 #: contract/templates/contract/partials/apartment_search_results.html:8
 #: contract/templates/contract/template_list.html:137
 msgid "Rooms"
-msgstr "xona"
+msgstr "Xonalar"
 
 #: building/templates/building/form.html:112
 #: building/templates/building/list.html:178
 msgid "Automated Grid:"
-msgstr "Avtomatlashtirilgan tarmoq:"
+msgstr "Avtomatik to'r:"
 
 #: building/templates/building/form.html:112
 #: building/templates/building/list.html:178
-msgid ""
-"If no Excel is uploaded, an entrance-by-floor matrix will be automatically "
-"generated."
-msgstr ""
-"An entrance-by-floor apartment matrix will be automatically generated upon "
-"creation."
-
-#: building/templates/building/form.html:117
-#: building/templates/building/list.html:183
-#: building/templates/building/partials/apartment_modal.html:197
-#: contract/templates/contract/confirm_termination.html:56
-#: contract/templates/contract/form.html:490
-#: contract/templates/contract/template_list.html:176
-#: users/templates/users/customer_list.html:172
-#: users/templates/users/role_form.html:19
-#: users/templates/users/role_form.html:63
-#: users/templates/users/staff_list.html:213
-#: users/templates/users/staff_list.html:276
 msgid "Cancel"
 msgstr "Bekor qilish"
 
@@ -319,12 +301,12 @@ msgstr "Bino loyihasini yaratish"
 #: building/templates/building/form.html:193
 #: building/templates/building/list.html:260
 msgid "Invalid template structure. Missing required columns."
-msgstr "Shablon tuzilishi yaroqsiz.Kerakli ustunlar etishmayapti."
+msgstr "Noto'g'ri shablon tuzilishi. Majburiy ustunlar yo'q."
 
 #: building/templates/building/form.html:200
 #: building/templates/building/list.html:267
 msgid "Failed to parse Excel file."
-msgstr "Excel faylini tahlil qilib boʻlmadi."
+msgstr "Excel faylini o'qishda xatolik yuz berdi."
 
 #: building/templates/building/list.html:24
 #: contract/templates/contract/template_list.html:133
@@ -358,14 +340,6 @@ msgid "No residential buildings yet"
 msgstr "Hozircha turar-joy binolari yo'q"
 
 #: building/templates/building/list.html:67
-msgid ""
-"Create your first residential project to generate visual apartment grids and"
-" sales schedules."
-msgstr ""
-"Vizual kvartira tarmoqlari va savdo jadvallarini yaratish uchun birinchi "
-"turar joy loyihangizni yarating."
-
-#: building/templates/building/list.html:70
 msgid "Create First Building Project"
 msgstr "Birinchi qurilish loyihasini yarating"
 
@@ -392,14 +366,6 @@ msgid "Apartment Cannot Be Edited"
 msgstr "Kvartirani tahrirlash mumkin emas"
 
 #: building/templates/building/partials/apartment_modal.html:42
-msgid ""
-"This apartment has an active sales contract and its structural or pricing "
-"parameters cannot be modified."
-msgstr ""
-"Ushbu kvartirada faol oldi-sotdi shartnomasi mavjud va uning tarkibiy yoki "
-"narxlash parametrlarini o'zgartirish mumkin emas."
-
-#: building/templates/building/partials/apartment_modal.html:49
 msgid "Living Rooms"
 msgstr "Yashash xonalari"
 
@@ -590,14 +556,6 @@ msgid "PINFL (JSHSHR) is required for legal contract generation."
 msgstr "PINFL (JSHSHR) qonuniy shartnoma yaratish uchun talab qilinadi."
 
 #: contract/forms.py:129
-msgid ""
-"A customer with this phone number already exists. Please select 'Existing "
-"Customer' instead."
-msgstr ""
-"Bu telefon raqamiga ega mijoz allaqachon mavjud.Buning oʻrniga “Mavjud "
-"mijoz”ni tanlang."
-
-#: contract/forms.py:137 contract/templates/contract/quick_payment.html:156
 msgid "Payment Date (d/m/Y)"
 msgstr "To'lov sanasi (k/o/y)"
 
@@ -840,14 +798,6 @@ msgid "Security Verification Required:"
 msgstr "Xavfsizlik tekshiruvi talab qilinadi:"
 
 #: contract/templates/contract/confirm_termination.html:19
-msgid ""
-"A 6-digit OTP confirmation code has been sent to the company manager's phone"
-" via Eskiz SMS. Enter the code below to authorize termination."
-msgstr ""
-"Eskiz SMS orqali kompaniya menejerining telefoniga 6 xonali OTP tasdiqlash "
-"kodi yuborildi.Tugatishga ruxsat berish uchun quyidagi kodni kiriting."
-
-#: contract/templates/contract/confirm_termination.html:25
 msgid "6-Digit OTP Code"
 msgstr "6 xonali OTP kodi"
 
@@ -991,13 +941,6 @@ msgid "Step 1: Download Template"
 msgstr "1-qadam: Shablonni yuklab oling"
 
 #: contract/templates/contract/detail.html:278
-msgid ""
-"Download the pre-formatted Excel template and fill in the payment details."
-msgstr ""
-"Oldindan formatlangan Excel shablonini yuklab oling va to'lov ma'lumotlarini"
-" to'ldiring."
-
-#: contract/templates/contract/detail.html:285
 msgid "Step 2: Upload Data"
 msgstr "2-qadam: Ma'lumotlarni yuklash"
 
@@ -1046,13 +989,6 @@ msgid "Create New Real Estate Contract"
 msgstr "Yangi shartnoma rasmiylashtirish"
 
 #: contract/templates/contract/form.html:185
-msgid ""
-"Register contract, set installment terms, and generate payment schedule"
-msgstr ""
-"Shartnomani ro'yxatdan o'tkazing, to'lov shartlarini belgilang va to'lov "
-"jadvalini tuzing"
-
-#: contract/templates/contract/form.html:203
 msgid "1. Customer Identity"
 msgstr "1. Mijoz ma'lumotlari"
 
@@ -1300,14 +1236,6 @@ msgid "Select a Customer"
 msgstr "Mijozni tanlang"
 
 #: contract/templates/contract/quick_payment.html:178
-msgid ""
-"Select a customer from the left panel to display active contracts and log "
-"payments."
-msgstr ""
-"Faol shartnomalarni ko'rsatish va to'lovlarni qayd qilish uchun chap "
-"paneldan mijozni tanlang."
-
-#: contract/templates/contract/template_list.html:9
 msgid "Manage Word (.docx) templates used for generating customer contracts"
 msgstr ""
 "Mijozlar shartnomalarini yaratish uchun ishlatiladigan Word (.docx) "
@@ -1353,14 +1281,6 @@ msgid "No Templates Uploaded"
 msgstr "Hech qanday shablon yuklanmagan"
 
 #: contract/templates/contract/template_list.html:72
-msgid ""
-"Upload your company's official MS Word contract templates to automatically "
-"generate contracts for your customers."
-msgstr ""
-"Mijozlaringiz uchun avtomatik ravishda shartnomalar yaratish uchun "
-"kompaniyangizning rasmiy MS Word shartnoma shablonlarini yuklang."
-
-#: contract/templates/contract/template_list.html:75
 msgid "Upload First Template"
 msgstr "Birinchi shablonni yuklang"
 
@@ -1381,32 +1301,10 @@ msgid "Note:"
 msgstr "Izoh / Qaydlar"
 
 #: contract/templates/contract/template_list.html:94
-msgid ""
-"The system natively supports both standard English Jinja tags (e.g. <code>{{"
-" contract_amount }}</code>) and native Latin Uzbek chevron tags exactly as "
-"shown below."
-msgstr ""
-"Tizim quyida koʻrsatilgandek standart ingliz Jinja teglarini (masalan, "
-"<code>{{ contract_amount }}</code>) va mahalliy lotin oʻzbek chevron "
-"teglarini asl holatda qoʻllab-quvvatlaydi."
-
-#: contract/templates/contract/template_list.html:99
 msgid "Backward Compatibility:"
 msgstr "Orqaga moslik:"
 
 #: contract/templates/contract/template_list.html:100
-msgid ""
-"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, "
-"<code>«Этаж»</code>) from previous document versions are still fully "
-"supported and will continue to work automatically. You do not need to update"
-" your existing templates."
-msgstr ""
-"Hujjatning oldingi versiyalaridagi eski kirill teglari (masalan, "
-"<code>«Shartnoma_summasi»</code>, <code>«Etaj»</code>) hali ham toʻliq "
-"qoʻllab-quvvatlanadi va avtomatik ishlashda davom etadi.Mavjud "
-"shablonlaringizni yangilashingiz shart emas."
-
-#: contract/templates/contract/template_list.html:107
 msgid "Contract Info"
 msgstr "Contract ID"
 
@@ -1663,13 +1561,6 @@ msgid "Schedule Timeline Settings"
 msgstr "Vaqt jadvalini sozlash"
 
 #: dashboard/admin.py:15
-msgid ""
-"Configure the time range and slot duration for the dashboard schedule view."
-msgstr ""
-"Boshqaruv paneli jadvali ko'rinishi uchun vaqt oralig'i va slot "
-"davomiyligini sozlang."
-
-#: dashboard/models.py:11
 msgid "Schedule Start Time"
 msgstr "Boshlanish vaqtini rejalashtirish"
 
@@ -1769,122 +1660,42 @@ msgid "Leads"
 msgstr "Lidlar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:8
-msgid ""
-"Leads in the first two pipeline stages who have not yet been assigned a "
-"trial lesson."
-msgstr ""
-"Hali sinov darsi tayinlanmagan dastlabki ikki quvur bosqichida yetakchilar."
-
-#: dashboard/templates/dashboard/partials/home_content.html:11
 msgid "Trial Lessons"
 msgstr "Sinov darslari"
 
 #: dashboard/templates/dashboard/partials/home_content.html:11
-msgid ""
-"Total trial lessons scheduled or completed — leads who have visited for a "
-"free trial class."
-msgstr ""
-"Rejalashtirilgan yoki yakunlangan jami sinov darslari — bepul sinov kursiga "
-"tashrif buyurgan yetakchilar."
-
-#: dashboard/templates/dashboard/partials/home_content.html:14
 msgid "New Students"
 msgstr "Yangi talabalar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:14
-msgid ""
-"Active, non-debtor students whose enrollment date falls in the current "
-"month."
-msgstr ""
-"Ro'yxatga olish muddati joriy oyga to'g'ri keladigan faol, qarzdor bo'lmagan"
-" talabalar."
-
-#: dashboard/templates/dashboard/partials/home_content.html:16
 msgid "Active Students"
 msgstr "Faol talabalar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:16
-msgid ""
-"All active, non-debtor students — excluding newly enrolled students this "
-"month. This is your stable, paying student base."
-msgstr ""
-"Barcha faol, qarzdor bo'lmagan talabalar - bu oy yangi ro'yxatga olingan "
-"talabalar bundan mustasno.Bu sizning barqaror, maoshli talabalar bazasi."
-
-#: dashboard/templates/dashboard/partials/home_content.html:19
 msgid "Left Leads"
 msgstr "Chap yetakchilar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:19
-msgid ""
-"Leads that were deleted (lost) during the current month — prospects who did "
-"not convert."
-msgstr ""
-"Joriy oy davomida o'chirilgan (yo'qolgan) etakchilar - konvertatsiya "
-"qilmagan istiqbollar."
-
-#: dashboard/templates/dashboard/partials/home_content.html:22
 msgid "New Student Leavers"
 msgstr "Yangi talabalar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:22
-msgid ""
-"Students who were archived this month, counted from the exact moment they "
-"were archived."
-msgstr ""
-"Bu oy arxivlangan talabalar arxivga olingan paytdan boshlab hisoblangan."
-
-#: dashboard/templates/dashboard/partials/home_content.html:24
 msgid "Active Students Left"
 msgstr "Faol talabalar ketdi"
 
 #: dashboard/templates/dashboard/partials/home_content.html:24
-msgid ""
-"Students with 'Left' status — previously active students who chose to stop "
-"attending."
-msgstr ""
-"\"Chap\" maqomiga ega talabalar - qatnashishni to'xtatishni tanlagan ilgari "
-"faol talabalar."
-
-#: dashboard/templates/dashboard/partials/home_content.html:26
-#: dashboard/templates/partials/_nav_items.html:131
 msgid "Debtors"
 msgstr "Qarzdorlar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:26
-msgid ""
-"Left: all students currently with a negative balance. Right: students who "
-"first became a debtor this month."
-msgstr ""
-"Chapda: hozirda salbiy balansga ega barcha talabalar.O'ngda: bu oy birinchi "
-"marta qarzdor bo'lgan talabalar."
-
-#: dashboard/templates/dashboard/partials/home_content.html:28
 msgid "Frozen Students"
 msgstr "Muzlatilgan talabalar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:28
-msgid ""
-"Students currently on a temporary freeze — their group attendance is paused "
-"and billing is suspended."
-msgstr ""
-"Talabalar hozirda vaqtinchalik muzlatib qo‘yilgan — ularning guruhdagi "
-"ishtiroki to‘xtatilgan va hisob-kitoblar to‘xtatilgan."
-
-#: dashboard/templates/dashboard/partials/home_content.html:30
 msgid "Graduated"
 msgstr "Bitirgan"
 
 #: dashboard/templates/dashboard/partials/home_content.html:30
-msgid ""
-"Students who completed their course this month, counted from their exact "
-"graduation date."
-msgstr ""
-"Kursni shu oyda tamomlagan talabalar aniq bitiruv sanasidan boshlab "
-"hisoblangan."
-
-#: dashboard/templates/dashboard/sms_usage.html:5
-#: dashboard/templates/dashboard/sms_usage.html:10
 msgid "SMS Usage & Billing"
 msgstr "SMS sarfi va hisobi"
 
@@ -2236,14 +2047,6 @@ msgid "Server Error"
 msgstr "Tizim xatoligi"
 
 #: templates/500.html:25
-msgid ""
-"Something went wrong on our end. Please try again later or contact your "
-"administrator if the problem persists."
-msgstr ""
-"Tizimda xatolik yuz berdi. Iltimos, keyinroq qayta urinib ko'ring yoki "
-"administratorga murojaat qiling."
-
-#: templates/base.html:64
 msgid "Welcome"
 msgstr "Xush kelibsiz"
 
@@ -2568,13 +2371,6 @@ msgid "Permissions Checklist"
 msgstr "Ruxsatlar ro'yxati"
 
 #: users/templates/users/role_form.html:37
-msgid ""
-"Select the specific actions this role can perform across different modules."
-msgstr ""
-"Bu rol turli modullarda qanday amallarni bajarishi mumkinligini tanlang."
-
-#: users/templates/users/role_form.html:67
-#| msgid "Active Role"
 msgid "Save Role"
 msgstr "Rolni saqlash"
 
@@ -2633,14 +2429,6 @@ msgid "Are you sure you want to delete this staff member?"
 msgstr "Haqiqatan ham bu xodimni o'chirib tashlamoqchimisiz?"
 
 #: users/templates/users/staff_list.html:120
-msgid ""
-"No staff members added yet. Click 'Add New Staff Member' to get started."
-msgstr ""
-"Xodimlar hali qo‘shilmagan.Ishni boshlash uchun \"Yangi xodim qo'shish\" "
-"tugmasini bosing."
-
-#: users/templates/users/staff_list.html:136
-#| msgid "Permissions"
 msgid "Permissions Count"
 msgstr "Ruxsatlar soni"
 
@@ -2772,749 +2560,5 @@ msgid "Role deleted successfully!"
 msgstr "Rol muvaffaqiyatli o'chirildi!"
 
 #: users/views.py:329
-msgid ""
-"Cannot delete this role because it is assigned to one or more staff members."
-msgstr ""
-"Ushbu rolni o'chirib bo'lmaydi, chunki u bir yoki bir nechta xodimlarga "
-"biriktirilgan."
-
-#, python-brace-format
-#~ msgid "Successfully imported {payments_created} payments!"
-#~ msgstr "{payments_created} toʻlov muvaffaqiyatli import qilindi!"
-
-#, python-brace-format
-#~ msgid "TrustBuilding: Your login code is {token.code}"
-#~ msgstr "TrustBuilding: Sizning login kodingiz: {token.code}"
-
-#~ msgid "Add and assign sales managers to company buildings"
-#~ msgstr "Kompaniya binolariga sotuv menejerlarini qo'shish va biriktirish"
-
-#~ msgid "View Schedule"
-#~ msgstr "Jadvalni ko'rish"
-
-#~ msgid "Attendance History"
-#~ msgstr "Qaytarishlar tarixi"
-
-#~ msgid "rooms"
-#~ msgstr "xonalar"
-
-#~ msgid "View Apartment Visualizer Matrix"
-#~ msgstr "Kvartira vizualizatori matritsasi"
-
-#~ msgid "Installment Schedule Matrix"
-#~ msgstr "To'lovlar grafigi matritsasi"
-
-#~ msgid "Monthly planned installments, payments, and payment receipts"
-#~ msgstr "Oylik rejalashtirilgan to'lovlar, to'lovlar va to'lov kvitansiyalari"
-
-#~ msgid "Sales Staff Payment Terminal"
-#~ msgstr "Savdo xodimlari uchun to'lov terminali"
-
-#~ msgid "Quick payment collection & instant receipt printing"
-#~ msgstr "Tez to'lovni yig'ish va bir zumda kvitansiyani chop etish"
-
-#~ msgid "No active contracts found for this customer."
-#~ msgstr "Bu mijoz uchun faol shartnomalar topilmadi."
-
-#~ msgid "Payment Receipt"
-#~ msgstr "Payment Record"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Kvitansiyani chop etish"
-
-#~ msgid "PAYMENT RECEIPT"
-#~ msgstr "TO'LOV KVITANSIYASI"
-
-#~ msgid "TrustBuilding - Real Estate Contract Payment Voucher"
-#~ msgstr "TrustBuilding - Ko'chmas mulk shartnomasi bo'yicha to'lov cheki"
-
-#~ msgid "Receipt ID"
-#~ msgstr "Kvitansiya ID"
-
-#~ msgid "Company"
-#~ msgstr "Kompaniya"
-
-#~ msgid "Received by"
-#~ msgstr "Qabul qildi"
-
-#~ msgid "Signature & Stamp"
-#~ msgstr "Imzo va Muxr"
-
-#~ msgid "Paid by"
-#~ msgstr "Topshirdi"
-
-#~ msgid "Signature"
-#~ msgstr "Imzo"
-
-#~ msgid "Terminated Contracts Archive"
-#~ msgstr "Bekor qilingan shartnomalar arxivi"
-
-#~ msgid "View terminated contracts, penalty fines, and refund ledgers"
-#~ msgstr ""
-#~ "Tugatilgan shartnomalar, jarimalar va to'lovlarni qaytarish daftarlarini "
-#~ "ko'ring"
-
-#~ msgid "Create Contract"
-#~ msgstr "Shartnoma tuzish"
-
-#~ msgid "Staff Payment Terminal"
-#~ msgstr "Xodimlar uchun to'lov terminali"
-
-#~ msgid "Search buyers and manage identity passport records"
-#~ msgstr "Xaridorlarni qidiring va shaxsiy pasport yozuvlarini boshqaring"
-
-#~ msgid "Manage Staff Members"
-#~ msgstr "Xodimlarni boshqarish"
-
-#~ msgid "Running Balance"
-#~ msgstr "Joriy qoldiq"
-
-#~ msgid "Carried Over"
-#~ msgstr "O'tkazildi"
-
-#~ msgid "Carry over unpaid debt of this month to the next month schedule?"
-#~ msgstr ""
-#~ "Ushbu oyning to'lanmagan qarzdorligini keyingi oy grafigiga o'tkazishni "
-#~ "tasdiqlaysizmi?"
-
-#~ msgid "Carry Over"
-#~ msgstr "O'tkazish"
-
-#~ msgid "Debt for Month #{} has already been carried over."
-#~ msgstr "#{}-oy uchun qarz allaqachon o'tkazilgan."
-
-#~ msgid "Month #{} has no remaining debt to carry over."
-#~ msgstr "#{}-oyning o'tkazish uchun qolgan qarzi yo'q."
-
-#~ msgid "Successfully carried over debt to Month #{}!"
-#~ msgstr "Qarz #{}-oyga muvaffaqiyatli topshirildi!"
-
-#~ msgid "Month #{} is the final month. Cannot carry over debt."
-#~ msgstr "#{}-oy oxirgi oy.Qarzni o'tkazib bo'lmaydi."
-
-#~ msgid "All groups"
-#~ msgstr "Barcha guruhlar"
-
-#~ msgid "New groups"
-#~ msgstr "Yangi guruhlar"
-
-#~ msgid "Left early"
-#~ msgstr "Erta ketdi"
-
-#~ msgid "No schedule"
-#~ msgstr "Jadval yo'q"
-
-#~ msgid "No scheduled groups for this teacher on this day."
-#~ msgstr "Bu kunda bu oʻqituvchi uchun rejalashtirilgan guruhlar yoʻq."
-
-#~ msgid "All teachers"
-#~ msgstr "Barcha o'qituvchilar"
-
-#~ msgid "All courses"
-#~ msgstr "Barcha kurslar"
-
-#~ msgid "Teachers"
-#~ msgstr "Teachers"
-
-#~ msgid "group(s)"
-#~ msgstr "group(s)"
-
-#~ msgid "No lead sources for this month."
-#~ msgstr "Bu oy uchun yetakchi manbalar yoʻq."
-
-#~ msgid "No churn reasons for this month."
-#~ msgstr "Bu oy uchun hech qanday sabab yo'q."
-
-#~ msgid "Loading attendance"
-#~ msgstr "Davomat yuklanmoqda"
-
-#~ msgid "Expected days"
-#~ msgstr "Kutilgan kunlar"
-
-#~ msgid "Employee"
-#~ msgstr "Xodim"
-
-#~ msgid "Student"
-#~ msgstr "Talaba"
-
-#~ msgid "Group"
-#~ msgstr "Guruh"
-
-#~ msgid "No expenses for this period."
-#~ msgstr "Ushbu davr uchun hech qanday xarajatlar yo'q."
-
-#~ msgid "active debtors"
-#~ msgstr "faol qarzdorlar"
-
-#~ msgid "Debtor Aging"
-#~ msgstr "Qarzdorning qarishi"
-
-#~ msgid "No collections for this month."
-#~ msgstr "Bu oy uchun kolleksiyalar yoʻq."
-
-#~ msgid "Top Groups"
-#~ msgstr "Eng yaxshi guruhlar"
-
-#~ msgid "Due sessions"
-#~ msgstr "Kerakli sessiyalar"
-
-#~ msgid "Scheduled"
-#~ msgstr "Rejalashtirilgan"
-
-#~ msgid "Groups for this day"
-#~ msgstr "Ushbu kun uchun guruhlar"
-
-#~ msgid "Student rows marked"
-#~ msgstr "Talabalar qatorlari belgilangan"
-
-#~ msgid "Employee Attendance"
-#~ msgstr "Xodimlarning ishtiroki"
-
-#~ msgid "Employee Ranking"
-#~ msgstr "Xodimlar reytingi"
-
-#~ msgid "Group Attendance"
-#~ msgstr "Guruh ishtiroki"
-
-#~ msgid "Statistics"
-#~ msgstr "Statistika"
-
-#~ msgid "Charged Students"
-#~ msgstr "Zaryadlangan talabalar"
-
-#~ msgid "Attendance"
-#~ msgstr "Davomat"
-
-#~ msgid "Attendances"
-#~ msgstr "Davomatlar"
-
-#~ msgid "Student Report"
-#~ msgstr "Talaba hisoboti"
-
-#~ msgid "Report Type"
-#~ msgstr "Hisobot turi"
-
-#~ msgid "Attendance Rate (%)"
-#~ msgstr "Davomat darajasi (%)"
-
-#~ msgid "Attendance Reports"
-#~ msgstr "Davomat haqida hisobot"
-
-#~ msgid "Attendance Session"
-#~ msgstr "Ishtirok etish sessiyasi"
-
-#~ msgid "Attendance Sessions"
-#~ msgstr "Ishtirok etish sessiyalari"
-
-#~ msgid "Attendance Settings"
-#~ msgstr "Davomat sozlamalari"
-
-#~ msgid "Advanced"
-#~ msgstr "Murakkab"
-
-#~ msgid "Course Materials"
-#~ msgstr "Kurs materiallari"
-
-#~ msgid "Course"
-#~ msgstr "Kurs"
-
-#~ msgid "Order"
-#~ msgstr "Tartib"
-
-#~ msgid "Course Module"
-#~ msgstr "Kurs moduli"
-
-#~ msgid "Course Modules"
-#~ msgstr "Kurs modullari"
-
-#~ msgid "Teacher Notes"
-#~ msgstr "O'qituvchi eslatmalari"
-
-#~ msgid "Lesson Type"
-#~ msgstr "Dars turi"
-
-#~ msgid "Student Tasks"
-#~ msgstr "Talabalar vazifalari"
-
-#~ msgid "Teacher Tip"
-#~ msgstr "O'qituvchi maslahati"
-
-#~ msgid "External Link"
-#~ msgstr "Tashqi havola"
-
-#~ msgid "Archived"
-#~ msgstr "Arxivlangan"
-
-#~ msgid "Test Type"
-#~ msgstr "Sinov turi"
-
-#~ msgid "Created By"
-#~ msgstr "Yaratgan"
-
-#~ msgid "Questions"
-#~ msgstr "Savollar"
-
-#~ msgid "Teacher View"
-#~ msgstr "O'qituvchi ko'rinishi"
-
-#~ msgid "Teacher notes"
-#~ msgstr "O'qituvchi eslatmalari"
-
-#~ msgid "Student tasks"
-#~ msgstr "Talabalarning vazifalari"
-
-#~ msgid "Type"
-#~ msgstr "Turi"
-
-#~ msgid "Course Color"
-#~ msgstr "Kurs rangi"
-
-#~ msgid "Update Question"
-#~ msgstr "Savolni yangilash"
-
-#~ msgid "Create Test"
-#~ msgstr "Test yaratish"
-
-#~ msgid "Active course"
-#~ msgstr "Faol kurs"
-
-#~ msgid "Delete Course"
-#~ msgstr "Kursni o'chirish"
-
-#~ msgid "questions"
-#~ msgstr "savollar"
-
-#~ msgid "Update Section"
-#~ msgstr "Yangilash bo'limi"
-
-#~ msgid "Enter full name"
-#~ msgstr "To'liq ismni kiriting"
-
-#~ msgid "Start date"
-#~ msgstr "Boshlanish sanasi"
-
-#~ msgid "Can Create"
-#~ msgstr "Yaratish mumkin"
-
-#~ msgid "Permission"
-#~ msgstr "Ruxsat"
-
-#~ msgid "Refreshed At"
-#~ msgstr "Yangilangan"
-
-#~ msgid "Employee KPI Snapshot"
-#~ msgstr "Xodimlarning KPI surati"
-
-#~ msgid "Missed Attendance"
-#~ msgstr "O'tkazib yuborilgan ishtirok"
-
-#~ msgid "Personal"
-#~ msgstr "Shaxsiy"
-
-#~ msgid "Leave Type"
-#~ msgstr "Chiqish turi"
-
-#~ msgid "Employee Leave"
-#~ msgstr "Xodimlarning ta'tillari"
-
-#~ msgid "Employee Leaves"
-#~ msgstr "Xodimlarning ta'tillari"
-
-#~ msgid "Delete Employee"
-#~ msgstr "Xodimni o'chirish"
-
-#~ msgid "Back to Employees"
-#~ msgstr "Xodimlar sahifasiga qaytish"
-
-#~ msgid "Delete Employee?"
-#~ msgstr "Xodim oʻchirilsinmi?"
-
-#~ msgid "Edit Employee"
-#~ msgstr "Xodimni tahrirlash"
-
-#~ msgid "Add Employee"
-#~ msgstr "Add Employee"
-
-#~ msgid "Add New Employee"
-#~ msgstr "Yangi xodim qo'shing"
-
-#~ msgid "Status & Notes"
-#~ msgstr "Holat va eslatmalar"
-
-#~ msgid "Employee is Active"
-#~ msgstr "Xodim faol"
-
-#~ msgid "Update Employee"
-#~ msgstr "Xodimni yangilash"
-
-#~ msgid "Go to Groups"
-#~ msgstr "Guruhlarga o'ting"
-
-#~ msgid "Inactive Employee"
-#~ msgstr "Faol bo'lmagan xodim"
-
-#~ msgid "Employee ID"
-#~ msgstr "Xodim identifikatori"
-
-#~ msgid "Work Type"
-#~ msgstr "Ish turi"
-
-#~ msgid "Linked Employees"
-#~ msgstr "Bog'langan xodimlar"
-
-#~ msgid "Our Employee"
-#~ msgstr "Bizning xodimimiz"
-
-#~ msgid "Not refreshed for this month"
-#~ msgstr "Bu oy uchun yangilanmagan"
-
-#~ msgid "Created by"
-#~ msgstr "tomonidan yaratilgan"
-
-#~ msgid "Updated"
-#~ msgstr "Yangilangan"
-
-#~ msgid "Full-Time"
-#~ msgstr "To'liq stavka"
-
-#~ msgid "All Status"
-#~ msgstr "Barcha holat"
-
-#~ msgid "Employment"
-#~ msgstr "Bandlik"
-
-#~ msgid "Final"
-#~ msgstr "Final"
-
-#~ msgid "Sessions"
-#~ msgstr "Seanslar"
-
-#~ msgid "Debtor"
-#~ msgstr "Qarzdor"
-
-#~ msgid "employees"
-#~ msgstr "xodimlar"
-
-#~ msgid "Attended"
-#~ msgstr "ishtirok etdi"
-
-#~ msgid "Referral Settings"
-#~ msgstr "Yo'naltiruvchi sozlamalari"
-
-#~ msgid "Full"
-#~ msgstr "Toʻliq"
-
-#~ msgid "No charges for this month."
-#~ msgstr "Bu oy uchun toʻlov olinmaydi."
-
-#~ msgid "All Groups"
-#~ msgstr "Barcha guruhlar"
-
-#~ msgid "No permission"
-#~ msgstr "Ruxsat yo'q"
-
-#~ msgid "Group / Course"
-#~ msgstr "Guruh / Kurs"
-
-#~ msgid "Finance Overview"
-#~ msgstr "Moliyaga umumiy nuqtai"
-
-#~ msgid "Per student:"
-#~ msgstr "Har bir talaba uchun:"
-
-#~ msgid "Teacher Base"
-#~ msgstr "O'qituvchilar bazasi"
-
-#~ msgid "Frozen"
-#~ msgstr "Muzlatilgan"
-
-#~ msgid "Final:"
-#~ msgstr "Final:"
-
-#~ msgid "Per Student"
-#~ msgstr "Talaba uchun"
-
-#~ msgid "All Courses"
-#~ msgstr "Barcha Kurslar"
-
-#~ msgid "All Statuses"
-#~ msgstr "Barcha Statuslar"
-
-#~ msgid "Segment Order"
-#~ msgstr "Segment Order"
-
-#~ msgid "Upgraded At"
-#~ msgstr "Upgraded At"
-
-#~ msgid "Support Teacher"
-#~ msgstr "Support Teacher"
-
-#~ msgid "Archive Reason"
-#~ msgstr "Archive Reason"
-
-#~ msgid "Back to Groups"
-#~ msgstr "Back to Groups"
-
-#~ msgid "Scheduled trial date"
-#~ msgstr "Scheduled trial date"
-
-#~ msgid "Archived Students"
-#~ msgstr "Archived Students"
-
-#~ msgid "Left group"
-#~ msgstr "Left group"
-
-#~ msgid "Back to Group"
-#~ msgstr "Back to Group"
-
-#~ msgid "Group is full"
-#~ msgstr "Group is full"
-
-#~ msgid "Archive"
-#~ msgstr "Arxiv"
-
-#~ msgid "Create Group"
-#~ msgstr "Create Group"
-
-#~ msgid "Total Groups"
-#~ msgstr "Total Groups"
-
-#~ msgid "Active Groups"
-#~ msgstr "Active Groups"
-
-#~ msgid "Enrolled Students"
-#~ msgstr "Enrolled Students"
-
-#~ msgid "Archive Group"
-#~ msgstr "Archive Group"
-
-#~ msgid "Archiving..."
-#~ msgstr "Archiving..."
-
-#~ msgid "Main Teacher"
-#~ msgstr "Main Teacher"
-
-#~ msgid "students"
-#~ msgstr "students"
-
-#~ msgid "Every day"
-#~ msgstr "Every day"
-
-#~ msgid "No active students yet."
-#~ msgstr "No active students yet."
-
-#~ msgid "Create Room"
-#~ msgstr "Create Room"
-
-#~ msgid "Settings & Notes"
-#~ msgstr "Settings & Notes"
-
-#~ msgid "Update"
-#~ msgstr "Update"
-
-#~ msgid "Lead Tag"
-#~ msgstr "Lead Tag"
-
-#~ msgid "Lead Tags"
-#~ msgstr "Lead Tags"
-
-#~ msgid "Lead Labels"
-#~ msgstr "Lead Labels"
-
-#~ msgid "Lead"
-#~ msgstr "Lead"
-
-#~ msgid "Lead Notes"
-#~ msgstr "Lead Notes"
-
-#~ msgid "Lead Created"
-#~ msgstr "Lead Created"
-
-#~ msgid "Event Type"
-#~ msgstr "Event Type"
-
-#~ msgid "Attendance Status"
-#~ msgstr "Attendance Status"
-
-#~ msgid "Add Lead"
-#~ msgstr "Add Lead"
-
-#~ msgid "Follow-up Schedule"
-#~ msgstr "Follow-up Schedule"
-
-#~ msgid "Create Lead"
-#~ msgstr "Create Lead"
-
-#~ msgid "Course Interest"
-#~ msgstr "Course Interest"
-
-#~ msgid "Scheduling for"
-#~ msgstr "Scheduling for"
-
-#~ msgid "Enroll as Student"
-#~ msgstr "Enroll as Student"
-
-#~ msgid "Lead to student"
-#~ msgstr "Lead to student"
-
-#~ msgid "Created"
-#~ msgstr "Created"
-
-#~ msgid "Additional Phone Numbers"
-#~ msgstr "Additional Phone Numbers"
-
-#~ msgid "Transfer to Student"
-#~ msgstr "Transfer to Student"
-
-#~ msgid "No leads"
-#~ msgstr "No leads"
-
-#~ msgid "Attendance Rate"
-#~ msgstr "Attendance Rate"
-
-#~ msgid "No students ready"
-#~ msgstr "No students ready"
-
-#~ msgid "English Level"
-#~ msgstr "English Level"
-
-#~ msgid "Last Read At"
-#~ msgstr "Last Read At"
-
-#~ msgid "Media Type"
-#~ msgstr "Media Type"
-
-#~ msgid "Father's full name"
-#~ msgstr "Father's full name"
-
-#~ msgid "Archived At"
-#~ msgstr "Archived At"
-
-#~ msgid "Completed At"
-#~ msgstr "Completed At"
-
-#~ msgid "Student Created"
-#~ msgstr "Student Created"
-
-#~ msgid "Group Transfer"
-#~ msgstr "Group Transfer"
-
-#~ msgid "Student Activity"
-#~ msgstr "Student Activity"
-
-#~ msgid "Student Activities"
-#~ msgstr "Student Activities"
-
-#~ msgid "Student Message"
-#~ msgstr "Student Message"
-
-#~ msgid "Student Messages"
-#~ msgstr "Student Messages"
-
-#~ msgid "From Group"
-#~ msgstr "From Group"
-
-#~ msgid "To Group"
-#~ msgstr "To Group"
-
-#~ msgid "All Students"
-#~ msgstr "All Students"
-
-#~ msgid "No students found"
-#~ msgstr "No students found"
-
-#~ msgid "Personal Information"
-#~ msgstr "Personal Information"
-
-#~ msgid "Create Student"
-#~ msgstr "Create Student"
-
-#~ msgid "Archive Student"
-#~ msgstr "Archive Student"
-
-#~ msgid "Freeze Student"
-#~ msgstr "Freeze Student"
-
-#~ msgid "Referred Students"
-#~ msgstr "Referred Students"
-
-#~ msgid "Archive Student?"
-#~ msgstr "Archive Student?"
-
-#~ msgid "Delete Student"
-#~ msgstr "Delete Student"
-
-#~ msgid "Back to Students"
-#~ msgstr "Back to Students"
-
-#~ msgid "Update Student"
-#~ msgstr "Update Student"
-
-#~ msgid "Student archived."
-#~ msgstr "Student archived."
-
-#~ msgid "Student frozen."
-#~ msgstr "Student frozen."
-
-#~ msgid "Student unfrozen."
-#~ msgstr "Student unfrozen."
-
-#~ msgid "Take Attendance"
-#~ msgstr "Take Attendance"
-
-#~ msgid "Trial Students"
-#~ msgstr "Trial Students"
-
-#~ msgid "Update Attendance"
-#~ msgstr "Update Attendance"
-
-#~ msgid "Save Attendance"
-#~ msgstr "Save Attendance"
-
-#~ msgid "My Groups"
-#~ msgstr "My Groups"
-
-#~ msgid "My Attendance"
-#~ msgstr "My Attendance"
-
-#~ msgid "My Dashboard"
-#~ msgstr "My Dashboard"
-
-#~ msgid "attendance"
-#~ msgstr "attendance"
-
-#~ msgid "debtors"
-#~ msgstr "debtors"
-
-#~ msgid "archived"
-#~ msgstr "archived"
-
-#~ msgid "Take attendance now"
-#~ msgstr "Take attendance now"
-
-#~ msgid "View Attendance"
-#~ msgstr "View Attendance"
-
-#~ msgid "No penalties for this month."
-#~ msgstr "No penalties for this month."
-
-#~ msgid "Attendance saved."
-#~ msgstr "Attendance saved."
-
-#~ msgid "User Type"
-#~ msgstr "Foydalanuvchi turi"
-
-#~ msgid "Is Student"
-#~ msgstr "Talaba"
-
-#~ msgid "Is Teacher"
-#~ msgstr "O'qituvchi"
-
-#~ msgid "Create Branch"
-#~ msgstr "Create Branch"
-
-#~ msgid "Create Teacher"
-#~ msgstr "Create Teacher"
-
-#~ msgid "User avatar"
-#~ msgstr "Foydalanuvchi avatari"
+msgid "If no Excel is uploaded, an entrance-by-floor matrix will be automatically generated."
+msgstr "Agar Excel yuklanmasa, podyezd va qavatlar matritsasi avtomatik ravishda yaratiladi."

@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="space-y-1">
     {% for apt in apartments %}
-    <div @click="selectedApartmentId = '{{ apt.pk }}'; selectedApartmentName = '{% trans "Apt" %} {{ apt.apartment_number }} ({{ apt.building.name }}) - {{ apt.total_area }} m²'; selectedApartmentArea = parseFloat('{{ apt.total_area }}'); openApartmentSearch = false" 
+    <div @click="selectedApartmentId = '{{ apt.pk }}'; selectedApartmentName = '{% trans "Apt" %} {{ apt.apartment_number }} ({{ apt.building.name }}) - {{ apt.total_area }} m²'; selectedApartmentArea = parseFloat('{{ apt.total_area }}'.replace(',', '.')); openApartmentSearch = false" 
          class="p-3 bg-white hover:bg-slate-50 border-slate-200 hover:border-indigo-300 shadow-sm rounded-lg cursor-pointer transition border border-slate-300 flex justify-between items-center text-xs group">
         <div>
             <div class="font-bold text-slate-900 group-hover:text-indigo-700">{% trans "Apt" %} {{ apt.apartment_number }} <span class="text-slate-500 font-normal">({{ apt.building.name }})</span></div>

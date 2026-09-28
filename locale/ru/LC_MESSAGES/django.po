@@ -199,7 +199,7 @@ msgstr "Новый проект здания"
 
 #: building/templates/building/form.html:15
 msgid "Define structural parameters to auto-generate the apartment matrix"
-msgstr "Define structural parameters to auto-generate the apartment matrix"
+msgstr "Задайте структурные параметры для автогенерации сетки квартир"
 
 #: building/templates/building/form.html:30
 #: building/templates/building/list.html:95
@@ -224,42 +224,42 @@ msgstr "Apts Per Floor"
 #: building/templates/building/form.html:63
 #: building/templates/building/list.html:128
 msgid "Advanced: Excel Import"
-msgstr "Attendance Report"
+msgstr "Расширенный: Импорт из Excel"
 
 #: building/templates/building/form.html:64
 msgid "Download a template, customize apartment details, and upload it back."
-msgstr "Download a template, customize apartment details, and upload it back."
+msgstr "Скачайте шаблон, заполните данные о квартирах и загрузите его обратно."
 
 #: building/templates/building/form.html:67
 #: building/templates/building/list.html:132
 #: contract/templates/contract/detail.html:280
 msgid "Download Template"
-msgstr "Download Template"
+msgstr "Скачать шаблон"
 
 #: building/templates/building/form.html:72
 #: building/templates/building/list.html:137
 msgid "Upload Customized Excel"
-msgstr "Upload Customized Excel"
+msgstr "Загрузить заполненный Excel"
 
 #: building/templates/building/form.html:80
 #: building/templates/building/list.html:145
 msgid "apartments parsed"
-msgstr "Apartment updated!"
+msgstr "квартир обработано"
 
 #: building/templates/building/form.html:81
 #: building/templates/building/list.html:146
 msgid "Showing first 5 rows"
-msgstr "Showing first 5 rows"
+msgstr "Показаны первые 5 строк"
 
 #: building/templates/building/form.html:86
 #: building/templates/building/list.html:152
 msgid "Ent"
-msgstr "Events"
+msgstr "Подъезд"
 
 #: building/templates/building/form.html:88
 #: building/templates/building/list.html:154
 msgid "Apt #"
-msgstr "Номер квартиры"
+msgstr "Кв №"
 
 #: building/templates/building/form.html:89
 #: building/templates/building/list.html:155
@@ -275,33 +275,15 @@ msgstr "Площадь"
 #: contract/templates/contract/partials/apartment_search_results.html:8
 #: contract/templates/contract/template_list.html:137
 msgid "Rooms"
-msgstr "комн."
+msgstr "Комнаты"
 
 #: building/templates/building/form.html:112
 #: building/templates/building/list.html:178
 msgid "Automated Grid:"
-msgstr "Automated Grid:"
+msgstr "Автоматическая сетка:"
 
 #: building/templates/building/form.html:112
 #: building/templates/building/list.html:178
-msgid ""
-"If no Excel is uploaded, an entrance-by-floor matrix will be automatically "
-"generated."
-msgstr ""
-"An entrance-by-floor apartment matrix will be automatically generated upon "
-"creation."
-
-#: building/templates/building/form.html:117
-#: building/templates/building/list.html:183
-#: building/templates/building/partials/apartment_modal.html:197
-#: contract/templates/contract/confirm_termination.html:56
-#: contract/templates/contract/form.html:490
-#: contract/templates/contract/template_list.html:176
-#: users/templates/users/customer_list.html:172
-#: users/templates/users/role_form.html:19
-#: users/templates/users/role_form.html:63
-#: users/templates/users/staff_list.html:213
-#: users/templates/users/staff_list.html:276
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -313,12 +295,12 @@ msgstr "Создать проект здания"
 #: building/templates/building/form.html:193
 #: building/templates/building/list.html:260
 msgid "Invalid template structure. Missing required columns."
-msgstr "Invalid template structure. Missing required columns."
+msgstr "Неверная структура шаблона. Отсутствуют обязательные столбцы."
 
 #: building/templates/building/form.html:200
 #: building/templates/building/list.html:267
 msgid "Failed to parse Excel file."
-msgstr "Failed to parse Excel file."
+msgstr "Не удалось прочитать файл Excel."
 
 #: building/templates/building/list.html:24
 #: contract/templates/contract/template_list.html:133
@@ -352,14 +334,6 @@ msgid "No residential buildings yet"
 msgstr "No residential buildings yet"
 
 #: building/templates/building/list.html:67
-msgid ""
-"Create your first residential project to generate visual apartment grids and"
-" sales schedules."
-msgstr ""
-"Create your first residential project to generate visual apartment grids and"
-" sales schedules."
-
-#: building/templates/building/list.html:70
 msgid "Create First Building Project"
 msgstr "Create First Building Project"
 
@@ -384,14 +358,6 @@ msgid "Apartment Cannot Be Edited"
 msgstr "Apartment Cannot Be Edited"
 
 #: building/templates/building/partials/apartment_modal.html:42
-msgid ""
-"This apartment has an active sales contract and its structural or pricing "
-"parameters cannot be modified."
-msgstr ""
-"This apartment has an active sales contract and its structural or pricing "
-"parameters cannot be modified."
-
-#: building/templates/building/partials/apartment_modal.html:49
 msgid "Living Rooms"
 msgstr "Living Rooms"
 
@@ -581,14 +547,6 @@ msgid "PINFL (JSHSHR) is required for legal contract generation."
 msgstr "PINFL (JSHSHR) is required for legal contract generation."
 
 #: contract/forms.py:129
-msgid ""
-"A customer with this phone number already exists. Please select 'Existing "
-"Customer' instead."
-msgstr ""
-"A customer with this phone number already exists. Please select 'Existing "
-"Customer' instead."
-
-#: contract/forms.py:137 contract/templates/contract/quick_payment.html:156
 msgid "Payment Date (d/m/Y)"
 msgstr "Дата оплаты (д/м/г)"
 
@@ -831,14 +789,6 @@ msgid "Security Verification Required:"
 msgstr "Security Verification Required:"
 
 #: contract/templates/contract/confirm_termination.html:19
-msgid ""
-"A 6-digit OTP confirmation code has been sent to the company manager's phone"
-" via Eskiz SMS. Enter the code below to authorize termination."
-msgstr ""
-"A 6-digit OTP confirmation code has been sent to the company manager's phone"
-" via Eskiz SMS. Enter the code below to authorize termination."
-
-#: contract/templates/contract/confirm_termination.html:25
 msgid "6-Digit OTP Code"
 msgstr "6-значный код OTP"
 
@@ -982,12 +932,6 @@ msgid "Step 1: Download Template"
 msgstr "Step 1: Download Template"
 
 #: contract/templates/contract/detail.html:278
-msgid ""
-"Download the pre-formatted Excel template and fill in the payment details."
-msgstr ""
-"Download the pre-formatted Excel template and fill in the payment details."
-
-#: contract/templates/contract/detail.html:285
 msgid "Step 2: Upload Data"
 msgstr "Step 2: Upload Data"
 
@@ -1035,12 +979,6 @@ msgid "Create New Real Estate Contract"
 msgstr "Оформить новый договор"
 
 #: contract/templates/contract/form.html:185
-msgid ""
-"Register contract, set installment terms, and generate payment schedule"
-msgstr ""
-"Register contract, set installment terms, and generate payment schedule"
-
-#: contract/templates/contract/form.html:203
 msgid "1. Customer Identity"
 msgstr "1. Данные клиента"
 
@@ -1278,14 +1216,6 @@ msgid "Select a Customer"
 msgstr "Выберите клиента"
 
 #: contract/templates/contract/quick_payment.html:178
-msgid ""
-"Select a customer from the left panel to display active contracts and log "
-"payments."
-msgstr ""
-"Select a customer from the left panel to display active contracts and log "
-"payments."
-
-#: contract/templates/contract/template_list.html:9
 msgid "Manage Word (.docx) templates used for generating customer contracts"
 msgstr ""
 "Управление шаблонами Word (.docx), используемыми для генерации договоров "
@@ -1331,14 +1261,6 @@ msgid "No Templates Uploaded"
 msgstr "Нет загруженных шаблонов"
 
 #: contract/templates/contract/template_list.html:72
-msgid ""
-"Upload your company's official MS Word contract templates to automatically "
-"generate contracts for your customers."
-msgstr ""
-"Upload your company's official MS Word contract templates to automatically "
-"generate contracts for your customers."
-
-#: contract/templates/contract/template_list.html:75
 msgid "Upload First Template"
 msgstr "Upload First Template"
 
@@ -1359,32 +1281,10 @@ msgid "Note:"
 msgstr "Примечание:"
 
 #: contract/templates/contract/template_list.html:94
-msgid ""
-"The system natively supports both standard English Jinja tags (e.g. <code>{{"
-" contract_amount }}</code>) and native Latin Uzbek chevron tags exactly as "
-"shown below."
-msgstr ""
-"Система поддерживает как стандартные теги Jinja (например, <code>{{ "
-"contract_amount }}</code>), так и теги на латинском узбекском, как показано "
-"ниже."
-
-#: contract/templates/contract/template_list.html:99
 msgid "Backward Compatibility:"
 msgstr "Обратная совместимость:"
 
 #: contract/templates/contract/template_list.html:100
-msgid ""
-"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, "
-"<code>«Этаж»</code>) from previous document versions are still fully "
-"supported and will continue to work automatically. You do not need to update"
-" your existing templates."
-msgstr ""
-"Старые теги на кириллице (например, <code>«Шартнома_суммаси»</code>, "
-"<code>«Этаж»</code>) из предыдущих версий документов по-прежнему полностью "
-"поддерживаются и продолжают работать автоматически. Вам не нужно обновлять "
-"существующие шаблоны."
-
-#: contract/templates/contract/template_list.html:107
 msgid "Contract Info"
 msgstr "Информация о договоре"
 
@@ -1635,12 +1535,6 @@ msgid "Schedule Timeline Settings"
 msgstr "Schedule Timeline Settings"
 
 #: dashboard/admin.py:15
-msgid ""
-"Configure the time range and slot duration for the dashboard schedule view."
-msgstr ""
-"Configure the time range and slot duration for the dashboard schedule view."
-
-#: dashboard/models.py:11
 msgid "Schedule Start Time"
 msgstr "Schedule Start Time"
 
@@ -1740,124 +1634,42 @@ msgid "Leads"
 msgstr "Лиды"
 
 #: dashboard/templates/dashboard/partials/home_content.html:8
-msgid ""
-"Leads in the first two pipeline stages who have not yet been assigned a "
-"trial lesson."
-msgstr ""
-"Leads in the first two pipeline stages who have not yet been assigned a "
-"trial lesson."
-
-#: dashboard/templates/dashboard/partials/home_content.html:11
 msgid "Trial Lessons"
 msgstr "Trial Lessons"
 
 #: dashboard/templates/dashboard/partials/home_content.html:11
-msgid ""
-"Total trial lessons scheduled or completed — leads who have visited for a "
-"free trial class."
-msgstr ""
-"Total trial lessons scheduled or completed — leads who have visited for a "
-"free trial class."
-
-#: dashboard/templates/dashboard/partials/home_content.html:14
 msgid "New Students"
 msgstr "New Students"
 
 #: dashboard/templates/dashboard/partials/home_content.html:14
-msgid ""
-"Active, non-debtor students whose enrollment date falls in the current "
-"month."
-msgstr ""
-"Active, non-debtor students whose enrollment date falls in the current "
-"month."
-
-#: dashboard/templates/dashboard/partials/home_content.html:16
 msgid "Active Students"
 msgstr "Active Students"
 
 #: dashboard/templates/dashboard/partials/home_content.html:16
-msgid ""
-"All active, non-debtor students — excluding newly enrolled students this "
-"month. This is your stable, paying student base."
-msgstr ""
-"All active, non-debtor students — excluding newly enrolled students this "
-"month. This is your stable, paying student base."
-
-#: dashboard/templates/dashboard/partials/home_content.html:19
 msgid "Left Leads"
 msgstr "Left Leads"
 
 #: dashboard/templates/dashboard/partials/home_content.html:19
-msgid ""
-"Leads that were deleted (lost) during the current month — prospects who did "
-"not convert."
-msgstr ""
-"Leads that were deleted (lost) during the current month — prospects who did "
-"not convert."
-
-#: dashboard/templates/dashboard/partials/home_content.html:22
 msgid "New Student Leavers"
 msgstr "New Student Leavers"
 
 #: dashboard/templates/dashboard/partials/home_content.html:22
-msgid ""
-"Students who were archived this month, counted from the exact moment they "
-"were archived."
-msgstr ""
-"Students who were archived this month, counted from the exact moment they "
-"were archived."
-
-#: dashboard/templates/dashboard/partials/home_content.html:24
 msgid "Active Students Left"
 msgstr "Active Students Left"
 
 #: dashboard/templates/dashboard/partials/home_content.html:24
-msgid ""
-"Students with 'Left' status — previously active students who chose to stop "
-"attending."
-msgstr ""
-"Students with 'Left' status — previously active students who chose to stop "
-"attending."
-
-#: dashboard/templates/dashboard/partials/home_content.html:26
-#: dashboard/templates/partials/_nav_items.html:131
 msgid "Debtors"
 msgstr "Debtors"
 
 #: dashboard/templates/dashboard/partials/home_content.html:26
-msgid ""
-"Left: all students currently with a negative balance. Right: students who "
-"first became a debtor this month."
-msgstr ""
-"Left: all students currently with a negative balance. Right: students who "
-"first became a debtor this month."
-
-#: dashboard/templates/dashboard/partials/home_content.html:28
 msgid "Frozen Students"
 msgstr "Frozen Students"
 
 #: dashboard/templates/dashboard/partials/home_content.html:28
-msgid ""
-"Students currently on a temporary freeze — their group attendance is paused "
-"and billing is suspended."
-msgstr ""
-"Students currently on a temporary freeze — their group attendance is paused "
-"and billing is suspended."
-
-#: dashboard/templates/dashboard/partials/home_content.html:30
 msgid "Graduated"
 msgstr "Graduated"
 
 #: dashboard/templates/dashboard/partials/home_content.html:30
-msgid ""
-"Students who completed their course this month, counted from their exact "
-"graduation date."
-msgstr ""
-"Students who completed their course this month, counted from their exact "
-"graduation date."
-
-#: dashboard/templates/dashboard/sms_usage.html:5
-#: dashboard/templates/dashboard/sms_usage.html:10
 msgid "SMS Usage & Billing"
 msgstr "Использование SMS и биллинг"
 
@@ -2207,14 +2019,6 @@ msgid "Server Error"
 msgstr "Ошибка сервера"
 
 #: templates/500.html:25
-msgid ""
-"Something went wrong on our end. Please try again later or contact your "
-"administrator if the problem persists."
-msgstr ""
-"Произошла ошибка на сервере. Пожалуйста, попробуйте позже или свяжитесь с "
-"администратором."
-
-#: templates/base.html:64
 msgid "Welcome"
 msgstr "Добро пожаловать"
 
@@ -2540,14 +2344,6 @@ msgid "Permissions Checklist"
 msgstr "Список прав"
 
 #: users/templates/users/role_form.html:37
-msgid ""
-"Select the specific actions this role can perform across different modules."
-msgstr ""
-"Выберите конкретные действия, которые эта роль может выполнять в различных "
-"модулях."
-
-#: users/templates/users/role_form.html:67
-#| msgid "Active Role"
 msgid "Save Role"
 msgstr "Сохранить роль"
 
@@ -2606,13 +2402,6 @@ msgid "Are you sure you want to delete this staff member?"
 msgstr "Вы уверены, что хотите удалить этого сотрудника?"
 
 #: users/templates/users/staff_list.html:120
-msgid ""
-"No staff members added yet. Click 'Add New Staff Member' to get started."
-msgstr ""
-"Сотрудники пока не добавлены. Нажмите 'Добавить сотрудника', чтобы начать."
-
-#: users/templates/users/staff_list.html:136
-#| msgid "Permissions"
 msgid "Permissions Count"
 msgstr "Количество прав"
 
@@ -2744,745 +2533,5 @@ msgid "Role deleted successfully!"
 msgstr "Роль успешно удалена!"
 
 #: users/views.py:329
-msgid ""
-"Cannot delete this role because it is assigned to one or more staff members."
-msgstr ""
-"Невозможно удалить эту роль, так как она назначена одному или нескольким "
-"сотрудникам."
-
-#, python-brace-format
-#~ msgid "Successfully imported {payments_created} payments!"
-#~ msgstr "Successfully imported {payments_created} payments!"
-
-#, python-brace-format
-#~ msgid "TrustBuilding: Your login code is {token.code}"
-#~ msgstr "TrustBuilding: Your login code is {token.code}"
-
-#~ msgid "Add and assign sales managers to company buildings"
-#~ msgstr "Добавляйте и назначайте менеджеров по продажам на объекты компании"
-
-#~ msgid "View Schedule"
-#~ msgstr "Просмотр графика"
-
-#~ msgid "Attendance History"
-#~ msgstr "История возвратов"
-
-#~ msgid "rooms"
-#~ msgstr "rooms"
-
-#~ msgid "View Apartment Visualizer Matrix"
-#~ msgstr "View Apartment Visualizer Matrix"
-
-#~ msgid "Installment Schedule Matrix"
-#~ msgstr "Матрица графика платежей"
-
-#~ msgid "Monthly planned installments, payments, and payment receipts"
-#~ msgstr "Ежемесячные плановые платежи, оплаты и квитанции"
-
-#~ msgid "Sales Staff Payment Terminal"
-#~ msgstr "Sales Staff Payment Terminal"
-
-#~ msgid "Quick payment collection & instant receipt printing"
-#~ msgstr "Quick payment collection & instant receipt printing"
-
-#~ msgid "No active contracts found for this customer."
-#~ msgstr "No active contracts found for this customer."
-
-#~ msgid "Payment Receipt"
-#~ msgstr "Payment Record"
-
-#~ msgid "Print Receipt"
-#~ msgstr "Распечатать квитанцию"
-
-#~ msgid "PAYMENT RECEIPT"
-#~ msgstr "ПЛАТЕЖНАЯ КВИТАНЦИЯ"
-
-#~ msgid "TrustBuilding - Real Estate Contract Payment Voucher"
-#~ msgstr "TrustBuilding - Чек об оплате по договору недвижимости"
-
-#~ msgid "Receipt ID"
-#~ msgstr "ID квитанции"
-
-#~ msgid "Company"
-#~ msgstr "Компания"
-
-#~ msgid "Received by"
-#~ msgstr "Принял"
-
-#~ msgid "Signature & Stamp"
-#~ msgstr "Подпись и печать"
-
-#~ msgid "Paid by"
-#~ msgstr "Сдал"
-
-#~ msgid "Signature"
-#~ msgstr "Подпись"
-
-#~ msgid "Terminated Contracts Archive"
-#~ msgstr "Архив расторгнутых договоров"
-
-#~ msgid "View terminated contracts, penalty fines, and refund ledgers"
-#~ msgstr "View terminated contracts, penalty fines, and refund ledgers"
-
-#~ msgid "Create Contract"
-#~ msgstr "Create Contract"
-
-#~ msgid "Staff Payment Terminal"
-#~ msgstr "Staff Payment Terminal"
-
-#~ msgid "Search buyers and manage identity passport records"
-#~ msgstr "Search buyers and manage identity passport records"
-
-#~ msgid "Manage Staff Members"
-#~ msgstr "Manage Staff Members"
-
-#~ msgid "Running Balance"
-#~ msgstr "Running Balance"
-
-#~ msgid "Carried Over"
-#~ msgstr "Перенесен"
-
-#~ msgid "Carry over unpaid debt of this month to the next month schedule?"
-#~ msgstr "Перенести неоплаченный долг этого месяца на график следующего месяца?"
-
-#~ msgid "Carry Over"
-#~ msgstr "Перенести"
-
-#~ msgid "Debt for Month #{} has already been carried over."
-#~ msgstr "Debt for Month #{} has already been carried over."
-
-#~ msgid "Month #{} has no remaining debt to carry over."
-#~ msgstr "Month #{} has no remaining debt to carry over."
-
-#~ msgid "Successfully carried over debt to Month #{}!"
-#~ msgstr "Successfully carried over debt to Month #{}!"
-
-#~ msgid "Month #{} is the final month. Cannot carry over debt."
-#~ msgstr "Month #{} is the final month. Cannot carry over debt."
-
-#~ msgid "All groups"
-#~ msgstr "All groups"
-
-#~ msgid "New groups"
-#~ msgstr "New groups"
-
-#~ msgid "Left early"
-#~ msgstr "Left early"
-
-#~ msgid "No schedule"
-#~ msgstr "No schedule"
-
-#~ msgid "No scheduled groups for this teacher on this day."
-#~ msgstr "No scheduled groups for this teacher on this day."
-
-#~ msgid "All teachers"
-#~ msgstr "All teachers"
-
-#~ msgid "All courses"
-#~ msgstr "All courses"
-
-#~ msgid "Teachers"
-#~ msgstr "Teachers"
-
-#~ msgid "group(s)"
-#~ msgstr "group(s)"
-
-#~ msgid "No lead sources for this month."
-#~ msgstr "No lead sources for this month."
-
-#~ msgid "No churn reasons for this month."
-#~ msgstr "No churn reasons for this month."
-
-#~ msgid "Loading attendance"
-#~ msgstr "Loading attendance"
-
-#~ msgid "Expected days"
-#~ msgstr "Expected days"
-
-#~ msgid "Employee"
-#~ msgstr "Employee"
-
-#~ msgid "Student"
-#~ msgstr "Student"
-
-#~ msgid "Group"
-#~ msgstr "Group"
-
-#~ msgid "No expenses for this period."
-#~ msgstr "No expenses for this period."
-
-#~ msgid "active debtors"
-#~ msgstr "active debtors"
-
-#~ msgid "Debtor Aging"
-#~ msgstr "Debtor Aging"
-
-#~ msgid "No collections for this month."
-#~ msgstr "No collections for this month."
-
-#~ msgid "Top Groups"
-#~ msgstr "Top Groups"
-
-#~ msgid "Due sessions"
-#~ msgstr "Due sessions"
-
-#~ msgid "Scheduled"
-#~ msgstr "Scheduled"
-
-#~ msgid "Groups for this day"
-#~ msgstr "Groups for this day"
-
-#~ msgid "Student rows marked"
-#~ msgstr "Student rows marked"
-
-#~ msgid "Employee Attendance"
-#~ msgstr "Employee Attendance"
-
-#~ msgid "Employee Ranking"
-#~ msgstr "Employee Ranking"
-
-#~ msgid "Group Attendance"
-#~ msgstr "Group Attendance"
-
-#~ msgid "Statistics"
-#~ msgstr "Statistics"
-
-#~ msgid "Charged Students"
-#~ msgstr "Charged Students"
-
-#~ msgid "Attendance"
-#~ msgstr "Посещаемость"
-
-#~ msgid "Attendances"
-#~ msgstr "Attendances"
-
-#~ msgid "Student Report"
-#~ msgstr "Student Report"
-
-#~ msgid "Report Type"
-#~ msgstr "Report Type"
-
-#~ msgid "Attendance Rate (%)"
-#~ msgstr "Attendance Rate (%)"
-
-#~ msgid "Attendance Reports"
-#~ msgstr "Attendance Reports"
-
-#~ msgid "Attendance Session"
-#~ msgstr "Attendance Session"
-
-#~ msgid "Attendance Sessions"
-#~ msgstr "Attendance Sessions"
-
-#~ msgid "Attendance Settings"
-#~ msgstr "Attendance Settings"
-
-#~ msgid "Advanced"
-#~ msgstr "Advanced"
-
-#~ msgid "Course Materials"
-#~ msgstr "Course Materials"
-
-#~ msgid "Course"
-#~ msgstr "Course"
-
-#~ msgid "Order"
-#~ msgstr "Заказ"
-
-#~ msgid "Course Module"
-#~ msgstr "Course Module"
-
-#~ msgid "Course Modules"
-#~ msgstr "Course Modules"
-
-#~ msgid "Teacher Notes"
-#~ msgstr "Teacher Notes"
-
-#~ msgid "Lesson Type"
-#~ msgstr "Lesson Type"
-
-#~ msgid "Student Tasks"
-#~ msgstr "Student Tasks"
-
-#~ msgid "Teacher Tip"
-#~ msgstr "Teacher Tip"
-
-#~ msgid "External Link"
-#~ msgstr "External Link"
-
-#~ msgid "Archived"
-#~ msgstr "Archived"
-
-#~ msgid "Test Type"
-#~ msgstr "Test Type"
-
-#~ msgid "Created By"
-#~ msgstr "Created By"
-
-#~ msgid "Questions"
-#~ msgstr "Questions"
-
-#~ msgid "Teacher View"
-#~ msgstr "Teacher View"
-
-#~ msgid "Teacher notes"
-#~ msgstr "Teacher notes"
-
-#~ msgid "Student tasks"
-#~ msgstr "Student tasks"
-
-#~ msgid "Type"
-#~ msgstr "Type"
-
-#~ msgid "Course Color"
-#~ msgstr "Course Color"
-
-#~ msgid "Update Question"
-#~ msgstr "Update Question"
-
-#~ msgid "Create Test"
-#~ msgstr "Create Test"
-
-#~ msgid "Active course"
-#~ msgstr "Active course"
-
-#~ msgid "Delete Course"
-#~ msgstr "Delete Course"
-
-#~ msgid "questions"
-#~ msgstr "questions"
-
-#~ msgid "Update Section"
-#~ msgstr "Update Section"
-
-#~ msgid "Enter full name"
-#~ msgstr "Enter full name"
-
-#~ msgid "Start date"
-#~ msgstr "Start date"
-
-#~ msgid "Can Create"
-#~ msgstr "Can Create"
-
-#~ msgid "Permission"
-#~ msgstr "Permission"
-
-#~ msgid "Refreshed At"
-#~ msgstr "Refreshed At"
-
-#~ msgid "Employee KPI Snapshot"
-#~ msgstr "Employee KPI Snapshot"
-
-#~ msgid "Missed Attendance"
-#~ msgstr "Missed Attendance"
-
-#~ msgid "Personal"
-#~ msgstr "Personal"
-
-#~ msgid "Leave Type"
-#~ msgstr "Leave Type"
-
-#~ msgid "Employee Leave"
-#~ msgstr "Employee Leave"
-
-#~ msgid "Employee Leaves"
-#~ msgstr "Employee Leaves"
-
-#~ msgid "Delete Employee"
-#~ msgstr "Delete Employee"
-
-#~ msgid "Back to Employees"
-#~ msgstr "Back to Employees"
-
-#~ msgid "Delete Employee?"
-#~ msgstr "Delete Employee?"
-
-#~ msgid "Edit Employee"
-#~ msgstr "Edit Employee"
-
-#~ msgid "Add Employee"
-#~ msgstr "Add Employee"
-
-#~ msgid "Add New Employee"
-#~ msgstr "Add New Employee"
-
-#~ msgid "Status & Notes"
-#~ msgstr "Status & Notes"
-
-#~ msgid "Employee is Active"
-#~ msgstr "Employee is Active"
-
-#~ msgid "Update Employee"
-#~ msgstr "Update Employee"
-
-#~ msgid "Go to Groups"
-#~ msgstr "Go to Groups"
-
-#~ msgid "Inactive Employee"
-#~ msgstr "Inactive Employee"
-
-#~ msgid "Employee ID"
-#~ msgstr "Employee ID"
-
-#~ msgid "Work Type"
-#~ msgstr "Work Type"
-
-#~ msgid "Linked Employees"
-#~ msgstr "Linked Employees"
-
-#~ msgid "Our Employee"
-#~ msgstr "Our Employee"
-
-#~ msgid "Not refreshed for this month"
-#~ msgstr "Not refreshed for this month"
-
-#~ msgid "Created by"
-#~ msgstr "Created by"
-
-#~ msgid "Updated"
-#~ msgstr "Updated"
-
-#~ msgid "Full-Time"
-#~ msgstr "Full-Time"
-
-#~ msgid "All Status"
-#~ msgstr "All Status"
-
-#~ msgid "Employment"
-#~ msgstr "Employment"
-
-#~ msgid "Final"
-#~ msgstr "Final"
-
-#~ msgid "Sessions"
-#~ msgstr "Sessions"
-
-#~ msgid "Debtor"
-#~ msgstr "Должник"
-
-#~ msgid "employees"
-#~ msgstr "employees"
-
-#~ msgid "Attended"
-#~ msgstr "Attended"
-
-#~ msgid "Referral Settings"
-#~ msgstr "Referral Settings"
-
-#~ msgid "Full"
-#~ msgstr "Full"
-
-#~ msgid "No charges for this month."
-#~ msgstr "No charges for this month."
-
-#~ msgid "All Groups"
-#~ msgstr "All Groups"
-
-#~ msgid "No permission"
-#~ msgstr "No permission"
-
-#~ msgid "Group / Course"
-#~ msgstr "Group / Course"
-
-#~ msgid "Finance Overview"
-#~ msgstr "Finance Overview"
-
-#~ msgid "Per student:"
-#~ msgstr "Per student:"
-
-#~ msgid "Teacher Base"
-#~ msgstr "Teacher Base"
-
-#~ msgid "Frozen"
-#~ msgstr "Заморожено"
-
-#~ msgid "Final:"
-#~ msgstr "Final:"
-
-#~ msgid "Per Student"
-#~ msgstr "Per Student"
-
-#~ msgid "All Courses"
-#~ msgstr "All Courses"
-
-#~ msgid "All Statuses"
-#~ msgstr "All Statuses"
-
-#~ msgid "Segment Order"
-#~ msgstr "Segment Order"
-
-#~ msgid "Upgraded At"
-#~ msgstr "Upgraded At"
-
-#~ msgid "Support Teacher"
-#~ msgstr "Support Teacher"
-
-#~ msgid "Archive Reason"
-#~ msgstr "Archive Reason"
-
-#~ msgid "Back to Groups"
-#~ msgstr "Back to Groups"
-
-#~ msgid "Scheduled trial date"
-#~ msgstr "Scheduled trial date"
-
-#~ msgid "Archived Students"
-#~ msgstr "Archived Students"
-
-#~ msgid "Left group"
-#~ msgstr "Left group"
-
-#~ msgid "Back to Group"
-#~ msgstr "Back to Group"
-
-#~ msgid "Group is full"
-#~ msgstr "Group is full"
-
-#~ msgid "Archive"
-#~ msgstr "Архив"
-
-#~ msgid "Create Group"
-#~ msgstr "Create Group"
-
-#~ msgid "Total Groups"
-#~ msgstr "Total Groups"
-
-#~ msgid "Active Groups"
-#~ msgstr "Active Groups"
-
-#~ msgid "Enrolled Students"
-#~ msgstr "Enrolled Students"
-
-#~ msgid "Archive Group"
-#~ msgstr "Archive Group"
-
-#~ msgid "Archiving..."
-#~ msgstr "Archiving..."
-
-#~ msgid "Main Teacher"
-#~ msgstr "Main Teacher"
-
-#~ msgid "students"
-#~ msgstr "students"
-
-#~ msgid "Every day"
-#~ msgstr "Every day"
-
-#~ msgid "No active students yet."
-#~ msgstr "No active students yet."
-
-#~ msgid "Create Room"
-#~ msgstr "Create Room"
-
-#~ msgid "Settings & Notes"
-#~ msgstr "Settings & Notes"
-
-#~ msgid "Update"
-#~ msgstr "Update"
-
-#~ msgid "Lead Tag"
-#~ msgstr "Lead Tag"
-
-#~ msgid "Lead Tags"
-#~ msgstr "Lead Tags"
-
-#~ msgid "Lead Labels"
-#~ msgstr "Lead Labels"
-
-#~ msgid "Lead"
-#~ msgstr "Lead"
-
-#~ msgid "Lead Notes"
-#~ msgstr "Lead Notes"
-
-#~ msgid "Lead Created"
-#~ msgstr "Lead Created"
-
-#~ msgid "Event Type"
-#~ msgstr "Event Type"
-
-#~ msgid "Attendance Status"
-#~ msgstr "Attendance Status"
-
-#~ msgid "Add Lead"
-#~ msgstr "Add Lead"
-
-#~ msgid "Follow-up Schedule"
-#~ msgstr "Follow-up Schedule"
-
-#~ msgid "Create Lead"
-#~ msgstr "Create Lead"
-
-#~ msgid "Course Interest"
-#~ msgstr "Course Interest"
-
-#~ msgid "Scheduling for"
-#~ msgstr "Scheduling for"
-
-#~ msgid "Enroll as Student"
-#~ msgstr "Enroll as Student"
-
-#~ msgid "Lead to student"
-#~ msgstr "Lead to student"
-
-#~ msgid "Created"
-#~ msgstr "Created"
-
-#~ msgid "Additional Phone Numbers"
-#~ msgstr "Additional Phone Numbers"
-
-#~ msgid "Transfer to Student"
-#~ msgstr "Transfer to Student"
-
-#~ msgid "No leads"
-#~ msgstr "No leads"
-
-#~ msgid "Attendance Rate"
-#~ msgstr "Attendance Rate"
-
-#~ msgid "No students ready"
-#~ msgstr "No students ready"
-
-#~ msgid "English Level"
-#~ msgstr "English Level"
-
-#~ msgid "Last Read At"
-#~ msgstr "Last Read At"
-
-#~ msgid "Media Type"
-#~ msgstr "Media Type"
-
-#~ msgid "Father's full name"
-#~ msgstr "Father's full name"
-
-#~ msgid "Archived At"
-#~ msgstr "Archived At"
-
-#~ msgid "Completed At"
-#~ msgstr "Completed At"
-
-#~ msgid "Student Created"
-#~ msgstr "Student Created"
-
-#~ msgid "Group Transfer"
-#~ msgstr "Group Transfer"
-
-#~ msgid "Student Activity"
-#~ msgstr "Student Activity"
-
-#~ msgid "Student Activities"
-#~ msgstr "Student Activities"
-
-#~ msgid "Student Message"
-#~ msgstr "Student Message"
-
-#~ msgid "Student Messages"
-#~ msgstr "Student Messages"
-
-#~ msgid "From Group"
-#~ msgstr "From Group"
-
-#~ msgid "To Group"
-#~ msgstr "To Group"
-
-#~ msgid "All Students"
-#~ msgstr "All Students"
-
-#~ msgid "No students found"
-#~ msgstr "No students found"
-
-#~ msgid "Personal Information"
-#~ msgstr "Personal Information"
-
-#~ msgid "Create Student"
-#~ msgstr "Create Student"
-
-#~ msgid "Archive Student"
-#~ msgstr "Archive Student"
-
-#~ msgid "Freeze Student"
-#~ msgstr "Freeze Student"
-
-#~ msgid "Referred Students"
-#~ msgstr "Referred Students"
-
-#~ msgid "Archive Student?"
-#~ msgstr "Archive Student?"
-
-#~ msgid "Delete Student"
-#~ msgstr "Delete Student"
-
-#~ msgid "Back to Students"
-#~ msgstr "Back to Students"
-
-#~ msgid "Update Student"
-#~ msgstr "Update Student"
-
-#~ msgid "Student archived."
-#~ msgstr "Student archived."
-
-#~ msgid "Student frozen."
-#~ msgstr "Student frozen."
-
-#~ msgid "Student unfrozen."
-#~ msgstr "Student unfrozen."
-
-#~ msgid "Take Attendance"
-#~ msgstr "Take Attendance"
-
-#~ msgid "Trial Students"
-#~ msgstr "Trial Students"
-
-#~ msgid "Update Attendance"
-#~ msgstr "Update Attendance"
-
-#~ msgid "Save Attendance"
-#~ msgstr "Save Attendance"
-
-#~ msgid "My Groups"
-#~ msgstr "My Groups"
-
-#~ msgid "My Attendance"
-#~ msgstr "My Attendance"
-
-#~ msgid "My Dashboard"
-#~ msgstr "My Dashboard"
-
-#~ msgid "attendance"
-#~ msgstr "attendance"
-
-#~ msgid "debtors"
-#~ msgstr "debtors"
-
-#~ msgid "archived"
-#~ msgstr "archived"
-
-#~ msgid "Take attendance now"
-#~ msgstr "Take attendance now"
-
-#~ msgid "View Attendance"
-#~ msgstr "View Attendance"
-
-#~ msgid "No penalties for this month."
-#~ msgstr "No penalties for this month."
-
-#~ msgid "Attendance saved."
-#~ msgstr "Attendance saved."
-
-#~ msgid "User Type"
-#~ msgstr "Тип пользователя"
-
-#~ msgid "Is Student"
-#~ msgstr "Является ли студентом"
-
-#~ msgid "Is Teacher"
-#~ msgstr "Является ли учитель"
-
-#~ msgid "Create Branch"
-#~ msgstr "Create Branch"
-
-#~ msgid "Create Teacher"
-#~ msgstr "Create Teacher"
-
-#~ msgid "User avatar"
-#~ msgstr "Аватар пользователя"
+msgid "If no Excel is uploaded, an entrance-by-floor matrix will be automatically generated."
+msgstr "Если Excel не загружен, матрица подъездов и этажей будет сгенерирована автоматически."

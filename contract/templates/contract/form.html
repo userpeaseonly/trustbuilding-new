@@ -10,7 +10,7 @@
         openCustomerSearch: false,
         selectedApartmentId: '{% if initial_apartment %}{{ initial_apartment.pk }}{% else %}{{ form.apartment.value|default:"" }}{% endif %}',
         selectedApartmentName: '{% if initial_apartment %}{% trans "Apt" %} {{ initial_apartment.apartment_number }} ({{ initial_apartment.building.name }}) - {{ initial_apartment.total_area }} m²{% endif %}',
-        selectedApartmentArea: parseFloat('{% if initial_apartment %}{{ initial_apartment.total_area }}{% else %}0{% endif %}'),
+        selectedApartmentArea: parseFloat('{% if initial_apartment %}{{ initial_apartment.total_area }}{% else %}0{% endif %}'.replace(',', '.')),
         openApartmentSearch: false,
 
         // Financials calculation state
