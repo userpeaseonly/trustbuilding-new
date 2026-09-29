@@ -70,9 +70,10 @@ class ContractWizardForm(forms.ModelForm):
     
     class Meta:
         model = Contract
-        fields = ['apartment', 'contract_date', 'price_per_square', 'down_payment_amount', 'down_payment_date', 'last_payment_amount', 'payment_months']
+        fields = ['apartment', 'date_made', 'contract_date', 'price_per_square', 'down_payment_amount', 'down_payment_date', 'last_payment_amount', 'payment_months']
         widgets = {
             'apartment': forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500'}),
+            'date_made': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY', 'x-model': 'dateMade'}),
             'contract_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY', 'x-model': 'contractDate'}),
             'price_per_square': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
             'down_payment_amount': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'step': '0.01', 'placeholder': '0.00'}),
@@ -84,6 +85,9 @@ class ContractWizardForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         company = kwargs.pop('company', None)
         super().__init__(*args, **kwargs)
+        if not self.initial.get('date_made'):
+            self.initial['date_made'] = timezone.now().strftime('%d/%m/%Y')
+        self.fields['date_made'].input_formats = ['%d/%m/%Y', '%d.%m.%Y', '%Y-%m-%d']
         self.fields['contract_date'].input_formats = ['%d/%m/%Y', '%d.%m.%Y', '%Y-%m-%d']
         self.fields['down_payment_date'].input_formats = ['%d/%m/%Y', '%d.%m.%Y', '%Y-%m-%d']
         self.fields['down_payment_date'].required = False

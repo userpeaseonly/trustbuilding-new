@@ -57,6 +57,11 @@ class CompanyProfile(models.Model):
     inn = models.CharField(_("INN"), max_length=20, blank=True)
     address = models.TextField(_("Company Address"), blank=True)
     
+    bank_name = models.CharField(_("Bank Name & Branch"), max_length=255, blank=True)
+    mfo = models.CharField(_("MFO"), max_length=10, blank=True)
+    account_number = models.CharField(_("Account Number (x/r)"), max_length=50, blank=True)
+    jshshr = models.CharField(_("PINFL (JSHSHR)"), max_length=14, blank=True)
+    
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
 

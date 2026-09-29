@@ -12,19 +12,25 @@ class CustomDocxTemplate(DocxTemplate):
         KNOWN_TAGS = {
             # Cyrillic
             'Шартнома_рақами', 'Шартнома_бўлган_сана', 'Шартнома_ойи', 'Шартнома_бўлган_йил',
+            'Шартнома_тузилган_сана', 'Тўлов_бошланиш_санаси',
             'Сотиб_олувчи_ФИО', 'Шартнома_суммаси', 'Шартнома_суммаси_сўз_билан', 'Блок_',
             'Подъезд', 'Этаж', 'Квартира_рақами', 'Яшаш_хоналар_сони', 'Умумий_майдони',
             'M_1_кв_метр_нархи', 'M_1_кв_нархи_сўз_билан', 'Бошланғич_тўлов', 'График_бўйича_ойлик_тўлов',
             'Сотиб_олувчи_паспорт_серияси', 'Паспорти_берилган_вақти', 'Паспорт_берилган_жойи',
-            'Телефон_рақами', 'Сотиб_олувчи_ФИО_қисқартмаси',
+            'Телефон_рақами', 'Сотиб_олувчи_ФИО_қисқартмаси', 'Сотиб_олувчи_ПИНФЛ',
+            'Пудратчи', 'Пудратчи_банки', 'Пудратчи_МФО', 'Пудратчи_ХР', 'Пудратчи_ИНН', 'Пудратчи_Манзили',
+            'Объект', 'Кадастр_рақами', 'Топшириш_муддати', 'Ер_майдони', 'Қурилиш_ости_майдони', 'Ҳиссадор',
             
             # Latin
             'Shartnoma_raqami', 'Shartnoma_kuni', 'Shartnoma_oyi', 'Shartnoma_yili',
+            'Shartnoma_tuzilgan_sana', 'Tolov_boshlanish_sanasi',
             'Xaridor_FIO', 'Shartnoma_summasi', 'Shartnoma_summasi_soz_bilan', 'Blok',
             'Podyezd', 'Qavat', 'Kvartira_raqami', 'Xonalar_soni', 'Umumiy_maydon',
             'Bir_kv_metr_narxi', 'Bir_kv_metr_narxi_soz_bilan', 'Boshlangich_tolov', 'Oylik_tolov',
             'Xaridor_pasporti', 'Pasport_berilgan_sana', 'Pasport_berilgan_joy',
-            'Telefon_raqami', 'Xaridor_FIO_qisqa', 'Kompaniya_rahbari', 'Kompaniya_rahbari_qisqa'
+            'Telefon_raqami', 'Xaridor_FIO_qisqa', 'Kompaniya_rahbari', 'Kompaniya_rahbari_qisqa', 'Xaridor_PINFL',
+            'Pudratchi', 'Pudratchi_banki', 'Pudratchi_MFO', 'Pudratchi_XR', 'Pudratchi_INN', 'Pudratchi_Manzili',
+            'Obyekt', 'Kadastr_raqami', 'Topshirish_muddati', 'Yer_maydoni', 'Qurilish_osti_maydoni', 'Hissador'
         }
         
         def clean_chevron_tags(m):
@@ -127,9 +133,11 @@ def generate_contract_docx_response(contract_id, template_id=None):
     context = {
         # --- Native Uzbek/Russian Placeholders (Chevron format - Cyrillic) ---
         'Шартнома_рақами': str(contract.id),
-        'Шартнома_бўлган_сана': str(contract.contract_date.day),
-        'Шартнома_ойи': MONTHS_UZ.get(contract.contract_date.month, str(contract.contract_date.month)),
-        'Шартнома_бўлган_йил': str(contract.contract_date.year),
+        'Шартнома_бўлган_сана': str(contract.date_made.day),
+        'Шартнома_ойи': MONTHS_UZ.get(contract.date_made.month, str(contract.date_made.month)),
+        'Шартнома_бўлган_йил': str(contract.date_made.year),
+        'Шартнома_тузилган_сана': contract.date_made.strftime("%d.%m.%Y"),
+        'Тўлов_бошланиш_санаси': contract.contract_date.strftime("%d.%m.%Y"),
         'Сотиб_олувчи_ФИО': contract.customer.full_name or str(contract.customer.phone_number),
         'Шартнома_суммаси': f"{total_amount:,.0f}".replace(",", " "),
         'Шартнома_суммаси_сўз_билан': amount_to_words_ru(total_amount).replace(" сумов 00 тийин, без НДС", ""),
@@ -146,16 +154,31 @@ def generate_contract_docx_response(contract_id, template_id=None):
         'Қолган_тўлов_фоизи': f"{((total_amount - down_payment) / total_amount * 100) if total_amount else 0:.0f}",
         'График_бўйича_ойлик_тўлов': f"{monthly_payment:,.0f}".replace(",", " ") if monthly_payment else "",
         'Сотиб_олувчи_паспорт_серияси': contract.customer.passport_series or '',
-        'Паспорти_берилган_вақти': contract.customer.passport_given_date.strftime("%d.%m.%Y") if hasattr(contract.customer, 'passport_given_date') and contract.customer.passport_given_date else '',
-        'Паспорт_берилган_жойи': getattr(contract.customer, 'passport_given_by', ''),
+        'Паспорти_берилган_вақти': contract.customer.passport_date_of_issue.strftime("%d.%m.%Y") if hasattr(contract.customer, 'passport_date_of_issue') and contract.customer.passport_date_of_issue else '',
+        'Паспорт_берилган_жойи': getattr(contract.customer, 'passport_issued_by', ''),
         'Телефон_рақами': str(contract.customer.phone_number),
         'Сотиб_олувчи_ФИО_қисқартмаси': contract.customer.full_name or '',
+        'Сотиб_олувчи_ПИНФЛ': getattr(contract.customer, 'passport_jshshr', ''),
+        'Пудратчи': getattr(contract.company.company_profile, 'company_name', '') if hasattr(contract.company, 'company_profile') else '',
+        'Пудратчи_банки': getattr(contract.company.company_profile, 'bank_name', '') if hasattr(contract.company, 'company_profile') else '',
+        'Пудратчи_МФО': getattr(contract.company.company_profile, 'mfo', '') if hasattr(contract.company, 'company_profile') else '',
+        'Пудратчи_ХР': getattr(contract.company.company_profile, 'account_number', '') if hasattr(contract.company, 'company_profile') else '',
+        'Пудратчи_ИНН': getattr(contract.company.company_profile, 'inn', '') if hasattr(contract.company, 'company_profile') else '',
+        'Пудратчи_Манзили': getattr(contract.company.company_profile, 'address', '') if hasattr(contract.company, 'company_profile') else '',
+        'Объект': contract.apartment.building.name or '',
+        'Кадастр_рақами': getattr(contract.apartment.building, 'cadastre_number', ''),
+        'Топшириш_муддати': getattr(contract.apartment.building, 'delivery_quarter', ''),
+        'Ер_майдони': str(contract.apartment.building.land_area) if getattr(contract.apartment.building, 'land_area', None) else '',
+        'Қурилиш_ости_майдони': str(contract.apartment.building.construction_footprint) if getattr(contract.apartment.building, 'construction_footprint', None) else '',
+        'Ҳиссадор': contract.customer.full_name or str(contract.customer.phone_number),
         
         # --- Native Uzbek Placeholders (Latin) ---
         'Shartnoma_raqami': str(contract.id),
-        'Shartnoma_kuni': str(contract.contract_date.day),
-        'Shartnoma_oyi': MONTHS_UZ_LATIN.get(contract.contract_date.month, str(contract.contract_date.month)),
-        'Shartnoma_yili': str(contract.contract_date.year),
+        'Shartnoma_kuni': str(contract.date_made.day),
+        'Shartnoma_oyi': MONTHS_UZ_LATIN.get(contract.date_made.month, str(contract.date_made.month)),
+        'Shartnoma_yili': str(contract.date_made.year),
+        'Shartnoma_tuzilgan_sana': contract.date_made.strftime("%d.%m.%Y"),
+        'Tolov_boshlanish_sanasi': contract.contract_date.strftime("%d.%m.%Y"),
         'Xaridor_FIO': contract.customer.full_name or str(contract.customer.phone_number),
         'Shartnoma_summasi': f"{total_amount:,.0f}".replace(",", " "),
         'Shartnoma_summasi_soz_bilan': amount_to_words_ru(total_amount).replace(" сумов 00 тийин, без НДС", ""),
@@ -170,11 +193,24 @@ def generate_contract_docx_response(contract_id, template_id=None):
         'Boshlangich_tolov': f"{down_payment:,.0f}".replace(",", " "),
         'Oylik_tolov': f"{monthly_payment:,.0f}".replace(",", " ") if monthly_payment else "",
         'Xaridor_pasporti': contract.customer.passport_series or '',
-        'Pasport_berilgan_sana': contract.customer.passport_given_date.strftime("%d.%m.%Y") if hasattr(contract.customer, 'passport_given_date') and contract.customer.passport_given_date else '',
-        'Pasport_berilgan_joy': getattr(contract.customer, 'passport_given_by', ''),
+        'Pasport_berilgan_sana': contract.customer.passport_date_of_issue.strftime("%d.%m.%Y") if hasattr(contract.customer, 'passport_date_of_issue') and contract.customer.passport_date_of_issue else '',
+        'Pasport_berilgan_joy': getattr(contract.customer, 'passport_issued_by', ''),
         'Xaridor_FIO_qisqa': contract.customer.full_name or '',
         'Kompaniya_rahbari': getattr(contract.company.company_profile, 'director_name', '') if hasattr(contract.company, 'company_profile') else '',
         'Kompaniya_rahbari_qisqa': getattr(contract.company.company_profile, 'director_short_name', '') if hasattr(contract.company, 'company_profile') else '',
+        'Xaridor_PINFL': getattr(contract.customer, 'passport_jshshr', ''),
+        'Pudratchi': getattr(contract.company.company_profile, 'company_name', '') if hasattr(contract.company, 'company_profile') else '',
+        'Pudratchi_banki': getattr(contract.company.company_profile, 'bank_name', '') if hasattr(contract.company, 'company_profile') else '',
+        'Pudratchi_MFO': getattr(contract.company.company_profile, 'mfo', '') if hasattr(contract.company, 'company_profile') else '',
+        'Pudratchi_XR': getattr(contract.company.company_profile, 'account_number', '') if hasattr(contract.company, 'company_profile') else '',
+        'Pudratchi_INN': getattr(contract.company.company_profile, 'inn', '') if hasattr(contract.company, 'company_profile') else '',
+        'Pudratchi_Manzili': getattr(contract.company.company_profile, 'address', '') if hasattr(contract.company, 'company_profile') else '',
+        'Obyekt': contract.apartment.building.name or '',
+        'Kadastr_raqami': getattr(contract.apartment.building, 'cadastre_number', ''),
+        'Topshirish_muddati': getattr(contract.apartment.building, 'delivery_quarter', ''),
+        'Yer_maydoni': str(contract.apartment.building.land_area) if getattr(contract.apartment.building, 'land_area', None) else '',
+        'Qurilish_osti_maydoni': str(contract.apartment.building.construction_footprint) if getattr(contract.apartment.building, 'construction_footprint', None) else '',
+        'Hissador': contract.customer.full_name or str(contract.customer.phone_number),
         
         # --- Dynamic Payment Schedule ---
         'schedule': schedule,
@@ -185,7 +221,8 @@ def generate_contract_docx_response(contract_id, template_id=None):
         'customer_name': contract.customer.full_name or str(contract.customer.phone_number),
         'building_name': contract.apartment.building.name,
         'apartment_number': contract.apartment.apartment_number,
-        'contract_date': contract.contract_date.strftime("%d.%m.%Y"),
+        'contract_date': contract.date_made.strftime("%d.%m.%Y"),
+        'installment_start_date': contract.contract_date.strftime("%d.%m.%Y"),
     }
 
     template.render(context)

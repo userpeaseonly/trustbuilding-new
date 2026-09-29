@@ -5,7 +5,7 @@ from .models import Building, Apartment
 class BuildingForm(forms.ModelForm):
     class Meta:
         model = Building
-        fields = ['name', 'block_number', 'address', 'floor_count', 'entrance_count', 'apartments_per_floor']
+        fields = ['name', 'block_number', 'address', 'floor_count', 'entrance_count', 'apartments_per_floor', 'cadastre_number', 'delivery_quarter', 'land_area', 'construction_footprint']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. Navoi Residency')}),
             'block_number': forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. Block A')}),
@@ -13,6 +13,10 @@ class BuildingForm(forms.ModelForm):
             'floor_count': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'min': 1, 'max': 100, 'x-model': 'floorCount'}),
             'entrance_count': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'min': 1, 'max': 20, 'x-model': 'entranceCount'}),
             'apartments_per_floor': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'min': 1, 'max': 20, 'x-model': 'aptsPerFloor'}),
+            'cadastre_number': forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. 14:06:41:02:02:1797')}),
+            'delivery_quarter': forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': _('e.g. 2029 йилнинг 4-чораги')}),
+            'land_area': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'step': '0.01'}),
+            'construction_footprint': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'step': '0.01'}),
         }
 
 class ApartmentUpdateForm(forms.ModelForm):

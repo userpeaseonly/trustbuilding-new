@@ -13,6 +13,11 @@ class Building(models.Model):
     apartments_per_floor = models.PositiveIntegerField(_("Apartments per Floor"), default=4)
     apartment_count = models.PositiveIntegerField(_("Apartment Count"), default=1)
     
+    cadastre_number = models.CharField(_("Cadastre Number"), max_length=100, blank=True)
+    delivery_quarter = models.CharField(_("Delivery Date/Quarter"), max_length=100, blank=True, help_text=_("e.g. 2029 йилнинг 4-чораги"))
+    land_area = models.DecimalField(_("Land Area (sqm)"), max_digits=12, decimal_places=2, null=True, blank=True)
+    construction_footprint = models.DecimalField(_("Construction Footprint (sqm)"), max_digits=12, decimal_places=2, null=True, blank=True)
+    
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
 

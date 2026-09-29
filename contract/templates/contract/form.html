@@ -14,6 +14,7 @@
         openApartmentSearch: false,
 
         // Financials calculation state
+        dateMade: '{{ form.date_made.value|default:"" }}',
         contractDate: '{{ form.contract_date.value|default:"" }}',
         downPaymentDate: '{{ form.down_payment_date.value|default:"" }}',
         pricePerSquare: '{{ form.price_per_square.value|default:"" }}',
@@ -356,6 +357,11 @@
                 <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200 pb-2">{% trans "3. Financial Terms & Schedule Setup" %}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ form.date_made.label }} (d/m/Y)</label>
+                        {{ form.date_made }}
+                        {% if form.date_made.errors %}<p class="text-rose-700 text-xs mt-1">{{ form.date_made.errors.0 }}</p>{% endif %}
+                    </div>
+                    <div>
                         <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ form.contract_date.label }} (d/m/Y)</label>
                         {{ form.contract_date }}
                         {% if form.contract_date.errors %}<p class="text-rose-700 text-xs mt-1">{{ form.contract_date.errors.0 }}</p>{% endif %}
@@ -502,7 +508,11 @@ document.addEventListener("DOMContentLoaded", function() {
     flatpickr(".datepicker-dmy", {
         dateFormat: "d/m/Y",
         allowInput: true,
-        defaultDate: "today",
+        onReady: function(selectedDates, dateStr, instance) {
+            if (dateStr) {
+                instance.element.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        },
         onChange: function(selectedDates, dateStr, instance) {
             instance.element.dispatchEvent(new Event('input', { bubbles: true }));
         }

@@ -110,23 +110,41 @@
                 <div class="space-y-2">
                     <h4 class="font-bold text-slate-900 font-sans border-b border-slate-200 pb-1 mb-2">{% trans "Contract Info" %}</h4>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Shartnoma_raqami»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Contract ID" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Shartnoma_tuzilgan_sana»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Date Contract Made (DD.MM.YYYY)" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Tolov_boshlanish_sanasi»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Installment Start Date (DD.MM.YYYY)" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Shartnoma_kuni»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Day of month" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Shartnoma_oyi»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Month (e.g. aprel)" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Shartnoma_yili»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Year" %}</span></div>
                     
                     
+                    
+                    <h4 class="font-bold text-slate-900 font-sans border-b border-slate-200 pb-1 mb-2 mt-6">{% trans "Company Info (Contractor)" %}</h4>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Pudratchi»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Company Name" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Kompaniya_rahbari»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Company Director" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Kompaniya_rahbari_qisqa»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Director Short Name" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Pudratchi_banki»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Bank Name & Branch" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Pudratchi_MFO»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Bank MFO" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Pudratchi_XR»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Account Number (x/r)" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Pudratchi_INN»</span> <span class="text-slate-400 text-xs font-sans">{% trans "INN (STIR)" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-blue-300">«Pudratchi_Manzili»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Company Address" %}</span></div>
+
                     <h4 class="font-bold text-slate-900 font-sans border-b border-slate-200 pb-1 mb-2 mt-6">{% trans "Customer Info" %}</h4>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-purple-300">«Xaridor_FIO»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Full Name" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-purple-300">«Xaridor_FIO_qisqa»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Short Name" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-purple-300">«Xaridor_pasporti»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Passport Series" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-purple-300">«Xaridor_PINFL»</span> <span class="text-slate-400 text-xs font-sans">{% trans "PINFL (JSHSHR)" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-purple-300">«Pasport_berilgan_sana»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Passport Date" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-purple-300">«Pasport_berilgan_joy»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Given By" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-purple-300">«Telefon_raqami»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Phone" %}</span></div>
                 </div>
 
                 <div class="space-y-2">
+                    <h4 class="font-bold text-slate-900 font-sans border-b border-slate-200 pb-1 mb-2">{% trans "Building & Property Info" %}</h4>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-emerald-400">«Obyekt»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Building Name" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-emerald-400">«Kadastr_raqami»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Cadastre Number" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-emerald-400">«Topshirish_muddati»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Delivery Date" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-emerald-400">«Yer_maydoni»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Land Area (sqm)" %}</span></div>
+                    <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-emerald-400">«Qurilish_osti_maydoni»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Const. Footprint (sqm)" %}</span></div>
                     <h4 class="font-bold text-slate-900 font-sans border-b border-slate-200 pb-1 mb-2">{% trans "Financials" %}</h4>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-green-300">«Shartnoma_summasi»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Total Amount" %}</span></div>
                     <div class="flex justify-between border-b border-slate-200/50 pb-1 hover:bg-slate-100/30 p-1"><span class="text-green-300">«Shartnoma_summasi_soz_bilan»</span> <span class="text-slate-400 text-xs font-sans">{% trans "Total in Words" %}</span></div>
