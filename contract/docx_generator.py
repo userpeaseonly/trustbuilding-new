@@ -42,6 +42,12 @@ class CustomDocxTemplate(DocxTemplate):
         
         # Find all `«...»` blocks safely
         src_xml = re.sub(r'«[^«»]*?»', clean_chevron_tags, src_xml, flags=re.DOTALL)
+        
+        # FIX docxtpl bug: docxtpl's regex strictly expects `{%tr` without a space after `%`.
+        # MS Word or users often add spaces like `{% tr for ... %}`.
+        # We strip spaces right after `{%` for `tr`, `tc`, `p`, `hm`, `vm`.
+        src_xml = re.sub(r'{%\s+(tr|tc|p|hm|vm)\s+', r'{%\1 ', src_xml)
+        
         return super().patch_xml(src_xml)
 
 MONTHS_UZ = {

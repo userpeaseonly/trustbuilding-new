@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'modeltranslation',
     
     'hijack',
-    'hijack.contrib.admin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +44,7 @@ INSTALLED_APPS = [
     
     # local apps
     'users',
+    'hijack.contrib.admin',
     'dashboard',
     'building',
     'contract',
