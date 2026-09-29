@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imaan\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-29 17:16+0500\n"
+"POT-Creation-Date: 2026-09-29 19:43+0500\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +72,7 @@ msgstr "Xonadonlar"
 msgid "Apartment Count"
 msgstr "Xonadonlar soni"
 
-#: building/models.py:16 contract/templates/contract/template_list.html:144
+#: building/models.py:16 contract/templates/contract/template_list.html:146
 msgid "Cadastre Number"
 msgstr "Kadastr raqami"
 
@@ -80,7 +80,7 @@ msgstr "Kadastr raqami"
 msgid "Delivery Date/Quarter"
 msgstr ""
 
-#: building/models.py:18 contract/templates/contract/template_list.html:146
+#: building/models.py:18 contract/templates/contract/template_list.html:148
 msgid "Land Area (sqm)"
 msgstr "Yer maydoni (kv.m)"
 
@@ -202,7 +202,7 @@ msgstr "Kvartira"
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
-#: contract/templates/contract/template_list.html:156
+#: contract/templates/contract/template_list.html:158
 msgid "Entrance"
 msgstr "Kirish"
 
@@ -213,7 +213,7 @@ msgstr "Kirish"
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
-#: contract/templates/contract/template_list.html:157
+#: contract/templates/contract/template_list.html:159
 msgid "Floor"
 msgstr "Qavat"
 
@@ -232,7 +232,7 @@ msgstr ""
 
 #: building/templates/building/form.html:30
 #: building/templates/building/list.html:95
-#: contract/templates/contract/template_list.html:143
+#: contract/templates/contract/template_list.html:145
 msgid "Building Name"
 msgstr "Obyekt nomi"
 
@@ -306,7 +306,7 @@ msgstr "Maydoni"
 #: building/templates/building/partials/apartment_modal.html:50
 #: building/templates/building/partials/apartment_modal.html:142
 #: contract/templates/contract/partials/apartment_search_results.html:8
-#: contract/templates/contract/template_list.html:159
+#: contract/templates/contract/template_list.html:161
 msgid "Rooms"
 msgstr "Xonalar"
 
@@ -329,7 +329,7 @@ msgstr ""
 #: building/templates/building/partials/apartment_modal.html:197
 #: contract/templates/contract/confirm_termination.html:56
 #: contract/templates/contract/form.html:496
-#: contract/templates/contract/template_list.html:198
+#: contract/templates/contract/template_list.html:200
 #: users/templates/users/customer_list.html:172
 #: users/templates/users/role_form.html:19
 #: users/templates/users/role_form.html:63
@@ -354,7 +354,7 @@ msgid "Failed to parse Excel file."
 msgstr "Excel faylini o'qishda xatolik yuz berdi."
 
 #: building/templates/building/list.html:24
-#: contract/templates/contract/template_list.html:155
+#: contract/templates/contract/template_list.html:157
 msgid "Block"
 msgstr "Blok"
 
@@ -535,7 +535,7 @@ msgid "Phone Number"
 msgstr "Telefon raqami"
 
 #: contract/forms.py:34 contract/templates/contract/detail.html:80
-#: contract/templates/contract/template_list.html:132 users/forms.py:83
+#: contract/templates/contract/template_list.html:134 users/forms.py:83
 #: users/templates/users/customer_list.html:140
 #: users/templates/users/staff_list.html:193
 #: users/templates/users/staff_list.html:255
@@ -561,13 +561,13 @@ msgid "Female"
 msgstr "Ayol"
 
 #: contract/forms.py:45 contract/templates/contract/detail.html:92
-#: contract/templates/contract/template_list.html:134 users/models.py:28
+#: contract/templates/contract/template_list.html:136 users/models.py:28
 #: users/templates/users/customer_list.html:39
 #: users/templates/users/customer_list.html:149
 msgid "Passport Series"
 msgstr "Pasport seriyasi"
 
-#: contract/forms.py:50 contract/templates/contract/template_list.html:135
+#: contract/forms.py:50 contract/templates/contract/template_list.html:137
 #: users/models.py:63 users/templates/users/customer_list.html:40
 #: users/templates/users/customer_list.html:153
 msgid "PINFL (JSHSHR)"
@@ -654,7 +654,7 @@ msgstr "1 m² narxi"
 
 #: contract/models.py:33 contract/templates/contract/detail.html:113
 #: contract/templates/contract/quick_payment.html:79
-#: contract/templates/contract/template_list.html:151
+#: contract/templates/contract/template_list.html:153
 msgid "Down Payment"
 msgstr "Boshlang'ich to'lov"
 
@@ -832,7 +832,7 @@ msgstr "To'lov yozuvi"
 msgid "Payment Records"
 msgstr "To'lov yozuvlari"
 
-#: contract/models.py:348 contract/templates/contract/template_list.html:182
+#: contract/models.py:348 contract/templates/contract/template_list.html:184
 msgid "Template Name"
 msgstr "Company Name"
 
@@ -934,7 +934,7 @@ msgid "Customer Details"
 msgstr "Mijoz ma'lumotlari"
 
 #: contract/templates/contract/detail.html:84
-#: contract/templates/contract/template_list.html:138
+#: contract/templates/contract/template_list.html:140
 #: dashboard/templates/dashboard/sms_usage.html:74
 msgid "Phone"
 msgstr "Tel"
@@ -949,7 +949,7 @@ msgstr "Shartnoma shartlari"
 
 #: contract/templates/contract/detail.html:109
 #: contract/templates/contract/list.html:53
-#: contract/templates/contract/template_list.html:149
+#: contract/templates/contract/template_list.html:151
 msgid "Total Amount"
 msgstr "Umumiy hisob"
 
@@ -1338,7 +1338,7 @@ msgstr ""
 "shablonlarini boshqarish"
 
 #: contract/templates/contract/template_list.html:13
-#: contract/templates/contract/template_list.html:201
+#: contract/templates/contract/template_list.html:203
 msgid "Upload Template"
 msgstr "Shablon yuklash"
 
@@ -1439,126 +1439,138 @@ msgid "Installment Start Date (DD.MM.YYYY)"
 msgstr "To'lov boshlanish sanasi (KK.OO.YYYY)"
 
 #: contract/templates/contract/template_list.html:115
-msgid "Day of month"
-msgstr "Oy kuni"
+msgid "Contract Day"
+msgstr "Shartnoma kuni"
 
 #: contract/templates/contract/template_list.html:116
-msgid "Month (e.g. aprel)"
-msgstr "Oy (masalan, aprel)"
+msgid "Contract Month (spelled)"
+msgstr "Shartnoma oyi (so'z bilan)"
 
 #: contract/templates/contract/template_list.html:117
-msgid "Year"
-msgstr "Yil"
+msgid "Contract Year"
+msgstr "Shartnoma yili"
 
-#: contract/templates/contract/template_list.html:121
+#: contract/templates/contract/template_list.html:118
+msgid "Installment Start Day"
+msgstr "To'lov boshlanish kuni"
+
+#: contract/templates/contract/template_list.html:119
+msgid "Installment Start Month (spelled)"
+msgstr "To'lov boshlanish oyi (so'z bilan)"
+
+#: contract/templates/contract/template_list.html:120
+msgid "Installment Start Year"
+msgstr "To'lov boshlanish yili"
+
+#: contract/templates/contract/template_list.html:123
 #, fuzzy
 #| msgid "Company Director"
 msgid "Company Info (Contractor)"
 msgstr "Mijozlar bazasi"
 
-#: contract/templates/contract/template_list.html:122 users/models.py:54
+#: contract/templates/contract/template_list.html:124 users/models.py:54
 msgid "Company Name"
 msgstr "Kompaniya nomi"
 
-#: contract/templates/contract/template_list.html:123
+#: contract/templates/contract/template_list.html:125
 msgid "Company Director"
 msgstr "Mijozlar bazasi"
 
-#: contract/templates/contract/template_list.html:124 users/models.py:56
+#: contract/templates/contract/template_list.html:126 users/models.py:56
 msgid "Director Short Name"
 msgstr "Rejissyorning qisqa nomi"
 
-#: contract/templates/contract/template_list.html:125 users/models.py:60
+#: contract/templates/contract/template_list.html:127 users/models.py:60
 msgid "Bank Name & Branch"
 msgstr "Bank nomi va filiali"
 
-#: contract/templates/contract/template_list.html:126
+#: contract/templates/contract/template_list.html:128
 msgid "Bank MFO"
 msgstr "Bank MFO"
 
-#: contract/templates/contract/template_list.html:127 users/models.py:62
+#: contract/templates/contract/template_list.html:129 users/models.py:62
 msgid "Account Number (x/r)"
 msgstr "Hisob raqami (x/r)"
 
-#: contract/templates/contract/template_list.html:128
+#: contract/templates/contract/template_list.html:130
 msgid "INN (STIR)"
 msgstr "INN (STIR)"
 
-#: contract/templates/contract/template_list.html:129 users/models.py:58
+#: contract/templates/contract/template_list.html:131 users/models.py:58
 msgid "Company Address"
 msgstr "Kompaniya manzili"
 
-#: contract/templates/contract/template_list.html:131
+#: contract/templates/contract/template_list.html:133
 msgid "Customer Info"
 msgstr "Mijoz"
 
-#: contract/templates/contract/template_list.html:133
+#: contract/templates/contract/template_list.html:135
 msgid "Short Name"
 msgstr "Customer Name"
 
-#: contract/templates/contract/template_list.html:136
+#: contract/templates/contract/template_list.html:138
 msgid "Passport Date"
 msgstr "Passport Scan"
 
-#: contract/templates/contract/template_list.html:137
+#: contract/templates/contract/template_list.html:139
 msgid "Given By"
 msgstr "tomonidan berilgan"
 
-#: contract/templates/contract/template_list.html:142
+#: contract/templates/contract/template_list.html:144
 #, fuzzy
 #| msgid "Buildings & Apartments"
 msgid "Building & Property Info"
 msgstr "Binolar va Kvartiralar"
 
-#: contract/templates/contract/template_list.html:145
+#: contract/templates/contract/template_list.html:147
 msgid "Delivery Date"
 msgstr "Topshirish muddati"
 
-#: contract/templates/contract/template_list.html:147
+#: contract/templates/contract/template_list.html:149
 msgid "Const. Footprint (sqm)"
 msgstr "Qurilish osti maydoni (kv.m)"
 
-#: contract/templates/contract/template_list.html:148
+#: contract/templates/contract/template_list.html:150
 msgid "Financials"
 msgstr "Moliya"
 
-#: contract/templates/contract/template_list.html:150
+#: contract/templates/contract/template_list.html:152
 msgid "Total in Words"
 msgstr "Jami to'langan"
 
-#: contract/templates/contract/template_list.html:152
+#: contract/templates/contract/template_list.html:154
 msgid "Monthly Installment"
 msgstr "Intermediate Monthly Installment:"
 
-#: contract/templates/contract/template_list.html:154
+#: contract/templates/contract/template_list.html:156
 msgid "Apartment Info"
 msgstr "Xonadon"
 
-#: contract/templates/contract/template_list.html:158
+#: contract/templates/contract/template_list.html:160
 msgid "Apartment No"
 msgstr "Xonadon"
 
-#: contract/templates/contract/template_list.html:160
+#: contract/templates/contract/template_list.html:162
 msgid "Area (m²)"
 msgstr "Total Area (m²)"
 
-#: contract/templates/contract/template_list.html:161
+#: contract/templates/contract/template_list.html:163
 msgid "1 m² Price"
 msgstr "1 m² narxi"
 
-#: contract/templates/contract/template_list.html:162
+#: contract/templates/contract/template_list.html:164
 msgid "1 m² Price Words"
 msgstr "1 m² Narx so'zlari"
 
-#: contract/templates/contract/template_list.html:173
+#: contract/templates/contract/template_list.html:175
 msgid "Upload Contract Template"
 msgstr "Shartnoma sanasi"
 
-#: contract/templates/contract/template_list.html:187
+#: contract/templates/contract/template_list.html:189
 msgid "Document File (.docx)"
 msgstr "Hujjat fayli (.docx)"
 
-#: contract/templates/contract/template_list.html:193
+#: contract/templates/contract/template_list.html:195
 msgid "Set as default template"
 msgstr "Standart shablon sifatida sozlang"
 
@@ -2796,3 +2808,12 @@ msgstr "Rol muvaffaqiyatli o'chirildi!"
 msgid ""
 "Cannot delete this role because it is assigned to one or more staff members."
 msgstr ""
+
+#~ msgid "Day of month"
+#~ msgstr "Oy kuni"
+
+#~ msgid "Month (e.g. aprel)"
+#~ msgstr "Oy (masalan, aprel)"
+
+#~ msgid "Year"
+#~ msgstr "Yil"
