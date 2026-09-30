@@ -9,10 +9,10 @@
             <div class="flex items-center gap-2 text-xs text-slate-500 mb-1">
                 <a href="{% url 'contract:list' %}" class="hover:text-slate-900 transition">{% trans "Contracts" %}</a>
                 <span>/</span>
-                <span class="text-slate-800">{% trans "Contract" %} #{{ contract.id }}</span>
+                <span class="text-slate-800">{% trans "Contract" %} #{{ contract.contract_id|default:contract.id }}</span>
             </div>
             <h1 class="text-2xl font-bold text-slate-900 flex items-center gap-3">
-                {% trans "Real Estate Contract" %} #{{ contract.id }}
+                {% trans "Real Estate Contract" %} #{{ contract.contract_id|default:contract.id }}
                 <span class="text-xs font-semibold px-2.5 py-1 rounded-full border 
                     {% if contract.status == 'ACTIVE' %}bg-emerald-100 text-emerald-800 border-emerald-200
                     {% elif contract.status == 'TERMINATED' %}bg-rose-100 text-rose-800 border-rose-200

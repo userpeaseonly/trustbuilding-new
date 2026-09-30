@@ -48,6 +48,20 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.full_name if self.full_name else str(self.phone_number)
 
+    @property
+    def short_name(self):
+        if not self.full_name:
+            return ""
+        parts = self.full_name.strip().split()
+        if len(parts) == 0:
+            return ""
+        if len(parts) == 1:
+            return parts[0]
+        
+        last_name = parts[0]
+        initials = [f"{part[0].upper()}." for part in parts[1:] if part]
+        return f"{last_name} {' '.join(initials)}"
+
 
 class CompanyProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='company_profile')
