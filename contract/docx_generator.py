@@ -133,7 +133,7 @@ def generate_contract_docx_response(contract_id, template_id=None):
 
     context = {
         # --- Native Uzbek/Russian Placeholders (Chevron format - Cyrillic) ---
-        'Шартнома_рақами': str(contract.id),
+        'Шартнома_рақами': str(contract.contract_id),
         'Шартнома_бўлган_сана': str(contract.date_made.day),
         'Шартнома_ойи': MONTHS_UZ.get(contract.date_made.month, str(contract.date_made.month)),
         'Шартнома_бўлган_йил': str(contract.date_made.year),
@@ -179,7 +179,7 @@ def generate_contract_docx_response(contract_id, template_id=None):
         'Ҳиссадор': contract.customer.full_name or str(contract.customer.phone_number),
         
         # --- Native Uzbek Placeholders (Latin) ---
-        'Shartnoma_raqami': str(contract.id),
+        'Shartnoma_raqami': str(contract.contract_id),
         'Shartnoma_kuni': str(contract.date_made.day),
         'Shartnoma_oyi': MONTHS_UZ_LATIN.get(contract.date_made.month, str(contract.date_made.month)),
         'Shartnoma_yili': str(contract.date_made.year),

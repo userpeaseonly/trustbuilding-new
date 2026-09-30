@@ -355,7 +355,12 @@
             <!-- Financials Section -->
             <div class="space-y-5">
                 <h3 class="text-sm font-bold text-slate-700 uppercase tracking-wider border-b border-slate-200 pb-2">{% trans "3. Financial Terms & Schedule Setup" %}</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ form.contract_id.label }}</label>
+                        {{ form.contract_id }}
+                        {% if form.contract_id.errors %}<p class="text-rose-700 text-xs mt-1">{{ form.contract_id.errors.0 }}</p>{% endif %}
+                    </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ form.date_made.label }} (d/m/Y)</label>
                         {{ form.date_made }}

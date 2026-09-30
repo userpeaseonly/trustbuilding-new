@@ -26,6 +26,8 @@ class Contract(models.Model):
     company = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='company_contracts', limit_choices_to={'is_company': True})
     staff_member = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='staff_contracts', limit_choices_to={'is_staff_member': True})
     
+    contract_id = models.IntegerField(_("Contract ID"))
+    
     date_made = models.DateField(_("Date Contract Made"), default=timezone.now)
     contract_date = models.DateField(_("Installment Start Date"))
     down_payment_date = models.DateField(_("Down Payment Date"), null=True, blank=True)
@@ -44,6 +46,7 @@ class Contract(models.Model):
     class Meta:
         verbose_name = _("Contract")
         verbose_name_plural = _("Contracts")
+        unique_together = ('company', 'contract_id')
 
     def __str__(self):
         return f"Contract #{self.pk} - {self.customer.full_name}"

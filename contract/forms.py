@@ -70,8 +70,9 @@ class ContractWizardForm(forms.ModelForm):
     
     class Meta:
         model = Contract
-        fields = ['apartment', 'date_made', 'contract_date', 'price_per_square', 'down_payment_amount', 'down_payment_date', 'last_payment_amount', 'payment_months']
+        fields = ['contract_id', 'apartment', 'date_made', 'contract_date', 'price_per_square', 'down_payment_amount', 'down_payment_date', 'last_payment_amount', 'payment_months']
         widgets = {
+            'contract_id': forms.NumberInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500'}),
             'apartment': forms.Select(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500'}),
             'date_made': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY', 'x-model': 'dateMade'}),
             'contract_date': forms.TextInput(attrs={'class': 'datepicker-dmy w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm focus:ring-2 focus:ring-indigo-500', 'placeholder': 'DD/MM/YYYY', 'x-model': 'contractDate'}),
@@ -101,6 +102,9 @@ class ContractWizardForm(forms.ModelForm):
                 status='AVAILABLE', 
                 is_real=True
             )
+            if not self.initial.get('contract_id'):
+                last_contract = Contract.objects.filter(company=company).order_by('-contract_id').first()
+                self.initial['contract_id'] = (last_contract.contract_id + 1) if last_contract else 1
 
     def clean(self):
         cleaned_data = super().clean()

@@ -27,12 +27,34 @@ def contract_list(request):
     contracts = Contract.objects.filter(company=company).select_related('customer', 'apartment__building').order_by('-created_at')
     
     query = request.GET.get('q', '').strip()
+    status_filter = request.GET.get('status', '')
+    sort_by = request.GET.get('sort', '')
+    
     if query:
         contracts = contracts.filter(
             Q(customer__phone_number__icontains=query) |
             Q(customer__full_name__icontains=query) |
-            Q(id__icontains=query)
+            Q(id__icontains=query) |
+            Q(contract_id__icontains=query)
         )
+        
+    if sort_by == 'oldest':
+        contracts = contracts.order_by('created_at')
+    elif sort_by == 'amount_desc':
+        contracts = contracts.order_by('-total_amount')
+    elif sort_by == 'amount_asc':
+        contracts = contracts.order_by('total_amount')
+    elif sort_by == 'id_desc':
+        contracts = contracts.order_by('-contract_id')
+    elif sort_by == 'id_asc':
+        contracts = contracts.order_by('contract_id')
+    elif sort_by == 'customer_asc':
+        contracts = contracts.order_by('customer__full_name')
+    elif sort_by == 'apt_asc':
+        contracts = contracts.order_by('apartment__apartment_number')
+    else:
+        # Default Contract ID: Low to High
+        contracts = contracts.order_by('contract_id')
     
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     
