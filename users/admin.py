@@ -40,7 +40,11 @@ class CustomUserAdmin(HijackUserAdminMixin, UserAdmin):
 class CompanyProfileAdmin(admin.ModelAdmin):
     list_display = ("company_name", "inn", "user")
     search_fields = ("company_name", "inn", "user__phone_number")
-    fields = ("user", "company_name", "inn", "address", "created_at", "updated_at")
+    fields = (
+        "user", "company_name", "director_name", "director_short_name",
+        "inn", "address", "bank_name", "mfo", "account_number", "jshshr",
+        "created_at", "updated_at"
+    )
     readonly_fields = ("created_at", "updated_at")
 
 
