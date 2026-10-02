@@ -48,7 +48,12 @@
                         <td class="px-4 py-3 font-semibold text-slate-900">
                             {{ customer.full_name|default:"-" }}
                         </td>
-                        <td class="px-4 py-3 font-mono text-slate-700">{{ customer.phone_number }}</td>
+                        <td class="px-4 py-3 font-mono text-slate-700">
+                            {{ customer.phone_number }}
+                            {% if customer.secondary_phone_number %}
+                            <br><span class="text-xs text-slate-400">{{ customer.secondary_phone_number }}</span>
+                            {% endif %}
+                        </td>
                         <td class="px-4 py-3 font-mono text-slate-700">{{ customer.passport_series|default:"-" }}</td>
                         <td class="px-4 py-3 font-mono text-slate-700">{{ customer.passport_jshshr|default:"-" }}</td>
                         <td class="px-4 py-3">
@@ -133,8 +138,12 @@
         <form method="post" enctype="multipart/form-data" class="space-y-4">
             {% csrf_token %}
             <div>
-                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Phone Number" %}</label>
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Phone Number" %} *</label>
                 {{ form.phone_number }}
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Secondary Phone Number (Optional)" %}</label>
+                {{ form.secondary_phone_number }}
             </div>
             <div>
                 <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Full Name" %}</label>

@@ -137,8 +137,19 @@ def contract_create(request):
             if mode == 'existing':
                 customer = form.cleaned_data['existing_customer']
             else:
+                raw_phone = form.cleaned_data['new_customer_phone'].replace(' ', '').replace('-', '')
+                if not raw_phone.startswith('+'):
+                    raw_phone = '+' + raw_phone
+                    
+                sec_phone = form.cleaned_data.get('new_customer_secondary_phone', '')
+                if sec_phone:
+                    sec_phone = sec_phone.replace(' ', '').replace('-', '')
+                    if not sec_phone.startswith('+'):
+                        sec_phone = '+' + sec_phone
+                
                 customer = CustomUser.objects.create(
-                    phone_number=form.cleaned_data['new_customer_phone'],
+                    phone_number=raw_phone,
+                    secondary_phone_number=sec_phone if sec_phone else None,
                     full_name=form.cleaned_data['new_customer_name'],
                     gender=form.cleaned_data.get('new_customer_gender', ''),
                     passport_series=form.cleaned_data.get('new_customer_passport_series', ''),

@@ -14,7 +14,7 @@ class CustomUserAdmin(HijackUserAdminMixin, UserAdmin):
     list_display = ("phone_number", "full_name", "is_company", "is_customer", "is_staff", "is_active")
     list_filter = ("is_staff", "is_active", "is_company", "is_customer", "gender", "created_at")
     fieldsets = (
-        (None, {"fields": ("phone_number", "password")}),
+        (None, {"fields": ("phone_number", "secondary_phone_number", "password")}),
         (_("Personal info"), {"fields": ("full_name", "gender", "profile_picture")}),
         (_("Roles"), {"fields": ("is_company", "is_customer")}),
         (_("Identity / Passport"), {"fields": ("passport_series", "passport_jshshr", "passport_issued_by", "passport_date_of_issue", "passport_scan")}),

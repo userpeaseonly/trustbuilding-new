@@ -9,6 +9,7 @@ from .managers import CustomUserManager
 class CustomUser(AbstractUser):
     username = None
     phone_number = PhoneNumberField(_("Phone number"), unique=True)
+    secondary_phone_number = PhoneNumberField(_("Secondary phone number"), blank=True, null=True)
     full_name = models.CharField(_("Full name"), max_length=255, blank=True)
     
     GENDER_CHOICES = [
@@ -60,7 +61,7 @@ class CustomUser(AbstractUser):
         
         last_name = parts[0]
         initials = [f"{part[0].upper()}." for part in parts[1:] if part]
-        return f"{last_name} {' '.join(initials)}"
+        return f"{''.join(initials)} {last_name}"
 
 
 class CompanyProfile(models.Model):

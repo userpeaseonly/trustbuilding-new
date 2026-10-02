@@ -30,6 +30,11 @@ class ContractWizardForm(forms.ModelForm):
         required=False,
         widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': '+998901234567'})
     )
+    new_customer_secondary_phone = forms.CharField(
+        label=_("Secondary Phone Number (Optional)"),
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'w-full px-4 py-2.5 bg-white border border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 rounded-lg text-slate-900 text-sm placeholder-gray-400 focus:ring-2 focus:ring-indigo-500', 'placeholder': '+998901234567'})
+    )
     new_customer_name = forms.CharField(
         label=_("Full Name"),
         required=False,
@@ -126,15 +131,27 @@ class ContractWizardForm(forms.ModelForm):
             
             if not phone:
                 self.add_error('new_customer_phone', _("Phone number is required for registering a new customer."))
+            else:
+                import re
+                clean_phone = phone.replace(' ', '').replace('-', '')
+                if not re.match(r'^\+?998\d{9}$', clean_phone):
+                    self.add_error('new_customer_phone', _("Invalid phone number. Must be a single valid Uzbekistan number (e.g. +998901234567)."))
+                elif CustomUser.objects.filter(phone_number=clean_phone).exists() or CustomUser.objects.filter(phone_number=f"+{clean_phone}" if not clean_phone.startswith('+') else clean_phone).exists():
+                    self.add_error('new_customer_phone', _("A customer with this phone number already exists. Please select 'Existing Customer' instead."))
+            
+            sec_phone = cleaned_data.get('new_customer_secondary_phone')
+            if sec_phone:
+                import re
+                clean_sec_phone = sec_phone.replace(' ', '').replace('-', '')
+                if not re.match(r'^\+?998\d{9}$', clean_sec_phone):
+                    self.add_error('new_customer_secondary_phone', _("Invalid phone number. Must be a valid Uzbekistan number."))
+                    
             if not name:
                 self.add_error('new_customer_name', _("Full name is required for registering a new customer."))
             if not series:
                 self.add_error('new_customer_passport_series', _("Passport series is required for legal contract generation."))
             if not pinfl:
                 self.add_error('new_customer_passport_jshshr', _("PINFL (JSHSHR) is required for legal contract generation."))
-                
-            if phone and CustomUser.objects.filter(phone_number=phone).exists():
-                self.add_error('new_customer_phone', _("A customer with this phone number already exists. Please select 'Existing Customer' instead."))
 
         return cleaned_data
 

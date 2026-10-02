@@ -74,12 +74,13 @@ class CustomerRegistrationForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = [
-            'phone_number', 'full_name', 'gender',
+            'phone_number', 'secondary_phone_number', 'full_name', 'gender',
             'passport_series', 'passport_jshshr', 'passport_issued_by',
             'passport_date_of_issue', 'passport_scan'
         ]
         widgets = {
             'phone_number': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg', 'placeholder': '+998901234567'}),
+            'secondary_phone_number': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg', 'placeholder': '+998901234567'}),
             'full_name': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg', 'placeholder': _('Full Name')}),
             'gender': forms.Select(attrs={'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg'}),
             'passport_series': forms.TextInput(attrs={'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg', 'placeholder': _('AA1234567')}),

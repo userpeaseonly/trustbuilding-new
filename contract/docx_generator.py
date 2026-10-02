@@ -20,7 +20,7 @@ class CustomDocxTemplate(DocxTemplate):
             'Телефон_рақами', 'Сотиб_олувчи_ФИО_қисқартмаси', 'Сотиб_олувчи_ПИНФЛ',
             'Пудратчи_вар', 'Пудратчи_банки', 'Пудратчи_МФО', 'Пудратчи_ХР', 'Пудратчи_ИНН', 'Пудратчи_Манзили',
             'Пудратчи_раҳбари', 'Пудратчи_раҳбари_қисқартмаси',
-            'Объект_вар', 'Кадастр_рақами', 'Топшириш_муддати', 'Ер_майдони', 'Қурилиш_ости_майдони', 'Ҳиссадор_вар',
+            'Объект_вар', 'Объект_манзили', 'Кадастр_рақами', 'Топшириш_муддати', 'Ер_майдони', 'Қурилиш_ости_майдони', 'Ҳиссадор_вар',
             
             # Latin
             'Shartnoma_raqami', 'Shartnoma_kuni', 'Shartnoma_oyi', 'Shartnoma_yili',
@@ -31,7 +31,7 @@ class CustomDocxTemplate(DocxTemplate):
             'Xaridor_pasporti', 'Pasport_berilgan_sana', 'Pasport_berilgan_joy',
             'Telefon_raqami', 'Xaridor_FIO_qisqa', 'Kompaniya_rahbari', 'Kompaniya_rahbari_qisqa', 'Xaridor_PINFL',
             'Pudratchi_var', 'Pudratchi_banki', 'Pudratchi_MFO', 'Pudratchi_XR', 'Pudratchi_INN', 'Pudratchi_Manzili',
-            'Obyekt_var', 'Kadastr_raqami', 'Topshirish_muddati', 'Yer_maydoni', 'Qurilish_osti_maydoni', 'Hissador_var'
+            'Obyekt_var', 'Obyekt_manzili', 'Kadastr_raqami', 'Topshirish_muddati', 'Yer_maydoni', 'Qurilish_osti_maydoni', 'Hissador_var'
         }
         
         def clean_chevron_tags(m):
@@ -173,6 +173,7 @@ def generate_contract_docx_response(contract_id, template_id=None):
         'Пудратчи_раҳбари': getattr(contract.company.company_profile, 'director_name', '') if hasattr(contract.company, 'company_profile') else '',
         'Пудратчи_раҳбари_қисқартмаси': getattr(contract.company.company_profile, 'director_short_name', '') if hasattr(contract.company, 'company_profile') else '',
         'Объект_вар': contract.apartment.building.name or '',
+        'Объект_манзили': contract.apartment.building.address or '',
         'Кадастр_рақами': getattr(contract.apartment.building, 'cadastre_number', ''),
         'Топшириш_муддати': getattr(contract.apartment.building, 'delivery_quarter', ''),
         'Ер_майдони': f"{contract.apartment.building.land_area:,.2f}".replace(",", " ").replace(".00", "") if getattr(contract.apartment.building, 'land_area', None) else '',
@@ -218,6 +219,7 @@ def generate_contract_docx_response(contract_id, template_id=None):
         'Pudratchi_INN': getattr(contract.company.company_profile, 'inn', '') if hasattr(contract.company, 'company_profile') else '',
         'Pudratchi_Manzili': getattr(contract.company.company_profile, 'address', '') if hasattr(contract.company, 'company_profile') else '',
         'Obyekt_var': contract.apartment.building.name or '',
+        'Obyekt_manzili': contract.apartment.building.address or '',
         'Kadastr_raqami': getattr(contract.apartment.building, 'cadastre_number', ''),
         'Topshirish_muddati': getattr(contract.apartment.building, 'delivery_quarter', ''),
         'Yer_maydoni': f"{contract.apartment.building.land_area:,.2f}".replace(",", " ").replace(".00", "") if getattr(contract.apartment.building, 'land_area', None) else '',

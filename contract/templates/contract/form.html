@@ -270,6 +270,11 @@
                             {% if form.new_customer_phone.errors %}<p class="text-rose-700 text-xs mt-1">{{ form.new_customer_phone.errors.0 }}</p>{% endif %}
                         </div>
                         <div>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ form.new_customer_secondary_phone.label }}</label>
+                            {{ form.new_customer_secondary_phone }}
+                            {% if form.new_customer_secondary_phone.errors %}<p class="text-rose-700 text-xs mt-1">{{ form.new_customer_secondary_phone.errors.0 }}</p>{% endif %}
+                        </div>
+                        <div class="md:col-span-2">
                             <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{{ form.new_customer_name.label }} *</label>
                             {{ form.new_customer_name }}
                             {% if form.new_customer_name.errors %}<p class="text-rose-700 text-xs mt-1">{{ form.new_customer_name.errors.0 }}</p>{% endif %}

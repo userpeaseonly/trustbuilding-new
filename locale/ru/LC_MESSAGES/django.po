@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imaan\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 15:37+0500\n"
+"POT-Creation-Date: 2026-10-02 11:41+0500\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +72,7 @@ msgstr "Квартиры"
 msgid "Apartment Count"
 msgstr "Количество квартир"
 
-#: building/models.py:16 contract/templates/contract/template_list.html:146
+#: building/models.py:16 contract/templates/contract/template_list.html:148
 msgid "Cadastre Number"
 msgstr "Кадастровый номер"
 
@@ -80,7 +80,7 @@ msgstr "Кадастровый номер"
 msgid "Delivery Date/Quarter"
 msgstr ""
 
-#: building/models.py:18 contract/templates/contract/template_list.html:148
+#: building/models.py:18 contract/templates/contract/template_list.html:150
 msgid "Land Area (sqm)"
 msgstr "Площадь земли (кв.м)"
 
@@ -90,14 +90,14 @@ msgstr ""
 
 #: building/models.py:21 building/models.py:58 contract/models.py:43
 #: contract/models.py:96 contract/models.py:123 contract/models.py:142
-#: contract/models.py:168 otp/models.py:12 users/models.py:36
-#: users/models.py:65 users/models.py:80 users/models.py:96
+#: contract/models.py:168 otp/models.py:12 users/models.py:37
+#: users/models.py:80 users/models.py:95 users/models.py:111
 msgid "Created At"
 msgstr "Дата создания"
 
 #: building/models.py:22 building/models.py:59 contract/models.py:44
-#: contract/models.py:124 contract/models.py:169 users/models.py:37
-#: users/models.py:66
+#: contract/models.py:124 contract/models.py:169 users/models.py:38
+#: users/models.py:81
 msgid "Updated At"
 msgstr "Дата обновления"
 
@@ -168,7 +168,7 @@ msgstr "Set to False if cloned/archived for a terminated contract."
 #: building/templates/building/partials/apartment_modal.html:136
 #: contract/models.py:38 contract/templates/contract/detail.html:156
 #: contract/templates/contract/list.html:71
-#: dashboard/templates/dashboard/sms_usage.html:75 users/models.py:34
+#: dashboard/templates/dashboard/sms_usage.html:75 users/models.py:35
 msgid "Status"
 msgstr "Статус"
 
@@ -200,7 +200,7 @@ msgstr "Квартира"
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
-#: contract/templates/contract/template_list.html:158
+#: contract/templates/contract/template_list.html:162
 msgid "Entrance"
 msgstr "Подъезд"
 
@@ -211,7 +211,7 @@ msgstr "Подъезд"
 #: building/templates/building/partials/apartment_modal.html:26
 #: building/templates/building/partials/apartment_modal.html:122
 #: contract/templates/contract/partials/apartment_search_results.html:8
-#: contract/templates/contract/template_list.html:159
+#: contract/templates/contract/template_list.html:163
 msgid "Floor"
 msgstr "Этаж"
 
@@ -227,9 +227,9 @@ msgstr "Задайте структурные параметры для авто
 
 #: building/templates/building/form.html:30
 #: building/templates/building/list.html:95
-#: contract/templates/contract/template_list.html:145
+#: contract/templates/contract/template_list.html:146
 msgid "Building Name"
-msgstr "Название объекта"
+msgstr "Название здания"
 
 #: building/templates/building/form.html:46
 #: building/templates/building/list.html:111
@@ -253,7 +253,8 @@ msgstr "Расширенный: Импорт из Excel"
 
 #: building/templates/building/form.html:64
 msgid "Download a template, customize apartment details, and upload it back."
-msgstr "Скачайте шаблон, заполните данные о квартирах и загрузите его обратно."
+msgstr ""
+"Скачайте шаблон, заполните данные о квартирах и загрузите его обратно."
 
 #: building/templates/building/form.html:67
 #: building/templates/building/list.html:132
@@ -298,7 +299,7 @@ msgstr "Площадь"
 #: building/templates/building/partials/apartment_modal.html:50
 #: building/templates/building/partials/apartment_modal.html:142
 #: contract/templates/contract/partials/apartment_search_results.html:8
-#: contract/templates/contract/template_list.html:161
+#: contract/templates/contract/template_list.html:165
 msgid "Rooms"
 msgstr "Комнаты"
 
@@ -320,9 +321,9 @@ msgstr ""
 #: building/templates/building/list.html:183
 #: building/templates/building/partials/apartment_modal.html:197
 #: contract/templates/contract/confirm_termination.html:56
-#: contract/templates/contract/form.html:501
-#: contract/templates/contract/template_list.html:200
-#: users/templates/users/customer_list.html:172
+#: contract/templates/contract/form.html:506
+#: contract/templates/contract/template_list.html:204
+#: users/templates/users/customer_list.html:181
 #: users/templates/users/role_form.html:19
 #: users/templates/users/role_form.html:63
 #: users/templates/users/staff_list.html:211
@@ -346,7 +347,7 @@ msgid "Failed to parse Excel file."
 msgstr "Не удалось прочитать файл Excel."
 
 #: building/templates/building/list.html:24
-#: contract/templates/contract/template_list.html:157
+#: contract/templates/contract/template_list.html:161
 msgid "Block"
 msgstr "Блок"
 
@@ -377,8 +378,8 @@ msgstr "No residential buildings yet"
 
 #: building/templates/building/list.html:67
 msgid ""
-"Create your first residential project to generate visual apartment grids and "
-"sales schedules."
+"Create your first residential project to generate visual apartment grids and"
+" sales schedules."
 msgstr ""
 
 #: building/templates/building/list.html:70
@@ -477,7 +478,7 @@ msgstr "Оформить договор на кв."
 msgid "Save changes"
 msgstr "Сохранить изменения"
 
-#: building/views.py:15 contract/views.py:647 contract/views.py:658
+#: building/views.py:15 contract/views.py:658 contract/views.py:669
 msgid "Access denied."
 msgstr "Access denied."
 
@@ -514,9 +515,10 @@ msgstr "Регистрация нового клиента"
 msgid "Select Customer"
 msgstr "Выберите клиента"
 
-#: contract/forms.py:29 otp/models.py:10 otp/templates/otp/request_otp.html:211
-#: users/forms.py:11 users/templates/users/customer_list.html:38
-#: users/templates/users/customer_list.html:136
+#: contract/forms.py:29 otp/models.py:10
+#: otp/templates/otp/request_otp.html:211 users/forms.py:11
+#: users/templates/users/customer_list.html:38
+#: users/templates/users/customer_list.html:141
 #: users/templates/users/login.html:199
 #: users/templates/users/staff_list.html:44
 #: users/templates/users/staff_list.html:189
@@ -524,92 +526,106 @@ msgstr "Выберите клиента"
 msgid "Phone Number"
 msgstr "Номер телефона"
 
-#: contract/forms.py:34 contract/templates/contract/detail.html:80
-#: contract/templates/contract/template_list.html:134 users/forms.py:83
-#: users/templates/users/customer_list.html:140
+#: contract/forms.py:34 users/templates/users/customer_list.html:145
+msgid "Secondary Phone Number (Optional)"
+msgstr "Дополнительный номер телефона (необязательно)"
+
+#: contract/forms.py:39 contract/templates/contract/detail.html:80
+#: contract/templates/contract/template_list.html:134 users/forms.py:84
+#: users/templates/users/customer_list.html:149
 #: users/templates/users/staff_list.html:193
 #: users/templates/users/staff_list.html:255
 msgid "Full Name"
 msgstr "Полное имя"
 
-#: contract/forms.py:36
+#: contract/forms.py:41
 msgid "e.g. Alisher Tursunov"
 msgstr "e.g. Alisher Tursunov"
 
-#: contract/forms.py:39 users/models.py:18
-#: users/templates/users/customer_list.html:144
+#: contract/forms.py:44 users/models.py:19
+#: users/templates/users/customer_list.html:153
 #: users/templates/users/staff_list.html:197
 msgid "Gender"
 msgstr "Пол"
 
-#: contract/forms.py:40 users/models.py:15
+#: contract/forms.py:45 users/models.py:16
 msgid "Male"
 msgstr "Мужской"
 
-#: contract/forms.py:40 users/models.py:16
+#: contract/forms.py:45 users/models.py:17
 msgid "Female"
 msgstr "Женский"
 
-#: contract/forms.py:45 contract/templates/contract/detail.html:92
-#: contract/templates/contract/template_list.html:136 users/models.py:28
+#: contract/forms.py:50 contract/templates/contract/detail.html:92
+#: contract/templates/contract/template_list.html:136 users/models.py:29
 #: users/templates/users/customer_list.html:39
-#: users/templates/users/customer_list.html:149
+#: users/templates/users/customer_list.html:158
 msgid "Passport Series"
 msgstr "Серия паспорта"
 
-#: contract/forms.py:50 contract/templates/contract/template_list.html:137
-#: users/models.py:63 users/templates/users/customer_list.html:40
-#: users/templates/users/customer_list.html:153
+#: contract/forms.py:55 contract/templates/contract/template_list.html:137
+#: users/models.py:78 users/templates/users/customer_list.html:40
+#: users/templates/users/customer_list.html:162
 msgid "PINFL (JSHSHR)"
 msgstr "ПИНФЛ (ЖШШИР)"
 
-#: contract/forms.py:55 users/models.py:30
+#: contract/forms.py:60 users/models.py:31
 msgid "Passport Issued By"
 msgstr "Кем выдан"
 
-#: contract/forms.py:57
+#: contract/forms.py:62
 msgid "e.g. Toshkent sh. Yunusobod tuman IIB"
 msgstr "e.g. Toshkent sh. Yunusobod tuman IIB"
 
-#: contract/forms.py:60 users/models.py:31
+#: contract/forms.py:65 users/models.py:32
 msgid "Passport Date of Issue"
 msgstr "Дата выдачи"
 
-#: contract/forms.py:66
+#: contract/forms.py:71
 msgid "Passport Scan File"
 msgstr "Passport Scan File"
 
-#: contract/forms.py:120
+#: contract/forms.py:125
 msgid "Please select an existing customer from the dropdown."
 msgstr "Please select an existing customer from the dropdown."
 
-#: contract/forms.py:128
+#: contract/forms.py:133
 msgid "Phone number is required for registering a new customer."
 msgstr "Phone number is required for registering a new customer."
 
-#: contract/forms.py:130
-msgid "Full name is required for registering a new customer."
-msgstr "Full name is required for registering a new customer."
+#: contract/forms.py:138
+msgid ""
+"Invalid phone number. Must be a single valid Uzbekistan number (e.g. "
+"+998901234567)."
+msgstr ""
 
-#: contract/forms.py:132
-msgid "Passport series is required for legal contract generation."
-msgstr "Passport series is required for legal contract generation."
-
-#: contract/forms.py:134
-msgid "PINFL (JSHSHR) is required for legal contract generation."
-msgstr "PINFL (JSHSHR) is required for legal contract generation."
-
-#: contract/forms.py:137
+#: contract/forms.py:140
 msgid ""
 "A customer with this phone number already exists. Please select 'Existing "
 "Customer' instead."
 msgstr ""
 
-#: contract/forms.py:145 contract/templates/contract/quick_payment.html:156
+#: contract/forms.py:147
+msgid "Invalid phone number. Must be a valid Uzbekistan number."
+msgstr ""
+
+#: contract/forms.py:150
+msgid "Full name is required for registering a new customer."
+msgstr "Full name is required for registering a new customer."
+
+#: contract/forms.py:152
+msgid "Passport series is required for legal contract generation."
+msgstr "Passport series is required for legal contract generation."
+
+#: contract/forms.py:154
+msgid "PINFL (JSHSHR) is required for legal contract generation."
+msgstr "PINFL (JSHSHR) is required for legal contract generation."
+
+#: contract/forms.py:162 contract/templates/contract/quick_payment.html:156
 msgid "Payment Date (d/m/Y)"
 msgstr "Дата оплаты (д/м/г)"
 
-#: contract/forms.py:174
+#: contract/forms.py:191
 msgid "Payment amount must be greater than zero."
 msgstr "Payment amount must be greater than zero."
 
@@ -648,7 +664,7 @@ msgstr "Цена за 1 м²"
 
 #: contract/models.py:35 contract/templates/contract/detail.html:113
 #: contract/templates/contract/quick_payment.html:79
-#: contract/templates/contract/template_list.html:153
+#: contract/templates/contract/template_list.html:155
 msgid "Down Payment"
 msgstr "Первоначальный взнос"
 
@@ -674,7 +690,7 @@ msgid "Contract"
 msgstr "Договор"
 
 #: contract/models.py:48 contract/templates/contract/detail.html:10
-#: users/permissions.py:28 users/templates/users/customer_list.html:56
+#: users/permissions.py:28 users/templates/users/customer_list.html:61
 msgid "Contracts"
 msgstr "Договоры"
 
@@ -789,12 +805,12 @@ msgid "Month Number"
 msgstr "Month Number"
 
 #: contract/models.py:160 contract/templates/contract/detail.html:151
-#: contract/templates/contract/form.html:473
+#: contract/templates/contract/form.html:478
 msgid "Due Date"
 msgstr "Срок оплаты"
 
 #: contract/models.py:161 contract/templates/contract/detail.html:152
-#: contract/templates/contract/form.html:474
+#: contract/templates/contract/form.html:479
 msgid "Planned Amount"
 msgstr "Планируемая сумма"
 
@@ -826,7 +842,7 @@ msgstr "Payment Record"
 msgid "Payment Records"
 msgstr "Payment Records"
 
-#: contract/models.py:351 contract/templates/contract/template_list.html:184
+#: contract/models.py:351 contract/templates/contract/template_list.html:188
 msgid "Template Name"
 msgstr "Company Name"
 
@@ -852,7 +868,7 @@ msgid "Contract Templates"
 msgstr "Шаблоны контрактов"
 
 #: contract/templates/contract/confirm_termination.html:12
-#: contract/views.py:463 contract/views.py:510
+#: contract/views.py:474 contract/views.py:521
 msgid "Confirm Contract Termination"
 msgstr "Подтверждение расторжения договора"
 
@@ -862,8 +878,8 @@ msgstr "Security Verification Required:"
 
 #: contract/templates/contract/confirm_termination.html:19
 msgid ""
-"A 6-digit OTP confirmation code has been sent to the company manager's phone "
-"via Eskiz SMS. Enter the code below to authorize termination."
+"A 6-digit OTP confirmation code has been sent to the company manager's phone"
+" via Eskiz SMS. Enter the code below to authorize termination."
 msgstr ""
 
 #: contract/templates/contract/confirm_termination.html:25
@@ -943,7 +959,7 @@ msgstr "Условия договора"
 
 #: contract/templates/contract/detail.html:109
 #: contract/templates/contract/list.html:70
-#: contract/templates/contract/template_list.html:151
+#: contract/templates/contract/template_list.html:153
 msgid "Total Amount"
 msgstr "Общая сумма"
 
@@ -1062,7 +1078,8 @@ msgid "Create New Real Estate Contract"
 msgstr "Оформить новый договор"
 
 #: contract/templates/contract/form.html:186
-msgid "Register contract, set installment terms, and generate payment schedule"
+msgid ""
+"Register contract, set installment terms, and generate payment schedule"
 msgstr ""
 
 #: contract/templates/contract/form.html:204
@@ -1094,111 +1111,111 @@ msgstr "Click or type phone (+99890...), customer full name, or PINFL..."
 msgid "Type to search customer database..."
 msgstr "Введите данные для поиска клиента..."
 
-#: contract/templates/contract/form.html:316
+#: contract/templates/contract/form.html:321
 msgid "2. Selected Apartment"
 msgstr "2. Выбранная квартира"
 
-#: contract/templates/contract/form.html:323
+#: contract/templates/contract/form.html:328
 msgid "Selected Apartment Unit:"
 msgstr "Selected Apartment Unit:"
 
-#: contract/templates/contract/form.html:327
+#: contract/templates/contract/form.html:332
 msgid "Search & Change Unit"
 msgstr "Search & Change Unit"
 
-#: contract/templates/contract/form.html:332
+#: contract/templates/contract/form.html:337
 msgid "Search Available Apartment (Unit #, Building, Floor, Rooms)"
 msgstr "Поиск квартиры (№, Здание, Этаж, Комнаты)"
 
-#: contract/templates/contract/form.html:341
+#: contract/templates/contract/form.html:346
 msgid "Click or type apartment number, building name, floor or room count..."
 msgstr "Click or type apartment number, building name, floor or room count..."
 
-#: contract/templates/contract/form.html:348
+#: contract/templates/contract/form.html:353
 msgid "Type to search available apartments..."
 msgstr "Введите данные для поиска квартиры..."
 
-#: contract/templates/contract/form.html:357
+#: contract/templates/contract/form.html:362
 msgid "3. Financial Terms & Schedule Setup"
 msgstr "3. Финансовые условия и график"
 
-#: contract/templates/contract/form.html:375
+#: contract/templates/contract/form.html:380
 msgid "Intermediate Months"
 msgstr "Intermediate Months"
 
-#: contract/templates/contract/form.html:377
+#: contract/templates/contract/form.html:382
 msgid "Intermediate monthly installments count (excludes DP & LP months)."
 msgstr "Intermediate monthly installments count (excludes DP & LP months)."
 
-#: contract/templates/contract/form.html:391
 #: contract/templates/contract/form.html:396
-#: contract/templates/contract/form.html:402
-#: contract/templates/contract/form.html:408
+#: contract/templates/contract/form.html:401
+#: contract/templates/contract/form.html:407
 #: contract/templates/contract/form.html:413
+#: contract/templates/contract/form.html:418
 msgid "optional"
 msgstr "optional"
 
-#: contract/templates/contract/form.html:398
+#: contract/templates/contract/form.html:403
 msgid "Optional Month 1 planned amount. Leave empty if no down payment."
 msgstr "Optional Month 1 planned amount. Leave empty if no down payment."
 
-#: contract/templates/contract/form.html:404
+#: contract/templates/contract/form.html:409
 msgid "Leave empty to use main Contract Date for the down payment."
 msgstr "Leave empty to use main Contract Date for the down payment."
 
-#: contract/templates/contract/form.html:415
+#: contract/templates/contract/form.html:420
 msgid "Optional final month planned amount. Leave empty if no last payment."
 msgstr "Optional final month planned amount. Leave empty if no last payment."
 
-#: contract/templates/contract/form.html:424
+#: contract/templates/contract/form.html:429
 msgid "Live Schedule Calculation Preview"
 msgstr "Предпросмотр расчета графика"
 
-#: contract/templates/contract/form.html:427
+#: contract/templates/contract/form.html:432
 msgid "Total Schedule Months"
 msgstr "Всего месяцев договора"
 
-#: contract/templates/contract/form.html:433
+#: contract/templates/contract/form.html:438
 msgid "Apartment Area"
 msgstr "Apartment Area"
 
-#: contract/templates/contract/form.html:438
+#: contract/templates/contract/form.html:443
 msgid "Total Contract Value"
 msgstr "Общая сумма договора"
 
-#: contract/templates/contract/form.html:443
+#: contract/templates/contract/form.html:448
 msgid "Month 1 (Down Payment)"
 msgstr "Month 1 (Down Payment)"
 
-#: contract/templates/contract/form.html:448
+#: contract/templates/contract/form.html:453
 msgid "Final Month (Last Payment)"
 msgstr "Final Month (Last Payment)"
 
-#: contract/templates/contract/form.html:456
+#: contract/templates/contract/form.html:461
 msgid "Intermediate Monthly Installment:"
 msgstr "Intermediate Monthly Installment:"
 
-#: contract/templates/contract/form.html:458
+#: contract/templates/contract/form.html:463
 msgid "Covering"
 msgstr "Covering"
 
-#: contract/templates/contract/form.html:458
+#: contract/templates/contract/form.html:463
 msgid "intermediate months"
 msgstr "intermediate months"
 
-#: contract/templates/contract/form.html:463
+#: contract/templates/contract/form.html:468
 msgid "per month"
 msgstr "per month"
 
-#: contract/templates/contract/form.html:494
+#: contract/templates/contract/form.html:499
 msgid "Automatic Schedule Generation:"
 msgstr "Automatic Schedule Generation:"
 
-#: contract/templates/contract/form.html:495
+#: contract/templates/contract/form.html:500
 msgid "Payment schedule generated based on intermediate months & terms"
 msgstr "Payment schedule generated based on intermediate months & terms"
 
-#: contract/templates/contract/form.html:504
+#: contract/templates/contract/form.html:509
 msgid "Generate Contract & Schedule"
 msgstr "Сформировать договор и график"
 
@@ -1260,14 +1277,14 @@ msgstr "No contracts found."
 #: contract/templates/contract/list.html:114
 #: dashboard/templates/dashboard/sms_usage.html:119
 #: dashboard/templates/dashboard/sms_usage.html:124
-#: users/templates/users/customer_list.html:87
+#: users/templates/users/customer_list.html:92
 msgid "Previous"
 msgstr "Назад"
 
 #: contract/templates/contract/list.html:137
 #: dashboard/templates/dashboard/sms_usage.html:143
 #: dashboard/templates/dashboard/sms_usage.html:148
-#: users/templates/users/customer_list.html:110
+#: users/templates/users/customer_list.html:115
 msgid "Next"
 msgstr "Вперед"
 
@@ -1350,7 +1367,7 @@ msgstr ""
 "клиентов"
 
 #: contract/templates/contract/template_list.html:13
-#: contract/templates/contract/template_list.html:203
+#: contract/templates/contract/template_list.html:207
 msgid "Upload Template"
 msgstr "Загрузить шаблон"
 
@@ -1416,9 +1433,9 @@ msgstr "Примечание:"
 
 #: contract/templates/contract/template_list.html:98
 msgid ""
-"The system natively supports both standard English Jinja tags (e.g. "
-"<code>{{ contract_amount }}</code>) and native Latin Uzbek chevron tags "
-"exactly as shown below."
+"The system natively supports both standard English Jinja tags (e.g. <code>{{"
+" contract_amount }}</code>) and native Latin Uzbek chevron tags exactly as "
+"shown below."
 msgstr ""
 
 #: contract/templates/contract/template_list.html:103
@@ -1427,10 +1444,10 @@ msgstr "Обратная совместимость:"
 
 #: contract/templates/contract/template_list.html:104
 msgid ""
-"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, <code>«Этаж»</"
-"code>) from previous document versions are still fully supported and will "
-"continue to work automatically. You do not need to update your existing "
-"templates."
+"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, "
+"<code>«Этаж»</code>) from previous document versions are still fully "
+"supported and will continue to work automatically. You do not need to update"
+" your existing templates."
 msgstr ""
 
 #: contract/templates/contract/template_list.html:111
@@ -1475,7 +1492,7 @@ msgstr "Год начала платежей"
 msgid "Company Info (Contractor)"
 msgstr "Директор компании"
 
-#: contract/templates/contract/template_list.html:124 users/models.py:54
+#: contract/templates/contract/template_list.html:124 users/models.py:69
 msgid "Company Name"
 msgstr "Название компании"
 
@@ -1483,11 +1500,11 @@ msgstr "Название компании"
 msgid "Company Director"
 msgstr "Директор компании"
 
-#: contract/templates/contract/template_list.html:126 users/models.py:56
+#: contract/templates/contract/template_list.html:126 users/models.py:71
 msgid "Director Short Name"
 msgstr "Краткое имя директора"
 
-#: contract/templates/contract/template_list.html:127 users/models.py:60
+#: contract/templates/contract/template_list.html:127 users/models.py:75
 msgid "Bank Name & Branch"
 msgstr "Название банка и филиал"
 
@@ -1495,7 +1512,7 @@ msgstr "Название банка и филиал"
 msgid "Bank MFO"
 msgstr "МФО банка"
 
-#: contract/templates/contract/template_list.html:129 users/models.py:62
+#: contract/templates/contract/template_list.html:129 users/models.py:77
 msgid "Account Number (x/r)"
 msgstr "Расчетный счет (х/р)"
 
@@ -1503,7 +1520,7 @@ msgstr "Расчетный счет (х/р)"
 msgid "INN (STIR)"
 msgstr "ИНН (СТИР)"
 
-#: contract/templates/contract/template_list.html:131 users/models.py:58
+#: contract/templates/contract/template_list.html:131 users/models.py:73
 msgid "Company Address"
 msgstr "Адрес компании"
 
@@ -1523,61 +1540,83 @@ msgstr "Дата выдачи паспорта"
 msgid "Given By"
 msgstr "Кем выдан"
 
-#: contract/templates/contract/template_list.html:144
+#: contract/templates/contract/template_list.html:141
 #, fuzzy
+#| msgid "Select Customer"
+msgid "Shareholder (Customer)"
+msgstr "Выберите клиента"
+
+#: contract/templates/contract/template_list.html:145
 #| msgid "Buildings & Apartments"
 msgid "Building & Property Info"
-msgstr "Здания и квартиры"
+msgstr "Информация о здании и недвижимости"
 
 #: contract/templates/contract/template_list.html:147
+#| msgid "Buildings"
+msgid "Building Address"
+msgstr "Адрес здания"
+
+#: contract/templates/contract/template_list.html:149
 msgid "Delivery Date"
 msgstr "Дата сдачи"
 
-#: contract/templates/contract/template_list.html:149
+#: contract/templates/contract/template_list.html:151
 msgid "Const. Footprint (sqm)"
 msgstr "Площадь застройки (кв.м)"
 
-#: contract/templates/contract/template_list.html:150
+#: contract/templates/contract/template_list.html:152
 msgid "Financials"
 msgstr "Финансы"
 
-#: contract/templates/contract/template_list.html:152
+#: contract/templates/contract/template_list.html:154
 msgid "Total in Words"
 msgstr "Сумма прописью"
 
-#: contract/templates/contract/template_list.html:154
+#: contract/templates/contract/template_list.html:156
+#, fuzzy, python-format
+#| msgid "Down Payment"
+msgid "Down Payment %%"
+msgstr "Первоначальный взнос"
+
+#: contract/templates/contract/template_list.html:157
+#, fuzzy, python-format
+#| msgid "Termination Payment"
+msgid "Remaining Payment %%"
+msgstr "Termination Payment"
+
+#: contract/templates/contract/template_list.html:158
 msgid "Monthly Installment"
 msgstr "Ежемесячный взнос"
 
-#: contract/templates/contract/template_list.html:156
+#: contract/templates/contract/template_list.html:160
 msgid "Apartment Info"
 msgstr "Информация о квартире"
 
-#: contract/templates/contract/template_list.html:160
+#: contract/templates/contract/template_list.html:164
 msgid "Apartment No"
 msgstr "Номер квартиры"
 
-#: contract/templates/contract/template_list.html:162
+#: contract/templates/contract/template_list.html:166
 msgid "Area (m²)"
 msgstr "Площадь (м²)"
 
-#: contract/templates/contract/template_list.html:163
+#: contract/templates/contract/template_list.html:167
 msgid "1 m² Price"
 msgstr "Цена за 1 м²"
 
-#: contract/templates/contract/template_list.html:164
+#: contract/templates/contract/template_list.html:168
 msgid "1 m² Price Words"
 msgstr "Цена за 1 м² прописью"
 
-#: contract/templates/contract/template_list.html:175
+#: contract/templates/contract/template_list.html:179
 msgid "Upload Contract Template"
 msgstr "Дата договора"
 
-#: contract/templates/contract/template_list.html:189
+#: contract/templates/contract/template_list.html:193
 msgid "Document File (.docx)"
 msgstr "Document File (.docx)"
 
-#: contract/templates/contract/template_list.html:195
+#: contract/templates/contract/template_list.html:199
 msgid "Set as default template"
 msgstr "Set as default template"
 
@@ -1674,67 +1713,67 @@ msgstr "Способ оплаты"
 msgid "Record Refund"
 msgstr "Зафиксировать возврат"
 
-#: contract/views.py:165
+#: contract/views.py:176
 msgid "Contract successfully generated for {}!"
 msgstr "Contract successfully generated for {}!"
 
-#: contract/views.py:209
+#: contract/views.py:220
 msgid "Payment logged successfully!"
 msgstr "Payment logged successfully!"
 
-#: contract/views.py:212
+#: contract/views.py:223
 msgid "Invalid payment data. Please check the entered amount."
 msgstr "Invalid payment data. Please check the entered amount."
 
-#: contract/views.py:283
+#: contract/views.py:294
 msgid "Cannot import payments: Contract already has existing payments."
 msgstr "Cannot import payments: Contract already has existing payments."
 
-#: contract/views.py:288
+#: contract/views.py:299
 msgid "Please upload a valid .xlsx file."
 msgstr "Please upload a valid .xlsx file."
 
-#: contract/views.py:346
+#: contract/views.py:357
 msgid "Failed to process Excel file. Please ensure it matches the template."
 msgstr "Failed to process Excel file. Please ensure it matches the template."
 
-#: contract/views.py:455
+#: contract/views.py:466
 msgid "A 6-digit OTP code has been sent to your phone for verification."
 msgstr "A 6-digit OTP code has been sent to your phone for verification."
 
-#: contract/views.py:457
+#: contract/views.py:468
 msgid "OTP generated ({}) but SMS failed: {}"
 msgstr "OTP generated ({}) but SMS failed: {}"
 
-#: contract/views.py:502
+#: contract/views.py:513
 msgid "Contract #{} terminated successfully! Apartment reset to AVAILABLE."
 msgstr "Contract #{} terminated successfully! Apartment reset to AVAILABLE."
 
-#: contract/views.py:505
+#: contract/views.py:516
 msgid "Invalid or expired OTP code."
 msgstr "Invalid or expired OTP code."
 
-#: contract/views.py:555
+#: contract/views.py:566
 msgid "Refund payment recorded successfully!"
 msgstr "Payment logged successfully!"
 
-#: contract/views.py:557
+#: contract/views.py:568
 msgid "Amount must be greater than 0."
 msgstr "Payment amount must be greater than zero."
 
-#: contract/views.py:737
+#: contract/views.py:748
 msgid "Template uploaded successfully."
 msgstr "Payment logged successfully!"
 
-#: contract/views.py:740
+#: contract/views.py:751
 msgid "Please provide a name and a valid .docx file."
 msgstr "Please provide a name and a valid .docx file."
 
-#: contract/views.py:752
+#: contract/views.py:763
 msgid "Template deleted."
 msgstr "Template deleted."
 
-#: contract/views.py:766
+#: contract/views.py:777
 msgid "Default template updated."
 msgstr "Default template updated."
 
@@ -1868,7 +1907,8 @@ msgstr "New Students"
 
 #: dashboard/templates/dashboard/partials/home_content.html:14
 msgid ""
-"Active, non-debtor students whose enrollment date falls in the current month."
+"Active, non-debtor students whose enrollment date falls in the current "
+"month."
 msgstr ""
 
 #: dashboard/templates/dashboard/partials/home_content.html:16
@@ -2222,8 +2262,9 @@ msgstr "OTP Token"
 msgid "OTP Tokens"
 msgstr "OTP Tokens"
 
-#: otp/templates/otp/request_otp.html:12 otp/templates/otp/request_otp.html:192
-#: users/templates/users/login.html:9 users/templates/users/login.html:253
+#: otp/templates/otp/request_otp.html:12
+#: otp/templates/otp/request_otp.html:192 users/templates/users/login.html:9
+#: users/templates/users/login.html:253
 msgid "Sign In"
 msgstr "Вход в систему"
 
@@ -2235,8 +2276,8 @@ msgstr "Введите номер телефона для получения к�
 msgid "Send Code"
 msgstr "Отправить код"
 
-#: otp/templates/otp/request_otp.html:228 otp/templates/otp/verify_otp.html:247
-#: templates/base.html:189
+#: otp/templates/otp/request_otp.html:228
+#: otp/templates/otp/verify_otp.html:247 templates/base.html:189
 msgid "All rights reserved."
 msgstr "Все права защищены."
 
@@ -2346,7 +2387,7 @@ msgstr "Использование SMS"
 msgid "Personal info"
 msgstr "Персональная информация"
 
-#: users/admin.py:19 users/models.py:84
+#: users/admin.py:19 users/models.py:99
 msgid "Roles"
 msgstr "Roles"
 
@@ -2354,7 +2395,7 @@ msgstr "Roles"
 msgid "Identity / Passport"
 msgstr "Identity / Passport"
 
-#: users/admin.py:21 users/models.py:79
+#: users/admin.py:21 users/models.py:94
 msgid "Permissions"
 msgstr "Разрешения"
 
@@ -2370,7 +2411,7 @@ msgstr "Пароль"
 msgid "Enter your password"
 msgstr "Введите ваш пароль"
 
-#: users/forms.py:44 users/models.py:94
+#: users/forms.py:44 users/models.py:109
 #: users/templates/users/staff_list.html:45
 #: users/templates/users/staff_list.html:201
 #: users/templates/users/staff_list.html:259
@@ -2390,19 +2431,19 @@ msgstr "Нет роли"
 msgid "John Doe"
 msgstr "Иван Иванов"
 
-#: users/forms.py:85
+#: users/forms.py:86
 msgid "AA1234567"
 msgstr "AA1234567"
 
-#: users/forms.py:86
+#: users/forms.py:87
 msgid "14-digit PINFL"
 msgstr "14-значный ПИНФЛ"
 
-#: users/forms.py:87
+#: users/forms.py:88
 msgid "IIB / Police Department"
 msgstr "РОВД / ГУВД"
 
-#: users/forms.py:99
+#: users/forms.py:100
 msgid "e.g. Senior Sales"
 msgstr "Например: Старший менеджер по продажам"
 
@@ -2411,85 +2452,90 @@ msgid "Phone number"
 msgstr "Номер телефона"
 
 #: users/models.py:12
+#| msgid "Phone number"
+msgid "Secondary phone number"
+msgstr "Дополнительный номер телефона"
+
+#: users/models.py:13
 msgid "Full name"
 msgstr "Полное имя"
 
-#: users/models.py:20
+#: users/models.py:21
 msgid "Profile Picture"
 msgstr "Фотография профиля"
 
-#: users/models.py:23
+#: users/models.py:24
 msgid "Is Company"
 msgstr "Is Company"
 
-#: users/models.py:24
+#: users/models.py:25
 msgid "Is Customer"
 msgstr "Is Customer"
 
-#: users/models.py:25
+#: users/models.py:26
 msgid "Is Staff Member"
 msgstr "Is Staff Member"
 
-#: users/models.py:29
+#: users/models.py:30
 msgid "Passport JSHSHR (PINFL)"
 msgstr "Passport JSHSHR (PINFL)"
 
-#: users/models.py:32 users/templates/users/customer_list.html:42
+#: users/models.py:33 users/templates/users/customer_list.html:42
 msgid "Passport Scan"
 msgstr "Скан паспорта"
 
-#: users/models.py:45
+#: users/models.py:46
 msgid "User"
 msgstr "Пользователь"
 
-#: users/models.py:46
+#: users/models.py:47
 msgid "Users"
 msgstr "Пользователи"
 
-#: users/models.py:55
+#: users/models.py:70
 msgid "Director Full Name"
 msgstr "Ф.И.О."
 
-#: users/models.py:55
+#: users/models.py:70
 msgid "e.g. Arslanov Axror Jamolovich"
 msgstr "e.g. Arslanov Axror Jamolovich"
 
-#: users/models.py:56
+#: users/models.py:71
 msgid "e.g. A.J.Arslanov"
 msgstr "e.g. A.J.Arslanov"
 
-#: users/models.py:57
+#: users/models.py:72
 msgid "INN"
 msgstr "INN"
 
-#: users/models.py:61
+#: users/models.py:76
 msgid "MFO"
 msgstr ""
 
-#: users/models.py:69
+#: users/models.py:84
 msgid "Company Profile"
 msgstr "Company Profile"
 
-#: users/models.py:70
+#: users/models.py:85
 msgid "Company Profiles"
 msgstr "Company Profiles"
 
-#: users/models.py:78 users/templates/users/role_form.html:28
+#: users/models.py:93 users/templates/users/role_form.html:28
 #: users/templates/users/staff_list.html:133
 msgid "Role Name"
 msgstr "Название роли"
 
-#: users/models.py:83 users/templates/users/staff_list.html:46
+#: users/models.py:98 users/templates/users/staff_list.html:46
 #: users/templates/users/staff_list.html:205
 #: users/templates/users/staff_list.html:263
 msgid "Role"
 msgstr "Роль"
 
-#: users/models.py:99
+#: users/models.py:114
 msgid "Staff Profile"
 msgstr "Staff Profile"
 
-#: users/models.py:100
+#: users/models.py:115
 msgid "Staff Profiles"
 msgstr "Staff Profiles"
 
@@ -2557,35 +2603,35 @@ msgstr "Новый клиент"
 msgid "Customer Name"
 msgstr "Имя клиента"
 
-#: users/templates/users/customer_list.html:62
+#: users/templates/users/customer_list.html:67
 msgid "View Scan"
 msgstr "Посмотреть скан"
 
-#: users/templates/users/customer_list.html:65
+#: users/templates/users/customer_list.html:70
 msgid "No Scan"
 msgstr "Нет скана"
 
-#: users/templates/users/customer_list.html:72
+#: users/templates/users/customer_list.html:77
 msgid "No customer records found matching query."
 msgstr "Записей клиентов по вашему запросу не найдено."
 
-#: users/templates/users/customer_list.html:127
+#: users/templates/users/customer_list.html:132
 msgid "Register Customer & Identity Records"
 msgstr "Register Customer & Identity Records"
 
-#: users/templates/users/customer_list.html:158
+#: users/templates/users/customer_list.html:167
 msgid "Issued By"
 msgstr "Issued By"
 
-#: users/templates/users/customer_list.html:162
+#: users/templates/users/customer_list.html:171
 msgid "Date of Issue"
 msgstr "Date of Issue"
 
-#: users/templates/users/customer_list.html:166
+#: users/templates/users/customer_list.html:175
 msgid "Passport Scan Image"
 msgstr "Passport Scan Image"
 
-#: users/templates/users/customer_list.html:175
+#: users/templates/users/customer_list.html:184
 msgid "Register Customer"
 msgstr "Register Customer"
 
@@ -2678,11 +2724,13 @@ msgstr "Вы уверены, что хотите удалить этого со�
 
 #: users/templates/users/staff_list.html:118
 #, fuzzy
-#| msgid "No roles added yet. Click 'Create Custom Role' to get started."
+#| msgid ""
+#| "No roles added yet. Click 'Create Custom Role' to get started."
 msgid ""
 "No staff members added yet. Click 'Add New Staff Member' to get started."
 msgstr ""
-"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы начать."
+"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы "
+"начать."
 
 #: users/templates/users/staff_list.html:134
 msgid "Permissions Count"
@@ -2707,7 +2755,8 @@ msgstr "Вы уверены, что хотите удалить эту роль?
 #: users/templates/users/staff_list.html:166
 msgid "No roles added yet. Click 'Create Custom Role' to get started."
 msgstr ""
-"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы начать."
+"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы "
+"начать."
 
 #: users/templates/users/staff_list.html:180
 msgid "Add Sales Staff Member"
@@ -2780,7 +2829,8 @@ msgstr "Сотрудник был {}."
 #: users/views.py:212
 msgid "Access denied. Only company admins can delete staff."
 msgstr ""
-"В доступе отказано. Только администраторы компании могут удалять сотрудников."
+"В доступе отказано. Только администраторы компании могут удалять "
+"сотрудников."
 
 #: users/views.py:224
 msgid "Staff member deleted successfully. Their past sales remain intact."
