@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'dashboard',
     'building',
     'contract',
+    'customer_portal',
     'otp',
     
     # third

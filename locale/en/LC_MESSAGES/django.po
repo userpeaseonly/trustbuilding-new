@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 11:41+0500\n"
+"POT-Creation-Date: 2026-10-02 16:46+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: application/settings/defaults.py:172
+#: application/settings/defaults.py:173
 msgid "English"
 msgstr "English"
 
-#: application/settings/defaults.py:173
+#: application/settings/defaults.py:174
 msgid "Russian"
 msgstr "Russian"
 
-#: application/settings/defaults.py:174
+#: application/settings/defaults.py:175
 msgid "Uzbek"
 msgstr "Uzbek"
 
@@ -114,6 +114,7 @@ msgid "Updated At"
 msgstr "Updated At"
 
 #: building/models.py:25
+#: customer_portal/templates/customer_portal/contract_detail.html:20
 msgid "Building"
 msgstr "Building"
 
@@ -180,6 +181,8 @@ msgstr "Set to False if cloned/archived for a terminated contract."
 #: building/templates/building/partials/apartment_modal.html:136
 #: contract/models.py:38 contract/templates/contract/detail.html:156
 #: contract/templates/contract/list.html:71
+#: customer_portal/templates/customer_portal/contract_detail.html:28
+#: customer_portal/templates/customer_portal/contract_detail.html:72
 #: dashboard/templates/dashboard/sms_usage.html:75 users/models.py:35
 msgid "Status"
 msgstr "Status"
@@ -188,6 +191,8 @@ msgstr "Status"
 #: building/templates/building/partials/apartment_modal.html:20
 #: contract/templates/contract/detail.html:105
 #: contract/templates/contract/list.html:69
+#: customer_portal/templates/customer_portal/contract_detail.html:24
+#: customer_portal/templates/customer_portal/home.html:40
 #: dashboard/templates/dashboard/home.html:87
 msgid "Apartment"
 msgstr "Apartment"
@@ -706,6 +711,8 @@ msgstr "Total Contract Amount"
 #: contract/templates/contract/detail.html:12
 #: contract/templates/contract/quick_payment.html:57
 #: contract/templates/contract/termination_dashboard.html:11
+#: customer_portal/templates/customer_portal/contract_detail.html:5
+#: customer_portal/templates/customer_portal/home.html:26
 msgid "Contract"
 msgstr "Contract"
 
@@ -839,6 +846,7 @@ msgid "Paid Amount"
 msgstr "Paid Amount"
 
 #: contract/models.py:163
+#: customer_portal/templates/customer_portal/contract_detail.html:70
 msgid "Debt"
 msgstr "Debt"
 
@@ -986,6 +994,8 @@ msgid "Total Amount"
 msgstr "Total Amount"
 
 #: contract/templates/contract/detail.html:132
+#: customer_portal/templates/customer_portal/contract_detail.html:43
+#: customer_portal/templates/customer_portal/home.html:48
 msgid "Total Paid"
 msgstr "Total Paid"
 
@@ -998,14 +1008,18 @@ msgid "Total Excess"
 msgstr "Total Excess"
 
 #: contract/templates/contract/detail.html:154
+#: customer_portal/templates/customer_portal/contract_detail.html:47
 msgid "Remaining Debt"
 msgstr "Remaining Debt"
 
 #: contract/templates/contract/detail.html:155
+#: customer_portal/templates/customer_portal/contract_detail.html:71
 msgid "Excess"
 msgstr "Excess"
 
 #: contract/templates/contract/detail.html:188
+#: customer_portal/templates/customer_portal/contract_detail.html:69
+#: customer_portal/templates/customer_portal/contract_detail.html:92
 msgid "Paid"
 msgstr "Paid"
 
@@ -1014,10 +1028,12 @@ msgid "Partially Paid"
 msgstr "Partially Paid"
 
 #: contract/templates/contract/detail.html:192
+#: customer_portal/templates/customer_portal/contract_detail.html:100
 msgid "Overdue"
 msgstr "Overdue"
 
 #: contract/templates/contract/detail.html:194
+#: customer_portal/templates/customer_portal/contract_detail.html:104
 msgid "Pending"
 msgstr "Pending"
 
@@ -1824,6 +1840,82 @@ msgstr "Template deleted."
 msgid "Default template updated."
 msgstr "Default template updated."
 
+#: customer_portal/templates/customer_portal/contract_detail.html:4
+#, fuzzy
+#| msgid "Linked Contract Details"
+msgid "Contract Details"
+msgstr "Linked Contract Details"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:10
+#, fuzzy
+#| msgid "Back to Contracts"
+msgid "Back to List"
+msgstr "Back to Contracts"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:37
+#: customer_portal/templates/customer_portal/home.html:44
+#, fuzzy
+#| msgid "Total Paid"
+msgid "Total Price"
+msgstr "Total Paid"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:51
+#, fuzzy
+#| msgid "Advanced: Excel Import"
+msgid "Advance Excess"
+msgstr "Advanced: Excel Import"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:60
+#, fuzzy
+#| msgid "Payment Record"
+msgid "Payment Schedule"
+msgstr "Payment Record"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:67
+#: dashboard/templates/dashboard/home.html:89
+#: dashboard/templates/dashboard/sms_usage.html:73
+msgid "Date"
+msgstr "Date"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:68
+msgid "Plan"
+msgstr ""
+
+#: customer_portal/templates/customer_portal/contract_detail.html:96
+#, fuzzy
+#| msgid "Partially Paid"
+msgid "Partial"
+msgstr "Partially Paid"
+
+#: customer_portal/templates/customer_portal/home.html:4
+#: customer_portal/templates/customer_portal/home.html:5
+#, fuzzy
+#| msgid "Contracts"
+msgid "My Contracts"
+msgstr "Contracts"
+
+#: customer_portal/templates/customer_portal/home.html:14
+#, fuzzy
+#| msgid "No contracts found."
+msgid "No contracts found"
+msgstr "No contracts found."
+
+#: customer_portal/templates/customer_portal/home.html:15
+#, fuzzy
+#| msgid "This customer doesn't have any active contracts to pay."
+msgid "You don't have any active contracts yet."
+msgstr "This customer doesn't have any active contracts to pay."
+
+#: customer_portal/templates/customer_portal/home.html:52
+#, fuzzy
+#| msgid "Remaining Debt"
+msgid "Remaining"
+msgstr "Remaining Debt"
+
+#: customer_portal/templates/customer_portal/home.html:60
+msgid "Progress"
+msgstr ""
+
 #: dashboard/admin.py:13
 msgid "Schedule Timeline Settings"
 msgstr "Schedule Timeline Settings"
@@ -1890,11 +1982,6 @@ msgstr "Recent Payments"
 #: dashboard/templates/dashboard/home.html:75
 msgid "View all contracts"
 msgstr "View all contracts"
-
-#: dashboard/templates/dashboard/home.html:89
-#: dashboard/templates/dashboard/sms_usage.html:73
-msgid "Date"
-msgstr "Date"
 
 #: dashboard/templates/dashboard/home.html:129
 msgid "No recent payments"
@@ -2362,35 +2449,41 @@ msgstr "Verify & Login"
 msgid "Didn't receive code? Try again"
 msgstr "Didn't receive code? Try again"
 
-#: otp/views.py:28
+#: otp/views.py:28 otp/views.py:77
 msgid "Phone number is required."
 msgstr "Phone number is required."
 
-#: otp/views.py:39
+#: otp/views.py:34 otp/views.py:83
+#, fuzzy
+#| msgid "Phone number is required."
+msgid "Phone number not registered or account disabled."
+msgstr "Phone number is required."
+
+#: otp/views.py:45
 msgid "Too many OTP requests. Please wait."
 msgstr "Too many OTP requests. Please wait."
 
-#: otp/views.py:55
+#: otp/views.py:61
 msgid "OTP sent to your phone."
 msgstr "OTP sent to your phone."
 
-#: otp/views.py:58
+#: otp/views.py:64
 msgid "Failed to send SMS. Please try again."
 msgstr "Failed to send SMS. Please try again."
 
-#: otp/views.py:71
-msgid "Session expired. Please request a new code."
-msgstr "Session expired. Please request a new code."
-
-#: otp/views.py:77
+#: otp/views.py:89
 msgid "Code is required."
 msgstr "Code is required."
 
-#: otp/views.py:106
+#: otp/views.py:108
+msgid "User not found or disabled."
+msgstr ""
+
+#: otp/views.py:118
 msgid "Successfully logged in!"
 msgstr "Successfully logged in!"
 
-#: otp/views.py:109
+#: otp/views.py:125
 msgid "Invalid or expired code."
 msgstr "Invalid or expired code."
 
@@ -2913,6 +3006,9 @@ msgid ""
 "Cannot delete this role because it is assigned to one or more staff members."
 msgstr ""
 "Cannot delete this role because it is assigned to one or more staff members."
+
+#~ msgid "Session expired. Please request a new code."
+#~ msgstr "Session expired. Please request a new code."
 
 #, fuzzy
 #~| msgid "Status"

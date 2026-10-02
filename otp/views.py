@@ -28,6 +28,12 @@ def request_otp_view(request):
             messages.error(request, _("Phone number is required."))
             return redirect('otp:request_otp')
             
+        # ONLY ALLOW EXISTING USERS TO LOGIN
+        user_exists = CustomUser.objects.filter(phone_number=phone_number, is_active=True).exists()
+        if not user_exists:
+            messages.error(request, _("Phone number not registered or account disabled."))
+            return redirect('otp:request_otp')
+            
         # Optional: Rate limiting check here (e.g., max 3 active tokens per phone)
         active_tokens = OTPToken.objects.filter(
             phone_number=phone_number, 
@@ -90,11 +96,11 @@ def verify_otp_view(request):
             token.is_verified = True
             token.save()
             
-            # Get or create user
-            user, created = CustomUser.objects.get_or_create(
-                phone_number=phone_number,
-                defaults={'is_customer': True} # Default new logins to customer
-            )
+            # Find the user
+            user = CustomUser.objects.filter(phone_number=phone_number).first()
+            if not user or not user.is_active:
+                messages.error(request, _("User not found or disabled."))
+                return redirect('otp:request_otp')
             
             # Log the user in
             auth_login(request, user)
@@ -104,6 +110,10 @@ def verify_otp_view(request):
                 del request.session['otp_phone_number']
                 
             messages.success(request, _("Successfully logged in!"))
+            
+            # Route to the correct dashboard
+            if user.is_customer and not (user.is_company or getattr(user, 'is_staff_member', False)):
+                return redirect('customer_portal:home')
             return redirect('dashboard:home')
         else:
             messages.error(request, _("Invalid or expired code."))

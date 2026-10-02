@@ -3,22 +3,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imaan\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 11:41+0500\n"
+"POT-Creation-Date: 2026-10-02 16:46+0500\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 
-#: application/settings/defaults.py:172
+#: application/settings/defaults.py:173
 msgid "English"
 msgstr "Английский"
 
-#: application/settings/defaults.py:173
+#: application/settings/defaults.py:174
 msgid "Russian"
 msgstr "Русский"
 
-#: application/settings/defaults.py:174
+#: application/settings/defaults.py:175
 msgid "Uzbek"
 msgstr "Узбекский"
 
@@ -102,6 +102,7 @@ msgid "Updated At"
 msgstr "Дата обновления"
 
 #: building/models.py:25
+#: customer_portal/templates/customer_portal/contract_detail.html:20
 msgid "Building"
 msgstr "Здание"
 
@@ -168,6 +169,8 @@ msgstr "Set to False if cloned/archived for a terminated contract."
 #: building/templates/building/partials/apartment_modal.html:136
 #: contract/models.py:38 contract/templates/contract/detail.html:156
 #: contract/templates/contract/list.html:71
+#: customer_portal/templates/customer_portal/contract_detail.html:28
+#: customer_portal/templates/customer_portal/contract_detail.html:72
 #: dashboard/templates/dashboard/sms_usage.html:75 users/models.py:35
 msgid "Status"
 msgstr "Статус"
@@ -176,6 +179,8 @@ msgstr "Статус"
 #: building/templates/building/partials/apartment_modal.html:20
 #: contract/templates/contract/detail.html:105
 #: contract/templates/contract/list.html:69
+#: customer_portal/templates/customer_portal/contract_detail.html:24
+#: customer_portal/templates/customer_portal/home.html:40
 #: dashboard/templates/dashboard/home.html:87
 msgid "Apartment"
 msgstr "Квартира"
@@ -686,8 +691,10 @@ msgstr "Total Contract Amount"
 #: contract/templates/contract/detail.html:12
 #: contract/templates/contract/quick_payment.html:57
 #: contract/templates/contract/termination_dashboard.html:11
+#: customer_portal/templates/customer_portal/contract_detail.html:5
+#: customer_portal/templates/customer_portal/home.html:26
 msgid "Contract"
-msgstr "Договор"
+msgstr "Контракт"
 
 #: contract/models.py:48 contract/templates/contract/detail.html:10
 #: users/permissions.py:28 users/templates/users/customer_list.html:61
@@ -819,6 +826,7 @@ msgid "Paid Amount"
 msgstr "Оплаченная сумма"
 
 #: contract/models.py:163
+#: customer_portal/templates/customer_portal/contract_detail.html:70
 msgid "Debt"
 msgstr "Задолженность"
 
@@ -964,8 +972,10 @@ msgid "Total Amount"
 msgstr "Общая сумма"
 
 #: contract/templates/contract/detail.html:132
+#: customer_portal/templates/customer_portal/contract_detail.html:43
+#: customer_portal/templates/customer_portal/home.html:48
 msgid "Total Paid"
-msgstr "Итого оплачено"
+msgstr "Всего выплачено"
 
 #: contract/templates/contract/detail.html:136
 msgid "Total Remaining"
@@ -976,14 +986,18 @@ msgid "Total Excess"
 msgstr "Общий излишек"
 
 #: contract/templates/contract/detail.html:154
+#: customer_portal/templates/customer_portal/contract_detail.html:47
 msgid "Remaining Debt"
-msgstr "Остаток долга"
+msgstr "Оставшийся долг"
 
 #: contract/templates/contract/detail.html:155
+#: customer_portal/templates/customer_portal/contract_detail.html:71
 msgid "Excess"
 msgstr "Излишек"
 
 #: contract/templates/contract/detail.html:188
+#: customer_portal/templates/customer_portal/contract_detail.html:69
+#: customer_portal/templates/customer_portal/contract_detail.html:92
 msgid "Paid"
 msgstr "Оплачено"
 
@@ -992,10 +1006,12 @@ msgid "Partially Paid"
 msgstr "Частично оплачено"
 
 #: contract/templates/contract/detail.html:192
+#: customer_portal/templates/customer_portal/contract_detail.html:100
 msgid "Overdue"
 msgstr "Просрочено"
 
 #: contract/templates/contract/detail.html:194
+#: customer_portal/templates/customer_portal/contract_detail.html:104
 msgid "Pending"
 msgstr "Ожидается"
 
@@ -1547,12 +1563,10 @@ msgid "Shareholder (Customer)"
 msgstr "Выберите клиента"
 
 #: contract/templates/contract/template_list.html:145
-#| msgid "Buildings & Apartments"
 msgid "Building & Property Info"
 msgstr "Информация о здании и недвижимости"
 
 #: contract/templates/contract/template_list.html:147
-#| msgid "Buildings"
 msgid "Building Address"
 msgstr "Адрес здания"
 
@@ -1777,6 +1791,76 @@ msgstr "Template deleted."
 msgid "Default template updated."
 msgstr "Default template updated."
 
+#: customer_portal/templates/customer_portal/contract_detail.html:4
+#| msgid "Linked Contract Details"
+msgid "Contract Details"
+msgstr "Детали контракта"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:10
+#| msgid "Back to Contracts"
+msgid "Back to List"
+msgstr "Вернуться к списку"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:37
+#: customer_portal/templates/customer_portal/home.html:44
+#, fuzzy
+#| msgid "Total Paid"
+msgid "Total Price"
+msgstr "Итого оплачено"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:51
+#| msgid "Advanced: Excel Import"
+msgid "Advance Excess"
+msgstr "Переплата"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:60
+#, fuzzy
+#| msgid "Payment Record"
+msgid "Payment Schedule"
+msgstr "Payment Record"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:67
+#: dashboard/templates/dashboard/home.html:89
+#: dashboard/templates/dashboard/sms_usage.html:73
+msgid "Date"
+msgstr "Дата"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:68
+msgid "Plan"
+msgstr ""
+
+#: customer_portal/templates/customer_portal/contract_detail.html:96
+#, fuzzy
+#| msgid "Partially Paid"
+msgid "Partial"
+msgstr "Частично оплачено"
+
+#: customer_portal/templates/customer_portal/home.html:4
+#: customer_portal/templates/customer_portal/home.html:5
+#| msgid "Contracts"
+msgid "My Contracts"
+msgstr "Мои контракты"
+
+#: customer_portal/templates/customer_portal/home.html:14
+#| msgid "No contracts found."
+msgid "No contracts found"
+msgstr "Контракты не найдены"
+
+#: customer_portal/templates/customer_portal/home.html:15
+#| msgid "This customer doesn't have any active contracts to pay."
+msgid "You don't have any active contracts yet."
+msgstr "У вас пока нет активных контрактов."
+
+#: customer_portal/templates/customer_portal/home.html:52
+#, fuzzy
+#| msgid "Remaining Debt"
+msgid "Remaining"
+msgstr "Остаток долга"
+
+#: customer_portal/templates/customer_portal/home.html:60
+msgid "Progress"
+msgstr "Прогресс"
+
 #: dashboard/admin.py:13
 msgid "Schedule Timeline Settings"
 msgstr "Schedule Timeline Settings"
@@ -1842,11 +1926,6 @@ msgstr "Последние платежи"
 #: dashboard/templates/dashboard/home.html:75
 msgid "View all contracts"
 msgstr "Все договоры"
-
-#: dashboard/templates/dashboard/home.html:89
-#: dashboard/templates/dashboard/sms_usage.html:73
-msgid "Date"
-msgstr "Дата"
 
 #: dashboard/templates/dashboard/home.html:129
 msgid "No recent payments"
@@ -2297,35 +2376,40 @@ msgstr "Подтвердить и войти"
 msgid "Didn't receive code? Try again"
 msgstr "Не получили код? Попробовать снова"
 
-#: otp/views.py:28
+#: otp/views.py:28 otp/views.py:77
 msgid "Phone number is required."
 msgstr "Phone number is required."
 
-#: otp/views.py:39
+#: otp/views.py:34 otp/views.py:83
+#| msgid "Phone number is required."
+msgid "Phone number not registered or account disabled."
+msgstr "Номер телефона не зарегистрирован или аккаунт отключен."
+
+#: otp/views.py:45
 msgid "Too many OTP requests. Please wait."
 msgstr "Too many OTP requests. Please wait."
 
-#: otp/views.py:55
+#: otp/views.py:61
 msgid "OTP sent to your phone."
 msgstr "OTP sent to your phone."
 
-#: otp/views.py:58
+#: otp/views.py:64
 msgid "Failed to send SMS. Please try again."
 msgstr "Failed to send SMS. Please try again."
 
-#: otp/views.py:71
-msgid "Session expired. Please request a new code."
-msgstr "Session expired. Please request a new code."
-
-#: otp/views.py:77
+#: otp/views.py:89
 msgid "Code is required."
 msgstr "Code is required."
 
-#: otp/views.py:106
+#: otp/views.py:108
+msgid "User not found or disabled."
+msgstr "Пользователь не найден или отключен."
+
+#: otp/views.py:118
 msgid "Successfully logged in!"
 msgstr "Successfully logged in!"
 
-#: otp/views.py:109
+#: otp/views.py:125
 msgid "Invalid or expired code."
 msgstr "Invalid or expired code."
 
@@ -2452,7 +2536,6 @@ msgid "Phone number"
 msgstr "Номер телефона"
 
 #: users/models.py:12
-#| msgid "Phone number"
 msgid "Secondary phone number"
 msgstr "Дополнительный номер телефона"
 
@@ -2856,6 +2939,9 @@ msgstr "Роль успешно удалена!"
 msgid ""
 "Cannot delete this role because it is assigned to one or more staff members."
 msgstr ""
+
+#~ msgid "Session expired. Please request a new code."
+#~ msgstr "Session expired. Please request a new code."
 
 #~ msgid "All Statuses"
 #~ msgstr "Все статусы"

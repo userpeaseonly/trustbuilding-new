@@ -76,9 +76,18 @@ def contract_list(request):
 @login_required
 def contract_detail(request, pk):
     """View details of a specific contract and its financial schedule"""
-    company = get_user_company(request.user)
-
-    contract = get_object_or_404(Contract, pk=pk, company=company)
+    contract = get_object_or_404(Contract, pk=pk)
+    
+    # Security Check
+    if getattr(request.user, 'is_customer', False):
+        if contract.customer != request.user:
+            from django.http import Http404
+            raise Http404("Not found")
+    else:
+        company = get_user_company(request.user)
+        if contract.company != company:
+            from django.http import Http404
+            raise Http404("Not found")
     
     if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
         return redirect('contract:termination_dashboard', pk=contract.pk)
@@ -200,9 +209,18 @@ def contract_create(request):
 @require_permission('create_payments')
 def process_payment(request, pk):
     """Process a payment for a contract"""
-    company = get_user_company(request.user)
-
-    contract = get_object_or_404(Contract, pk=pk, company=company)
+    contract = get_object_or_404(Contract, pk=pk)
+    
+    # Security Check
+    if getattr(request.user, 'is_customer', False):
+        if contract.customer != request.user:
+            from django.http import Http404
+            raise Http404("Not found")
+    else:
+        company = get_user_company(request.user)
+        if contract.company != company:
+            from django.http import Http404
+            raise Http404("Not found")
     
     if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
         return redirect('contract:termination_dashboard', pk=contract.pk)
@@ -241,6 +259,16 @@ from .docx_generator import generate_contract_docx_response
 @login_required
 def download_docx_contract(request, pk):
     """Download the official .docx legal contract."""
+    # Security Check
+    contract = get_object_or_404(Contract, pk=pk)
+    if request.user.is_customer:
+        if contract.customer != request.user:
+            raise Http404()
+    else:
+        company = get_user_company(request.user)
+        if contract.company != company:
+            raise Http404()
+            
     template_id = request.GET.get('template_id')
     return generate_contract_docx_response(pk, template_id=template_id)
 
@@ -281,9 +309,18 @@ def download_import_template(request):
 @login_required
 def import_payments_excel(request, pk):
     """Process the uploaded Excel template and bulk create payment logs."""
-    company = get_user_company(request.user)
-
-    contract = get_object_or_404(Contract, pk=pk, company=company)
+    contract = get_object_or_404(Contract, pk=pk)
+    
+    # Security Check
+    if getattr(request.user, 'is_customer', False):
+        if contract.customer != request.user:
+            from django.http import Http404
+            raise Http404("Not found")
+    else:
+        company = get_user_company(request.user)
+        if contract.company != company:
+            from django.http import Http404
+            raise Http404("Not found")
     
     if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
         return redirect('contract:termination_dashboard', pk=contract.pk)
@@ -361,9 +398,18 @@ def import_payments_excel(request, pk):
 @login_required
 def download_payments_excel(request, pk):
     """Download the payment history as an Excel file."""
-    company = get_user_company(request.user)
-
-    contract = get_object_or_404(Contract, pk=pk, company=company)
+    contract = get_object_or_404(Contract, pk=pk)
+    
+    # Security Check
+    if getattr(request.user, 'is_customer', False):
+        if contract.customer != request.user:
+            from django.http import Http404
+            raise Http404("Not found")
+    else:
+        company = get_user_company(request.user)
+        if contract.company != company:
+            from django.http import Http404
+            raise Http404("Not found")
     
     if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
         return redirect('contract:termination_dashboard', pk=contract.pk)

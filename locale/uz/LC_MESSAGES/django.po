@@ -3,22 +3,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imaan\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 11:41+0500\n"
+"POT-Creation-Date: 2026-10-02 16:46+0500\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: POEditor.com\n"
 
-#: application/settings/defaults.py:172
+#: application/settings/defaults.py:173
 msgid "English"
 msgstr "Inglizcha"
 
-#: application/settings/defaults.py:173
+#: application/settings/defaults.py:174
 msgid "Russian"
 msgstr "Ruscha"
 
-#: application/settings/defaults.py:174
+#: application/settings/defaults.py:175
 msgid "Uzbek"
 msgstr "O'zbekcha"
 
@@ -102,6 +102,7 @@ msgid "Updated At"
 msgstr "Yangilangan vaqti"
 
 #: building/models.py:25
+#: customer_portal/templates/customer_portal/contract_detail.html:20
 msgid "Building"
 msgstr "Bino"
 
@@ -170,6 +171,8 @@ msgstr ""
 #: building/templates/building/partials/apartment_modal.html:136
 #: contract/models.py:38 contract/templates/contract/detail.html:156
 #: contract/templates/contract/list.html:71
+#: customer_portal/templates/customer_portal/contract_detail.html:28
+#: customer_portal/templates/customer_portal/contract_detail.html:72
 #: dashboard/templates/dashboard/sms_usage.html:75 users/models.py:35
 msgid "Status"
 msgstr "Holati"
@@ -178,6 +181,8 @@ msgstr "Holati"
 #: building/templates/building/partials/apartment_modal.html:20
 #: contract/templates/contract/detail.html:105
 #: contract/templates/contract/list.html:69
+#: customer_portal/templates/customer_portal/contract_detail.html:24
+#: customer_portal/templates/customer_portal/home.html:40
 #: dashboard/templates/dashboard/home.html:87
 msgid "Apartment"
 msgstr "Xonadon"
@@ -696,6 +701,8 @@ msgstr "Shartnomaning umumiy summasi"
 #: contract/templates/contract/detail.html:12
 #: contract/templates/contract/quick_payment.html:57
 #: contract/templates/contract/termination_dashboard.html:11
+#: customer_portal/templates/customer_portal/contract_detail.html:5
+#: customer_portal/templates/customer_portal/home.html:26
 msgid "Contract"
 msgstr "Shartnoma"
 
@@ -829,6 +836,7 @@ msgid "Paid Amount"
 msgstr "To'langan summa"
 
 #: contract/models.py:163
+#: customer_portal/templates/customer_portal/contract_detail.html:70
 msgid "Debt"
 msgstr "Qarzdorlik"
 
@@ -974,6 +982,8 @@ msgid "Total Amount"
 msgstr "Umumiy hisob"
 
 #: contract/templates/contract/detail.html:132
+#: customer_portal/templates/customer_portal/contract_detail.html:43
+#: customer_portal/templates/customer_portal/home.html:48
 msgid "Total Paid"
 msgstr "Jami to'langan"
 
@@ -986,14 +996,18 @@ msgid "Total Excess"
 msgstr "Umumiy ortiqcha"
 
 #: contract/templates/contract/detail.html:154
+#: customer_portal/templates/customer_portal/contract_detail.html:47
 msgid "Remaining Debt"
-msgstr "Qoldiq qarzdorlik"
+msgstr "Qolgan qarz"
 
 #: contract/templates/contract/detail.html:155
+#: customer_portal/templates/customer_portal/contract_detail.html:71
 msgid "Excess"
 msgstr "Ortiqcha"
 
 #: contract/templates/contract/detail.html:188
+#: customer_portal/templates/customer_portal/contract_detail.html:69
+#: customer_portal/templates/customer_portal/contract_detail.html:92
 msgid "Paid"
 msgstr "To'langan"
 
@@ -1002,10 +1016,12 @@ msgid "Partially Paid"
 msgstr "Qisman to'langan"
 
 #: contract/templates/contract/detail.html:192
+#: customer_portal/templates/customer_portal/contract_detail.html:100
 msgid "Overdue"
 msgstr "Muddati o'tgan"
 
 #: contract/templates/contract/detail.html:194
+#: customer_portal/templates/customer_portal/contract_detail.html:104
 msgid "Pending"
 msgstr "Kutilmoqda"
 
@@ -1568,12 +1584,10 @@ msgid "Shareholder (Customer)"
 msgstr "Mijozni tanlang"
 
 #: contract/templates/contract/template_list.html:145
-#| msgid "Buildings & Apartments"
 msgid "Building & Property Info"
 msgstr "Bino va mulk ma'lumotlari"
 
 #: contract/templates/contract/template_list.html:147
-#| msgid "Buildings"
 msgid "Building Address"
 msgstr "Bino manzili"
 
@@ -1804,6 +1818,76 @@ msgstr "Shablon oʻchirildi."
 msgid "Default template updated."
 msgstr "Standart shablon yangilandi."
 
+#: customer_portal/templates/customer_portal/contract_detail.html:4
+#| msgid "Linked Contract Details"
+msgid "Contract Details"
+msgstr "Shartnoma tafsilotlari"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:10
+#| msgid "Back to Contracts"
+msgid "Back to List"
+msgstr "Ro'yxatga qaytish"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:37
+#: customer_portal/templates/customer_portal/home.html:44
+#, fuzzy
+#| msgid "Total Paid"
+msgid "Total Price"
+msgstr "Jami to'langan"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:51
+#| msgid "Advanced: Excel Import"
+msgid "Advance Excess"
+msgstr "Oldindan to'lov"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:60
+#, fuzzy
+#| msgid "Payment Record"
+msgid "Payment Schedule"
+msgstr "To'lov yozuvi"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:67
+#: dashboard/templates/dashboard/home.html:89
+#: dashboard/templates/dashboard/sms_usage.html:73
+msgid "Date"
+msgstr "Sana"
+
+#: customer_portal/templates/customer_portal/contract_detail.html:68
+msgid "Plan"
+msgstr ""
+
+#: customer_portal/templates/customer_portal/contract_detail.html:96
+#, fuzzy
+#| msgid "Partially Paid"
+msgid "Partial"
+msgstr "Qisman to'langan"
+
+#: customer_portal/templates/customer_portal/home.html:4
+#: customer_portal/templates/customer_portal/home.html:5
+#| msgid "Contracts"
+msgid "My Contracts"
+msgstr "Mening Shartnomalarim"
+
+#: customer_portal/templates/customer_portal/home.html:14
+#| msgid "No contracts found."
+msgid "No contracts found"
+msgstr "Shartnomalar topilmadi"
+
+#: customer_portal/templates/customer_portal/home.html:15
+#| msgid "This customer doesn't have any active contracts to pay."
+msgid "You don't have any active contracts yet."
+msgstr "Hali faol shartnomalaringiz yo'q."
+
+#: customer_portal/templates/customer_portal/home.html:52
+#, fuzzy
+#| msgid "Remaining Debt"
+msgid "Remaining"
+msgstr "Qoldiq qarzdorlik"
+
+#: customer_portal/templates/customer_portal/home.html:60
+msgid "Progress"
+msgstr "Jarayon"
+
 #: dashboard/admin.py:13
 msgid "Schedule Timeline Settings"
 msgstr "Vaqt jadvalini sozlash"
@@ -1869,11 +1953,6 @@ msgstr "Oxirgi to'lovlar"
 #: dashboard/templates/dashboard/home.html:75
 msgid "View all contracts"
 msgstr "Barcha shartnomalarni ko'ring"
-
-#: dashboard/templates/dashboard/home.html:89
-#: dashboard/templates/dashboard/sms_usage.html:73
-msgid "Date"
-msgstr "Sana"
 
 #: dashboard/templates/dashboard/home.html:129
 msgid "No recent payments"
@@ -2325,35 +2404,40 @@ msgstr "Tasdiqlash va kirish"
 msgid "Didn't receive code? Try again"
 msgstr "Kodni olmadingizmi? Qaytadan urinib ko'ring"
 
-#: otp/views.py:28
+#: otp/views.py:28 otp/views.py:77
 msgid "Phone number is required."
 msgstr "Telefon raqami talab qilinadi."
 
-#: otp/views.py:39
+#: otp/views.py:34 otp/views.py:83
+#| msgid "Phone number is required."
+msgid "Phone number not registered or account disabled."
+msgstr "Telefon raqami ro'yxatdan o'tmagan yoki akkaunt o'chirilgan."
+
+#: otp/views.py:45
 msgid "Too many OTP requests. Please wait."
 msgstr "OTP soʻrovlari juda koʻp.Iltimos kuting."
 
-#: otp/views.py:55
+#: otp/views.py:61
 msgid "OTP sent to your phone."
 msgstr "OTP telefoningizga yuborildi."
 
-#: otp/views.py:58
+#: otp/views.py:64
 msgid "Failed to send SMS. Please try again."
 msgstr "SMS yuborib bo‘lmadi.Iltimos, qayta urinib koʻring."
 
-#: otp/views.py:71
-msgid "Session expired. Please request a new code."
-msgstr "Seans muddati tugadi.Iltimos, yangi kod so'rang."
-
-#: otp/views.py:77
+#: otp/views.py:89
 msgid "Code is required."
 msgstr "Kod talab qilinadi."
 
-#: otp/views.py:106
+#: otp/views.py:108
+msgid "User not found or disabled."
+msgstr "Foydalanuvchi topilmadi yoki o'chirilgan."
+
+#: otp/views.py:118
 msgid "Successfully logged in!"
 msgstr "Muvaffaqiyatli tizimga kirdingiz!"
 
-#: otp/views.py:109
+#: otp/views.py:125
 msgid "Invalid or expired code."
 msgstr "Yaroqsiz yoki muddati o‘tgan kod."
 
@@ -2481,7 +2565,6 @@ msgid "Phone number"
 msgstr "Telefon raqami"
 
 #: users/models.py:12
-#| msgid "Phone number"
 msgid "Secondary phone number"
 msgstr "Qo'shimcha telefon raqami"
 
@@ -2884,6 +2967,9 @@ msgstr "Rol muvaffaqiyatli o'chirildi!"
 msgid ""
 "Cannot delete this role because it is assigned to one or more staff members."
 msgstr ""
+
+#~ msgid "Session expired. Please request a new code."
+#~ msgstr "Seans muddati tugadi.Iltimos, yangi kod so'rang."
 
 #~ msgid "All Statuses"
 #~ msgstr "Barcha holatlar"

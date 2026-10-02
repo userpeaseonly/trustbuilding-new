@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load i18n dashboard_tags %}
+
+{% block title %}{% trans "My Contracts" %} | TrustBuilding{% endblock %}
+{% block page_title %}{% trans "My Contracts" %}{% endblock %}
+
+{% block content %}
+<div class="w-full">
+        {% if not contracts %}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-12 text-center">
+            <svg class="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 class="text-lg font-semibold text-slate-800">{% trans "No contracts found" %}</h3>
+            <p class="text-slate-500 mt-2">{% trans "You don't have any active contracts yet." %}</p>
+        </div>
+    {% else %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            {% for contract in contracts %}
+                <a href="{% url 'customer_portal:contract_detail' contract.id %}" class="block group">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 transition-all group-hover:shadow-md group-hover:border-blue-300 relative overflow-hidden">
+                        
+                        <!-- Top header -->
+                        <div class="flex items-start justify-between mb-4">
+                            <div>
+                                <p class="text-sm font-medium text-slate-500">{% trans "Contract" %} #{{ contract.contract_id }}</p>
+                                <h3 class="text-xl font-bold text-slate-900 mt-1">{{ contract.apartment.building.name }}</h3>
+                            </div>
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium 
+                                {% if contract.status == 'ACTIVE' %}bg-emerald-100 text-emerald-800
+                                {% elif contract.status == 'TERMINATED' %}bg-red-100 text-red-800
+                                {% else %}bg-slate-100 text-slate-800{% endif %}">
+                                {{ contract.get_status_display }}
+                            </span>
+                        </div>
+                        
+                        <!-- Details grid -->
+                        <div class="grid grid-cols-2 gap-4 mb-5 text-sm text-slate-600">
+                            <div>
+                                <p class="text-slate-400 text-xs uppercase tracking-wider mb-1">{% trans "Apartment" %}</p>
+                                <p class="font-medium text-slate-800">№ {{ contract.apartment.apartment_number }}</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-400 text-xs uppercase tracking-wider mb-1">{% trans "Total Price" %}</p>
+                                <p class="font-medium text-slate-800">{{ contract.total_amount|formatted_amount }}</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-400 text-xs uppercase tracking-wider mb-1">{% trans "Total Paid" %}</p>
+                                <p class="font-medium text-emerald-600">{{ contract.total_paid|formatted_amount }}</p>
+                            </div>
+                            <div>
+                                <p class="text-slate-400 text-xs uppercase tracking-wider mb-1">{% trans "Remaining" %}</p>
+                                <p class="font-medium text-rose-600">{{ contract.remaining_debt|formatted_amount }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mt-4">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-slate-500">{% trans "Progress" %}</span>
+                                <span class="font-medium text-slate-700">{{ contract.paid_percentage }}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 rounded-full h-2">
+                                <div class="bg-emerald-500 h-2 rounded-full" style="width: {{ contract.paid_percentage|stringformat:'f' }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

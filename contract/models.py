@@ -35,7 +35,7 @@ class Contract(models.Model):
     down_payment_amount = models.DecimalField(_("Down Payment"), max_digits=15, decimal_places=2, default=0)
     last_payment_amount = models.DecimalField(_("Last Payment"), max_digits=15, decimal_places=2, default=0)
     payment_months = models.PositiveIntegerField(_("Payment Duration (Months)"))
-    status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default=STATUS_ACTIVE)
+    status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default=STATUS_ACTIVE, db_index=True)
     
     # Calculated field for caching
     total_amount = models.DecimalField(_("Total Contract Amount"), max_digits=15, decimal_places=2, editable=False, default=0)
@@ -47,6 +47,23 @@ class Contract(models.Model):
         verbose_name = _("Contract")
         verbose_name_plural = _("Contracts")
         unique_together = ('company', 'contract_id')
+
+    @property
+    def total_paid(self):
+        from django.db.models import Sum
+        return self.payment_logs.aggregate(total=Sum('amount'))['total'] or 0
+
+    @property
+    def remaining_debt(self):
+        # We cap it at 0 to avoid negative debt
+        return max(0, self.total_amount - self.total_paid)
+
+    @property
+    def paid_percentage(self):
+        if self.total_amount <= 0:
+            return 0
+        percentage = (self.total_paid / self.total_amount) * 100
+        return round(min(100, percentage), 1)
 
     def __str__(self):
         return f"Contract #{self.pk} - {self.customer.full_name}"
@@ -91,7 +108,7 @@ class PaymentLog(models.Model):
     payment_type = models.CharField(_("Payment Type"), max_length=20, choices=PAYMENT_TYPE_CHOICES)
     transaction_id = models.CharField(_("Transaction ID"), max_length=255, blank=True, help_text=_("For bank transfers/terminal"))
     receipt_image = models.ImageField(_("Receipt Image"), upload_to='payment_receipts/', blank=True, null=True)
-    date_paid = models.DateTimeField(_("Date Paid"), default=timezone.now, blank=True)
+    date_paid = models.DateTimeField(_("Date Paid"), default=timezone.now, blank=True, db_index=True)
     
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
 
@@ -157,7 +174,7 @@ class TerminateContractPayment(models.Model):
 class PaymentRecord(models.Model):
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE, related_name='payment_records')
     month_number = models.PositiveIntegerField(_("Month Number"))
-    due_date = models.DateField(_("Due Date"))
+    due_date = models.DateField(_("Due Date"), db_index=True)
     plan_amount = models.DecimalField(_("Planned Amount"), max_digits=15, decimal_places=2)
     paid_amount = models.DecimalField(_("Paid Amount"), max_digits=15, decimal_places=2, default=0)
     debt = models.DecimalField(_("Debt"), max_digits=15, decimal_places=2, default=0)

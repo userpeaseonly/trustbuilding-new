@@ -28,7 +28,8 @@ urlpatterns = [
     path('users/', include('users.urls')),  # Users app
     path('otp/', include('otp.urls')),  # OTP Auth app
     path('building/', include('building.urls')),  # Inventory app
-    path('contract/', include('contract.urls')),  # Contract app
+    path('contract/', include('contract.urls')),
+    path('portal/', include('customer_portal.urls')),  # Contract app
 ]
 
 # Serve static and media files in development
