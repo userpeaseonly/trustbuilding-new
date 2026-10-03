@@ -50,3 +50,19 @@ class CompanyProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 
+
+from .models import SMSLog
+
+@admin.register(SMSLog)
+class SMSLogAdmin(admin.ModelAdmin):
+    list_display = ("phone_number", "status", "cost", "parts", "operator", "created_at", "company")
+    list_filter = ("status", "operator", "created_at")
+    search_fields = ("phone_number", "message")
+    readonly_fields = ("company", "phone_number", "message", "status", "cost", "parts", "operator", "created_at")
+    date_hierarchy = 'created_at'
+    
+    def has_add_permission(self, request):
+        return False
+        
+    def has_change_permission(self, request, obj=None):
+        return False

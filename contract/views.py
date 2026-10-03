@@ -58,7 +58,7 @@ def contract_list(request):
     
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     
-    paginator = Paginator(contracts, 10)
+    paginator = Paginator(contracts, 20)
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.page(page_number)

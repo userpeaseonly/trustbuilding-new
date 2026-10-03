@@ -115,7 +115,7 @@ def customer_list_view(request):
         
     from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     
-    paginator = Paginator(customers, 10)
+    paginator = Paginator(customers, 20)
     page_number = request.GET.get('page')
     try:
         page_obj = paginator.page(page_number)
