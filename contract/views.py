@@ -467,7 +467,7 @@ def receipt_view(request, payment_id):
         company_name = contract.company.get_full_name() or contract.company.username
         
     customer_name = contract.customer.full_name or contract.customer.phone_number
-    customer_desc = f"{customer_name} №{contract.id} сонли шартномага асосан тўлов"
+    customer_desc = f"{customer_name} №{contract.contract_id} сонли шартномага асосан тўлов"
     
     amount_words = amount_to_words_ru(payment.amount)
     if payment.payment_type == PaymentLog.PAYMENT_TYPE_CARD:

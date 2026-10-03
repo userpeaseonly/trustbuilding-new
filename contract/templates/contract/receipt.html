@@ -1,3 +1,4 @@
+{% load dashboard_tags %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -115,7 +116,7 @@
                         <tr>
                             <td class="border border-black p-2 align-top">4010</td>
                             <td class="border border-black p-2 text-left align-top">{{ customer_desc }}</td>
-                            <td class="border border-black p-2 align-top">{{ payment.amount|floatformat:2 }}</td>
+                            <td class="border border-black p-2 align-top">{{ payment.amount|formatted_amount }}</td>
                             <td class="border border-black p-2 align-top"></td>
                         </tr>
                     </tbody>
@@ -176,7 +177,7 @@
                 
                 <div class="flex items-end mt-4">
                     <span class="text-[11px] text-gray-600 shrink-0">Сумма</span> 
-                    <span class="font-bold border-b border-black flex-1 text-center pl-2">{{ payment.amount|floatformat:2 }}</span>
+                    <span class="font-bold border-b border-black flex-1 text-center pl-2">{{ payment.amount|formatted_amount }}</span>
                 </div>
                 <div class="text-center text-[9px] text-slate-400 -mt-1">цифрами</div>
                 
