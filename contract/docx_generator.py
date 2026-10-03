@@ -120,8 +120,37 @@ def generate_contract_docx_response(contract_id, template_id=None):
         # Usually month_number 1 is down payment, so we check month 2, or just max frequency amount
         monthly_payment = records[1].plan_amount if len(records) > 1 else records[0].plan_amount
 
+    # Convert queryset to list so we can pop the down payment if it exists
+    records_list = list(records)
     schedule = []
-    for i, rec in enumerate(records):
+    
+    # Always include the Down Payment row
+    if down_payment > 0:
+        # The first record is the down payment record
+        dp_record = records_list.pop(0) if records_list else None
+        
+        # Fallback date if dp_record is missing
+        dp_date = ""
+        if dp_record and dp_record.due_date:
+            dp_date = dp_record.due_date.strftime("%d.%m.%Y")
+        elif contract.down_payment_date:
+            dp_date = contract.down_payment_date.strftime("%d.%m.%Y")
+            
+        schedule.append({
+            'name': 'Бўнак тўлови',
+            'amount': f"{down_payment:,.0f}".replace(",", " "),
+            'date': dp_date
+        })
+    else:
+        # No down payment
+        schedule.append({
+            'name': 'Бўнак тўлови',
+            'amount': 'Йўқ',
+            'date': 'Йўқ'
+        })
+        
+    # Then loop through the rest of the records for regular installments
+    for i, rec in enumerate(records_list):
         name = f"{i+1}-тўлов"
         
         amt = f"{rec.plan_amount:,.0f}".replace(",", " ") if rec.plan_amount else ""
