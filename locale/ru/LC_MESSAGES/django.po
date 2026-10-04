@@ -2954,3 +2954,9 @@ msgstr ""
 
 #~ msgid "Year"
 #~ msgstr "Год"
+
+msgid "Total Cash"
+msgstr "Всего наличными"
+
+msgid "Total Bank"
+msgstr "Всего перечислением"

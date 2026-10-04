@@ -107,6 +107,11 @@ def contract_detail(request, pk):
         r.is_running_zero = net_balance == 0
 
     total_paid = sum(log.amount for log in payment_logs)
+    total_cash_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_CASH)
+    total_bank_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_BANK)
+    total_card_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_CARD)
+    total_material_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_MATERIAL)
+
     global_balance = running_plan - total_paid
     total_remaining_debt = max(Decimal('0.00'), global_balance)
     total_excess = max(Decimal('0.00'), -global_balance)
@@ -121,6 +126,10 @@ def contract_detail(request, pk):
         'records': records,
         'payment_logs': payment_logs,
         'total_paid': total_paid,
+        'total_cash_paid': total_cash_paid,
+        'total_bank_paid': total_bank_paid,
+        'total_card_paid': total_card_paid,
+        'total_material_paid': total_material_paid,
         'total_remaining_debt': total_remaining_debt,
         'total_excess': total_excess,
         'next_due_record': next_due_record,
@@ -517,6 +526,10 @@ def initiate_termination(request, pk):
         return render(request, 'contract/confirm_termination.html', {
             'contract': contract,
             'total_paid': total_paid,
+        'total_cash_paid': total_cash_paid,
+        'total_bank_paid': total_bank_paid,
+        'total_card_paid': total_card_paid,
+        'total_material_paid': total_material_paid,
             'page_title': _("Confirm Contract Termination")
         })
         
@@ -564,6 +577,10 @@ def confirm_termination(request, pk):
         return render(request, 'contract/confirm_termination.html', {
             'contract': contract,
             'total_paid': total_paid,
+        'total_cash_paid': total_cash_paid,
+        'total_bank_paid': total_bank_paid,
+        'total_card_paid': total_card_paid,
+        'total_material_paid': total_material_paid,
             'page_title': _("Confirm Contract Termination")
         })
             

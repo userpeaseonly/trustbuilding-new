@@ -127,10 +127,18 @@
             <div class="bg-white border border-slate-200 rounded-2xl shadow-sm shadow-sm overflow-hidden">
 
                 <!-- Global Summary Bar -->
-                <div class="grid grid-cols-3 divide-x divide-slate-200 border-b border-slate-200 text-center">
+                <div class="grid grid-cols-5 divide-x divide-slate-200 border-b border-slate-200 text-center">
                     <div class="py-4 px-4">
                         <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wide mb-1">{% trans "Total Paid" %}</div>
                         <div class="text-slate-800 font-bold text-sm font-semibold">{{ total_paid|formatted_amount }}</div>
+                    </div>
+                    <div class="py-4 px-4">
+                        <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wide mb-1">{% trans "Total Cash" %}</div>
+                        <div class="text-emerald-600 font-bold text-sm font-semibold">{{ total_cash_paid|formatted_amount }}</div>
+                    </div>
+                    <div class="py-4 px-4">
+                        <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wide mb-1">{% trans "Total Bank" %}</div>
+                        <div class="text-blue-600 font-bold text-sm font-semibold">{{ total_bank_paid|formatted_amount }}</div>
                     </div>
                     <div class="py-4 px-4">
                         <div class="text-[10px] uppercase text-slate-500 font-semibold tracking-wide mb-1">{% trans "Total Remaining" %}</div>
