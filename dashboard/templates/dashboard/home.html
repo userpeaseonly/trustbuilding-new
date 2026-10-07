@@ -8,61 +8,100 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         
         <!-- Active Contracts -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5 flex items-center justify-between transition hover:shadow-md">
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
             <div class="overflow-hidden">
-                <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Active Contracts" %}</p>
-                <p class="text-xl font-bold text-slate-900 mt-1 whitespace-nowrap truncate">{{ stats.active_contracts_count }}</p>
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Active Contracts" %}</p>
+                <p class="text-lg font-bold text-slate-900 mt-0.5 whitespace-nowrap truncate">{{ stats.active_contracts_count }}</p>
             </div>
-            <div class="p-2.5 bg-indigo-50 text-indigo-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                 </svg>
             </div>
         </div>
 
         <!-- Monthly Revenue -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5 flex items-center justify-between transition hover:shadow-md">
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
             <div class="overflow-hidden">
-                <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Monthly Revenue" %}</p>
-                <p class="text-xl font-bold text-emerald-600 mt-1 whitespace-nowrap truncate">{{ stats.monthly_revenue|uzs }}</p>
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Monthly Revenue" %}</p>
+                <p class="text-lg font-bold text-emerald-600 mt-0.5 whitespace-nowrap truncate">{{ stats.monthly_revenue|uzs }}</p>
             </div>
-            <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942a60.07 60.07 0 00-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942c0-.754.727-1.294 1.453-1.096a60.07 60.07 0 0115.797-2.101c.727-.198 1.453.342 1.453 1.096v10.518c0 .754-.727 1.294-1.453 1.096a60.07 60.07 0 00-15.797 2.101z" />
                 </svg>
             </div>
         </div>
 
         <!-- Outstanding Debt -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5 flex items-center justify-between transition hover:shadow-md">
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
             <div class="overflow-hidden">
-                <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Outstanding Debt" %}</p>
-                <p class="text-xl font-bold text-rose-600 mt-1 whitespace-nowrap truncate" title="{{ stats.total_outstanding_debt|uzs }}">{{ stats.total_outstanding_debt|uzs }}</p>
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Outstanding Debt" %}</p>
+                <p class="text-lg font-bold text-rose-600 mt-0.5 whitespace-nowrap truncate" title="{{ stats.total_outstanding_debt|uzs }}">{{ stats.total_outstanding_debt|uzs }}</p>
             </div>
-            <div class="p-2.5 bg-rose-50 text-rose-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <div class="p-2 bg-rose-50 text-rose-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </div>
         </div>
 
         <!-- Inventory Sold -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5 flex items-center justify-between transition hover:shadow-md">
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
             <div class="overflow-hidden flex flex-col justify-center h-full">
-                <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Inventory Sold" %}</p>
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Inventory Sold" %}</p>
                 <div class="flex items-baseline gap-2 mt-1">
-                    <p class="text-xl font-bold text-slate-900 whitespace-nowrap">{{ stats.inventory_sold_percent }}%</p>
+                    <p class="text-lg font-bold text-slate-900 whitespace-nowrap">{{ stats.inventory_sold_percent }}%</p>
                     <p class="text-xs text-slate-400 whitespace-nowrap truncate">{{ stats.sold_apartments }}/{{ stats.total_apartments }} {% trans "Apts" %}</p>
                 </div>
             </div>
-            <div class="p-2.5 bg-sky-50 text-sky-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+            <div class="p-2 bg-sky-50 text-sky-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
                 </svg>
             </div>
         </div>
 
+        <!-- Total Sqm Sold -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
+            <div class="overflow-hidden">
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Sold (m²)" %}</p>
+                <p class="text-lg font-bold text-slate-900 mt-0.5 whitespace-nowrap truncate">{{ stats.total_sqm_sold|floatformat:2 }} m²</p>
+            </div>
+            <div class="p-2 bg-orange-50 text-orange-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Total Cash Collected -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
+            <div class="overflow-hidden">
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Cash Collected" %}</p>
+                <p class="text-lg font-bold text-emerald-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_cash_collected|uzs }}</p>
+            </div>
+            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942a60.07 60.07 0 00-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V5.942c0-.754.727-1.294 1.453-1.096a60.07 60.07 0 0115.797-2.101c.727-.198 1.453.342 1.453 1.096v10.518c0 .754-.727 1.294-1.453 1.096a60.07 60.07 0 00-15.797 2.101z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Total Bank Collected -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
+            <div class="overflow-hidden">
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Bank Collected" %}</p>
+                <p class="text-lg font-bold text-blue-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_bank_collected|uzs }}</p>
+            </div>
+            <div class="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                </svg>
+            </div>
+        </div>
     </div>
+
 
         <!-- Main Content Area -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -83,10 +122,10 @@
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr>
-                            <th class="pb-3 px-6 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Customer" %}</th>
-                            <th class="pb-3 px-6 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Apartment" %}</th>
-                            <th class="pb-3 px-6 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Amount" %}</th>
-                            <th class="pb-3 px-6 text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-right">{% trans "Date" %}</th>
+                            <th class="pb-3 px-6 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Customer" %}</th>
+                            <th class="pb-3 px-6 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Apartment" %}</th>
+                            <th class="pb-3 px-6 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{% trans "Amount" %}</th>
+                            <th class="pb-3 px-6 text-[10px] font-semibold text-slate-400 uppercase tracking-wider text-right">{% trans "Date" %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -153,7 +192,7 @@
                     <div class="group relative flex flex-col p-4 rounded-xl border border-rose-100 bg-white hover:bg-rose-50/50 transition-colors shadow-sm">
                         <div class="flex items-start gap-3">
                             <div class="p-2 bg-rose-100 rounded-lg shrink-0">
-                                <svg class="w-5 h-5 text-rose-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <svg class="w-4 h-4 text-rose-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                                 </svg>
                             </div>
@@ -184,6 +223,45 @@
             </div>
         </div>
 
+        <!-- Total Sqm Sold -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
+            <div class="overflow-hidden">
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Sold (m²)" %}</p>
+                <p class="text-lg font-bold text-slate-900 mt-0.5 whitespace-nowrap truncate">{{ stats.total_sqm_sold|floatformat:2 }} m²</p>
+            </div>
+            <div class="p-2 bg-orange-50 text-orange-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Total Cash Collected -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
+            <div class="overflow-hidden">
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Cash Collected" %}</p>
+                <p class="text-lg font-bold text-emerald-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_cash_collected|uzs }}</p>
+            </div>
+            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942a60.07 60.07 0 00-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V5.942c0-.754.727-1.294 1.453-1.096a60.07 60.07 0 0115.797-2.101c.727-.198 1.453.342 1.453 1.096v10.518c0 .754-.727 1.294-1.453 1.096a60.07 60.07 0 00-15.797 2.101z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Total Bank Collected -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
+            <div class="overflow-hidden">
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Bank Collected" %}</p>
+                <p class="text-lg font-bold text-blue-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_bank_collected|uzs }}</p>
+            </div>
+            <div class="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                </svg>
+            </div>
+        </div>
     </div>
+
 </div>
 {% endblock %}

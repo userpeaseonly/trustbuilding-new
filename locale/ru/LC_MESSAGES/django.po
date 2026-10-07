@@ -258,8 +258,7 @@ msgstr "Расширенный: Импорт из Excel"
 
 #: building/templates/building/form.html:64
 msgid "Download a template, customize apartment details, and upload it back."
-msgstr ""
-"Скачайте шаблон, заполните данные о квартирах и загрузите его обратно."
+msgstr "Скачайте шаблон, заполните данные о квартирах и загрузите его обратно."
 
 #: building/templates/building/form.html:67
 #: building/templates/building/list.html:132
@@ -383,8 +382,8 @@ msgstr "No residential buildings yet"
 
 #: building/templates/building/list.html:67
 msgid ""
-"Create your first residential project to generate visual apartment grids and"
-" sales schedules."
+"Create your first residential project to generate visual apartment grids and "
+"sales schedules."
 msgstr ""
 
 #: building/templates/building/list.html:70
@@ -520,9 +519,8 @@ msgstr "Регистрация нового клиента"
 msgid "Select Customer"
 msgstr "Выберите клиента"
 
-#: contract/forms.py:29 otp/models.py:10
-#: otp/templates/otp/request_otp.html:211 users/forms.py:11
-#: users/templates/users/customer_list.html:38
+#: contract/forms.py:29 otp/models.py:10 otp/templates/otp/request_otp.html:211
+#: users/forms.py:11 users/templates/users/customer_list.html:38
 #: users/templates/users/customer_list.html:141
 #: users/templates/users/login.html:199
 #: users/templates/users/staff_list.html:44
@@ -886,8 +884,8 @@ msgstr "Security Verification Required:"
 
 #: contract/templates/contract/confirm_termination.html:19
 msgid ""
-"A 6-digit OTP confirmation code has been sent to the company manager's phone"
-" via Eskiz SMS. Enter the code below to authorize termination."
+"A 6-digit OTP confirmation code has been sent to the company manager's phone "
+"via Eskiz SMS. Enter the code below to authorize termination."
 msgstr ""
 
 #: contract/templates/contract/confirm_termination.html:25
@@ -1094,8 +1092,7 @@ msgid "Create New Real Estate Contract"
 msgstr "Оформить новый договор"
 
 #: contract/templates/contract/form.html:186
-msgid ""
-"Register contract, set installment terms, and generate payment schedule"
+msgid "Register contract, set installment terms, and generate payment schedule"
 msgstr ""
 
 #: contract/templates/contract/form.html:204
@@ -1287,8 +1284,13 @@ msgid "ID / Date"
 msgstr "ID / Дата"
 
 #: contract/templates/contract/list.html:101
+#, fuzzy
 msgid "No contracts found."
-msgstr "No contracts found."
+msgstr ""
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"No contracts found.\n"
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"Контракты не найдены."
 
 #: contract/templates/contract/list.html:114
 #: dashboard/templates/dashboard/sms_usage.html:119
@@ -1449,9 +1451,9 @@ msgstr "Примечание:"
 
 #: contract/templates/contract/template_list.html:98
 msgid ""
-"The system natively supports both standard English Jinja tags (e.g. <code>{{"
-" contract_amount }}</code>) and native Latin Uzbek chevron tags exactly as "
-"shown below."
+"The system natively supports both standard English Jinja tags (e.g. "
+"<code>{{ contract_amount }}</code>) and native Latin Uzbek chevron tags "
+"exactly as shown below."
 msgstr ""
 
 #: contract/templates/contract/template_list.html:103
@@ -1460,10 +1462,10 @@ msgstr "Обратная совместимость:"
 
 #: contract/templates/contract/template_list.html:104
 msgid ""
-"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, "
-"<code>«Этаж»</code>) from previous document versions are still fully "
-"supported and will continue to work automatically. You do not need to update"
-" your existing templates."
+"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, <code>«Этаж»</"
+"code>) from previous document versions are still fully supported and will "
+"continue to work automatically. You do not need to update your existing "
+"templates."
 msgstr ""
 
 #: contract/templates/contract/template_list.html:111
@@ -1599,8 +1601,13 @@ msgid "Remaining Payment %%"
 msgstr "Termination Payment"
 
 #: contract/templates/contract/template_list.html:158
+#, fuzzy
 msgid "Monthly Installment"
-msgstr "Ежемесячный взнос"
+msgstr ""
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"Ежемесячный взнос\n"
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"Ежемесячный платеж"
 
 #: contract/templates/contract/template_list.html:160
 msgid "Apartment Info"
@@ -1986,8 +1993,7 @@ msgstr "New Students"
 
 #: dashboard/templates/dashboard/partials/home_content.html:14
 msgid ""
-"Active, non-debtor students whose enrollment date falls in the current "
-"month."
+"Active, non-debtor students whose enrollment date falls in the current month."
 msgstr ""
 
 #: dashboard/templates/dashboard/partials/home_content.html:16
@@ -2341,9 +2347,8 @@ msgstr "OTP Token"
 msgid "OTP Tokens"
 msgstr "OTP Tokens"
 
-#: otp/templates/otp/request_otp.html:12
-#: otp/templates/otp/request_otp.html:192 users/templates/users/login.html:9
-#: users/templates/users/login.html:253
+#: otp/templates/otp/request_otp.html:12 otp/templates/otp/request_otp.html:192
+#: users/templates/users/login.html:9 users/templates/users/login.html:253
 msgid "Sign In"
 msgstr "Вход в систему"
 
@@ -2355,8 +2360,8 @@ msgstr "Введите номер телефона для получения к�
 msgid "Send Code"
 msgstr "Отправить код"
 
-#: otp/templates/otp/request_otp.html:228
-#: otp/templates/otp/verify_otp.html:247 templates/base.html:189
+#: otp/templates/otp/request_otp.html:228 otp/templates/otp/verify_otp.html:247
+#: templates/base.html:189
 msgid "All rights reserved."
 msgstr "Все права защищены."
 
@@ -2807,13 +2812,11 @@ msgstr "Вы уверены, что хотите удалить этого со�
 
 #: users/templates/users/staff_list.html:118
 #, fuzzy
-#| msgid ""
-#| "No roles added yet. Click 'Create Custom Role' to get started."
+#| msgid "No roles added yet. Click 'Create Custom Role' to get started."
 msgid ""
 "No staff members added yet. Click 'Add New Staff Member' to get started."
 msgstr ""
-"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы "
-"начать."
+"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы начать."
 
 #: users/templates/users/staff_list.html:134
 msgid "Permissions Count"
@@ -2838,8 +2841,7 @@ msgstr "Вы уверены, что хотите удалить эту роль?
 #: users/templates/users/staff_list.html:166
 msgid "No roles added yet. Click 'Create Custom Role' to get started."
 msgstr ""
-"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы "
-"начать."
+"Роли еще не добавлены. Нажмите «Создать пользовательскую роль», чтобы начать."
 
 #: users/templates/users/staff_list.html:180
 msgid "Add Sales Staff Member"
@@ -2912,8 +2914,7 @@ msgstr "Сотрудник был {}."
 #: users/views.py:212
 msgid "Access denied. Only company admins can delete staff."
 msgstr ""
-"В доступе отказано. Только администраторы компании могут удалять "
-"сотрудников."
+"В доступе отказано. Только администраторы компании могут удалять сотрудников."
 
 #: users/views.py:224
 msgid "Staff member deleted successfully. Their past sales remain intact."
@@ -2940,6 +2941,74 @@ msgid ""
 "Cannot delete this role because it is assigned to one or more staff members."
 msgstr ""
 
+msgid "Total Cash"
+msgstr "Всего наличными"
+
+msgid "Total Bank"
+msgstr "Всего перечислением"
+
+msgid "Total Sold (m²)"
+msgstr "Всего продано (м²)"
+
+msgid "Total Cash Collected"
+msgstr "Всего собрано наличными"
+
+msgid "Total Bank Collected"
+msgstr "Всего собрано перечислением"
+
+msgid "Reconciliation Report"
+msgstr "Акт сверки / Сальдо"
+
+msgid "Analyze contract balances, expected payments, and actual receipts."
+msgstr ""
+"Анализируйте остатки по контрактам, ожидаемые платежи и фактические "
+"поступления."
+
+msgid "Start Date"
+msgstr "Дата начала"
+
+msgid "End Date"
+msgstr "Дата окончания"
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Export Excel"
+msgstr "Экспорт Excel"
+
+msgid "Period Report"
+msgstr "Сальдо ведомость"
+
+msgid "Customer (FIO)"
+msgstr "ФИО"
+
+msgid "Beginning Balance"
+msgstr "Остаток на начало периода"
+
+msgid "Expected Payment"
+msgstr "К оплате за период"
+
+msgid "Actual Payment"
+msgstr "Оплачено за период"
+
+msgid "Ending Balance"
+msgstr "Остаток на конец периода"
+
+msgid "Contract No."
+msgstr "№"
+
+msgid "Schedule Start Date"
+msgstr "Дата начала оплаты по графику"
+
+msgid "Price per 1 m²"
+msgstr "Цена за 1 кв.м"
+
+msgid "OVERPAYMENT"
+msgstr "ПЕРЕПЛАТА (ОРТИҚЧА ТЎЛОВ)"
+
+msgid "DEBT"
+msgstr "ЗАДОЛЖЕННОСТЬ (ҚАРЗДОРЛИК)"
+
 #~ msgid "Session expired. Please request a new code."
 #~ msgstr "Session expired. Please request a new code."
 
@@ -2954,9 +3023,3 @@ msgstr ""
 
 #~ msgid "Year"
 #~ msgstr "Год"
-
-msgid "Total Cash"
-msgstr "Всего наличными"
-
-msgid "Total Bank"
-msgstr "Всего перечислением"

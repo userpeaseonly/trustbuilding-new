@@ -232,8 +232,8 @@ msgstr "Yangi bino loyihasi"
 msgid "Define structural parameters to auto-generate the apartment matrix"
 msgstr ""
 "Kvartiralar to'rini avtomatik yaratish uchun tuzilmaviy parametrlarni "
-"kiritingKvartira matritsasini avtomatik yaratish uchun tizimli parametrlarni"
-" aniqlang"
+"kiritingKvartira matritsasini avtomatik yaratish uchun tizimli parametrlarni "
+"aniqlang"
 
 #: building/templates/building/form.html:30
 #: building/templates/building/list.html:95
@@ -265,8 +265,8 @@ msgstr "Kengaytirilgan: Excel-dan import"
 msgid "Download a template, customize apartment details, and upload it back."
 msgstr ""
 "Shablonni yuklab oling, kvartira ma'lumotlarini to'ldiring va uni qayta "
-"yuklang.Shablonni yuklab oling, kvartira tafsilotlarini sozlang va uni qayta"
-" yuklang."
+"yuklang.Shablonni yuklab oling, kvartira tafsilotlarini sozlang va uni qayta "
+"yuklang."
 
 #: building/templates/building/form.html:67
 #: building/templates/building/list.html:132
@@ -390,8 +390,8 @@ msgstr "Hozircha turar-joy binolari yo'q"
 
 #: building/templates/building/list.html:67
 msgid ""
-"Create your first residential project to generate visual apartment grids and"
-" sales schedules."
+"Create your first residential project to generate visual apartment grids and "
+"sales schedules."
 msgstr ""
 
 #: building/templates/building/list.html:70
@@ -529,9 +529,8 @@ msgstr "Yangi mijozni ro'yxatdan o'tkazish"
 msgid "Select Customer"
 msgstr "Mijozni tanlang"
 
-#: contract/forms.py:29 otp/models.py:10
-#: otp/templates/otp/request_otp.html:211 users/forms.py:11
-#: users/templates/users/customer_list.html:38
+#: contract/forms.py:29 otp/models.py:10 otp/templates/otp/request_otp.html:211
+#: users/forms.py:11 users/templates/users/customer_list.html:38
 #: users/templates/users/customer_list.html:141
 #: users/templates/users/login.html:199
 #: users/templates/users/staff_list.html:44
@@ -896,8 +895,8 @@ msgstr "Xavfsizlik tekshiruvi talab qilinadi:"
 
 #: contract/templates/contract/confirm_termination.html:19
 msgid ""
-"A 6-digit OTP confirmation code has been sent to the company manager's phone"
-" via Eskiz SMS. Enter the code below to authorize termination."
+"A 6-digit OTP confirmation code has been sent to the company manager's phone "
+"via Eskiz SMS. Enter the code below to authorize termination."
 msgstr ""
 
 #: contract/templates/contract/confirm_termination.html:25
@@ -1105,8 +1104,7 @@ msgid "Create New Real Estate Contract"
 msgstr "Yangi shartnoma rasmiylashtirish"
 
 #: contract/templates/contract/form.html:186
-msgid ""
-"Register contract, set installment terms, and generate payment schedule"
+msgid "Register contract, set installment terms, and generate payment schedule"
 msgstr ""
 
 #: contract/templates/contract/form.html:204
@@ -1132,8 +1130,7 @@ msgstr "Mijozni o'zgartirish"
 
 #: contract/templates/contract/form.html:249
 msgid "Click or type phone (+99890...), customer full name, or PINFL..."
-msgstr ""
-"Bosing yoki telefon (+99890...), mijozning to‘liq ismini yoki PINFL..."
+msgstr "Bosing yoki telefon (+99890...), mijozning to‘liq ismini yoki PINFL..."
 
 #: contract/templates/contract/form.html:256
 msgid "Type to search customer database..."
@@ -1199,8 +1196,8 @@ msgstr ""
 #: contract/templates/contract/form.html:420
 msgid "Optional final month planned amount. Leave empty if no last payment."
 msgstr ""
-"Majburiy emas oxirgi oy rejalashtirilgan miqdor.Agar oxirgi to'lov bo'lmasa,"
-" bo'sh qoldiring."
+"Majburiy emas oxirgi oy rejalashtirilgan miqdor.Agar oxirgi to'lov bo'lmasa, "
+"bo'sh qoldiring."
 
 #: contract/templates/contract/form.html:429
 msgid "Live Schedule Calculation Preview"
@@ -1306,8 +1303,13 @@ msgid "ID / Date"
 msgstr "ID / Sana"
 
 #: contract/templates/contract/list.html:101
+#, fuzzy
 msgid "No contracts found."
-msgstr "Hech qanday shartnoma topilmadi."
+msgstr ""
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"Hech qanday shartnoma topilmadi.\n"
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"Shartnomalar topilmadi."
 
 #: contract/templates/contract/list.html:114
 #: dashboard/templates/dashboard/sms_usage.html:119
@@ -1338,8 +1340,8 @@ msgstr "Tanlang"
 #: contract/templates/contract/partials/customer_search_results.html:17
 msgid "No customers found. Click 'Register New Customer' above to add them."
 msgstr ""
-"Hech qanday mijoz topilmadi.Ularni qo'shish uchun yuqoridagi \"Yangi mijozni"
-" ro'yxatdan o'tkazish\" tugmasini bosing."
+"Hech qanday mijoz topilmadi.Ularni qo'shish uchun yuqoridagi \"Yangi mijozni "
+"ro'yxatdan o'tkazish\" tugmasini bosing."
 
 #: contract/templates/contract/quick_payment.html:10
 msgid "Search & Select Customer"
@@ -1470,9 +1472,9 @@ msgstr "Izoh / Qaydlar"
 
 #: contract/templates/contract/template_list.html:98
 msgid ""
-"The system natively supports both standard English Jinja tags (e.g. <code>{{"
-" contract_amount }}</code>) and native Latin Uzbek chevron tags exactly as "
-"shown below."
+"The system natively supports both standard English Jinja tags (e.g. "
+"<code>{{ contract_amount }}</code>) and native Latin Uzbek chevron tags "
+"exactly as shown below."
 msgstr ""
 
 #: contract/templates/contract/template_list.html:103
@@ -1481,10 +1483,10 @@ msgstr "Orqaga moslik:"
 
 #: contract/templates/contract/template_list.html:104
 msgid ""
-"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, "
-"<code>«Этаж»</code>) from previous document versions are still fully "
-"supported and will continue to work automatically. You do not need to update"
-" your existing templates."
+"Older Cyrillic tags (e.g. <code>«Шартнома_суммаси»</code>, <code>«Этаж»</"
+"code>) from previous document versions are still fully supported and will "
+"continue to work automatically. You do not need to update your existing "
+"templates."
 msgstr ""
 
 #: contract/templates/contract/template_list.html:111
@@ -1620,8 +1622,13 @@ msgid "Remaining Payment %%"
 msgstr "Tugatish to'lovi"
 
 #: contract/templates/contract/template_list.html:158
+#, fuzzy
 msgid "Monthly Installment"
-msgstr "Intermediate Monthly Installment:"
+msgstr ""
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"Intermediate Monthly Installment:\n"
+"#-#-#-#-#  django.po (imaan)  #-#-#-#-#\n"
+"Oyma-oy qancha to'lashi kerak"
 
 #: contract/templates/contract/template_list.html:160
 msgid "Apartment Info"
@@ -2013,8 +2020,7 @@ msgstr "Yangi talabalar"
 
 #: dashboard/templates/dashboard/partials/home_content.html:14
 msgid ""
-"Active, non-debtor students whose enrollment date falls in the current "
-"month."
+"Active, non-debtor students whose enrollment date falls in the current month."
 msgstr ""
 
 #: dashboard/templates/dashboard/partials/home_content.html:16
@@ -2369,9 +2375,8 @@ msgstr "OTP tokeni"
 msgid "OTP Tokens"
 msgstr "OTP tokenlari"
 
-#: otp/templates/otp/request_otp.html:12
-#: otp/templates/otp/request_otp.html:192 users/templates/users/login.html:9
-#: users/templates/users/login.html:253
+#: otp/templates/otp/request_otp.html:12 otp/templates/otp/request_otp.html:192
+#: users/templates/users/login.html:9 users/templates/users/login.html:253
 msgid "Sign In"
 msgstr "Tizimga kirish"
 
@@ -2383,8 +2388,8 @@ msgstr "Kirish kodini olish uchun telefon raqamingizni kiriting."
 msgid "Send Code"
 msgstr "Kodni yuborish"
 
-#: otp/templates/otp/request_otp.html:228
-#: otp/templates/otp/verify_otp.html:247 templates/base.html:189
+#: otp/templates/otp/request_otp.html:228 otp/templates/otp/verify_otp.html:247
+#: templates/base.html:189
 msgid "All rights reserved."
 msgstr "Barcha huquqlar himoyalangan."
 
@@ -2447,8 +2452,7 @@ msgstr "Sahifa topilmadi"
 
 #: templates/404.html:25
 msgid "The page you are looking for doesn't exist or has been moved."
-msgstr ""
-"Siz qidirayotgan sahifa mavjud emas yoki boshqa manzilga ko'chirilgan."
+msgstr "Siz qidirayotgan sahifa mavjud emas yoki boshqa manzilga ko'chirilgan."
 
 #: templates/404.html:29 templates/500.html:29
 msgid "Back to Dashboard"
@@ -2835,8 +2839,7 @@ msgstr "Haqiqatan ham bu xodimni o'chirib tashlamoqchimisiz?"
 
 #: users/templates/users/staff_list.html:118
 #, fuzzy
-#| msgid ""
-#| "No roles added yet. Click 'Create Custom Role' to get started."
+#| msgid "No roles added yet. Click 'Create Custom Role' to get started."
 msgid ""
 "No staff members added yet. Click 'Add New Staff Member' to get started."
 msgstr ""
@@ -2968,6 +2971,74 @@ msgid ""
 "Cannot delete this role because it is assigned to one or more staff members."
 msgstr ""
 
+msgid "Total Cash"
+msgstr "Jami naqd pul"
+
+msgid "Total Bank"
+msgstr "Jami pul o'tkazish"
+
+msgid "Total Sold (m²)"
+msgstr "Jami sotilgan (m²)"
+
+msgid "Total Cash Collected"
+msgstr "Jami yig'ilgan naqd pul"
+
+msgid "Total Bank Collected"
+msgstr "Jami yig'ilgan bank to'lovlari"
+
+msgid "Reconciliation Report"
+msgstr "Saldo hisoboti"
+
+msgid "Analyze contract balances, expected payments, and actual receipts."
+msgstr ""
+"Shartnoma qoldiqlari, kutilayotgan to'lovlar va haqiqiy tushumlarni tahlil "
+"qiling."
+
+msgid "Start Date"
+msgstr "Boshlanish sanasi"
+
+msgid "End Date"
+msgstr "Tugash sanasi"
+
+msgid "Filter"
+msgstr "Filtr"
+
+msgid "Export Excel"
+msgstr "Excelga yuklash"
+
+msgid "Period Report"
+msgstr "Saldo hisoboti"
+
+msgid "Customer (FIO)"
+msgstr "F.I.Sh"
+
+msgid "Beginning Balance"
+msgstr "Period boshiga qoldiq"
+
+msgid "Expected Payment"
+msgstr "Shu period to'lanishi kerak"
+
+msgid "Actual Payment"
+msgstr "Shu period to'lagan"
+
+msgid "Ending Balance"
+msgstr "Period oxiriga qoldiq"
+
+msgid "Contract No."
+msgstr "№"
+
+msgid "Schedule Start Date"
+msgstr "Grafik bo'yicha to'lov boshlanish sanasi"
+
+msgid "Price per 1 m²"
+msgstr "1 kv narxi"
+
+msgid "OVERPAYMENT"
+msgstr "ORTIQCHA TO'LOV"
+
+msgid "DEBT"
+msgstr "QARZDORLIK"
+
 #~ msgid "Session expired. Please request a new code."
 #~ msgstr "Seans muddati tugadi.Iltimos, yangi kod so'rang."
 
@@ -2982,9 +3053,3 @@ msgstr ""
 
 #~ msgid "Year"
 #~ msgstr "Yil"
-
-msgid "Total Cash"
-msgstr "Jami naqd pul"
-
-msgid "Total Bank"
-msgstr "Jami pul o'tkazish"
