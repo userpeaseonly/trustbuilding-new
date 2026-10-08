@@ -3039,6 +3039,24 @@ msgstr "ORTIQCHA TO'LOV"
 msgid "DEBT"
 msgstr "QARZDORLIK"
 
+msgid "Has Overdue Debt"
+msgstr "Qarzdorligi bor"
+
+msgid "Total Card"
+msgstr "Jami plastik karta"
+
+msgid "Total Material"
+msgstr "Jami material"
+
+msgid "Total Card Collected"
+msgstr "Jami yig'ilgan karta to'lovlari"
+
+msgid "Total Material Collected"
+msgstr "Jami yig'ilgan materiallar"
+
+msgid "Collected Revenue Breakdown"
+msgstr "Tushumlarning taqsimoti"
+
 #~ msgid "Session expired. Please request a new code."
 #~ msgstr "Seans muddati tugadi.Iltimos, yangi kod so'rang."
 

@@ -30,12 +30,39 @@ def contract_list(request):
     status_filter = request.GET.get('status', '')
     sort_by = request.GET.get('sort', '')
     
+    has_debt = request.GET.get('has_debt') == 'true'
+
     if query:
         contracts = contracts.filter(
             Q(customer__phone_number__icontains=query) |
             Q(customer__full_name__icontains=query) |
             Q(id__icontains=query) |
             Q(contract_id__icontains=query)
+        )
+        
+    if has_debt:
+        from django.utils import timezone
+        from django.db.models import Sum, Subquery, OuterRef, F, DecimalField
+        from django.db.models.functions import Coalesce
+        
+        total_paid_sq = PaymentLog.objects.filter(
+            contract=OuterRef('pk')
+        ).values('contract').annotate(
+            total=Sum('amount')
+        ).values('total')
+        
+        expected_sq = PaymentRecord.objects.filter(
+            contract=OuterRef('pk'),
+            due_date__lte=timezone.now().date()
+        ).values('contract').annotate(
+            total=Sum('plan_amount')
+        ).values('total')
+        
+        contracts = contracts.annotate(
+            paid_to_date=Coalesce(Subquery(total_paid_sq), 0, output_field=DecimalField()),
+            expected_to_date=Coalesce(Subquery(expected_sq), 0, output_field=DecimalField())
+        ).filter(
+            expected_to_date__gt=F('paid_to_date')
         )
         
     if sort_by == 'oldest':

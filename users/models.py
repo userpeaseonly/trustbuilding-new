@@ -58,12 +58,19 @@ class CustomUser(AbstractUser):
             return ""
         if len(parts) == 1:
             return parts[0]
-        
-        last_name = parts[0]
-        initials = [f"{part[0].upper()}." for part in parts[1:] if part]
-        return f"{''.join(initials)} {last_name}"
-
-
+            
+        filtered_parts = []
+        for part in parts:
+            w = part.lower().replace("'", "").replace("‘", "").replace("’", "")
+            if w not in ["ogli", "ugli", "qizi", "ўғли", "угли", "қизи", "кизи"]:
+                filtered_parts.append(part)
+                
+        if not filtered_parts:
+            filtered_parts = parts
+            
+        last_name = filtered_parts[0]
+        initials = [f"{part[0].upper()}." for part in filtered_parts[1:] if part]
+        return f"{''.join(initials)} {last_name}".strip()
 class CompanyProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='company_profile')
     company_name = models.CharField(_("Company Name"), max_length=255)

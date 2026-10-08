@@ -5,7 +5,7 @@
 <div class="space-y-6">
 
         <!-- KPI Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
         
         <!-- Active Contracts -->
         <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
@@ -28,7 +28,20 @@
             </div>
             <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 ml-3">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942a60.07 60.07 0 00-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942c0-.754.727-1.294 1.453-1.096a60.07 60.07 0 0115.797-2.101c.727-.198 1.453.342 1.453 1.096v10.518c0 .754-.727 1.294-1.453 1.096a60.07 60.07 0 00-15.797 2.101z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Expected Payment -->
+        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
+            <div class="overflow-hidden">
+                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Expected Payment" %}</p>
+                <p class="text-lg font-bold text-teal-600 mt-0.5 whitespace-nowrap truncate">{{ stats.expected_monthly_payment|uzs }}</p>
+            </div>
+            <div class="p-2 bg-teal-50 text-teal-600 rounded-lg shrink-0 ml-3">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008z" />
                 </svg>
             </div>
         </div>
@@ -62,53 +75,96 @@
             </div>
         </div>
 
+        <!-- Row 2 Alignment Wrapper -->
         <!-- Total Sqm Sold -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
-            <div class="overflow-hidden">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Sold (m²)" %}</p>
-                <p class="text-lg font-bold text-slate-900 mt-0.5 whitespace-nowrap truncate">{{ stats.total_sqm_sold|floatformat:2 }} m²</p>
-            </div>
-            <div class="p-2 bg-orange-50 text-orange-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-                </svg>
-            </div>
-        </div>
-
-        <!-- Total Cash Collected -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
-            <div class="overflow-hidden">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Cash Collected" %}</p>
-                <p class="text-lg font-bold text-emerald-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_cash_collected|uzs }}</p>
-            </div>
-            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942a60.07 60.07 0 00-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V5.942c0-.754.727-1.294 1.453-1.096a60.07 60.07 0 0115.797-2.101c.727-.198 1.453.342 1.453 1.096v10.518c0 .754-.727 1.294-1.453 1.096a60.07 60.07 0 00-15.797 2.101z" />
-                </svg>
+        <div class="col-span-1 flex flex-col">
+            
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex flex-col justify-center transition hover:shadow-md h-full">
+                <div class="flex items-center gap-1.5 mb-2 text-orange-600">
+                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                    </svg>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">{% trans "Total Sold (m²)" %}</span>
+                </div>
+                <p class="text-sm font-extrabold text-slate-900 mt-0.5">{{ stats.total_sqm_sold|formatted_amount }} m²</p>
             </div>
         </div>
 
-        <!-- Total Bank Collected -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
-            <div class="overflow-hidden">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Bank Collected" %}</p>
-                <p class="text-lg font-bold text-blue-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_bank_collected|uzs }}</p>
-            </div>
-            <div class="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-                </svg>
+        
+<style>
+  @media (min-width: 768px) {
+    .revenue-wrapper { grid-column: span 4 / span 4; }
+    .revenue-inner { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 767px) {
+    .revenue-wrapper { grid-column: span 1 / span 1; }
+    .revenue-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+<!-- Collected Revenue Breakdown Wrapper (Spans remaining 4 columns) -->
+        <div class="revenue-wrapper flex flex-col relative">
+            
+            
+            
+            <!-- Dotted border grouping background (absolute so it doesn't break grid alignment) -->
+            <div class="absolute -inset-3 border-2 border-dotted border-slate-400 rounded-2xl bg-slate-50/50 transition-colors duration-300 hover:bg-slate-100/80 -z-10 pointer-events-auto"></div>
+            
+            <!-- Internal Grid -->
+            <div class="grid revenue-inner gap-4 flex-1">
+                    <!-- Cash -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 hover:border-emerald-200 hover:bg-emerald-50/30 transition flex flex-col justify-center">
+                        <div class="flex items-center gap-1.5 mb-2 text-emerald-600">
+                            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942a60.07 60.07 0 00-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942c0-.754.727-1.294 1.453-1.096a60.07 60.07 0 0115.797-2.101c.727-.198 1.453.342 1.453 1.096v10.518c0 .754-.727 1.294-1.453 1.096a60.07 60.07 0 00-15.797 2.101z" />
+                            </svg>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{% trans "Cash" %}</span>
+                        </div>
+                        <p class="text-sm font-extrabold text-emerald-600 truncate" title="{{ stats.total_cash_collected|uzs }}">{{ stats.total_cash_collected|uzs }}</p>
+                    </div>
+
+                    <!-- Bank -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 hover:border-blue-200 hover:bg-blue-50/30 transition flex flex-col justify-center">
+                        <div class="flex items-center gap-1.5 mb-2 text-blue-600">
+                            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+                            </svg>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{% trans "Bank" %}</span>
+                        </div>
+                        <p class="text-sm font-extrabold text-blue-600 truncate" title="{{ stats.total_bank_collected|uzs }}">{{ stats.total_bank_collected|uzs }}</p>
+                    </div>
+
+                    <!-- Card -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 hover:border-purple-200 hover:bg-purple-50/30 transition flex flex-col justify-center">
+                        <div class="flex items-center gap-1.5 mb-2 text-purple-600">
+                            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                            </svg>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{% trans "Card" %}</span>
+                        </div>
+                        <p class="text-sm font-extrabold text-purple-600 truncate" title="{{ stats.total_card_collected|uzs }}">{{ stats.total_card_collected|uzs }}</p>
+                    </div>
+
+                    <!-- Material -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 hover:border-stone-300 hover:bg-stone-50/30 transition flex flex-col justify-center">
+                        <div class="flex items-center gap-1.5 mb-2 text-stone-600">
+                            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                            </svg>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{% trans "Material" %}</span>
+                        </div>
+                        <p class="text-sm font-extrabold text-stone-600 truncate" title="{{ stats.total_material_collected|uzs }}">{{ stats.total_material_collected|uzs }}</p>
+                    </div>
+                
             </div>
         </div>
     </div>
 
-
-        <!-- Main Content Area -->
+    <!-- Main Content Area -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Recent Transactions -->
         <div class="lg:col-span-2 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
-            <div class="p-6 flex justify-between items-center">
+            <div class="py-3 px-6 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-slate-900">{% trans "Recent Payments" %}</h3>
                 <a href="{% url 'contract:list' %}" class="inline-flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
                     {% trans "View all contracts" %}
@@ -137,25 +193,21 @@
                                         {{ log.contract.customer.full_name|default:log.contract.customer.phone_number|make_list|first|upper }}
                                     </div>
                                     <span class="text-sm font-medium text-slate-900">{{ log.contract.customer.full_name|default:log.contract.customer.phone_number }}</span>
-                                </div>
-                            </td>
+                                </div></td>
                             <td class="py-3 px-6">
                                 <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60">
                                     <svg class="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
                                     </svg>
                                     {% trans "Apt" %} {{ log.contract.apartment.apartment_number }}
-                                </span>
-                            </td>
+                                </span></td>
                             <td class="py-3 px-6">
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
                                     +{{ log.amount|uzs }}
-                                </span>
-                            </td>
+                                </span></td>
                             <td class="py-3 px-6 text-right">
                                 <div class="text-sm text-slate-700 font-medium">{{ log.date_paid|date:"d M Y" }}</div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">{{ log.date_paid|date:"H:i" }}</div>
-                            </td>
+                                </td>
                         </tr>
                         {% empty %}
                         <tr>
@@ -166,8 +218,7 @@
                                     </svg>
                                 </div>
                                 <p class="text-sm font-medium text-slate-900">{% trans "No recent payments" %}</p>
-                                <p class="text-xs text-slate-500 mt-1">{% trans "Payments will appear here once processed." %}</p>
-                            </td>
+                                <p class="text-xs text-slate-500 mt-1">{% trans "Payments will appear here once processed." %}</p></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -201,7 +252,7 @@
                                 <p class="text-xs text-slate-500 mt-1 leading-relaxed">{% trans "Clients who have missed their scheduled due date require attention." %}</p>
                             </div>
                         </div>
-                        <a href="{% url 'contract:list' %}" class="mt-4 flex items-center justify-center gap-1.5 w-full py-2 px-4 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm">
+                        <a href="{% url 'contract:list' %}?has_debt=true" class="mt-4 flex items-center justify-center gap-1.5 w-full py-2 px-4 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-sm">
                             {% trans "Review Contracts" %}
                             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -222,46 +273,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Total Sqm Sold -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
-            <div class="overflow-hidden">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Sold (m²)" %}</p>
-                <p class="text-lg font-bold text-slate-900 mt-0.5 whitespace-nowrap truncate">{{ stats.total_sqm_sold|floatformat:2 }} m²</p>
-            </div>
-            <div class="p-2 bg-orange-50 text-orange-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-                </svg>
-            </div>
-        </div>
-
-        <!-- Total Cash Collected -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
-            <div class="overflow-hidden">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Cash Collected" %}</p>
-                <p class="text-lg font-bold text-emerald-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_cash_collected|uzs }}</p>
-            </div>
-            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V5.942c0-.754-.727-1.294-1.453-1.096V5.942a60.07 60.07 0 00-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V5.942c0-.754.727-1.294 1.453-1.096a60.07 60.07 0 0115.797-2.101c.727-.198 1.453.342 1.453 1.096v10.518c0 .754-.727 1.294-1.453 1.096a60.07 60.07 0 00-15.797 2.101z" />
-                </svg>
-            </div>
-        </div>
-
-        <!-- Total Bank Collected -->
-        <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
-            <div class="overflow-hidden">
-                <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{% trans "Total Bank Collected" %}</p>
-                <p class="text-lg font-bold text-blue-600 mt-0.5 whitespace-nowrap truncate">{{ stats.total_bank_collected|uzs }}</p>
-            </div>
-            <div class="p-2 bg-blue-50 text-blue-600 rounded-lg shrink-0 ml-3">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.75" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-                </svg>
-            </div>
-        </div>
-    </div>
 
 </div>
 {% endblock %}

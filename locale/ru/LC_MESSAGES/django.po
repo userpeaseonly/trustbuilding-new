@@ -3009,6 +3009,24 @@ msgstr "ПЕРЕПЛАТА (ОРТИҚЧА ТЎЛОВ)"
 msgid "DEBT"
 msgstr "ЗАДОЛЖЕННОСТЬ (ҚАРЗДОРЛИК)"
 
+msgid "Has Overdue Debt"
+msgstr "Имеется задолженность"
+
+msgid "Total Card"
+msgstr "Итого по карте"
+
+msgid "Total Material"
+msgstr "Итого материалами"
+
+msgid "Total Card Collected"
+msgstr "Итого собрано по картам"
+
+msgid "Total Material Collected"
+msgstr "Итого собрано материалами"
+
+msgid "Collected Revenue Breakdown"
+msgstr "Разбивка собранной выручки"
+
 #~ msgid "Session expired. Please request a new code."
 #~ msgstr "Session expired. Please request a new code."
 

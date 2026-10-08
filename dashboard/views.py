@@ -36,6 +36,20 @@ def home(request):
     active_contracts_count = active_contracts.count()
     
     # 3. Revenue Stats
+    # Expected Payment this month
+    import calendar
+    from decimal import Decimal
+    _, last_day = calendar.monthrange(now.year, now.month)
+    end_of_month = now.replace(day=last_day).date()
+    start_of_month = current_month.date()
+
+    expected_monthly_payment = PaymentRecord.objects.filter(
+        contract__company=company,
+        contract__status='ACTIVE',
+        due_date__gte=start_of_month,
+        due_date__lte=end_of_month
+    ).aggregate(total=Sum('plan_amount'))['total'] or Decimal('0.00')
+
     # Revenue this month (sum of all PaymentLogs this month)
     monthly_revenue = PaymentLog.objects.filter(
         contract__company=company,
@@ -52,6 +66,18 @@ def home(request):
     total_bank_collected = PaymentLog.objects.filter(
         contract__company=company,
         payment_type=PaymentLog.PAYMENT_TYPE_BANK
+    ).aggregate(total=Sum('amount'))['total'] or 0
+    
+    # Total Card
+    total_card_collected = PaymentLog.objects.filter(
+        contract__company=company,
+        payment_type=PaymentLog.PAYMENT_TYPE_CARD
+    ).aggregate(total=Sum('amount'))['total'] or 0
+    
+    # Total Material
+    total_material_collected = PaymentLog.objects.filter(
+        contract__company=company,
+        payment_type=PaymentLog.PAYMENT_TYPE_MATERIAL
     ).aggregate(total=Sum('amount'))['total'] or 0
     
     # Total square meters sold
@@ -89,8 +115,11 @@ def home(request):
             'active_contracts_count': active_contracts_count,
             'total_sqm_sold': total_sqm_sold,
             'monthly_revenue': monthly_revenue,
+            'expected_monthly_payment': expected_monthly_payment,
             'total_cash_collected': total_cash_collected,
             'total_bank_collected': total_bank_collected,
+            'total_card_collected': total_card_collected,
+            'total_material_collected': total_material_collected,
             'total_outstanding_debt': total_outstanding_debt,
             'late_payments_count': late_payments_count,
         },
