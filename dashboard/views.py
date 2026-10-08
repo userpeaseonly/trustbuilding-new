@@ -26,6 +26,7 @@ def home(request):
     # Check date filters
     start_date_str = request.GET.get('start_date')
     end_date_str = request.GET.get('end_date')
+    payment_type = request.GET.get('payment_type', '')
     filter_all = request.GET.get('filter_all') == 'true'
     
     now = timezone.now()
@@ -84,6 +85,8 @@ def home(request):
     # Revenue
     revenue_qs = PaymentLog.objects.filter(contract__company=company)
     revenue_qs = apply_date_filter(revenue_qs, 'date_paid', is_datetime=True)
+    if payment_type:
+        revenue_qs = revenue_qs.filter(payment_type=payment_type)
     monthly_revenue = revenue_qs.aggregate(total=Sum('amount'))['total'] or 0
 
     # Collections by type
@@ -119,6 +122,8 @@ def home(request):
     ).select_related('contract__customer', 'contract__apartment').order_by('-date_paid')
     
     payments_list = apply_date_filter(payments_list, 'date_paid', is_datetime=True)
+    if payment_type:
+        payments_list = payments_list.filter(payment_type=payment_type)
     
 
     # Export to Excel feature for Payments (Receipts)
@@ -177,6 +182,8 @@ def home(request):
         'start_date_str': start_date_str if not filter_all else '',
         'end_date_str': end_date_str if not filter_all else '',
         'filter_all': filter_all,
+        'payment_type': payment_type,
+        'payment_types': PaymentLog.PAYMENT_TYPE_CHOICES,
         'stats': {
             'total_apartments': total_apartments,
             'sold_apartments': sold_apartments,

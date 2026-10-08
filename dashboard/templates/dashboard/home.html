@@ -2,10 +2,10 @@
 {% load i18n dashboard_tags %}
 
 {% block content %}
-<div class="space-y-6">
+<div>
 
             <!-- KPI Stats Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-3 mb-3">
         
         <!-- Active Contracts -->
         <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 flex items-center justify-between transition hover:shadow-md">
@@ -110,7 +110,7 @@
             <div class="absolute -inset-3 border-2 border-dotted border-slate-400 rounded-2xl bg-slate-50/50 transition-colors duration-300 hover:bg-slate-100/80 -z-10 pointer-events-auto"></div>
             
             <!-- Internal Grid -->
-            <div class="grid revenue-inner gap-4 flex-1">
+            <div class="grid revenue-inner gap-3 flex-1">
                     <!-- Cash -->
                     <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-4 hover:border-emerald-200 hover:bg-emerald-50/30 transition flex flex-col justify-center">
                         <div class="flex items-center gap-1.5 mb-2 text-emerald-600">
@@ -159,7 +159,7 @@
         </div>
     </div>
 
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-6 mb-4">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
                 {% if stats.late_payments_count > 0 %}
         <a href="{% url 'contract:list' %}?has_debt=true" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors border border-rose-100 group">
             <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -191,7 +191,7 @@
             </style>
             <form method="get" class="flex items-center bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden text-sm">
                 <!-- Start Date -->
-                <div class="flex items-center px-3 border-r border-slate-200 relative group">
+                <div class="flex items-center pl-3 pr-2 relative group">
                     <svg class="w-4 h-4 text-indigo-600 mr-2 shrink-0 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                     </svg>
@@ -202,14 +202,14 @@
                 </div>
                 
                 <!-- Arrow -->
-                <div class="px-2 text-slate-300">
+                <div class="px-1 text-slate-300">
                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                     </svg>
                 </div>
                 
                 <!-- End Date -->
-                <div class="flex items-center px-3 border-r border-slate-200 relative group">
+                <div class="flex items-center pl-2 pr-3 border-r border-slate-200 relative group">
                     <svg class="w-4 h-4 text-indigo-600 mr-2 shrink-0 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                     </svg>
@@ -219,8 +219,22 @@
                     </svg>
                 </div>
                 
+                
+                <!-- Payment Type -->
+                <div class="flex items-center px-1 border-r border-slate-200 relative group">
+                    <select name="payment_type" class="border-0 focus:ring-0 text-slate-700 py-2 pl-2 pr-7 bg-transparent text-sm font-medium cursor-pointer appearance-none">
+                        <option value="">{% trans "All Types" %}</option>
+                        {% for pt_value, pt_label in payment_types %}
+                            <option value="{{ pt_value }}" {% if payment_type == pt_value %}selected{% endif %}>{{ pt_label }}</option>
+                        {% endfor %}
+                    </select>
+                    <svg class="w-3.5 h-3.5 text-slate-400 absolute right-2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                </div>
+                
                 <!-- Filter Button -->
-                <button type="submit" class="px-4 py-2 text-slate-700 font-medium hover:bg-slate-50 transition-colors">
+                <button type="submit" class="px-4 py-2 bg-slate-50 text-slate-700 font-medium hover:bg-slate-100 transition-colors">
                     {% trans "Filter" %}
                 </button>
             </form>
@@ -232,7 +246,7 @@
                 </button>
             </form>
 
-            <a href="?export=excel{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg shadow-sm font-medium hover:bg-emerald-700 transition-colors text-sm inline-flex items-center gap-1.5">
+            <a href="?export=excel{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg shadow-sm font-medium hover:bg-emerald-700 transition-colors text-sm inline-flex items-center gap-1.5">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                 </svg>
@@ -326,7 +340,7 @@
                 </p>
                 <nav class="flex items-center gap-1">
                     {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors">
+                    <a href="?page={{ page_obj.previous_page_number }}{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
                     </a>
                     {% endif %}
@@ -335,12 +349,12 @@
                         {% if page_obj.number == i %}
                         <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 font-bold text-xs">{{ i }}</span>
                         {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                        <a href="?page={{ i }}{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors text-xs font-medium">{{ i }}</a>
+                        <a href="?page={{ i }}{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors text-xs font-medium">{{ i }}</a>
                         {% endif %}
                     {% endfor %}
                     
                     {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors">
+                    <a href="?page={{ page_obj.next_page_number }}{% if start_date_str %}&start_date={{ start_date_str }}{% endif %}{% if end_date_str %}&end_date={{ end_date_str }}{% endif %}{% if filter_all %}&filter_all=true{% endif %}{% if payment_type %}&payment_type={{ payment_type }}{% endif %}" class="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
                     </a>
                     {% endif %}
