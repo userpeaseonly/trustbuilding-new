@@ -82,8 +82,14 @@
                 </div>
                 <div class="flex justify-between">
                     <span class="text-slate-500">{% trans "Phone" %}</span>
-                    <span class="text-slate-500 font-semibold font-medium">{{ contract.customer.phone_number }}</span>
+                    <span class="text-slate-900 font-bold">{{ contract.customer.phone_number }}</span>
                 </div>
+                {% if contract.customer.secondary_phone_number %}
+                <div class="flex justify-between">
+                    <span class="text-slate-500">{% trans "Secondary Phone" %}</span>
+                    <span class="text-slate-900 font-bold">{{ contract.customer.secondary_phone_number }}</span>
+                </div>
+                {% endif %}
                 <div class="flex justify-between">
                     <span class="text-slate-500">{% trans "PINFL / JSHSHR" %}</span>
                     <span class="text-slate-800 font-semibold">{{ contract.customer.passport_jshshr|default:"N/A" }}</span>
