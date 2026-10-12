@@ -11,8 +11,8 @@ echo "[$(date)] Initializing TrustBuilding Database Backup Service..."
 # Ensure /backups directory exists
 mkdir -p /backups
 
-# Export container environment variables for cron execution
-printenv | grep -E '^(POSTGRES_|TELEGRAM_|BACKUP_|PATH)' | sed 's/^\(.*\)$/export \1/g' > /app/env.sh
+# Export container environment variables for cron execution (properly quoted)
+export -p | grep -E ' (POSTGRES_|TELEGRAM_|BACKUP_KEEP_DAYS)' > /app/env.sh
 chmod +x /app/env.sh
 
 # Configure cron schedule (default: 03:00 UTC daily)
@@ -30,7 +30,6 @@ ${CRON_SCHEDULE} root . /app/env.sh && /app/backup.sh >> /proc/1/fd/1 2>&1
 EOF
 
 chmod 0644 "${CRON_FILE}"
-crontab "${CRON_FILE}"
 
 echo "[$(date)] Cron daemon starting in foreground. Waiting for scheduled runs..."
 exec cron -f
