@@ -34,7 +34,9 @@ export PGPASSWORD="${POSTGRES_PASSWORD}"
 # Execute pg_dump and compress
 if ! pg_dump -h "${POSTGRES_HOST:-db}" -p "${POSTGRES_PORT:-5432}" -U "${POSTGRES_USER}" "${POSTGRES_DB}" | gzip -9 > "${BACKUP_FILE}"; then
     echo "[$(date)] ERROR: pg_dump failed!"
-    send_telegram_alert "🔴 <b>CRITICAL: TrustBuilding DB Backup FAILED!</b>%0A📅 <b>Time:</b> ${HUMAN_DATE}%0A⚠️ <b>Error:</b> pg_dump execution error."
+    send_telegram_alert "🔴 <b>CRITICAL: TrustBuilding DB Backup FAILED!</b>
+📅 <b>Time:</b> ${HUMAN_DATE}
+⚠️ <b>Error:</b> pg_dump execution error."
     rm -f "${BACKUP_FILE}"
     exit 1
 fi
@@ -55,7 +57,10 @@ if [ -n "${BOT_TOKEN}" ] && [ -n "${TELEGRAM_BACKUP_CHAT_ID:-}" ]; then
         echo "[$(date)] WARNING: Backup file exceeds 50MB limit. Splitting into chunks..."
         split -b 45M "${BACKUP_FILE}" "${BACKUP_FILE}.part_"
         
-        send_telegram_alert "⚠️ <b>TrustBuilding DB Backup: File exceeds 50MB</b>%0A📅 <b>Date:</b> ${HUMAN_DATE}%0A📦 <b>Total Size:</b> ${FILE_SIZE}%0AUploading in multiple parts..."
+        send_telegram_alert "⚠️ <b>TrustBuilding DB Backup: File exceeds 50MB</b>
+📅 <b>Date:</b> ${HUMAN_DATE}
+📦 <b>Total Size:</b> ${FILE_SIZE}
+Uploading in multiple parts..."
         
         for part in "${BACKUP_FILE}.part_"*; do
             local_thread_param=""
@@ -70,7 +75,12 @@ if [ -n "${BOT_TOKEN}" ] && [ -n "${TELEGRAM_BACKUP_CHAT_ID:-}" ]; then
             rm -f "${part}"
         done
     else
-        CAPTION="🟢 <b>TrustBuilding Database Backup</b>%0A📅 <b>Date:</b> ${HUMAN_DATE}%0A📦 <b>Size:</b> ${FILE_SIZE}%0A⏱ <b>Duration:</b> ${DURATION}s%0A🗄 <b>Database:</b> PostgreSQL 18%0A📁 <b>File:</b> $(basename "${BACKUP_FILE}")"
+        CAPTION="🟢 <b>TrustBuilding Database Backup</b>
+📅 <b>Date:</b> ${HUMAN_DATE}
+📦 <b>Size:</b> ${FILE_SIZE}
+⏱ <b>Duration:</b> ${DURATION}s
+🗄 <b>Database:</b> PostgreSQL 18
+📁 <b>File:</b> $(basename "${BACKUP_FILE}")"
         
         thread_param=""
         if [ -n "${TELEGRAM_BACKUP_THREAD_ID:-}" ]; then
