@@ -105,8 +105,16 @@ def staff_list_view(request):
 @require_permission('view_customers')
 def customer_list_view(request):
     """Customer directory listing & customer registration"""
+    from building.views import get_user_company
+    company = get_user_company(request.user)
+
     query = request.GET.get('q', '').strip()
-    customers = CustomUser.objects.filter(is_customer=True).annotate(contract_count=Count('customer_contracts')).order_by('-created_at')
+    customers = CustomUser.objects.filter(
+        is_customer=True,
+        company_links__company=company
+    ).annotate(
+        contract_count=Count('customer_contracts', filter=Q(customer_contracts__company=company))
+    ).order_by('-created_at')
     
     if query:
         customers = customers.filter(
@@ -125,15 +133,13 @@ def customer_list_view(request):
         page_obj = paginator.page(paginator.num_pages)
         
     if request.method == 'POST':
-        form = CustomerRegistrationForm(request.POST, request.FILES)
+        form = CustomerRegistrationForm(request.POST, request.FILES, company=company)
         if form.is_valid():
-            customer = form.save(commit=False)
-            customer.is_customer = True
-            customer.save()
+            customer = form.save(commit=True)
             messages.success(request, _("Customer profile registered successfully!"))
             return redirect('users:customer_list')
     else:
-        form = CustomerRegistrationForm()
+        form = CustomerRegistrationForm(company=company)
         
     return render(request, 'users/customer_list.html', {
         'customers': page_obj.object_list,
@@ -141,6 +147,7 @@ def customer_list_view(request):
         'form': form,
         'query': query
     })
+
 
 
 

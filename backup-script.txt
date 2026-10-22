@@ -1,0 +1,36 @@
+# 1. Dump database from inside the production Docker container
+docker exec trustbuilding_production-db-1 pg_dump \
+  -U trustbuilding \
+  -d trustbuilding \
+  --no-owner \
+  --no-acl \
+  -F c \
+  -f /tmp/trustbuilding_dump.dump
+
+# 2. Copy the dump out of the container to the server's home directory
+docker cp trustbuilding_production-db-1:/tmp/trustbuilding_dump.dump ~/trustbuilding_dump.dump
+
+
+
+# Download the dump from the server to your local machine
+scp trustbuilding@116.203.50.220:~/trustbuilding_dump.dump ~/trustbuilding_dump.dump
+
+
+
+# 1. Copy the dump into your local db container
+docker cp ~/trustbuilding_dump.dump trustbuilding-db-1:/tmp/trustbuilding_dump.dump
+
+# 2. Drop and recreate your local database (clean slate)
+docker exec trustbuilding-db-1 psql -U trustbuilding_user -d postgres \
+  -c "DROP DATABASE IF EXISTS trustbuilding_db;"
+docker exec trustbuilding-db-1 psql -U trustbuilding_user -d postgres \
+  -c "CREATE DATABASE trustbuilding_db OWNER trustbuilding_user;"
+
+# 3. Restore the production data into your local database
+docker exec trustbuilding-db-1 pg_restore \
+  -U trustbuilding_user \
+  -d trustbuilding_db \
+  --no-owner \
+  --no-acl \
+  -F c \
+  /tmp/trustbuilding_dump.dump

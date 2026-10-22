@@ -4,6 +4,7 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Contract, PaymentRecord
 from otp.services import send_sms
+from otp.transliteration import build_overdue_sms, build_upcoming_reminder_sms
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +30,13 @@ def process_daily_payment_reminders():
         record.is_late = True
         record.save(update_fields=['is_late', 'updated_at'])
         
-        formatted_debt = f"{record.debt:,.2f}".replace(",", " ")
         customer_phone = str(record.contract.customer.phone_number)
-        message = f"Hurmatli {record.contract.customer.full_name or 'Mijoz'}, No{record.contract.id} shartnomangiz bo'yicha {record.due_date.strftime('%d.%m.%Y')} kungi {formatted_debt} UZS to'lovingiz kechikmoqda. Iltimos, to'lovni amalga oshiring." 
+        message = build_overdue_sms(
+            customer_full_name=record.contract.customer.full_name,
+            contract_id=record.contract.id,
+            due_date=record.due_date,
+            debt_amount=record.debt
+        )
         try:
             send_sms(customer_phone, message, company=record.contract.company)
             overdue_count += 1
@@ -47,12 +52,11 @@ def process_daily_payment_reminders():
 
     reminder_count = 0
     for record in upcoming_records:
-        formatted_debt = f"{record.debt:,.2f}".replace(",", " ")
         customer_phone = str(record.contract.customer.phone_number)
-        message = (
-            f"Eslatma: No{record.contract.id} sonli shartnoma bo'yicha "
-            f"{record.due_date.strftime('%d.%m.%Y')} kuni {formatted_debt} UZS "
-            f"to'lov muddati kelmoqda."
+        message = build_upcoming_reminder_sms(
+            contract_id=record.contract.id,
+            due_date=record.due_date,
+            amount=record.debt
         )
         try:
             send_sms(customer_phone, message, company=record.contract.company)

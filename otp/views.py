@@ -49,7 +49,8 @@ def request_otp_view(request):
         token = OTPToken.objects.create(phone_number=phone_number)
         
         # Send SMS via Eskiz
-        message = f"TrustBuilding: Tizimga kirish uchun tasdiqlash kodi: {token.code}"
+        from .transliteration import build_login_otp_sms
+        message = build_login_otp_sms(token.code)
         success = EskizSMS.send_sms(phone_number, message)
         
         from django.conf import settings

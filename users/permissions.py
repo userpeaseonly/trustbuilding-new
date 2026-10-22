@@ -48,6 +48,13 @@ AVAILABLE_PERMISSIONS = {
             ('view_reports', _('View Dashboard & Financials')),
         ]
     },
+    'finance': {
+        'label': _('Finance & Cash Desks'),
+        'actions': [
+            ('view_finance', _('View Cash Flow & Balances')),
+            ('manage_finance', _('Record Incomes, Expenses & Transfers')),
+        ]
+    },
     'sms': {
         'label': _('SMS Marketing'),
         'actions': [

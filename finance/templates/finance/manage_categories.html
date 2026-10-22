@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Expense Categories" %} - TrustBuilding{% endblock %}
+
+{% block content %}
+<div class="space-y-4 max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="-mt-2 mb-3 flex items-center justify-between">
+        <div>
+            <div class="flex items-center gap-2">
+                <a href="{% url 'finance:overview' %}" class="text-xs text-indigo-600 hover:underline">← {% trans "Back to Finance" %}</a>
+            </div>
+            <h1 class="text-xl font-bold text-slate-900 mt-1">{% trans "Manage Expense Categories (Статьи расходов)" %}</h1>
+        </div>
+    </div>
+
+    <!-- Create Category Card -->
+    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+        <h3 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2.5 mb-3 flex items-center gap-1.5">
+            <span>➕</span> {% trans "Add New Category" %}
+        </h3>
+        <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            {% csrf_token %}
+            <div class="md:col-span-2">
+                <label class="block font-medium text-slate-700 mb-1">{% trans "Category Name" %} *</label>
+                <input type="text" name="name" required placeholder="e.g. Аренда крана и бетононасоса" class="w-full h-8 rounded-md border border-slate-200 px-2.5 text-xs">
+            </div>
+
+            <div>
+                <label class="block font-medium text-slate-700 mb-1">{% trans "Type" %} *</label>
+                <select name="category_type" class="w-full h-8 rounded-md border border-slate-200 px-2 text-xs">
+                    <option value="EXPENSE">🔴 {% trans "Expense (Расход)" %}</option>
+                    <option value="INCOME">🟢 {% trans "Income (Приход)" %}</option>
+                </select>
+            </div>
+
+            <div class="md:col-span-3 flex justify-end">
+                <button type="submit" class="h-8 px-4 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">
+                    {% trans "Save Category" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Categories Table -->
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 font-bold text-slate-800 text-xs">
+            {% trans "Existing Categories" %}
+        </div>
+        <table class="w-full text-left border-collapse whitespace-nowrap text-xs">
+            <thead>
+                <tr class="bg-slate-50/50 border-b border-slate-200 text-slate-500 font-semibold text-[11px]">
+                    <th class="py-2.5 px-3">{% trans "Category Name" %}</th>
+                    <th class="py-2.5 px-3">{% trans "Type" %}</th>
+                    <th class="py-2.5 px-3">{% trans "Status" %}</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for cat in categories %}
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-semibold text-slate-800">
+                        {{ cat.name }}
+                    </td>
+                    <td class="py-2.5 px-3">
+                        {% if cat.category_type == 'INCOME' %}
+                        <span class="text-emerald-700 font-medium">🟢 {% trans "Income" %}</span>
+                        {% else %}
+                        <span class="text-rose-700 font-medium">🔴 {% trans "Expense" %}</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-400 text-[11px]">
+                        {% if cat.is_system %}{% trans "System Default" %}{% else %}{% trans "Custom" %}{% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="py-8 text-center text-slate-400">
+                        {% trans "No categories found." %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

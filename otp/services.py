@@ -82,6 +82,16 @@ class EskizSMS:
         # Clean phone number (remove +, spaces)
         clean_phone = str(phone_number).replace('+', '').replace(' ', '')
         
+        # Normalize unicode apostrophes to ASCII 39 (') so GSM-7 encoding is preserved
+        message = (
+            str(message)
+            .replace('‘', "'")
+            .replace('’', "'")
+            .replace('ʻ', "'")
+            .replace('ʼ', "'")
+            .replace('`', "'")
+        )
+        
         cost, parts, operator = cls.calculate_sms_cost(clean_phone, message)
         
         # --- DEVELOPMENT LOGGING ---
@@ -96,7 +106,20 @@ class EskizSMS:
         
         token = cls.get_token()
         if not token:
-            logger.error("Cannot send SMS: No Eskiz token available.")
+            logger.warning("Cannot send SMS: No Eskiz token available (check credentials or connection).")
+            try:
+                from users.models import SMSLog
+                SMSLog.objects.create(
+                    company=company,
+                    phone_number=clean_phone,
+                    message=message,
+                    status='FAILED',
+                    cost=0.0,
+                    parts=parts,
+                    operator=operator
+                )
+            except Exception as log_e:
+                logger.error(f"Failed to log SMS: {log_e}")
             return False
             
         status = 'FAILED'

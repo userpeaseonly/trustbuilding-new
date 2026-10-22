@@ -121,6 +121,13 @@
                 </a>
                 {% endif %}
                 
+                {% if request.user|has_perm:'view_reports' or request.user|has_perm:'view_finance' %}
+                <a href="{% url 'finance:overview' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'finance' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
+                    <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {% trans "Finance & Cash Flow" %}
+                </a>
+                {% endif %}
+                
                 {% if request.user|has_perm:'view_contracts' %}
                 <a href="{% url 'contract:terminated_list' %}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium {% if request.resolver_match.app_name == 'contract' and request.resolver_match.url_name == 'terminated_list' %}bg-blue-500/10 text-indigo-600 border-l-2 border-blue-500 transition-all{% else %}text-slate-500 hover:bg-white/5 hover:text-slate-800 border-l-2 border-transparent transition-all{% endif %}">
                     <svg class="w-5 h-5 shrink-0 opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>

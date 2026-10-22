@@ -69,33 +69,45 @@ MONTHS_UZ_LATIN = {
     9: 'sentyabr', 10: 'oktyabr', 11: 'noyabr', 12: 'dekabr'
 }
 
-def generate_contract_docx_response(contract_id, template_id=None):
+def build_contract_docx(contract, template_id=None, force_regenerate=False):
     """
-    Renders and returns the official legal contract .docx document for a contract ID.
-    Supports dynamic templates and native Uzbek/Russian chevron placeholders.
+    Builds and persists the immutable .docx legal contract for a Contract instance.
+    If contract.contract_file already exists on disk and force_regenerate is False,
+    returns the existing file path immediately to guarantee immutable historical integrity.
     """
-    try:
-        contract = Contract.objects.select_related(
-            'customer', 'apartment', 'apartment__building', 'company'
-        ).prefetch_related('payment_records').get(id=contract_id)
-    except Contract.DoesNotExist:
-        raise Http404("Contract not found.")
+    # 1. Return frozen document if it already exists and not regenerating
+    if contract.contract_file and not force_regenerate:
+        try:
+            if os.path.exists(contract.contract_file.path):
+                return contract.contract_file.path
+        except Exception:
+            pass
 
-    # 1. Determine Template Path
+    # 2. Determine Template Path
     template_path = None
+    selected_template = None
     
     if template_id:
         try:
-            ct = ContractTemplate.objects.get(id=template_id, company=contract.company)
-            template_path = ct.file.path
+            selected_template = ContractTemplate.objects.get(id=template_id, company=contract.company)
+            if selected_template.file and os.path.exists(selected_template.file.path):
+                template_path = selected_template.file.path
         except ContractTemplate.DoesNotExist:
             pass
             
+    if not template_path and contract.template_used:
+        try:
+            if contract.template_used.file and os.path.exists(contract.template_used.file.path):
+                selected_template = contract.template_used
+                template_path = selected_template.file.path
+        except Exception:
+            pass
+
     if not template_path:
         # Get default template for company
-        ct = ContractTemplate.objects.filter(company=contract.company, is_default=True).first()
-        if ct and ct.file:
-            template_path = ct.file.path
+        selected_template = ContractTemplate.objects.filter(company=contract.company, is_default=True).first()
+        if selected_template and selected_template.file and os.path.exists(selected_template.file.path):
+            template_path = selected_template.file.path
             
     if not template_path:
         # Fallback to hardcoded template
@@ -105,13 +117,14 @@ def generate_contract_docx_response(contract_id, template_id=None):
             if os.path.exists(legacy_path):
                 template_path = legacy_path
             else:
-                return HttpResponse("No contract template available. Please upload a template in settings.", status=404)
+                return None
 
-    # 2. Render Template
+    # 3. Render Template
     template = CustomDocxTemplate(template_path)
 
     down_payment = contract.down_payment_amount
     total_amount = contract.total_amount
+
     
     # 3. Prepare Dynamic Payment Schedule
     records = contract.payment_records.all().order_by('month_number')
@@ -271,15 +284,46 @@ def generate_contract_docx_response(contract_id, template_id=None):
 
     template.render(context)
     
-    temp_file_path = os.path.join(settings.MEDIA_ROOT, "generated_contracts", f"generated_contract_{contract_id}.docx")
-    os.makedirs(os.path.dirname(temp_file_path), exist_ok=True)
-    template.save(temp_file_path)
+    # Save to immutable file path
+    rel_dir = os.path.join("generated_contracts", str(contract.company_id))
+    abs_dir = os.path.join(settings.MEDIA_ROOT, rel_dir)
+    os.makedirs(abs_dir, exist_ok=True)
+    
+    filename = f"contract_{contract.id}.docx"
+    abs_file_path = os.path.join(abs_dir, filename)
+    template.save(abs_file_path)
+    
+    # Update contract record with relative file path and template reference
+    rel_path = os.path.join(rel_dir, filename)
+    contract.contract_file.name = rel_path
+    if selected_template:
+        contract.template_used = selected_template
+    contract.save(update_fields=['contract_file', 'template_used'])
+    
+    return abs_file_path
+
+
+def generate_contract_docx_response(contract_id, template_id=None, force_regenerate=False):
+    """
+    Returns an HTTP FileResponse for the immutable contract .docx document.
+    """
+    try:
+        contract = Contract.objects.select_related(
+            'customer', 'apartment', 'apartment__building', 'company'
+        ).prefetch_related('payment_records').get(id=contract_id)
+    except Contract.DoesNotExist:
+        raise Http404("Contract not found.")
+
+    file_path = build_contract_docx(contract, template_id=template_id, force_regenerate=force_regenerate)
+    if not file_path or not os.path.exists(file_path):
+        return HttpResponse("No contract template available. Please upload a template in settings.", status=404)
 
     display_id = contract.contract_id if contract.contract_id else contract.id
 
     response = FileResponse(
-        open(temp_file_path, 'rb'),
+        open(file_path, 'rb'),
         content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
     response['Content-Disposition'] = f'attachment; filename="Shartnoma_{display_id}.docx"'
     return response
+

@@ -18,10 +18,10 @@ load_dotenv(_env_file)
 
 DEBUG = int(os.getenv('DEBUG', '0'))
 
-# if DEBUG == 'False':
-#     from dotenv import dotenv_values
-#     config = dotenv_values("env/.local")
-#     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = [h.strip() for h in os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',') if h.strip()]
+if not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ['*']
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'dashboard',
     'building',
     'contract',
+    'finance',
     'customer_portal',
     'otp',
     

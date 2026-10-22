@@ -90,6 +90,7 @@ class ContractWizardForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         company = kwargs.pop('company', None)
+        self.company = company
         super().__init__(*args, **kwargs)
         if not self.initial.get('date_made'):
             self.initial['date_made'] = timezone.now().strftime('%d/%m/%Y')
@@ -99,7 +100,13 @@ class ContractWizardForm(forms.ModelForm):
         self.fields['down_payment_date'].required = False
         self.fields['down_payment_amount'].required = False
         self.fields['last_payment_amount'].required = False
-        self.fields['existing_customer'].queryset = CustomUser.objects.filter(is_customer=True).order_by('-created_at')
+        if company:
+            self.fields['existing_customer'].queryset = CustomUser.objects.filter(
+                is_customer=True,
+                company_links__company=company
+            ).order_by('-created_at')
+        else:
+            self.fields['existing_customer'].queryset = CustomUser.objects.filter(is_customer=True).order_by('-created_at')
         self.fields['existing_customer'].label_from_instance = lambda obj: f"{obj.full_name or 'N/A'} ({obj.phone_number}) - {obj.passport_jshshr or obj.passport_series or 'No Passport'}"
         if company:
             self.fields['apartment'].queryset = Apartment.objects.filter(
@@ -136,8 +143,14 @@ class ContractWizardForm(forms.ModelForm):
                 clean_phone = phone.replace(' ', '').replace('-', '')
                 if not re.match(r'^\+?998\d{9}$', clean_phone):
                     self.add_error('new_customer_phone', _("Invalid phone number. Must be a single valid Uzbekistan number (e.g. +998901234567)."))
-                elif CustomUser.objects.filter(phone_number=clean_phone).exists() or CustomUser.objects.filter(phone_number=f"+{clean_phone}" if not clean_phone.startswith('+') else clean_phone).exists():
-                    self.add_error('new_customer_phone', _("A customer with this phone number already exists. Please select 'Existing Customer' instead."))
+                else:
+                    norm_phone = clean_phone if clean_phone.startswith('+') else f"+{clean_phone}"
+                    if self.company and CustomUser.objects.filter(
+                        phone_number=norm_phone,
+                        company_links__company=self.company
+                    ).exists():
+                        self.add_error('new_customer_phone', _("A customer with this phone number already exists in your company. Please select 'Existing Customer' instead."))
+
             
             sec_phone = cleaned_data.get('new_customer_secondary_phone')
             if sec_phone:

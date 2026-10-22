@@ -1,0 +1,1016 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load dashboard_tags %}
+
+{% block title %}{% trans "Finance & Cash Flow" %} - TrustBuilding{% endblock %}
+
+{% block content %}
+<div x-data="{ incomeModal: false, expenseModal: false, transferModal: false, expenseBuildingId: '{{ selected_costing_bld_id }}' }" class="space-y-4">
+
+    <!-- Top Header & Action Buttons -->
+    <div class="-mt-2 mb-3 flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+        <div>
+            <h1 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                <span>💰</span> {% trans "Finance & Cash Flow (ДДС)" %}
+            </h1>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-2">
+            <!-- Manage Accounts -->
+            <a href="{% url 'finance:manage_wallets' %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                {% trans "Accounts & Cash Desks" %}
+            </a>
+
+            <!-- Manage Categories -->
+            <a href="{% url 'finance:manage_categories' %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition">
+                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-5 5a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 10V5a2 2 0 012-2z"/></svg>
+                {% trans "Expense Categories" %}
+            </a>
+
+            <!-- Transfer Button -->
+            <button @click="transferModal = true" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold shadow-xs transition">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                {% trans "Transfer (Инкассация)" %}
+            </button>
+
+            <!-- Expense Button -->
+            <button @click="expenseModal = true" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold shadow-xs transition">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                {% trans "Add Expense (Расход)" %}
+            </button>
+
+            <!-- Income Button -->
+            <button @click="incomeModal = true" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                {% trans "Add Income (Приход)" %}
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="flex items-center border-b border-slate-200 gap-6 text-sm font-medium">
+        <a href="?tab=cashflow&start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}" 
+           class="pb-2.5 border-b-2 transition {% if active_tab == 'cashflow' %}border-indigo-600 text-indigo-600 font-bold{% else %}border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300{% endif %}">
+           📊 {% trans "1. Cash Flow (ДДС & Касса)" %}
+        </a>
+        <a href="?tab=debtors" 
+           class="pb-2.5 border-b-2 transition {% if active_tab == 'debtors' %}border-indigo-600 text-indigo-600 font-bold{% else %}border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300{% endif %}">
+           📅 {% trans "2. Inflows & Debtors (План / Факт)" %}
+        </a>
+        <a href="?tab=costing" 
+           class="pb-2.5 border-b-2 transition {% if active_tab == 'costing' %}border-indigo-600 text-indigo-600 font-bold{% else %}border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300{% endif %}">
+           🏗️ {% trans "3. Building Costing (Себестоимость)" %}
+        </a>
+    </div>
+
+    {% if active_tab == 'cashflow' %}
+    <!-- ==================== TAB 1: CASH FLOW (ДДС) ==================== -->
+    
+    <!-- Top KPI Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <!-- Card 1: Total Liquid -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
+            <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block">{% trans "Total Liquid Balance" %}</span>
+            <div class="text-lg font-bold text-slate-900 mt-1">{{ total_liquid|formatted_amount }} <span class="text-xs font-normal text-slate-500">UZS</span></div>
+            <div class="text-[11px] text-slate-400 mt-0.5">{% trans "Across all active accounts" %}</div>
+        </div>
+
+        <!-- Card 2: Cash Desks -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
+            <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block">{% trans "Cash in Desks (Касса)" %}</span>
+            <div class="text-lg font-bold text-emerald-600 mt-1">{{ total_cash|formatted_amount }} <span class="text-xs font-normal text-slate-500">UZS</span></div>
+            <div class="text-[11px] text-slate-400 mt-0.5">{% trans "Physical cash on hand" %}</div>
+        </div>
+
+        <!-- Card 3: Bank Accounts -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
+            <span class="text-[11px] font-medium text-slate-500 uppercase tracking-wider block">{% trans "Bank Accounts (Банк)" %}</span>
+            <div class="text-lg font-bold text-indigo-600 mt-1">{{ total_bank|formatted_amount }} <span class="text-xs font-normal text-slate-500">UZS</span></div>
+            <div class="text-[11px] text-slate-400 mt-0.5">{% trans "Corporate wire accounts" %}</div>
+        </div>
+
+        <!-- Card 4: Inflow (Period) -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
+            <span class="text-[11px] font-medium text-emerald-600 uppercase tracking-wider block">{% trans "Period Inflow (+Приход)" %}</span>
+            <div class="text-lg font-bold text-emerald-700 mt-1">+{{ period_income|formatted_amount }} <span class="text-xs font-normal text-slate-500">UZS</span></div>
+            <div class="text-[11px] text-slate-400 mt-0.5">{{ start_date|date:"d.m" }} - {{ end_date|date:"d.m.Y" }}</div>
+        </div>
+
+        <!-- Card 5: Outflow (Period) -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs">
+            <span class="text-[11px] font-medium text-rose-600 uppercase tracking-wider block">{% trans "Period Outflow (-Расход)" %}</span>
+            <div class="text-lg font-bold text-rose-700 mt-1">-{{ period_expense|formatted_amount }} <span class="text-xs font-normal text-slate-500">UZS</span></div>
+            <div class="text-[11px] text-slate-400 mt-0.5">
+                {% trans "Net Flow:" %} <span class="font-semibold {% if net_cash_flow >= 0 %}text-emerald-600{% else %}text-rose-600{% endif %}">{{ net_cash_flow|formatted_amount }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="bg-white rounded-xl border border-slate-200 p-2.5 shadow-xs">
+        <form method="GET" action="{% url 'finance:overview' %}" class="flex flex-wrap items-center gap-2">
+            <input type="hidden" name="tab" value="cashflow">
+
+            <!-- Date Range -->
+            <div class="flex items-center bg-slate-50 rounded-md border border-slate-200 h-8 px-2 text-xs">
+                <input type="date" name="start_date" value="{{ start_date|date:'Y-m-d' }}" class="bg-transparent border-0 p-0 text-xs text-slate-700 cursor-pointer focus:ring-0">
+                <span class="text-slate-400 mx-1.5">→</span>
+                <input type="date" name="end_date" value="{{ end_date|date:'Y-m-d' }}" class="bg-transparent border-0 p-0 text-xs text-slate-700 cursor-pointer focus:ring-0">
+            </div>
+
+            <!-- Type Filter -->
+            <select name="tx_type" class="h-8 text-xs border border-slate-200 rounded-md bg-slate-50 px-2 py-0 text-slate-700 focus:ring-indigo-500">
+                <option value="">{% trans "All Types" %}</option>
+                <option value="INCOME" {% if filter_type == 'INCOME' %}selected{% endif %}>🟢 {% trans "Income (+)" %}</option>
+                <option value="EXPENSE" {% if filter_type == 'EXPENSE' %}selected{% endif %}>🔴 {% trans "Expense (-)" %}</option>
+                <option value="TRANSFER" {% if filter_type == 'TRANSFER' %}selected{% endif %}>🔄 {% trans "Transfer" %}</option>
+            </select>
+
+            <!-- Wallet Filter -->
+            <select name="wallet_id" class="h-8 text-xs border border-slate-200 rounded-md bg-slate-50 px-2 py-0 text-slate-700 focus:ring-indigo-500">
+                <option value="">{% trans "All Accounts" %}</option>
+                {% for w in wallets %}
+                <option value="{{ w.id }}" {% if filter_wallet == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Category Filter -->
+            <select name="category_id" class="h-8 text-xs border border-slate-200 rounded-md bg-slate-50 px-2 py-0 text-slate-700 focus:ring-indigo-500 max-w-[150px] truncate">
+                <option value="">{% trans "All Categories" %}</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}" {% if filter_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Building Filter -->
+            <select name="building_id" class="h-8 text-xs border border-slate-200 rounded-md bg-slate-50 px-2 py-0 text-slate-700 focus:ring-indigo-500">
+                <option value="">{% trans "All Buildings" %}</option>
+                {% for bld in buildings %}
+                <option value="{{ bld.id }}" {% if filter_building == bld.id|stringformat:"s" %}selected{% endif %}>{{ bld.name }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Search -->
+            <div class="relative flex-1 min-w-[130px]">
+                <input type="text" name="q" value="{{ q_search }}" placeholder="{% trans 'Search note / contract...' %}" class="w-full h-8 text-xs border border-slate-200 rounded-md bg-slate-50 px-2.5 text-slate-700 focus:ring-indigo-500">
+            </div>
+
+            <!-- Submit & Reset -->
+            <button type="submit" class="h-8 px-3 rounded-md bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium transition">
+                {% trans "Filter" %}
+            </button>
+            <a href="{% url 'finance:overview' %}?tab=cashflow" class="h-8 px-2 flex items-center text-xs text-slate-500 hover:text-slate-800">
+                {% trans "Reset" %}
+            </a>
+
+            <!-- Excel Export -->
+            <button type="submit" name="export" value="excel" class="ml-auto h-8 px-3 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium shadow-xs transition flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                {% trans "Export Excel" %}
+            </button>
+        </form>
+    </div>
+
+    <!-- Ledger Table -->
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse whitespace-nowrap text-xs">
+                <thead>
+                    <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
+                        <th class="py-2.5 px-3 border-r border-slate-200">{% trans "Date" %}</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200 text-center">{% trans "Type" %}</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200">{% trans "Account / Cash Desk" %}</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200">{% trans "Category" %}</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200">{% trans "Object / Building" %}</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200 text-right">{% trans "Amount (UZS)" %}</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200">{% trans "Note / Contract" %}</th>
+                        <th class="py-2.5 px-3 border-r border-slate-200">{% trans "Recorded By" %}</th>
+                        <th class="py-2.5 px-2 text-center"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for tx in transactions %}
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="py-2 px-3 border-r border-slate-100 font-medium text-slate-600">{{ tx.date|date:"d.m.Y" }}</td>
+                        
+                        <td class="py-2 px-3 border-r border-slate-100 text-center">
+                            {% if tx.transaction_type == 'INCOME' %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                🟢 {% trans "Income" %}
+                            </span>
+                            {% elif tx.transaction_type == 'EXPENSE' %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                                🔴 {% trans "Expense" %}
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+                                🔄 {% trans "Transfer" %}
+                            </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-2 px-3 border-r border-slate-100 font-medium text-slate-800">
+                            {% if tx.transaction_type == 'TRANSFER' %}
+                            <span class="text-slate-600">{{ tx.wallet.name }}</span>
+                            <span class="text-slate-400 mx-1">→</span>
+                            <span class="text-indigo-600 font-bold">{{ tx.target_wallet.name }}</span>
+                            {% else %}
+                            {{ tx.wallet.name }}
+                            {% endif %}
+                        </td>
+
+                        <td class="py-2 px-3 border-r border-slate-100 text-slate-700">
+                            {{ tx.category.name|default:"-" }}
+                        </td>
+
+                        <td class="py-2 px-3 border-r border-slate-100 text-slate-600">
+                            {% if tx.building %}
+                            <span class="inline-flex items-center gap-1 font-medium text-indigo-700 bg-indigo-50/70 px-1.5 py-0.5 rounded">
+                                🏢 {{ tx.building.name }}
+                            </span>
+                            {% else %}-{% endif %}
+                        </td>
+
+                        <td class="py-2 px-3 border-r border-slate-100 text-right font-bold {% if tx.transaction_type == 'INCOME' %}text-emerald-600{% elif tx.transaction_type == 'EXPENSE' %}text-rose-600{% else %}text-indigo-600{% endif %}">
+                            {% if tx.transaction_type == 'INCOME' %}+{% elif tx.transaction_type == 'EXPENSE' %}-{% endif %}{{ tx.amount|formatted_amount }}
+                        </td>
+
+                        <td class="py-2 px-3 border-r border-slate-100 text-slate-600 max-w-[240px] truncate" title="{{ tx.description }}">
+                            {% if tx.contract %}
+                            <a href="{% url 'contract:detail' tx.contract.id %}" class="text-indigo-600 hover:underline font-medium">№{{ tx.contract.contract_id }}</a>
+                            <span class="text-slate-400">·</span>
+                            {% endif %}
+                            {{ tx.description|default:"-" }}
+                        </td>
+
+                        <td class="py-2 px-3 border-r border-slate-100 text-slate-500 text-[11px]">
+                            {% if tx.created_by %}
+                                {{ tx.created_by.full_name|default:tx.created_by.phone_number }}
+                            {% else %}
+                                {% trans "System" %}
+                            {% endif %}
+                        </td>
+
+                        <td class="py-2 px-2 text-center">
+                            {% if not tx.payment_log %}
+                            <form method="POST" action="{% url 'finance:delete_transaction' tx.id %}" onsubmit="return confirm('{% trans 'Delete this transaction?' %}')" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-slate-400 hover:text-rose-600 transition p-1" title="{% trans 'Delete' %}">
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                            </form>
+                            {% else %}
+                            <span class="text-slate-300" title="{% trans 'Linked to Contract receipt' %}">🔒</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="py-8 text-center text-slate-400">
+                            {% trans "No financial transactions found for this period." %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if transactions.has_other_pages %}
+        <div class="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+            <div>
+                {% trans "Page" %} {{ transactions.number }} {% trans "of" %} {{ transactions.paginator.num_pages }}
+            </div>
+            <div class="flex items-center gap-1">
+                {% if transactions.has_previous %}
+                <a href="?page={{ transactions.previous_page_number }}&start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&tx_type={{ filter_type }}&wallet_id={{ filter_wallet }}&category_id={{ filter_category }}&building_id={{ filter_building }}&q={{ q_search }}" class="px-2.5 py-1 bg-white border border-slate-200 rounded hover:bg-slate-100">{% trans "Previous" %}</a>
+                {% endif %}
+                {% if transactions.has_next %}
+                <a href="?page={{ transactions.next_page_number }}&start_date={{ start_date|date:'Y-m-d' }}&end_date={{ end_date|date:'Y-m-d' }}&tx_type={{ filter_type }}&wallet_id={{ filter_wallet }}&category_id={{ filter_category }}&building_id={{ filter_building }}&q={{ q_search }}" class="px-2.5 py-1 bg-white border border-slate-200 rounded hover:bg-slate-100">{% trans "Next" %}</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% elif active_tab == 'debtors' %}
+    <!-- ==================== TAB 2: INFLOWS & DEBTORS (PHASE 2) ==================== -->
+    <div class="space-y-4">
+
+        <!-- 1. 6-Month Rolling Inflow Forecast -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5 mb-3">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                        <span>📅</span> {% trans "6-Month Inflow Forecast (Календарный график поступлений)" %}
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">{% trans "Projected installment cash inflows across the next 6 months based on active contracts." %}</p>
+                </div>
+                <span class="text-[11px] font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded">
+                    {% trans "Rolling Projection" %}
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                {% for m in forecast_months %}
+                <div class="rounded-lg border p-3 flex flex-col justify-between transition {% if m.is_current %}bg-indigo-50/40 border-indigo-200 ring-1 ring-indigo-200{% else %}bg-slate-50/60 border-slate-200 hover:bg-slate-50{% endif %}">
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="text-xs font-bold {% if m.is_current %}text-indigo-900{% else %}text-slate-700{% endif %}">
+                                {% if LANGUAGE_CODE == 'ru' %}{{ m.month_name_ru }}{% elif LANGUAGE_CODE == 'uz' %}{{ m.month_name_uz }}{% else %}{{ m.month_name }}{% endif %} {{ m.year }}
+                            </span>
+                            {% if m.is_current %}
+                            <span class="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800 uppercase">{% trans "Current" %}</span>
+                            {% endif %}
+                        </div>
+                        <div class="text-base font-extrabold text-slate-900 mt-1">
+                            {{ m.planned|formatted_amount }}
+                            <span class="text-[10px] font-normal text-slate-400 block">UZS</span>
+                        </div>
+                        <div class="text-[11px] text-slate-500 mt-1">
+                            {{ m.contracts_count }} {% trans "contracts due" %}
+                        </div>
+                    </div>
+
+                    {% if m.is_current %}
+                    <div class="mt-2.5 pt-2 border-t border-indigo-100 text-[11px]">
+                        <div class="flex justify-between items-center text-slate-600 mb-1">
+                            <span>{% trans "Collected" %}:</span>
+                            <span class="font-bold text-emerald-600">{{ m.rate }}%</span>
+                        </div>
+                        <div class="w-full bg-slate-200/80 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-emerald-500 h-1.5 rounded-full" style="width: min({{ m.rate }}%, 100%)"></div>
+                        </div>
+                        <div class="text-[10px] text-slate-400 mt-1 truncate">
+                            {{ m.paid|formatted_amount }} UZS
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="mt-2.5 pt-2 border-t border-slate-100 text-[10px] text-slate-400">
+                        {% trans "Scheduled future cash" %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 2. Debtor Aging Matrix Summary & Filter Toolbar -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3 shadow-xs space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                        <span>⚠️</span> {% trans "Debtor Aging Matrix (Анализ дебиторки по срокам)" %}
+                    </h3>
+                    <p class="text-xs text-slate-500">{% trans "Segment overdue installments by delay severity for targeted collection." %}</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs text-slate-500">
+                        {% trans "Total Overdue:" %} <strong class="text-rose-600 font-bold text-sm">{{ aging_stats.all.amount|formatted_amount }} UZS</strong>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Aging Filter Pills & Building Selector -->
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <!-- Pills -->
+                <div class="flex flex-wrap items-center gap-1.5 text-xs">
+                    <!-- All -->
+                    <a href="?tab=debtors&bucket=all{% if debtor_building_id %}&debtor_building={{ debtor_building_id }}{% endif %}" 
+                       class="px-2.5 py-1 rounded-md font-semibold border transition {% if selected_bucket == 'all' %}bg-slate-800 text-white border-slate-800 shadow-xs{% else %}bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100{% endif %}">
+                        {% trans "All Debtors" %} ({{ aging_stats.all.count }})
+                    </a>
+
+                    <!-- 1-15 days -->
+                    <a href="?tab=debtors&bucket=1_15{% if debtor_building_id %}&debtor_building={{ debtor_building_id }}{% endif %}" 
+                       class="px-2.5 py-1 rounded-md font-semibold border transition {% if selected_bucket == '1_15' %}bg-amber-600 text-white border-amber-600 shadow-xs{% else %}bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100{% endif %}">
+                        🟡 1–15 {% trans "Days" %} ({{ aging_stats.1_15.count }}) · {{ aging_stats.1_15.amount|formatted_amount }}
+                    </a>
+
+                    <!-- 16-30 days -->
+                    <a href="?tab=debtors&bucket=16_30{% if debtor_building_id %}&debtor_building={{ debtor_building_id }}{% endif %}" 
+                       class="px-2.5 py-1 rounded-md font-semibold border transition {% if selected_bucket == '16_30' %}bg-orange-600 text-white border-orange-600 shadow-xs{% else %}bg-orange-50 text-orange-800 border-orange-200 hover:bg-orange-100{% endif %}">
+                        🟠 16–30 {% trans "Days" %} ({{ aging_stats.16_30.count }}) · {{ aging_stats.16_30.amount|formatted_amount }}
+                    </a>
+
+                    <!-- 31-60 days -->
+                    <a href="?tab=debtors&bucket=31_60{% if debtor_building_id %}&debtor_building={{ debtor_building_id }}{% endif %}" 
+                       class="px-2.5 py-1 rounded-md font-semibold border transition {% if selected_bucket == '31_60' %}bg-rose-600 text-white border-rose-600 shadow-xs{% else %}bg-rose-50 text-rose-800 border-rose-200 hover:bg-rose-100{% endif %}">
+                        🔴 31–60 {% trans "Days" %} ({{ aging_stats.31_60.count }}) · {{ aging_stats.31_60.amount|formatted_amount }}
+                    </a>
+
+                    <!-- 60+ days -->
+                    <a href="?tab=debtors&bucket=60_plus{% if debtor_building_id %}&debtor_building={{ debtor_building_id }}{% endif %}" 
+                       class="px-2.5 py-1 rounded-md font-semibold border transition {% if selected_bucket == '60_plus' %}bg-purple-600 text-white border-purple-600 shadow-xs{% else %}bg-purple-50 text-purple-800 border-purple-200 hover:bg-purple-100{% endif %}">
+                        🟣 60+ {% trans "Days" %} ({{ aging_stats.60_plus.count }}) · {{ aging_stats.60_plus.amount|formatted_amount }}
+                    </a>
+                </div>
+
+                <!-- Building Dropdown Filter -->
+                <form method="GET" class="flex items-center gap-1.5 text-xs">
+                    <input type="hidden" name="tab" value="debtors">
+                    <input type="hidden" name="bucket" value="{{ selected_bucket }}">
+                    <select name="debtor_building" onchange="this.form.submit()" class="h-7 text-xs border border-slate-200 rounded-md bg-slate-50 px-2 text-slate-700">
+                        <option value="">{% trans "All Buildings" %}</option>
+                        {% for bld in buildings %}
+                        <option value="{{ bld.id }}" {% if debtor_building_id == bld.id|stringformat:"s" %}selected{% endif %}>{{ bld.name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- 3. Debtor Installments Table with 1-Click Action Hub -->
+        <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse whitespace-nowrap text-xs">
+                    <thead>
+                        <tr class="bg-slate-50/75 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px]">
+                            <th class="py-2 px-2.5 border-r border-slate-200">{% trans "Contract No." %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200">{% trans "Customer (FIO)" %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200">{% trans "Phone Number" %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200">{% trans "Object / Apartment" %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200">{% trans "Due Date" %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200 text-center">{% trans "Overdue Days" %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200 text-right">{% trans "Planned" %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200 text-right">{% trans "Paid" %}</th>
+                            <th class="py-2 px-2.5 border-r border-slate-200 text-right text-rose-600 font-bold">{% trans "Overdue Debt" %}</th>
+                            <th class="py-2 px-2.5 text-center">{% trans "Actions" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for rec in debtors_data %}
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="py-2 px-2.5 border-r border-slate-100 font-semibold text-indigo-600">
+                                <a href="{% url 'contract:detail' rec.contract.id %}" class="hover:underline">№{{ rec.contract.contract_id }}</a>
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 font-medium text-slate-800 max-w-[180px] truncate" title="{{ rec.contract.customer.full_name|default:'' }}">
+                                {{ rec.contract.customer.full_name|default:"-" }}
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 text-slate-600 font-mono text-[11px]">
+                                {{ rec.contract.customer.phone_number }}
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 text-slate-600 max-w-[160px] truncate">
+                                {% if rec.contract.apartment %}
+                                <span class="font-medium text-slate-800">{{ rec.contract.apartment.building.name }}</span> · Кв. {{ rec.contract.apartment.apartment_number }}
+                                {% else %}-{% endif %}
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 text-slate-600 font-medium">
+                                {{ rec.due_date|date:"d.m.Y" }}
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 text-center">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border {{ rec.badge_class }}">
+                                    ⏱ {{ rec.days_late }} {% trans "days" %}
+                                </span>
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 text-right text-slate-600">
+                                {{ rec.plan_amount|formatted_amount }}
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 text-right text-slate-600">
+                                {{ rec.paid_amount|formatted_amount }}
+                            </td>
+                            <td class="py-2 px-2.5 border-r border-slate-100 text-right font-bold text-rose-600">
+                                {{ rec.debt|formatted_amount }} UZS
+                            </td>
+                            <td class="py-2 px-2.5 text-center">
+                                <div class="inline-flex items-center gap-1.5">
+                                    <!-- 1-Click SMS Reminder Button -->
+                                    <form method="POST" action="{% url 'finance:send_debtor_reminder' rec.id %}" onsubmit="return confirm('{% trans 'Send payment reminder SMS to' %} {{ rec.contract.customer.full_name|default:rec.contract.customer.phone_number }}?')" class="inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium border border-slate-200 transition" title="{% trans 'Send SMS Reminder' %}">
+                                            <span>✉️</span> {% trans "SMS" %}
+                                        </button>
+                                    </form>
+
+                                    <!-- View Contract Button -->
+                                    <a href="{% url 'contract:detail' rec.contract.id %}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold transition" title="{% trans 'View Contract & Ledger' %}">
+                                        <span>📄</span> {% trans "Contract" %}
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="10" class="py-12 text-center text-slate-400">
+                                👏 {% trans "No overdue installments found for the selected filter! All clients are up to date." %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% elif active_tab == 'costing' %}
+    <!-- ==================== TAB 3: BUILDING COSTING & UNIT ECONOMICS (PHASE 3) ==================== -->
+    <div class="space-y-4">
+
+        <!-- 1. Portfolio Unit Economics KPI Header -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5 mb-3">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                        <span>🏗️</span> {% trans "Portfolio Unit Economics (Себестоимость и экономика проектов)" %}
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                        {% trans "Comprehensive construction cost, square meter unit economics, and projected profitability across all objects." %}
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button @click="expenseModal = true; expenseBuildingId = '{{ selected_costing_bld_id }}'" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition shadow-xs">
+                        <span>➕</span> {% trans "Add Cost / Expense" %}
+                    </button>
+                </div>
+            </div>
+
+            <!-- KPI Cards Row -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                <!-- 1. Total Sellable Area -->
+                <div class="bg-slate-50/70 border border-slate-200 rounded-lg p-3">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{% trans "Total Sellable Area" %}</p>
+                    <p class="text-base font-extrabold text-slate-900 mt-1">
+                        {{ portfolio_costing.total_area|floatformat:1 }} <span class="text-xs font-normal text-slate-400">m²</span>
+                    </p>
+                    <p class="text-[11px] text-slate-500 mt-0.5">{{ portfolio_costing.total_apts }} {% trans "apartments total" %}</p>
+                </div>
+
+                <!-- 2. Sold Area & Sales Progress -->
+                <div class="bg-indigo-50/40 border border-indigo-200 rounded-lg p-3">
+                    <p class="text-[10px] font-bold text-indigo-700 uppercase tracking-wider">{% trans "Sold Area" %}</p>
+                    <p class="text-base font-extrabold text-indigo-900 mt-1">
+                        {{ portfolio_costing.sold_area|floatformat:1 }} <span class="text-xs font-normal text-slate-400">m²</span>
+                    </p>
+                    <div class="flex items-center gap-1.5 mt-1">
+                        <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                            <div class="bg-indigo-600 h-1.5 rounded-full" style="width: {{ portfolio_costing.sold_pct }}%"></div>
+                        </div>
+                        <span class="text-[10px] font-bold text-indigo-700">{{ portfolio_costing.sold_pct }}%</span>
+                    </div>
+                </div>
+
+                <!-- 3. Contracted Sales Revenue -->
+                <div class="bg-slate-50/70 border border-slate-200 rounded-lg p-3">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{% trans "Contracted Sales" %}</p>
+                    <p class="text-base font-extrabold text-slate-900 mt-1">
+                        {{ portfolio_costing.contracted_revenue|formatted_amount }}
+                    </p>
+                    <p class="text-[10px] text-slate-400 truncate">UZS · {{ portfolio_costing.sold_apts }} {% trans "units sold" %}</p>
+                </div>
+
+                <!-- 4. Actual Construction Cost -->
+                <div class="bg-slate-50/70 border border-slate-200 rounded-lg p-3">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{% trans "Total Incurred Cost" %}</p>
+                    <p class="text-base font-extrabold text-rose-700 mt-1">
+                        {{ portfolio_costing.total_expenses|formatted_amount }}
+                    </p>
+                    <p class="text-[10px] text-slate-400 truncate">
+                        {% trans "Overhead" %}: {{ portfolio_costing.overhead_expenses|formatted_amount }} UZS
+                    </p>
+                </div>
+
+                <!-- 5. Average Selling Price / m2 -->
+                <div class="bg-emerald-50/40 border border-emerald-200 rounded-lg p-3">
+                    <p class="text-[10px] font-bold text-emerald-800 uppercase tracking-wider">{% trans "Avg Sale Price / m²" %}</p>
+                    <p class="text-base font-extrabold text-emerald-700 mt-1">
+                        {{ portfolio_costing.avg_sale_price_sqm|formatted_amount }}
+                    </p>
+                    <p class="text-[10px] text-emerald-600 truncate">UZS / m²</p>
+                </div>
+
+                <!-- 6. Cost per m2 (Себестоимость 1 м2) -->
+                <div class="bg-amber-50/40 border border-amber-200 rounded-lg p-3">
+                    <p class="text-[10px] font-bold text-amber-800 uppercase tracking-wider">{% trans "Cost / m² (Себестоимость)" %}</p>
+                    <p class="text-base font-extrabold text-amber-900 mt-1">
+                        {{ portfolio_costing.avg_cost_sqm|formatted_amount }}
+                    </p>
+                    <div class="flex items-center justify-between text-[10px] mt-0.5">
+                        <span class="text-slate-500">{% trans "Margin" %}:</span>
+                        <span class="font-bold {% if portfolio_costing.margin_per_sqm >= 0 %}text-emerald-700{% else %}text-rose-600{% endif %}">
+                            {{ portfolio_costing.profit_margin_pct }}%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Building Cards Grid -->
+        <div>
+            <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                    <span>🏢</span> {% trans "Project Economics by Building (Себестоимость по блокам)" %}
+                </h4>
+                {% if selected_costing_bld_id %}
+                <a href="?tab=costing" class="text-xs font-semibold text-indigo-600 hover:underline">
+                    ← {% trans "Show All Buildings" %}
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                {% for b_data in buildings_costing %}
+                <div class="bg-white border rounded-xl p-4 shadow-xs flex flex-col justify-between transition hover:shadow-sm {% if b_data.is_selected %}border-indigo-500 ring-2 ring-indigo-500/20{% else %}border-slate-200{% endif %}">
+                    <div>
+                        <!-- Header -->
+                        <div class="flex items-start justify-between gap-2 border-b border-slate-100 pb-2 mb-3">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm flex items-center gap-1">
+                                    {{ b_data.building.name }}
+                                </h4>
+                                <span class="text-[11px] font-medium text-slate-500">
+                                    {% if b_data.building.block_number %}{% trans "Block" %} {{ b_data.building.block_number }}{% else %}ID: {{ b_data.building.id }}{% endif %}
+                                </span>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
+                                {{ b_data.sold_apts }} / {{ b_data.total_apts }} {% trans "Sold" %}
+                            </span>
+                        </div>
+
+                        <!-- Area & Progress -->
+                        <div class="space-y-1.5 mb-3">
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-slate-500">{% trans "Sellable Area" %}:</span>
+                                <span class="font-bold text-slate-800">{{ b_data.total_area|floatformat:1 }} m²</span>
+                            </div>
+                            <div class="flex justify-between items-center text-[11px] text-slate-500">
+                                <span>{% trans "Sold" %}: {{ b_data.sold_area|floatformat:1 }} m²</span>
+                                <span class="font-semibold text-indigo-600">{{ b_data.sold_pct }}%</span>
+                            </div>
+                            <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                <div class="bg-indigo-600 h-1.5 rounded-full" style="width: {{ b_data.sold_pct }}%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Financials -->
+                        <div class="space-y-1.5 text-xs border-t border-slate-100 pt-2.5">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500">{% trans "Contracted Sales" %}:</span>
+                                <span class="font-semibold text-slate-800">{{ b_data.contracted_rev|formatted_amount }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500">{% trans "Collected Cash" %}:</span>
+                                <span class="font-bold text-emerald-600">+{{ b_data.collected_rev|formatted_amount }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-500">{% trans "Actual Expenses" %}:</span>
+                                <span class="font-bold text-rose-600">-{{ b_data.actual_expenses|formatted_amount }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Unit Economics Badges -->
+                        <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-2 gap-2 text-[11px]">
+                            <div class="bg-slate-50 p-1.5 rounded border border-slate-100 text-center">
+                                <span class="text-[10px] text-slate-400 block">{% trans "Cost / m²" %}</span>
+                                <span class="font-bold text-amber-800 block mt-0.5">{{ b_data.cost_per_sqm|formatted_amount }}</span>
+                                <span class="text-[9px] text-slate-400">UZS / m²</span>
+                            </div>
+                            <div class="bg-slate-50 p-1.5 rounded border border-slate-100 text-center">
+                                <span class="text-[10px] text-slate-400 block">{% trans "Avg Sale / m²" %}</span>
+                                <span class="font-bold text-emerald-700 block mt-0.5">{{ b_data.avg_sale_price_sqm|formatted_amount }}</span>
+                                <span class="text-[9px] text-slate-400">UZS / m²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-1.5">
+                        <a href="?tab=costing&costing_bld={{ b_data.building.id }}" class="flex-1 text-center py-1.5 rounded-md font-semibold text-xs transition {% if b_data.is_selected %}bg-indigo-600 text-white shadow-xs{% else %}bg-slate-100 hover:bg-slate-200 text-slate-700{% endif %}">
+                            📊 {% trans "Cost Breakdown" %}
+                        </a>
+                        <button @click="expenseModal = true; expenseBuildingId = '{{ b_data.building.id }}'" type="button" class="px-2 py-1.5 rounded-md bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold transition" title="{% trans 'Add Expense for this Building' %}">
+                            ➕
+                        </button>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-4 py-12 text-center text-slate-400 bg-white border border-slate-200 rounded-xl">
+                    {% trans "No buildings registered yet." %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 3. Category Breakdown & Expense Ledger Drill-Down -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2.5">
+                <div>
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                        <span>📊</span> 
+                        {% if selected_costing_bld %}
+                            {% trans "Cost Breakdown for" %} {{ selected_costing_bld.name }} {% if selected_costing_bld.block_number %}({% trans "Block" %} {{ selected_costing_bld.block_number }}){% endif %}
+                        {% else %}
+                            {% trans "Portfolio Expense Breakdown by Category (Все объекты)" %}
+                        {% endif %}
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">
+                        {% trans "Itemized construction expenses per category, cost per m², and budget shares." %}
+                    </p>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-slate-500">{% trans "Total Spent:" %}</span>
+                    <strong class="font-bold text-rose-600 text-sm">{{ target_total_expense|formatted_amount }} UZS</strong>
+                </div>
+            </div>
+
+            <!-- Categories Table / Matrix -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse whitespace-nowrap text-xs">
+                    <thead>
+                        <tr class="bg-slate-50/75 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px]">
+                            <th class="py-2 px-3 border-r border-slate-200">{% trans "Expense Category" %}</th>
+                            <th class="py-2 px-3 border-r border-slate-200 text-center">{% trans "Operations" %}</th>
+                            <th class="py-2 px-3 border-r border-slate-200 text-right">{% trans "Total Amount" %}</th>
+                            <th class="py-2 px-3 border-r border-slate-200 text-right">{% trans "Cost / m²" %}</th>
+                            <th class="py-2 px-3 border-r border-slate-200 text-center w-36">{% trans "Share of Cost" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for cat in category_breakdown %}
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="py-2 px-3 border-r border-slate-100 font-medium text-slate-800 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                                {{ cat.name }}
+                            </td>
+                            <td class="py-2 px-3 border-r border-slate-100 text-center text-slate-500">
+                                {{ cat.tx_count }}
+                            </td>
+                            <td class="py-2 px-3 border-r border-slate-100 text-right font-bold text-slate-900">
+                                {{ cat.amount|formatted_amount }} UZS
+                            </td>
+                            <td class="py-2 px-3 border-r border-slate-100 text-right font-semibold text-amber-800">
+                                {{ cat.cost_per_sqm|formatted_amount }} UZS/m²
+                            </td>
+                            <td class="py-2 px-3 border-r border-slate-100">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                                        <div class="bg-rose-500 h-2 rounded-full" style="width: {{ cat.share_pct }}%"></div>
+                                    </div>
+                                    <span class="text-[11px] font-bold text-slate-700 min-w-[36px] text-right">{{ cat.share_pct }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-400">
+                                {% trans "No construction expenses recorded yet. Use the '+ Add Cost / Expense' button above to register material or contractor expenses." %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recent Expenses Table -->
+            {% if recent_costing_txs %}
+            <div class="mt-4 pt-4 border-t border-slate-100">
+                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-2.5">
+                    {% trans "Recent Expense Transactions" %}
+                </h4>
+                <div class="overflow-x-auto border border-slate-100 rounded-lg">
+                    <table class="w-full text-left border-collapse whitespace-nowrap text-xs">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[10px]">
+                                <th class="py-2 px-2.5">{% trans "Date" %}</th>
+                                <th class="py-2 px-2.5">{% trans "Category" %}</th>
+                                <th class="py-2 px-2.5">{% trans "Building" %}</th>
+                                <th class="py-2 px-2.5">{% trans "Wallet / Account" %}</th>
+                                <th class="py-2 px-2.5">{% trans "Description" %}</th>
+                                <th class="py-2 px-2.5 text-right">{% trans "Amount" %}</th>
+                                <th class="py-2 px-2 text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-[11px]">
+                            {% for tx in recent_costing_txs %}
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="py-2 px-2.5 text-slate-600">{{ tx.date|date:"d.m.Y" }}</td>
+                                <td class="py-2 px-2.5 font-medium text-slate-800">{{ tx.category.name|default:"-" }}</td>
+                                <td class="py-2 px-2.5 text-slate-600">
+                                    {% if tx.building %}{{ tx.building.name }}{% else %}<span class="text-slate-400">{% trans "Overhead" %}</span>{% endif %}
+                                </td>
+                                <td class="py-2 px-2.5 text-slate-600">{{ tx.wallet.name }}</td>
+                                <td class="py-2 px-2.5 text-slate-500 max-w-[200px] truncate">{{ tx.description|default:"-" }}</td>
+                                <td class="py-2 px-2.5 text-right font-bold text-rose-600">-{{ tx.amount|formatted_amount }} UZS</td>
+                                <td class="py-2 px-2 text-center">
+                                    <form method="POST" action="{% url 'finance:delete_transaction' tx.id %}" onsubmit="return confirm('{% trans 'Delete this transaction?' %}')" class="inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next_tab" value="costing">
+                                        <button type="submit" class="text-slate-400 hover:text-rose-600 transition p-1" title="{% trans 'Delete' %}">
+                                            ✕
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ==================== MODAL: ADD INCOME ==================== -->
+    <div x-show="incomeModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+        <div @click.away="incomeModal = false" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-base font-bold text-emerald-700 flex items-center gap-1.5">
+                    <span>🟢</span> {% trans "Record Income (+Приход)" %}
+                </h3>
+                <button @click="incomeModal = false" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+
+            <form method="POST" action="{% url 'finance:add_transaction' %}" class="space-y-3 text-xs">
+                {% csrf_token %}
+                <input type="hidden" name="transaction_type" value="INCOME">
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Amount (UZS)" %} *</label>
+                    <input type="number" name="amount" required step="any" min="1" placeholder="e.g. 50000000" class="w-full h-9 rounded-md border border-slate-200 px-3 text-sm font-bold text-emerald-700 focus:ring-emerald-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">{% trans "Deposit into Account" %} *</label>
+                        <select name="wallet" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                            {% for w in wallets %}
+                            <option value="{{ w.id }}">{{ w.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">{% trans "Date" %} *</label>
+                        <input type="date" name="date" value="{% now 'Y-m-d' %}" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Category" %}</label>
+                    <select name="category" class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                        <option value="">-- {% trans "Select category" %} --</option>
+                        {% for cat in categories %}
+                        {% if cat.category_type == 'INCOME' %}
+                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Related Building (Optional)" %}</label>
+                    <select name="building" class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                        <option value="">-- {% trans "None" %} --</option>
+                        {% for bld in buildings %}
+                        <option value="{{ bld.id }}">{{ bld.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Description / Note" %}</label>
+                    <textarea name="description" rows="2" placeholder="{% trans 'Purpose of income...' %}" class="w-full rounded-md border border-slate-200 p-2 text-xs"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button @click="incomeModal = false" type="button" class="px-4 py-2 rounded-md border border-slate-200 text-slate-600 font-medium">{% trans "Cancel" %}</button>
+                    <button type="submit" class="px-4 py-2 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold">{% trans "Save Income" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: ADD EXPENSE ==================== -->
+    <div x-show="expenseModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+        <div @click.away="expenseModal = false" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-base font-bold text-rose-700 flex items-center gap-1.5">
+                    <span>🔴</span> {% trans "Record Expense (-Расход)" %}
+                </h3>
+                <button @click="expenseModal = false" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+
+            <form method="POST" action="{% url 'finance:add_transaction' %}" class="space-y-3 text-xs">
+                {% csrf_token %}
+                <input type="hidden" name="transaction_type" value="EXPENSE">
+                <input type="hidden" name="next_tab" value="{{ active_tab }}">
+                <input type="hidden" name="costing_bld" value="{{ selected_costing_bld_id }}">
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Amount (UZS)" %} *</label>
+                    <input type="number" name="amount" required step="any" min="1" placeholder="e.g. 15000000" class="w-full h-9 rounded-md border border-slate-200 px-3 text-sm font-bold text-rose-700 focus:ring-rose-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">{% trans "Pay from Account" %} *</label>
+                        <select name="wallet" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                            {% for w in wallets %}
+                            <option value="{{ w.id }}">{{ w.name }} ({{ w.current_balance|formatted_amount }} UZS)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-700 mb-1">{% trans "Date" %} *</label>
+                        <input type="date" name="date" value="{% now 'Y-m-d' %}" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block font-medium text-slate-700">{% trans "Expense Category" %} *</label>
+                        <a href="{% url 'finance:manage_categories' %}" target="_blank" class="text-[11px] text-indigo-600 hover:underline flex items-center gap-0.5">
+                            + {% trans "Add New" %}
+                        </a>
+                    </div>
+                    <select name="category" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                        <option value="">-- {% trans "Select category" %} --</option>
+                        {% for cat in categories %}
+                        {% if cat.category_type == 'EXPENSE' %}
+                        <option value="{{ cat.id }}">{{ cat.name }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Allocate to Building (Object)" %}</label>
+                    <select name="building" x-model="expenseBuildingId" class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                        <option value="">-- {% trans "General Company / Overhead" %} --</option>
+                        {% for bld in buildings %}
+                        <option value="{{ bld.id }}">{{ bld.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="text-[10px] text-slate-400">{% trans "Tags cost directly to construction site costing" %}</span>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Description / Reason" %}</label>
+                    <textarea name="description" rows="2" placeholder="{% trans 'e.g. Concrete 50m3 delivery from supplier...' %}" class="w-full rounded-md border border-slate-200 p-2 text-xs"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button @click="expenseModal = false" type="button" class="px-4 py-2 rounded-md border border-slate-200 text-slate-600 font-medium">{% trans "Cancel" %}</button>
+                    <button type="submit" class="px-4 py-2 rounded-md bg-rose-600 hover:bg-rose-700 text-white font-bold">{% trans "Save Expense" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: TRANSFER (ИНКАССАЦИЯ) ==================== -->
+    <div x-show="transferModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs">
+        <div @click.away="transferModal = false" class="bg-white rounded-xl shadow-xl border border-slate-200 w-full max-w-md p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-base font-bold text-indigo-700 flex items-center gap-1.5">
+                    <span>🔄</span> {% trans "Account Transfer (Инкассация)" %}
+                </h3>
+                <button @click="transferModal = false" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+
+            <form method="POST" action="{% url 'finance:add_transaction' %}" class="space-y-3 text-xs">
+                {% csrf_token %}
+                <input type="hidden" name="transaction_type" value="TRANSFER">
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Transfer Amount (UZS)" %} *</label>
+                    <input type="number" name="amount" required step="any" min="1" placeholder="e.g. 20000000" class="w-full h-9 rounded-md border border-slate-200 px-3 text-sm font-bold text-indigo-700 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "From Account (Source)" %} *</label>
+                    <select name="wallet" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                        {% for w in wallets %}
+                        <option value="{{ w.id }}">{{ w.name }} ({{ w.current_balance|formatted_amount }} UZS)</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "To Account (Destination)" %} *</label>
+                    <select name="target_wallet" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                        {% for w in wallets %}
+                        <option value="{{ w.id }}">{{ w.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Date" %} *</label>
+                    <input type="date" name="date" value="{% now 'Y-m-d' %}" required class="w-full h-9 rounded-md border border-slate-200 px-2 text-xs">
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">{% trans "Comment" %}</label>
+                    <input type="text" name="description" placeholder="{% trans 'e.g. Cash collection deposit to bank...' %}" class="w-full h-9 rounded-md border border-slate-200 px-2.5 text-xs">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button @click="transferModal = false" type="button" class="px-4 py-2 rounded-md border border-slate-200 text-slate-600 font-medium">{% trans "Cancel" %}</button>
+                    <button type="submit" class="px-4 py-2 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-bold">{% trans "Execute Transfer" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

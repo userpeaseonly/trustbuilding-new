@@ -140,3 +140,34 @@ class SMSLog(models.Model):
         
     def __str__(self):
         return f"{self.phone_number} - {self.cost} UZS"
+
+
+class CustomerCompanyLink(models.Model):
+    customer = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='company_links',
+        limit_choices_to={'is_customer': True},
+        verbose_name=_("Customer")
+    )
+    company = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='customer_links',
+        limit_choices_to={'is_company': True},
+        verbose_name=_("Company")
+    )
+    created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Customer Company Link")
+        verbose_name_plural = _("Customer Company Links")
+        unique_together = ('customer', 'company')
+        indexes = [
+            models.Index(fields=['customer', 'company']),
+            models.Index(fields=['company']),
+        ]
+
+    def __str__(self):
+        return f"{self.customer} <-> {self.company}"
+

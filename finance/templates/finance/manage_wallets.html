@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load dashboard_tags %}
+
+{% block title %}{% trans "Accounts & Cash Desks" %} - TrustBuilding{% endblock %}
+
+{% block content %}
+<div class="space-y-4 max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="-mt-2 mb-3 flex items-center justify-between">
+        <div>
+            <div class="flex items-center gap-2">
+                <a href="{% url 'finance:overview' %}" class="text-xs text-indigo-600 hover:underline">← {% trans "Back to Finance" %}</a>
+            </div>
+            <h1 class="text-xl font-bold text-slate-900 mt-1">{% trans "Manage Accounts & Cash Desks (Кассы и Счета)" %}</h1>
+        </div>
+    </div>
+
+    <!-- Create Account Card -->
+    <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
+        <h3 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2.5 mb-3 flex items-center gap-1.5">
+            <span>➕</span> {% trans "Add New Cash Desk or Bank Account" %}
+        </h3>
+        <form method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+            {% csrf_token %}
+            <div>
+                <label class="block font-medium text-slate-700 mb-1">{% trans "Account Name" %} *</label>
+                <input type="text" name="name" required placeholder="e.g. Касса офиса №2" class="w-full h-8 rounded-md border border-slate-200 px-2.5 text-xs">
+            </div>
+
+            <div>
+                <label class="block font-medium text-slate-700 mb-1">{% trans "Account Type" %} *</label>
+                <select name="wallet_type" class="w-full h-8 rounded-md border border-slate-200 px-2 text-xs">
+                    <option value="CASH">{% trans "Physical Cash Desk (Наличные)" %}</option>
+                    <option value="BANK">{% trans "Bank Account (Расчетный счет)" %}</option>
+                    <option value="CARD">{% trans "Corporate Card (Карта)" %}</option>
+                    <option value="OTHER">{% trans "Other" %}</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block font-medium text-slate-700 mb-1">{% trans "Initial Balance (UZS)" %}</label>
+                <input type="number" name="initial_balance" value="0" step="any" class="w-full h-8 rounded-md border border-slate-200 px-2.5 text-xs font-semibold">
+            </div>
+
+            <div>
+                <label class="block font-medium text-slate-700 mb-1">{% trans "Bank Name (Optional)" %}</label>
+                <input type="text" name="bank_name" placeholder="e.g. Ipak Yo'li Banki" class="w-full h-8 rounded-md border border-slate-200 px-2.5 text-xs">
+            </div>
+
+            <div>
+                <label class="block font-medium text-slate-700 mb-1">{% trans "Account / Card Number (Optional)" %}</label>
+                <input type="text" name="account_number" placeholder="20208000..." class="w-full h-8 rounded-md border border-slate-200 px-2.5 text-xs">
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit" class="w-full h-8 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs transition">
+                    {% trans "Create Account" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Accounts Table -->
+    <div class="bg-white rounded-xl shadow-xs border border-slate-200 overflow-hidden">
+        <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 font-bold text-slate-800 text-xs">
+            {% trans "Existing Accounts & Current Balances" %}
+        </div>
+        <table class="w-full text-left border-collapse whitespace-nowrap text-xs">
+            <thead>
+                <tr class="bg-slate-50/50 border-b border-slate-200 text-slate-500 font-semibold text-[11px]">
+                    <th class="py-2.5 px-3">{% trans "Account Name" %}</th>
+                    <th class="py-2.5 px-3">{% trans "Type" %}</th>
+                    <th class="py-2.5 px-3">{% trans "Details" %}</th>
+                    <th class="py-2.5 px-3 text-right">{% trans "Initial Balance" %}</th>
+                    <th class="py-2.5 px-3 text-right font-bold">{% trans "Current Calculated Balance" %}</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for w in wallets %}
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-semibold text-slate-900">
+                        {{ w.name }}
+                        {% if w.is_default %}
+                        <span class="ml-1.5 px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 font-normal">{% trans "Default" %}</span>
+                        {% endif %}
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-600">
+                        {{ w.get_wallet_type_display }}
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-500">
+                        {% if w.bank_name %}{{ w.bank_name }}{% endif %}
+                        {% if w.account_number %}<span class="text-[11px] text-slate-400">({{ w.account_number }})</span>{% endif %}
+                        {% if not w.bank_name and not w.account_number %}-{% endif %}
+                    </td>
+                    <td class="py-2.5 px-3 text-right text-slate-500">
+                        {{ w.initial_balance|formatted_amount }} UZS
+                    </td>
+                    <td class="py-2.5 px-3 text-right font-bold text-indigo-700 text-sm">
+                        {{ w.current_balance|formatted_amount }} UZS
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="py-8 text-center text-slate-400">
+                        {% trans "No accounts found." %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

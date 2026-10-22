@@ -66,3 +66,14 @@ class SMSLogAdmin(admin.ModelAdmin):
         
     def has_change_permission(self, request, obj=None):
         return False
+
+
+from .models import CustomerCompanyLink
+
+@admin.register(CustomerCompanyLink)
+class CustomerCompanyLinkAdmin(admin.ModelAdmin):
+    list_display = ("customer", "company", "created_at")
+    list_filter = ("company", "created_at")
+    search_fields = ("customer__phone_number", "customer__full_name", "company__phone_number", "company__company_profile__company_name")
+    readonly_fields = ("created_at",)
+

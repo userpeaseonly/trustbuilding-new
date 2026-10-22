@@ -37,10 +37,15 @@ class Contract(models.Model):
     payment_months = models.PositiveIntegerField(_("Payment Duration (Months)"))
     status = models.CharField(_("Status"), max_length=20, choices=STATUS_CHOICES, default=STATUS_ACTIVE, db_index=True)
     
+    # Immutable Generated Document File & Template Tracking
+    contract_file = models.FileField(_("Generated Contract File"), upload_to='generated_contracts/', blank=True, null=True)
+    template_used = models.ForeignKey('ContractTemplate', on_delete=models.SET_NULL, null=True, blank=True, related_name='contracts_using_template', verbose_name=_("Template Used"))
+
     # Calculated field for caching
     total_amount = models.DecimalField(_("Total Contract Amount"), max_digits=15, decimal_places=2, editable=False, default=0)
 
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+
     updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
 
     class Meta:
@@ -209,7 +214,18 @@ class PaymentRecord(models.Model):
 
 
 @receiver(post_save, sender=Contract)
+def link_customer_on_contract_save(sender, instance, **kwargs):
+    if instance.customer_id and instance.company_id:
+        from users.models import CustomerCompanyLink
+        CustomerCompanyLink.objects.get_or_create(
+            customer_id=instance.customer_id,
+            company_id=instance.company_id
+        )
+
+
+@receiver(post_save, sender=Contract)
 def generate_payment_records(sender, instance, created, **kwargs):
+
     if created:
         M = instance.payment_months or 0  # Intermediate monthly installment count
         total = instance.total_amount

@@ -29,6 +29,7 @@ urlpatterns = [
     path('otp/', include('otp.urls')),  # OTP Auth app
     path('building/', include('building.urls')),  # Inventory app
     path('contract/', include('contract.urls')),
+    path('finance/', include('finance.urls')),  # Finance & Cash Flow app
     path('portal/', include('customer_portal.urls')),  # Contract app
 ]
 

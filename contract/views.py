@@ -192,18 +192,42 @@ def contract_create(request):
                     if not sec_phone.startswith('+'):
                         sec_phone = '+' + sec_phone
                 
-                customer = CustomUser.objects.create(
-                    phone_number=raw_phone,
-                    secondary_phone_number=sec_phone if sec_phone else None,
-                    full_name=form.cleaned_data['new_customer_name'],
-                    gender=form.cleaned_data.get('new_customer_gender', ''),
-                    passport_series=form.cleaned_data.get('new_customer_passport_series', ''),
-                    passport_jshshr=form.cleaned_data.get('new_customer_passport_jshshr', ''),
-                    passport_issued_by=form.cleaned_data.get('new_customer_passport_issued_by', ''),
-                    passport_date_of_issue=form.cleaned_data.get('new_customer_passport_date_of_issue'),
-                    passport_scan=form.cleaned_data.get('new_customer_passport_scan'),
-                    is_customer=True
-                )
+                customer = CustomUser.objects.filter(phone_number=raw_phone).first()
+                if customer:
+                    customer.is_customer = True
+                    if not customer.full_name and form.cleaned_data.get('new_customer_name'):
+                        customer.full_name = form.cleaned_data['new_customer_name']
+                    if not customer.secondary_phone_number and sec_phone:
+                        customer.secondary_phone_number = sec_phone
+                    if not customer.gender and form.cleaned_data.get('new_customer_gender'):
+                        customer.gender = form.cleaned_data['new_customer_gender']
+                    if not customer.passport_series and form.cleaned_data.get('new_customer_passport_series'):
+                        customer.passport_series = form.cleaned_data['new_customer_passport_series']
+                    if not customer.passport_jshshr and form.cleaned_data.get('new_customer_passport_jshshr'):
+                        customer.passport_jshshr = form.cleaned_data['new_customer_passport_jshshr']
+                    if not customer.passport_issued_by and form.cleaned_data.get('new_customer_passport_issued_by'):
+                        customer.passport_issued_by = form.cleaned_data['new_customer_passport_issued_by']
+                    if not customer.passport_date_of_issue and form.cleaned_data.get('new_customer_passport_date_of_issue'):
+                        customer.passport_date_of_issue = form.cleaned_data['new_customer_passport_date_of_issue']
+                    if not customer.passport_scan and form.cleaned_data.get('new_customer_passport_scan'):
+                        customer.passport_scan = form.cleaned_data['new_customer_passport_scan']
+                    customer.save()
+                else:
+                    customer = CustomUser.objects.create(
+                        phone_number=raw_phone,
+                        secondary_phone_number=sec_phone if sec_phone else None,
+                        full_name=form.cleaned_data['new_customer_name'],
+                        gender=form.cleaned_data.get('new_customer_gender', ''),
+                        passport_series=form.cleaned_data.get('new_customer_passport_series', ''),
+                        passport_jshshr=form.cleaned_data.get('new_customer_passport_jshshr', ''),
+                        passport_issued_by=form.cleaned_data.get('new_customer_passport_issued_by', ''),
+                        passport_date_of_issue=form.cleaned_data.get('new_customer_passport_date_of_issue'),
+                        passport_scan=form.cleaned_data.get('new_customer_passport_scan'),
+                        is_customer=True
+                    )
+                
+                from users.models import CustomerCompanyLink
+                CustomerCompanyLink.objects.get_or_create(customer=customer, company=company)
                 
             # 2. Create Contract
             contract = form.save(commit=False)
@@ -212,14 +236,24 @@ def contract_create(request):
             if getattr(request.user, 'is_staff_member', False):
                 contract.staff_member = request.user
             contract.save()  # Signal generates PaymentRecords here!
+
             
             # 3. Mark Apartment as Sold
             apartment = contract.apartment
             apartment.status = 'SOLD'
             apartment.save(update_fields=['status'])
             
+            # 4. Generate & Save Immutable Contract Document File
+            try:
+                from .docx_generator import build_contract_docx
+                build_contract_docx(contract)
+            except Exception as e:
+                import logging
+                logging.getLogger(__name__).warning(f"Could not pre-generate contract file: {e}")
+
             messages.success(request, _("Contract successfully generated for {}!").format(customer.full_name or customer.phone_number))
             return redirect('contract:detail', pk=contract.pk)
+
         else:
             apt_id = request.POST.get('apartment')
             if apt_id:
@@ -307,6 +341,24 @@ def download_docx_contract(request, pk):
             
     template_id = request.GET.get('template_id')
     return generate_contract_docx_response(pk, template_id=template_id)
+
+
+@login_required
+@require_permission('edit_contracts')
+def regenerate_docx_contract(request, pk):
+    """Regenerate the immutable contract document with current company and customer information."""
+    contract = get_object_or_404(Contract, pk=pk)
+    company = get_user_company(request.user)
+    if contract.company != company:
+        raise Http404()
+        
+    template_id = request.POST.get('template_id') or request.GET.get('template_id')
+    from .docx_generator import build_contract_docx
+    build_contract_docx(contract, template_id=template_id, force_regenerate=True)
+    
+    messages.success(request, _("Contract document has been successfully regenerated and updated!"))
+    return redirect('contract:detail', pk=contract.pk)
+
 
 
 
@@ -542,10 +594,14 @@ def initiate_termination(request, pk):
         
         # Send SMS to company user
         company_phone = str(contract.company.phone_number)
-        msg = f"TrustBuilding: No{contract.id} shartnomani bekor qilish uchun tasdiqlash kodi: {otp_code}"
+        from otp.transliteration import build_termination_otp_sms
+        msg = build_termination_otp_sms(contract.id, otp_code)
         try:
-            send_sms(company_phone, msg, company=contract.company)
-            messages.info(request, _("A 6-digit OTP code has been sent to your phone for verification."))
+            sent = send_sms(company_phone, msg, company=contract.company)
+            if sent:
+                messages.info(request, _("A 6-digit OTP code has been sent to your phone for verification."))
+            else:
+                messages.warning(request, _("OTP generated ({}) but SMS delivery failed.").format(otp_code))
         except Exception as e:
             messages.warning(request, _("OTP generated ({}) but SMS failed: {}").format(otp_code, e))
             
@@ -680,7 +736,7 @@ def staff_quick_payment(request):
     query = request.GET.get('q', '').strip()
     selected_customer_id = request.GET.get('customer', '')
     
-    customers = CustomUser.objects.filter(is_customer=True)
+    customers = CustomUser.objects.filter(is_customer=True, company_links__company=company)
     if query:
         customers = customers.filter(
             Q(phone_number__icontains=query) | Q(full_name__icontains=query)
@@ -689,7 +745,7 @@ def staff_quick_payment(request):
     selected_customer = None
     contracts = []
     if selected_customer_id:
-        selected_customer = get_object_or_404(CustomUser, pk=selected_customer_id, is_customer=True)
+        selected_customer = get_object_or_404(CustomUser, pk=selected_customer_id, is_customer=True, company_links__company=company)
         contracts = Contract.objects.filter(customer=selected_customer, company=company, status=Contract.STATUS_ACTIVE).select_related('apartment__building')
         
     return render(request, 'contract/quick_payment.html', {
@@ -704,8 +760,9 @@ def staff_quick_payment(request):
 @login_required
 def search_customers_api(request):
     """Real-time HTMX customer search endpoint for thousands of records"""
+    company = get_user_company(request.user)
     query = request.GET.get('q', '').strip()
-    customers = CustomUser.objects.filter(is_customer=True)
+    customers = CustomUser.objects.filter(is_customer=True, company_links__company=company)
     if query:
         customers = customers.filter(
             Q(full_name__icontains=query) |
@@ -715,6 +772,7 @@ def search_customers_api(request):
         )
     customers = customers.order_by('-created_at')[:20]
     return render(request, 'contract/partials/customer_search_results.html', {'customers': customers})
+
 
 
 @login_required

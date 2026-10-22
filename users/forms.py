@@ -71,6 +71,57 @@ class StaffCreationForm(forms.ModelForm):
 
 
 class CustomerRegistrationForm(forms.ModelForm):
+    def __init__(self, *args, company=None, **kwargs):
+        self.company = company
+        super().__init__(*args, **kwargs)
+
+    def validate_unique(self):
+        exclude = self._get_validation_exclusions()
+        phone = self.cleaned_data.get('phone_number')
+        if phone and self.company:
+            existing = CustomUser.objects.filter(phone_number=phone).first()
+            if existing:
+                from .models import CustomerCompanyLink
+                already_linked = CustomerCompanyLink.objects.filter(customer=existing, company=self.company).exists()
+                if already_linked:
+                    self.add_error('phone_number', _("A customer with this phone number is already registered in your company."))
+                # Exclude phone_number from model validate_unique so Django doesn't raise standard duplicate error
+                exclude.add('phone_number')
+        try:
+            self.instance.validate_unique(exclude=exclude)
+        except forms.ValidationError as e:
+            self._update_errors(e)
+
+    def save(self, commit=True):
+        phone = self.cleaned_data.get('phone_number')
+        existing = CustomUser.objects.filter(phone_number=phone).first() if phone else None
+
+        if existing:
+            customer = existing
+            for field in [
+                'secondary_phone_number', 'full_name', 'gender',
+                'passport_series', 'passport_jshshr', 'passport_issued_by',
+                'passport_date_of_issue', 'passport_scan'
+            ]:
+                val = self.cleaned_data.get(field)
+                if val:
+                    setattr(customer, field, val)
+            customer.is_customer = True
+            if commit:
+                customer.save()
+        else:
+            customer = super().save(commit=False)
+            customer.is_customer = True
+            if commit:
+                customer.save()
+                self.save_m2m()
+
+        if commit and self.company:
+            from .models import CustomerCompanyLink
+            CustomerCompanyLink.objects.get_or_create(customer=customer, company=self.company)
+
+        return customer
+
     class Meta:
         model = CustomUser
         fields = [
@@ -89,6 +140,7 @@ class CustomerRegistrationForm(forms.ModelForm):
             'passport_date_of_issue': forms.DateInput(attrs={'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg', 'type': 'date'}),
             'passport_scan': forms.FileInput(attrs={'class': 'w-full px-4 py-2 border border-slate-300 rounded-lg'}),
         }
+
 
 
 class RoleForm(forms.ModelForm):

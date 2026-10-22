@@ -246,53 +246,6 @@ def sms_usage_view(request):
     ).order_by('-count')
 
     # Paginate sms_logs
-
-    # Export to Excel feature for Payments (Receipts)
-    if request.GET.get('export') == 'excel':
-        import openpyxl
-        from openpyxl.styles import Font, Alignment
-        from django.utils.translation import gettext as _
-        
-        wb = openpyxl.Workbook()
-        ws = wb.active
-        ws.title = "Payments"
-        
-        headers = [
-            str(_('Contract ID')),
-            str(_('Customer')),
-            str(_('Apartment')),
-            str(_('Payment Type')),
-            str(_('Amount (UZS)')),
-            str(_('Date Paid'))
-        ]
-        ws.append(headers)
-        
-        for col in range(1, len(headers) + 1):
-            cell = ws.cell(row=1, column=col)
-            cell.font = Font(bold=True)
-            cell.alignment = Alignment(horizontal='center', vertical='center')
-            
-        for log in payments_list:
-            ws.append([
-                log.contract.contract_id,
-                log.contract.customer.full_name or str(log.contract.customer.phone_number),
-                f"Apt {log.contract.apartment.apartment_number}",
-                log.get_payment_type_display(),
-                float(log.amount),
-                log.date_paid.strftime("%d.%m.%Y")
-            ])
-            
-        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        
-        # Determine filename based on filter
-        filename = "Payments_All.xlsx"
-        if not filter_all and start_date and end_date:
-            filename = f"Payments_{start_date}_to_{end_date}.xlsx"
-            
-        response['Content-Disposition'] = f'attachment; filename="{filename}"'
-        wb.save(response)
-        return response
-
     from django.core.paginator import Paginator
 
     paginator = Paginator(sms_logs, 20)

@@ -9,7 +9,9 @@ urlpatterns = [
     path('<int:pk>/', views.contract_detail, name='detail'),
     path('<int:pk>/payment/', views.process_payment, name='process_payment'),
     path('<int:pk>/download-docx/', views.download_docx_contract, name='download_docx'),
+    path('<int:pk>/regenerate-docx/', views.regenerate_docx_contract, name='regenerate_docx'),
     path('<int:pk>/download-payments/', views.download_payments_excel, name='download_payments'),
+
     path('<int:pk>/import-payments/', views.import_payments_excel, name='import_payments'),
     path('templates/payment-import/', views.download_import_template, name='download_import_template'),
     path('payment/<int:payment_id>/receipt/', views.receipt_view, name='receipt'),
