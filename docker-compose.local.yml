@@ -54,5 +54,20 @@ services:
       - redis
       - db
 
+  bot:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: trustbuilding_web_local
+    command: python manage.py run_telegram_bot
+    volumes:
+      - .:/app
+    env_file:
+      - ./env/.local
+    depends_on:
+      - redis
+      - db
+    restart: unless-stopped
+
 volumes:
   trustbuilding_local_data:

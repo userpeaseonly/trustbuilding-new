@@ -110,6 +110,22 @@ services:
         condition: service_healthy
     stop_grace_period: 30s
 
+  bot:
+    <<: *app
+    command: ["python", "manage.py", "run_telegram_bot"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    restart: unless-stopped
+    logging: *logging
+
   db_backup:
     build:
       context: .
