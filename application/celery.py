@@ -28,4 +28,12 @@ app.conf.beat_schedule = {
         'task': 'contract.tasks.process_daily_payment_reminders',
         'schedule': crontab(hour=10, minute=0),  # Run every day at 10 AM
     },
+    'executive-morning-report': {
+        'task': 'bot.tasks.send_morning_executive_reports',
+        'schedule': crontab(hour=9, minute=0),  # Run every day at 9 AM
+    },
+    'executive-evening-report': {
+        'task': 'bot.tasks.send_evening_executive_reports',
+        'schedule': crontab(hour=20, minute=0),  # Run every day at 8 PM (20:00)
+    },
 }

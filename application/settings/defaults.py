@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'finance',
     'customer_portal',
     'otp',
+    'bot',
     
     # third
     'rest_framework',
@@ -252,6 +253,7 @@ ESKIZ_FROM = os.getenv('ESKIZ_FROM', '4546')  # Default Eskiz sender ID
 
 # Telegram Bot
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_BACKUP_BOT_TOKEN = os.getenv('TELEGRAM_BACKUP_BOT_TOKEN', '')
 
 # Sipuni VoIP credentials
 SIPUNI_USER = os.getenv('SIPUNI_USER', '')

@@ -31,6 +31,7 @@ urlpatterns = [
     path('contract/', include('contract.urls')),
     path('finance/', include('finance.urls')),  # Finance & Cash Flow app
     path('portal/', include('customer_portal.urls')),  # Contract app
+    path('bot/', include('bot.urls')),  # Telegram Bot app
 ]
 
 # Serve static and media files in development
