@@ -31,6 +31,11 @@
             <button @click="activeTab = 'roles'" :class="{'border-emerald-500 text-emerald-600': activeTab === 'roles', 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300': activeTab !== 'roles'}" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium text-sm transition-colors">
                 {% trans "Roles & Permissions" %}
             </button>
+            {% if request.user.is_company %}
+            <button @click="activeTab = 'security'" :class="{'border-emerald-500 text-emerald-600': activeTab === 'security', 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300': activeTab !== 'security'}" class="whitespace-nowrap pb-3 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-1.5">
+                <span>🛡️</span> {% trans "Security & Approvals" %}
+            </button>
+            {% endif %}
         </nav>
     </div>
 
@@ -171,6 +176,55 @@
             </table>
         </div>
     </div>
+
+    <!-- Security & Approvals Tab -->
+    {% if request.user.is_company %}
+    <div x-show="activeTab === 'security'" style="display: none;" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-6">
+        <div>
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                🛡️ {% trans "Company Security & Termination Approvals" %}
+            </h3>
+            <p class="text-xs text-slate-500 mt-1">
+                {% trans "Configure authorization safeguards for sensitive operations across your company." %}
+            </p>
+        </div>
+
+        <div class="p-5 border border-slate-200 rounded-xl bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div class="space-y-1.5 max-w-xl">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-bold text-sm text-slate-900">{% trans "SMS OTP for Contract Termination" %}</span>
+                    {% if company_profile.require_termination_otp %}
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                        🔒 {% trans "OTP Required (High Security)" %}
+                    </span>
+                    {% else %}
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800 border border-amber-200 flex items-center gap-1">
+                        ⚡ {% trans "Direct Termination (No OTP)" %}
+                    </span>
+                    {% endif %}
+                </div>
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    {% trans "When enabled, terminating an active contract requires entering a 6-digit SMS OTP verification code sent to the company director's phone. When disabled, authorized staff can terminate contracts directly without an SMS code." %}
+                </p>
+            </div>
+
+            <form action="{% url 'users:toggle_termination_otp' %}" method="post" class="shrink-0">
+                {% csrf_token %}
+                {% if company_profile.require_termination_otp %}
+                <input type="hidden" name="action" value="disable">
+                <button type="submit" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold text-xs rounded-lg transition shadow-xs flex items-center gap-1.5">
+                    🔓 {% trans "Disable SMS OTP" %}
+                </button>
+                {% else %}
+                <input type="hidden" name="action" value="enable">
+                <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition shadow-xs flex items-center gap-1.5">
+                    🔒 {% trans "Enable SMS OTP" %}
+                </button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 <!-- Add Modal -->

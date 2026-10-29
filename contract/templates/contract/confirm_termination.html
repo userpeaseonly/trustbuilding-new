@@ -14,21 +14,37 @@
             </div>
         </div>
 
+        {% if require_otp %}
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-xs text-amber-800 space-y-1">
-            <strong class="font-bold block">{% trans "Security Verification Required:" %}</strong>
-            <p>{% trans "A 6-digit OTP confirmation code has been sent to the company manager's phone via Eskiz SMS. Enter the code below to authorize termination." %}</p>
+            <strong class="font-bold block flex items-center gap-1.5">
+                🔒 {% trans "Security Verification Required:" %}
+            </strong>
+            <p>{% trans "A 6-digit OTP confirmation code has been sent to the company director's phone via Eskiz SMS. Enter the code below to authorize termination." %}</p>
         </div>
+        {% else %}
+        <div class="bg-indigo-50 border border-indigo-200 rounded-lg p-4 text-xs text-indigo-900 space-y-1">
+            <strong class="font-bold block flex items-center gap-1.5">
+                ⚡ {% trans "Direct Termination Mode:" %}
+            </strong>
+            <p>{% trans "SMS OTP verification is disabled in your company settings. You can authorize and execute contract termination directly." %}</p>
+        </div>
+        {% endif %}
 
-        <form method="post" action="{% url 'contract:confirm_termination' contract.pk %}" class="space-y-4">
+        <form method="post" action="{% url 'contract:confirm_termination' contract.pk %}" class="space-y-4"
+              x-data="{ isSubmitting: false }"
+              @submit="if(isSubmitting) { $event.preventDefault(); return false; } isSubmitting = true;">
             {% csrf_token %}
+            
+            {% if require_otp %}
             <div>
                 <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "6-Digit OTP Code" %}</label>
                 <input type="text" name="otp_code" maxlength="6" required placeholder="123456" class="w-full px-4 py-2 border border-slate-300 bg-slate-50 text-slate-900 placeholder-gray-400 rounded-lg font-mono text-center text-lg tracking-widest focus:ring-2 focus:ring-rose-500">
             </div>
+            {% endif %}
 
             <div>
                 <label class="block text-xs font-semibold text-slate-500 uppercase mb-1">{% trans "Termination Reason" %}</label>
-                <textarea name="reason" rows="3" placeholder="{% trans 'State the reason for contract termination...' %}" class="w-full px-4 py-2.5 border border-slate-300 bg-slate-50 text-slate-900 placeholder-gray-400 rounded-lg text-sm"></textarea>
+                <textarea name="reason" rows="3" required placeholder="{% trans 'State the reason for contract termination...' %}" class="w-full px-4 py-2.5 border border-slate-300 bg-slate-50 text-slate-900 placeholder-gray-400 rounded-lg text-sm"></textarea>
             </div>
 
             <div>
@@ -55,8 +71,13 @@
                 <a href="{% url 'contract:detail' contract.pk %}" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition">
                     {% trans "Cancel" %}
                 </a>
-                <button type="submit" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-medium text-sm rounded-lg transition shadow-sm">
-                    {% trans "Authorize & Terminate Contract" %}
+                <button type="submit" 
+                        :disabled="isSubmitting"
+                        :class="isSubmitting ? 'opacity-60 cursor-not-allowed pointer-events-none' : ''"
+                        class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-medium text-sm rounded-lg transition shadow-sm flex items-center gap-2">
+                    <span x-text="isSubmitting ? '{% trans "Processing..." %}' : '{% trans "Authorize & Terminate Contract" %}'">
+                        {% trans "Authorize & Terminate Contract" %}
+                    </span>
                 </button>
             </div>
         </form>

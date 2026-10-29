@@ -630,38 +630,52 @@ def receipt_view(request, payment_id):
 
 
 @login_required
+@require_permission('delete_contracts')
 def initiate_termination(request, pk):
-    """Initiates termination request, generates OTP and sends SMS to company manager"""
+    """Initiates termination request, generates OTP if company security requires it, and prepares confirmation view"""
     company = get_user_company(request.user)
     contract = get_object_or_404(Contract, pk=pk, company=company, status=Contract.STATUS_ACTIVE)
     
+    profile = getattr(company, 'company_profile', None)
+    require_otp = profile.require_termination_otp if profile else True
+    
     if request.method == 'POST':
-        # Generate 6-digit random OTP
-        otp_code = f"{random.randint(100000, 999999)}"
-        cache_key = f"term_otp_{contract.id}"
-        cache.set(cache_key, otp_code, timeout=300)  # 5 minutes TTL
-        
-        # Send SMS to company user
-        company_phone = str(contract.company.phone_number)
-        from otp.transliteration import build_termination_otp_sms
-        msg = build_termination_otp_sms(contract.id, otp_code)
-        try:
-            sent = send_sms(company_phone, msg, company=contract.company)
-            if sent:
-                messages.info(request, _("A 6-digit OTP code has been sent to your phone for verification."))
-            else:
-                messages.warning(request, _("OTP generated ({}) but SMS delivery failed.").format(otp_code))
-        except Exception as e:
-            messages.warning(request, _("OTP generated ({}) but SMS failed: {}").format(otp_code, e))
+        if require_otp:
+            # Generate 6-digit random OTP
+            otp_code = f"{random.randint(100000, 999999)}"
+            cache_key = f"term_otp_{contract.id}"
+            cache.set(cache_key, otp_code, timeout=300)  # 5 minutes TTL
             
-        total_paid = sum(p.amount for p in contract.payment_logs.all())
+            # Send SMS to company user
+            company_phone = str(contract.company.phone_number)
+            from otp.transliteration import build_termination_otp_sms
+            msg = build_termination_otp_sms(contract.id, otp_code)
+            try:
+                sent = send_sms(company_phone, msg, company=contract.company)
+                if sent:
+                    messages.info(request, _("A 6-digit OTP code has been sent to the company director's phone for verification."))
+                else:
+                    messages.warning(request, _("OTP generated ({}) but SMS delivery failed.").format(otp_code))
+            except Exception as e:
+                messages.warning(request, _("OTP generated ({}) but SMS failed: {}").format(otp_code, e))
+        else:
+            cache.delete(f"term_otp_{contract.id}")
+            
+        payment_logs = list(contract.payment_logs.all())
+        total_paid = sum(p.amount for p in payment_logs)
+        total_cash_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_CASH)
+        total_bank_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_BANK)
+        total_card_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_CARD)
+        total_material_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_MATERIAL)
+
         return render(request, 'contract/confirm_termination.html', {
             'contract': contract,
+            'require_otp': require_otp,
             'total_paid': total_paid,
-        'total_cash_paid': total_cash_paid,
-        'total_bank_paid': total_bank_paid,
-        'total_card_paid': total_card_paid,
-        'total_material_paid': total_material_paid,
+            'total_cash_paid': total_cash_paid,
+            'total_bank_paid': total_bank_paid,
+            'total_card_paid': total_card_paid,
+            'total_material_paid': total_material_paid,
             'page_title': _("Confirm Contract Termination")
         })
         
@@ -669,20 +683,33 @@ def initiate_termination(request, pk):
 
 
 @login_required
+@require_permission('delete_contracts')
 def confirm_termination(request, pk):
-    """Verifies OTP and executes contract termination & apartment archiving"""
+    """Verifies authorization (OTP if required, or direct) and executes contract termination & apartment archiving"""
     company = get_user_company(request.user)
     contract = get_object_or_404(Contract, pk=pk, company=company, status=Contract.STATUS_ACTIVE)
     
+    profile = getattr(company, 'company_profile', None)
+    require_otp = profile.require_termination_otp if profile else True
+    
     if request.method == 'POST':
-        otp_input = request.POST.get('otp_code', '').strip()
         reason = request.POST.get('reason', '').strip()
         fine_amount = request.POST.get('fine_amount', '0').strip()
         
-        cache_key = f"term_otp_{contract.id}"
-        cached_otp = cache.get(cache_key)
+        is_authorized = False
+        if require_otp:
+            otp_input = request.POST.get('otp_code', '').strip()
+            cache_key = f"term_otp_{contract.id}"
+            cached_otp = cache.get(cache_key)
+            if cached_otp and cached_otp == otp_input:
+                is_authorized = True
+                cache.delete(cache_key)
+            else:
+                messages.error(request, _("Invalid or expired OTP code."))
+        else:
+            is_authorized = True
         
-        if cached_otp and cached_otp == otp_input:
+        if is_authorized:
             fine_dec = Decimal(fine_amount or 0)
             
             # Execute apartment cloning & status update
@@ -700,19 +727,24 @@ def confirm_termination(request, pk):
                 planned_refund=planned_refund
             )
             
-            cache.delete(cache_key)
             messages.success(request, _("Contract #{} terminated successfully! Apartment reset to AVAILABLE.").format(contract.id))
             return redirect('contract:terminated_list')
-        else:
-            messages.error(request, _("Invalid or expired OTP code."))
-            total_paid = sum(p.amount for p in contract.payment_logs.all())
+        
+        payment_logs = list(contract.payment_logs.all())
+        total_paid = sum(p.amount for p in payment_logs)
+        total_cash_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_CASH)
+        total_bank_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_BANK)
+        total_card_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_CARD)
+        total_material_paid = sum(log.amount for log in payment_logs if log.payment_type == PaymentLog.PAYMENT_TYPE_MATERIAL)
+
         return render(request, 'contract/confirm_termination.html', {
             'contract': contract,
+            'require_otp': require_otp,
             'total_paid': total_paid,
-        'total_cash_paid': total_cash_paid,
-        'total_bank_paid': total_bank_paid,
-        'total_card_paid': total_card_paid,
-        'total_material_paid': total_material_paid,
+            'total_cash_paid': total_cash_paid,
+            'total_bank_paid': total_bank_paid,
+            'total_card_paid': total_card_paid,
+            'total_material_paid': total_material_paid,
             'page_title': _("Confirm Contract Termination")
         })
             

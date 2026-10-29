@@ -84,6 +84,12 @@ class CompanyProfile(models.Model):
     account_number = models.CharField(_("Account Number (x/r)"), max_length=50, blank=True)
     jshshr = models.CharField(_("PINFL (JSHSHR)"), max_length=14, blank=True)
     
+    require_termination_otp = models.BooleanField(
+        _("Require OTP for Contract Termination"),
+        default=True,
+        help_text=_("If disabled, authorized staff can terminate contracts directly without an SMS OTP confirmation.")
+    )
+    
     created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
 

@@ -19,5 +19,6 @@ urlpatterns = [
     path('roles/<int:pk>/delete/', views.role_delete_view, name='role_delete'),
     
     path('customers/', views.customer_list_view, name='customer_list'),
+    path('settings/toggle-termination-otp/', views.toggle_termination_otp, name='toggle_termination_otp'),
 ]
 

@@ -91,14 +91,57 @@ def staff_list_view(request):
         form = StaffCreationForm(company=company)
         
     # Also fetch roles for the Roles tab
-    from .models import Role
+    from .models import Role, CompanyProfile
     roles = Role.objects.filter(company=company)
+    company_profile = getattr(company, 'company_profile', None)
+    if not company_profile and request.user.is_company:
+        company_profile, created = CompanyProfile.objects.get_or_create(
+            user=company,
+            defaults={'company_name': company.full_name or "Company"}
+        )
         
     return render(request, 'users/staff_list.html', {
         'staff_profiles': staff_profiles,
         'roles': roles,
         'form': form,
+        'company_profile': company_profile,
     })
+
+
+@login_required
+def toggle_termination_otp(request):
+    """Toggle whether contract termination requires an SMS OTP for the company"""
+    if not request.user.is_company:
+        messages.error(request, _("Only company administrators can modify security settings."))
+        return redirect('users:staff_list')
+        
+    from .models import CompanyProfile
+    company_profile = getattr(request.user, 'company_profile', None)
+    if not company_profile:
+        company_profile, created = CompanyProfile.objects.get_or_create(
+            user=request.user,
+            defaults={'company_name': request.user.full_name or "Company"}
+        )
+        
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        if action == 'disable':
+            company_profile.require_termination_otp = False
+            company_profile.save(update_fields=['require_termination_otp'])
+            messages.warning(request, _("Security setting updated: SMS OTP verification for contract termination is now DISABLED (Direct termination enabled)."))
+        elif action == 'enable':
+            company_profile.require_termination_otp = True
+            company_profile.save(update_fields=['require_termination_otp'])
+            messages.success(request, _("Security setting updated: SMS OTP verification is now REQUIRED for contract termination."))
+        else:
+            company_profile.require_termination_otp = not company_profile.require_termination_otp
+            company_profile.save(update_fields=['require_termination_otp'])
+            if company_profile.require_termination_otp:
+                messages.success(request, _("Security setting updated: SMS OTP verification is now REQUIRED."))
+            else:
+                messages.warning(request, _("Security setting updated: SMS OTP verification is now DISABLED."))
+                
+    return redirect('users:staff_list')
 
 
 @login_required
