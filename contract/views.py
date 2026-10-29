@@ -1,12 +1,16 @@
 from decimal import Decimal
 import openpyxl
-from django.http import HttpResponse
+import datetime
+import logging
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.translation import gettext as _
+from django.utils import timezone
 from django.db import transaction
 from django.db.models import Q
+from django.core.cache import cache
 
 from .models import Contract, PaymentRecord, PaymentLog, ContractTemplate
 from .forms import ContractWizardForm, PaymentLogForm
@@ -15,6 +19,8 @@ from building.models import Apartment
 from building.views import get_user_company
 from .utils.utils import number_to_words, amount_to_words_ru, MONTHS_UZ
 from users.permissions import require_permission
+
+logger = logging.getLogger(__name__)
 
 @login_required
 @require_permission('view_contracts')
@@ -278,33 +284,76 @@ def contract_create(request):
 @login_required
 @require_permission('create_payments')
 def process_payment(request, pk):
-    """Process a payment for a contract"""
+    """Process a payment for a contract with strict concurrency & idempotency protection"""
     contract = get_object_or_404(Contract, pk=pk)
     
     # Security Check
     if getattr(request.user, 'is_customer', False):
         if contract.customer != request.user:
-            from django.http import Http404
             raise Http404("Not found")
     else:
         company = get_user_company(request.user)
         if contract.company != company:
-            from django.http import Http404
             raise Http404("Not found")
     
     if contract.status == Contract.STATUS_TERMINATED and request.GET.get('view') != 'schedule':
         return redirect('contract:termination_dashboard', pk=contract.pk)
 
-    
     if request.method == 'POST':
+        idempotency_key = request.POST.get('idempotency_key', '').strip()
+        cache_key = f"payment_idemp_{contract.pk}_{idempotency_key}" if idempotency_key else None
+        
+        # 1. Fast Cache Check: Immediate return if identical idempotency token was already completed
+        if cache_key:
+            cached_payment_id = cache.get(cache_key)
+            if cached_payment_id:
+                logger.info(f"Duplicate payment prevented via cache key {cache_key}. Redirecting to receipt #{cached_payment_id}.")
+                return redirect('contract:receipt', payment_id=cached_payment_id)
+
         form = PaymentLogForm(request.POST, request.FILES)
         if form.is_valid():
-            payment = form.save(commit=False)
-            payment.contract = contract
-            if getattr(request.user, 'is_staff_member', False):
-                payment.staff_member = request.user
-            payment.save()  # Signal cascades debt recalculation
-            
+            with transaction.atomic():
+                # 2. Concurrency Lock: Lock contract row to serialize parallel worker requests
+                locked_contract = Contract.objects.select_for_update().get(pk=contract.pk)
+                
+                # Check cache again inside the lock in case another worker just completed
+                if cache_key:
+                    cached_payment_id = cache.get(cache_key)
+                    if cached_payment_id:
+                        logger.info(f"Duplicate payment prevented post-lock via cache key {cache_key}.")
+                        return redirect('contract:receipt', payment_id=cached_payment_id)
+
+                amount = form.cleaned_data.get('amount')
+                payment_type = form.cleaned_data.get('payment_type')
+                time_threshold = timezone.now() - datetime.timedelta(seconds=15)
+
+                # 3. 15-second debounce window check for identical submission
+                recent_duplicate = PaymentLog.objects.filter(
+                    contract=locked_contract,
+                    amount=amount,
+                    payment_type=payment_type,
+                    created_at__gte=time_threshold
+                ).order_by('-id').first()
+
+                if recent_duplicate:
+                    logger.warning(
+                        f"Duplicate payment prevented for contract {contract.pk} within 15s window "
+                        f"(Amount: {amount}, Type: {payment_type}). Redirecting to existing payment #{recent_duplicate.pk}."
+                    )
+                    if cache_key:
+                        cache.set(cache_key, recent_duplicate.pk, timeout=600)
+                    return redirect('contract:receipt', payment_id=recent_duplicate.pk)
+
+                # 4. Save new payment
+                payment = form.save(commit=False)
+                payment.contract = locked_contract
+                if getattr(request.user, 'is_staff_member', False):
+                    payment.staff_member = request.user
+                payment.save()  # Signal cascades debt recalculation & finance sync
+
+                if cache_key:
+                    cache.set(cache_key, payment.pk, timeout=600)
+
             messages.success(request, _("Payment logged successfully!"))
             return redirect('contract:receipt', payment_id=payment.pk)
         else:
@@ -691,7 +740,7 @@ def termination_dashboard(request, pk):
 
 @login_required
 def process_refund(request, pk):
-    """Process a refund payment to the customer."""
+    """Process a refund payment to the customer with concurrency & deduplication guard."""
     company = get_user_company(request.user)
     contract = get_object_or_404(Contract, pk=pk, company=company, status=Contract.STATUS_TERMINATED)
     termination = get_object_or_404(TerminateContract, contract=contract)
@@ -702,14 +751,26 @@ def process_refund(request, pk):
         notes = request.POST.get('notes', '')
         
         if amount > 0:
-            TerminateContractPayment.objects.create(
-                termination=termination,
-                amount=amount,
-                payment_type=payment_method,
-                notes=notes,
-                payment_date=timezone.now().date()
-            )
-            messages.success(request, _("Refund payment recorded successfully!"))
+            with transaction.atomic():
+                cutoff = timezone.now() - datetime.timedelta(seconds=15)
+                recent = TerminateContractPayment.objects.filter(
+                    termination=termination,
+                    amount=amount,
+                    payment_type=payment_method,
+                    created_at__gte=cutoff
+                ).first()
+                if not recent:
+                    TerminateContractPayment.objects.create(
+                        termination=termination,
+                        amount=amount,
+                        payment_type=payment_method,
+                        notes=notes,
+                        payment_date=timezone.now().date()
+                    )
+                    messages.success(request, _("Refund payment recorded successfully!"))
+                else:
+                    logger.warning(f"Duplicate refund payment prevented for termination {termination.pk}.")
+                    messages.warning(request, _("Refund payment was already recorded."))
         else:
             messages.error(request, _("Amount must be greater than 0."))
             
