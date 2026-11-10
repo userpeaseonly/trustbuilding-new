@@ -1,0 +1,913 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ current_lang|default:'uz' }}" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustBuilding — Oʻzbekiston qurilish kompaniyalari uchun yagona savdo, moliya va shaxmatka tizimi</title>
+    <meta name="description" content="Exceldagi chalkashliklar va xonadonlarning ikki marta sotilishiga chek qoʻying. Interaktiv shaxmatka, Telegram CEO kokpit, multi-kassa va 1-klik shartnomalar.">
+    <link rel="icon" type="image/png" href="{% static 'images/favicon-32x32.png' %}">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN for standalone reliability on landing) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        .gradient-glow {
+            background: radial-gradient(circle at 50% 20%, rgba(16, 185, 129, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans antialiased selection:bg-emerald-500 selection:text-white"
+      x-data="{
+          lang: '{{ current_lang|default:'uz' }}',
+          mobileMenuOpen: false,
+          privacyModalOpen: false,
+          termsModalOpen: false,
+          demoFormSubmitting: false,
+          demoFormSubmitted: false,
+          demoFormError: '',
+          
+          // Mini-shaxmatka interactive widget state
+          selectedApt: { number: '42', floor: 4, rooms: 3, area: '78.5', price: '706 500 000', status: 'AVAILABLE' },
+          apartments: [
+              { number: '51', floor: 5, rooms: 2, area: '56.0', price: '504 000 000', status: 'SOLD' },
+              { number: '52', floor: 5, rooms: 3, area: '78.5', price: '706 500 000', status: 'AVAILABLE' },
+              { number: '53', floor: 5, rooms: 4, area: '102.0', price: '918 000 000', status: 'BOOKED' },
+              { number: '41', floor: 4, rooms: 2, area: '56.0', price: '504 000 000', status: 'AVAILABLE' },
+              { number: '42', floor: 4, rooms: 3, area: '78.5', price: '706 500 000', status: 'AVAILABLE' },
+              { number: '43', floor: 4, rooms: 4, area: '102.0', price: '918 000 000', status: 'SOLD' },
+              { number: '31', floor: 3, rooms: 2, area: '56.0', price: '504 000 000', status: 'SOLD' },
+              { number: '32', floor: 3, rooms: 3, area: '78.5', price: '706 500 000', status: 'BOOKED' },
+              { number: '33', floor: 3, rooms: 4, area: '102.0', price: '918 000 000', status: 'AVAILABLE' }
+          ],
+          
+          setLang(l) {
+              this.lang = l;
+              fetch('?lang=' + l);
+          },
+          
+          async submitDemo(e) {
+              this.demoFormSubmitting = true;
+              this.demoFormError = '';
+              const formData = new FormData(e.target);
+              formData.append('lang', this.lang);
+              
+              try {
+                  const resp = await fetch('{{ demo_submit_url }}', {
+                      method: 'POST',
+                      headers: {
+                          'X-CSRFToken': '{{ csrf_token }}',
+                          'X-Requested-With': 'XMLHttpRequest'
+                      },
+                      body: formData
+                  });
+                  const res = await resp.json();
+                  if (res.success) {
+                      this.demoFormSubmitted = true;
+                  } else {
+                      this.demoFormError = res.message || 'Xatolik yuz berdi.';
+                  }
+              } catch (err) {
+                  this.demoFormError = 'Server bilan aloqa uzildi. Iltimos qaytadan urinib koʻring.';
+              } finally {
+                  this.demoFormSubmitting = false;
+              }
+          }
+      }">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-900/85 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo with official TrustBuilding logo icon -->
+            <a href="#hero" class="flex items-center gap-2.5 group">
+                <img src="{% static 'images/logo_icon_white.png' %}" alt="TrustBuilding Logo" class="h-9 w-auto object-contain transition group-hover:scale-105">
+                <span class="font-black text-2xl tracking-tight text-white">Trust<span class="text-emerald-400">Building</span></span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#shaxmatka" class="hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Shaxmatka' : 'Шахматка'">Shaxmatka</a>
+                <a href="#telegram-bot" class="hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Telegram Kokpit' : 'Telegram Кокпит'">Telegram Kokpit</a>
+                <a href="#moliya" class="hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Moliya & Kassa' : 'Финансы и Касса'">Moliya & Kassa</a>
+                <a href="#shartnomalar" class="hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Shartnomalar' : 'Договоры'">Shartnomalar</a>
+                <a href="#taqqoslash" class="hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Taqqoslash' : 'Сравнение'">Taqqoslash</a>
+                <a href="#aloqa" class="hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Aloqa' : 'Контакты'">Aloqa</a>
+            </nav>
+
+            <!-- Language Switcher & Action Buttons -->
+            <div class="hidden sm:flex items-center gap-4">
+                <!-- Language Toggle -->
+                <div class="bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 flex items-center text-xs font-semibold">
+                    <button type="button" 
+                            @click="setLang('uz')" 
+                            :class="lang === 'uz' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-400 hover:text-white'"
+                            class="px-2.5 py-1 rounded-md transition">
+                        UZ
+                    </button>
+                    <button type="button" 
+                            @click="setLang('ru')" 
+                            :class="lang === 'ru' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-400 hover:text-white'"
+                            class="px-2.5 py-1 rounded-md transition">
+                        RU
+                    </button>
+                </div>
+
+                <!-- Tizimga kirish (Login) -->
+                <a href="{{ app_login_url }}" target="_blank" class="px-4 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-700 transition">
+                    <span x-text="lang === 'uz' ? 'Tizimga kirish' : 'Вход в систему'">Tizimga kirish</span> &rarr;
+                </a>
+
+                <!-- Demo button -->
+                <a href="#demo-form" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition shadow-lg shadow-emerald-500/20">
+                    <span x-text="lang === 'uz' ? 'Demoni koʻrish' : 'Запросить демо'">Demoni koʻrish</span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-slate-400 hover:text-white p-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div x-show="mobileMenuOpen" x-cloak class="md:hidden bg-slate-800 border-b border-slate-700 px-4 py-4 space-y-3">
+            <a href="#shaxmatka" @click="mobileMenuOpen = false" class="block text-sm font-medium text-slate-300 hover:text-emerald-400">Shaxmatka</a>
+            <a href="#telegram-bot" @click="mobileMenuOpen = false" class="block text-sm font-medium text-slate-300 hover:text-emerald-400">Telegram Kokpit</a>
+            <a href="#moliya" @click="mobileMenuOpen = false" class="block text-sm font-medium text-slate-300 hover:text-emerald-400">Moliya & Kassa</a>
+            <a href="#shartnomalar" @click="mobileMenuOpen = false" class="block text-sm font-medium text-slate-300 hover:text-emerald-400">Shartnomalar</a>
+            <a href="#taqqoslash" @click="mobileMenuOpen = false" class="block text-sm font-medium text-slate-300 hover:text-emerald-400">Taqqoslash</a>
+            <a href="#aloqa" @click="mobileMenuOpen = false" class="block text-sm font-medium text-slate-300 hover:text-emerald-400">Aloqa</a>
+            
+            <div class="pt-3 border-t border-slate-700 flex items-center justify-between">
+                <div class="flex gap-2">
+                    <button @click="setLang('uz')" :class="lang === 'uz' ? 'bg-emerald-500 text-white' : 'text-slate-400'" class="px-3 py-1 rounded text-xs font-bold">UZ</button>
+                    <button @click="setLang('ru')" :class="lang === 'ru' ? 'bg-emerald-500 text-white' : 'text-slate-400'" class="px-3 py-1 rounded text-xs font-bold">RU</button>
+                </div>
+                <a href="{{ app_login_url }}" target="_blank" class="text-xs font-semibold text-emerald-400">Tizimga kirish &rarr;</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION 1: HERO HOOK -->
+    <section id="hero" class="relative overflow-hidden pt-16 pb-24 md:pt-24 md:pb-32 gradient-glow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <!-- Market Specific Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-8 backdrop-blur-sm">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span x-text="lang === 'uz' ? 'Oʻzbekiston qurilish sohasi uchun maxsus ishlab chiqilgan' : 'Специально для девелоперов и застройщиков Узбекистана'">
+                    Oʻzbekiston qurilish sohasi uchun maxsus ishlab chiqilgan
+                </span>
+            </div>
+
+            <!-- Main Headline -->
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-white tracking-tight leading-[1.1] max-w-5xl mx-auto">
+                <span x-show="lang === 'uz'">
+                    Qurilish biznesingizni toʻliq nazoratga oling: <br class="hidden sm:inline">
+                    <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">Shaxmatkadan to Telegram kokpitgacha.</span>
+                </span>
+                <span x-show="lang === 'ru'" x-cloak>
+                    Полный контроль строительного бизнеса: <br class="hidden sm:inline">
+                    <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">от интерактивной шахматки до Telegram-кокпита.</span>
+                </span>
+            </h1>
+
+            <!-- Subheadline -->
+            <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+                <span x-show="lang === 'uz'">
+                    Excel jadvallaridagi chalkashliklar, ikki marta sotilgan xonadonlar va kechikkan toʻlovlar bilan xayrlashing. Savdo, moliya, KO-1 kassa va shartnomalar — bitta xavfsiz tizimda.
+                </span>
+                <span x-show="lang === 'ru'" x-cloak>
+                    Забудьте о хаосе в Excel, риске двойных продаж квартир и забытых должниках. Продажи, мультивалютная касса КО-1, договоры и отчеты руководству — в единой защищенной платформе.
+                </span>
+            </p>
+
+            <!-- Hero CTA Buttons -->
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#demo-form" class="w-full sm:w-auto px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold rounded-xl text-base transition shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2 group">
+                    <span>⚡</span>
+                    <span x-text="lang === 'uz' ? 'Bepul demoni koʻrish' : 'Запросить бесплатное демо'">Bepul demoni koʻrish</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+                <a href="https://t.me/{{ telegram_contact }}" target="_blank" class="w-full sm:w-auto px-8 py-4 bg-slate-800/80 hover:bg-slate-700/80 text-white font-bold rounded-xl text-base border border-slate-700 transition flex items-center justify-center gap-2.5">
+                    <svg class="w-5 h-5 text-sky-400 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.197 1.006.128.832.941z"/></svg>
+                    <span x-text="lang === 'uz' ? 'Telegramda yozish (@' + '{{ telegram_contact }}' + ')' : 'Написать в Telegram'">Telegramda yozish</span>
+                </a>
+            </div>
+
+            <!-- Trust metric badges -->
+            <div class="mt-14 pt-10 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-4xl mx-auto text-left">
+                <div class="p-4 bg-slate-800/40 rounded-xl border border-slate-800">
+                    <div class="text-2xl font-black text-emerald-400">0%</div>
+                    <div class="text-xs text-slate-400 font-medium mt-1" x-text="lang === 'uz' ? 'Ikki marta sotish xavfi' : 'Риск двойных продаж'">Ikki marta sotish xavfi</div>
+                </div>
+                <div class="p-4 bg-slate-800/40 rounded-xl border border-slate-800">
+                    <div class="text-2xl font-black text-white">&lt; 30 soniya</div>
+                    <div class="text-xs text-slate-400 font-medium mt-1" x-text="lang === 'uz' ? 'Rasmiy shartnoma generatsiyasi' : 'Генерация договора'">Rasmiy shartnoma generatsiyasi</div>
+                </div>
+                <div class="p-4 bg-slate-800/40 rounded-xl border border-slate-800">
+                    <div class="text-2xl font-black text-teal-400">KO-1</div>
+                    <div class="text-xs text-slate-400 font-medium mt-1" x-text="lang === 'uz' ? 'Birlamchi kassa standarti' : 'Стандарт первичной кассы'">Birlamchi kassa standarti</div>
+                </div>
+                <div class="p-4 bg-slate-800/40 rounded-xl border border-slate-800">
+                    <div class="text-2xl font-black text-sky-400">09:00 / 20:00</div>
+                    <div class="text-xs text-slate-400 font-medium mt-1" x-text="lang === 'uz' ? 'Telegram kunlik kokpit' : 'Telegram дайджест шефу'">Telegram kunlik kokpit</div>
+                </div>
+            </div>
+
+            <!-- Hero Platform Preview Mockup (macOS-style browser window with live dashboard) -->
+            <div class="mt-14 relative max-w-5xl mx-auto">
+                <div class="rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl overflow-hidden ring-1 ring-white/10 group">
+                    <!-- Browser Titlebar -->
+                    <div class="bg-slate-800/90 px-4 py-3 border-b border-slate-700/80 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                        </div>
+                        <div class="flex items-center gap-2 px-4 py-1.5 rounded-md bg-slate-950/70 border border-slate-700/60 text-xs font-mono text-slate-300 max-w-md w-full justify-center">
+                            <svg class="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+                            <span class="truncate">https://app.trust-building.uz/dashboard/</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-slate-400 text-xs font-semibold">
+                            <span class="hidden sm:inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="hidden sm:inline" x-text="lang === 'uz' ? 'Jonli tizim' : 'Live система'">Jonli tizim</span>
+                        </div>
+                    </div>
+                    <!-- Live High-Resolution ERP Screenshot -->
+                    <div class="relative bg-slate-950">
+                        <img src="{% static 'landing/images/dashboard.png' %}" alt="TrustBuilding ERP Dashboard" class="w-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: THE 4 REAL-WORLD PAIN POINTS -->
+    <section class="py-20 bg-slate-950 border-y border-slate-800 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold text-rose-400 uppercase tracking-widest block mb-2" x-text="lang === 'uz' ? 'Eski usuldagi xatolar' : 'Проблемы классического учета'">
+                    Eski usuldagi xatolar
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Oʻzbekiston qurilishida har kuni uchraydigan 4 ta asosiy ogʻriq' : '4 главные проблемы в учете новостроек Узбекистана'">
+                    Oʻzbekiston qurilishida har kuni uchraydigan 4 ta asosiy ogʻriq
+                </h2>
+                <p class="text-slate-400 mt-4 text-sm sm:text-base" x-text="lang === 'uz' ? 'Daftar va Excelda yuritilgan savdolar kompaniyaga yuz millionlab soʻm zarar yetkazadi:' : 'Учет в блокнотах и Excel обходится девелоперу сотнями миллионов сумов потерь:'">
+                    Daftar va Excelda yuritilgan savdolar kompaniyaga yuz millionlab soʻm zarar yetkazadi:
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Pain 1 -->
+                <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition">
+                    <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center font-bold text-xl mb-6">
+                        ⚠️
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3" x-text="lang === 'uz' ? 'Xonadonlarning ikki marta sotilib ketishi' : 'Двойные продажи квартир'">
+                        Xonadonlarning ikki marta sotilib ketishi
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed" x-text="lang === 'uz' ? 'Menejerlar turli xonalarda yoki filiallarda oʻtirib, bir-biridan bexabar bitta uyni ikki mijozga band qiladi yoki sotadi. Bu kompaniya obroʻsiga va sud jarayonlariga olib keladi.' : 'Менеджеры в разных офисах, не имея общей онлайн-картины, продают одну и ту же квартиру двум клиентам. Это прямые суды и удар по репутации бренда.'">
+                        Menejerlar turli xonalarda yoki filiallarda oʻtirib, bir-biridan bexabar bitta uyni ikki mijozga band qiladi yoki sotadi. Bu kompaniya obroʻsiga va sud jarayonlariga olib keladi.
+                    </p>
+                </div>
+
+                <!-- Pain 2 -->
+                <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-xl mb-6">
+                        📉
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3" x-text="lang === 'uz' ? 'Mijozlar qarzini esdan chiqarish va kassaviy uzilish' : 'Забытые долги клиентов и кассовые разрывы'">
+                        Mijozlar qarzini esdan chiqarish va kassaviy uzilish
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed" x-text="lang === 'uz' ? 'Muddatli toʻlovlar jadvali boʻyicha kim qachon toʻlashi kerakligini daftardan qidirishga soatlar ketadi. Qarzdorlar oʻz vaqtida ogohlantirilmagani sababli qurilish toʻxtab qoladi.' : 'Графики рассрочки теряются в файлах. Клиенты забывают внести очередной транш вовремя, а у компании не хватает наличных на арматуру и бетон.'">
+                        Muddatli toʻlovlar jadvali boʻyicha kim qachon toʻlashi kerakligini daftardan qidirishga soatlar ketadi. Qarzdorlar oʻz vaqtida ogohlantirilmagani sababli qurilish toʻxtab qoladi.
+                    </p>
+                </div>
+
+                <!-- Pain 3 -->
+                <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-xl mb-6">
+                        ⏳
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3" x-text="lang === 'uz' ? 'Har bir shartnomani Word-da 45 daqiqa terish' : '45 минут на подготовку каждого договора в Word'">
+                        Har bir shartnomani Word-da 45 daqiqa terish
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed" x-text="lang === 'uz' ? 'Mijoz pasporti, PINFL, toʻlov grafiki va xonadon kvadratura hisobini Word shablonlariga qoʻlda koʻchirishda doimiy xatolar boʻladi va mijoz ofisda kutib qoladi.' : 'Менеджер вручную копирует паспортные данные, расчеты графика и квадратные метры в шаблоны Word, допуская юридические опечатки, пока клиент томится в ожидании.'">
+                        Mijoz pasporti, PINFL, toʻlov grafiki va xonadon kvadratura hisobini Word shablonlariga qoʻlda koʻchirishda doimiy xatolar boʻladi va mijoz ofisda kutib qoladi.
+                    </p>
+                </div>
+
+                <!-- Pain 4 -->
+                <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800/80 hover:border-rose-500/40 transition">
+                    <div class="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 flex items-center justify-center font-bold text-xl mb-6">
+                        📲
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3" x-text="lang === 'uz' ? 'Taʼsischining real pul qoldigʻidan bexabarligi' : 'Неведение руководства о реальном балансе'">
+                        Taʼsischining real pul qoldigʻidan bexabarligi
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-relaxed" x-text="lang === 'uz' ? 'Kassada qancha naqd pul bor, bank hisobiga qancha tushdi, barterga nima olindi? Bu savollarga javob olish uchun rahbar har kuni buxgalter bilan soatlab hisob-kitob qilishga majbur.' : 'Сколько денег в главной кассе? Сколько на расчетном счете? Руководитель постоянно на объекте и вынужден обрывать телефон бухгалтерии, чтобы узнать дневную выручку.'">
+                        Kassada qancha naqd pul bor, bank hisobiga qancha tushdi, barterga nima olindi? Bu savollarga javob olish uchun rahbar har kuni buxgalter bilan soatlab hisob-kitob qilishga majbur.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: THE 4 CORE SUPERPOWERS -->
+    <section class="py-24 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-28">
+            
+            <!-- Pillar 1: Shaxmatka -->
+            <div id="shaxmatka" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                        🏢 01. Interaktiv Shaxmatka
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Birgina ekran orqali butun turar-joy majmuasi nazorati' : 'Вся шахматка жилого комплекса на одном экране'">
+                        Birgina ekran orqali butun turar-joy majmuasi nazorati
+                    </h2>
+                    <p class="text-slate-400 text-base leading-relaxed" x-text="lang === 'uz' ? 'Barcha qavatlar, bloklar va xonadonlar real-vaqtda yangilanadi. Sotuvchi xonadonni band qilgan soniyada qolgan barcha menejerlar ekranida u darhol qizil (Sotilgan) yoki sariq (Band) rangga oʻtadi.' : 'Синхронизация в реальном времени. В ту же секунду, когда бронь подтверждена, квартира окрашивается у всех менеджеров. Никаких случайных двойных продаж.'">
+                        Barcha qavatlar, bloklar va xonadonlar real-vaqtda yangilanadi. Sotuvchi xonadonni band qilgan soniyada qolgan barcha menejerlar ekranida u darhol qizil (Sotilgan) yoki sariq (Band) rangga oʻtadi.
+                    </p>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <span class="text-emerald-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Qavat va kvadratura boʻyicha avtomatik narx hisoblash' : 'Авторасчет цены по этажам и квадратуре'">Qavat va kvadratura boʻyicha avtomatik narx hisoblash</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-emerald-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Xonadon rejalari (Planlar) va qavat sxemalarini biriktirish' : 'Привязка планировок и этажных планов'">Xonadon rejalari (Planlar) va qavat sxemalarini biriktirish</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-emerald-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Ommaviy narx belgilash va chegirmalarni boshqarish' : 'Массовое управление ценами и акциями'">Ommaviy narx belgilash va chegirmalarni boshqarish</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Shaxmatka Live Screenshot Frame -->
+                <div class="rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl overflow-hidden ring-1 ring-white/10 group">
+                    <div class="bg-slate-800/90 px-4 py-2.5 border-b border-slate-700/80 flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                        </div>
+                        <span class="text-[11px] font-mono text-slate-400">app.trust-building.uz/buildings/7/matrix/</span>
+                        <span class="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Ahmad Ali (48 ta xonadon, 2 ta blok)</span>
+                    </div>
+                    <img src="{% static 'landing/images/matrix.png' %}" alt="TrustBuilding Shaxmatka Ekran" class="w-full object-cover">
+                </div>
+            </div>
+
+            <!-- Pillar 2: Telegram CEO Cockpit -->
+            <div id="telegram-bot" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1 rounded-2xl p-6 bg-gradient-to-tr from-slate-800 to-slate-800/40 border border-slate-700 shadow-xl font-mono text-xs">
+                    <!-- Telegram Simulated Bubble -->
+                    <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 shadow-md space-y-3 max-w-md mx-auto">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-full bg-sky-500 flex items-center justify-center text-white text-[10px]">🤖</div>
+                                <span class="font-bold text-sky-400">TrustBuilding Bot</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">20:00</span>
+                        </div>
+                        <div class="text-white space-y-2 text-xs leading-relaxed">
+                            <div class="font-bold text-emerald-400">📊 BUGUNGI KUNLIK KOKPIT (09.11.2026)</div>
+                            <div>🏢 <b>Bugungi savdo:</b> 2 ta xonadon shartnomalandi ($140,000)</div>
+                            <div>💵 <b>Tushgan toʻlovlar:</b> 380,000,000 UZS<br>
+                                &nbsp;&nbsp;├─ Naqd kassa: 210,000,000 UZS<br>
+                                &nbsp;&nbsp;└─ Bank x/r: 170,000,000 UZS
+                            </div>
+                            <div>⚠️ <b>Kechikkan qarzdorlar:</b> 14 ta mijoz (&gt;15 kun)<br>
+                                &nbsp;&nbsp;└─ Jami kechikkan qarz: 1,240,000,000 UZS
+                            </div>
+                            <div>🏦 <b>Joriy kassa qoldiqlari:</b><br>
+                                &nbsp;&nbsp;├─ Asosiy kassa: 450,000,000 UZS<br>
+                                &nbsp;&nbsp;└─ Bank x/r: 2,150,000,000 UZS
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6 order-1 lg:order-2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-sky-500/10 text-sky-400 text-xs font-bold uppercase tracking-wider">
+                        📱 02. Telegram CEO Kokpit
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Rahbar uchun shaxsiy boshqaruv kabinasi — toʻgʻridan-toʻgʻri smartfonda' : 'Личный кабинет учредителя прямо в Telegram'">
+                        Rahbar uchun shaxsiy boshqaruv kabinasi — toʻgʻridan-toʻgʻri smartfonda
+                    </h2>
+                    <p class="text-slate-400 text-base leading-relaxed" x-text="lang === 'uz' ? 'Kompaniya taʼsischilari har doim harakatda, qurilish maydonlarida yoki uchrashuvlarda. Telegram bot har kuni ertalab 09:00 da va kechqurun 20:00 da eng muhim moliyaviy va savdo koʻrsatkichlarini telefoningizga yuboradi.' : 'Учредители редко сидят за компьютером. Telegram-бот дважды в день (в 09:00 и 20:00) присылает структурированную сводку: сколько продано, сколько денег поступило в кассу и кто из покупателей просрочил платеж.'">
+                        Kompaniya taʼsischilari har doim harakatda, qurilish maydonlarida yoki uchrashuvlarda. Telegram bot har kuni ertalab 09:00 da va kechqurun 20:00 da eng muhim moliyaviy va savdo koʻrsatkichlarini telefoningizga yuboradi.
+                    </p>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <span class="text-sky-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Hech qanday murakkab ilovani yuklab olish shart emas' : 'Не нужно заходить в веб-интерфейс'">Hech qanday murakkab ilovani yuklab olish shart emas</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-sky-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Toʻgʻridan-toʻgʻri telefoningizdan xavfsiz tasdiqlash' : 'Моментальные алерты о просрочках'">Toʻgʻridan-toʻgʻri telefoningizdan xavfsiz tasdiqlash</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Pillar 3: Multi-Kassa & KO-1 -->
+            <div id="moliya" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-teal-500/10 text-teal-400 text-xs font-bold uppercase tracking-wider">
+                        💵 03. Koʻp hisobli Kassa va KO-1 Kvitansiyalari
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Naqd, Bank, Karta va Barter — toʻliq moliyaviy shaffoflik' : 'Мультикасса и официальные квитанции КО-1'">
+                        Naqd, Bank, Karta va Barter — toʻliq moliyaviy shaffoflik
+                    </h2>
+                    <p class="text-slate-400 text-base leading-relaxed" x-text="lang === 'uz' ? 'Xorijiy CRM tizimlari Oʻzbekistondagi naqd pul va barter hisobini tushunmaydi. TrustBuilding har bir toʻlov turini (Naqd, Bank oʻtkazmasi, Plastik karta, Barter/Material) alohida kassa boʻyicha hisoblaydi va 1 bosishda KO-1 kassa orderi kvitansiyasini chop etadi.' : 'Зарубежные CRM не понимают местной специфики учета наличных и бартера. TrustBuilding разделяет кассы (Наличные, Банковский р/с, Пластик, Бартер), формирует первичный кассовый ордер КО-1 и исключает утечки.'">
+                        Xorijiy CRM tizimlari Oʻzbekistondagi naqd pul va barter hisobini tushunmaydi. TrustBuilding har bir toʻlov turini (Naqd, Bank oʻtkazmasi, Plastik karta, Barter/Material) alohida kassa boʻyicha hisoblaydi va 1 bosishda KO-1 kassa orderi kvitansiyasini chop etadi.
+                    </p>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <span class="text-teal-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Qonuniy standartdagi KO-1 shaklidagi rasmiy kvitansiya' : 'Печать квитанций государственного стандарта КО-1'">Qonuniy standartdagi KO-1 shaklidagi rasmiy kvitansiya</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-teal-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Kassalararo pul oʻtkazmalari va harajat moddalari' : 'Переводы между счетами и постатейный учет расходов'">Kassalararo pul oʻtkazmalari va harajat moddalari</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Finance Live Multi-Kassa with Floating Receipt Preview -->
+                <div class="relative">
+                    <div class="rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl overflow-hidden ring-1 ring-white/10 group">
+                        <div class="bg-slate-800/90 px-4 py-2.5 border-b border-slate-700/80 flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                            </div>
+                            <span class="text-[11px] font-mono text-slate-400">app.trust-building.uz/finance/</span>
+                            <span class="text-[10px] font-semibold text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded">Moliya & Pul Oqimi (DDS)</span>
+                        </div>
+                        <img src="{% static 'landing/images/finance.png' %}" alt="TrustBuilding Kassa va Moliya" class="w-full object-cover">
+                    </div>
+                    <!-- Overlapping KO-1 Receipt Preview Card -->
+                    <div class="hidden sm:block absolute -bottom-6 -right-4 w-72 rounded-xl border border-slate-600/80 bg-slate-900/95 shadow-2xl p-2.5 backdrop-blur-md">
+                        <div class="flex items-center justify-between text-[10px] font-bold text-slate-300 pb-1.5 mb-1.5 border-b border-slate-800">
+                            <span class="flex items-center gap-1.5 text-teal-400">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Rasmiy KO-1 Shakli
+                            </span>
+                            <span class="text-emerald-400 font-mono">1-klikda chop etish</span>
+                        </div>
+                        <img src="{% static 'landing/images/receipt.png' %}" alt="KO-1 Rasmiy Kvitansiya" class="w-full rounded border border-slate-700/60 object-cover shadow-md">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pillar 4: Shartnoma & SMS -->
+            <div id="shartnomalar" class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Contract Live Screenshot Frame -->
+                <div class="order-2 lg:order-1 rounded-2xl border border-slate-700/80 bg-slate-900 shadow-2xl overflow-hidden ring-1 ring-white/10 group">
+                    <div class="bg-slate-800/90 px-4 py-2.5 border-b border-slate-700/80 flex items-center justify-between text-xs">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block"></span>
+                        </div>
+                        <span class="text-[11px] font-mono text-slate-400">app.trust-building.uz/contract/6/</span>
+                        <span class="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">Shartnoma #3 & Toʻlov Grafigi</span>
+                    </div>
+                    <img src="{% static 'landing/images/contract.png' %}" alt="TrustBuilding Shartnoma Tafsilotlari" class="w-full object-cover">
+                </div>
+
+                <div class="space-y-6 order-1 lg:order-2">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-emerald-500/10 text-emerald-400 text-xs font-bold uppercase tracking-wider">
+                        📄 04. 1-Klik Shartnoma & Eskiz SMS
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Yuridik hujjatlar 10 soniyada, SMS eslatmalar esa avtomatik' : 'Договор за 10 секунд и авто-SMS должникам'">
+                        Yuridik hujjatlar 10 soniyada, SMS eslatmalar esa avtomatik
+                    </h2>
+                    <p class="text-slate-400 text-base leading-relaxed" x-text="lang === 'uz' ? 'Mijoz pasporti va toʻlov jadvalini kiritish kifoya — toʻliq yuridik Word (.docx) shartnoma 10 soniyada tayyor boʻladi. Har oy toʻlov kuni yaqinlashganda esa Eskiz SMS orqali mijozga lotin imlosida eslatma yuboriladi.' : 'Система генерирует юридически выверенный договор (.docx) по вашему фирменному шаблону за считанные секунды. А сервис SMS-рассылок автоматически напоминает покупателям о приближении даты платежа.'">
+                        Mijoz pasporti va toʻlov jadvalini kiritish kifoya — toʻliq yuridik Word (.docx) shartnoma 10 soniyada tayyor boʻladi. Har oy toʻlov kuni yaqinlashganda esa Eskiz SMS orqali mijozga lotin imlosida eslatma yuboriladi.
+                    </p>
+                    <ul class="space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center gap-3">
+                            <span class="text-emerald-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? 'Har bir mijoz uchun shaxsiy portal (toʻlovlar tarixini koʻrish)' : 'Личный кабинет покупателя для проверки графика'">Har bir mijoz uchun shaxsiy portal (toʻlovlar tarixini koʻrish)</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="text-emerald-400 font-bold">✓</span>
+                            <span x-text="lang === 'uz' ? '1 qismli tejamkor SMS transliteratsiyasi (xarajatlarni tejash)' : 'Экономичная транслитерация SMS в 1 часть'">1 qismli tejamkor SMS transliteratsiyasi (xarajatlarni tejash)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE MINI-SHAXMATKA DEMO -->
+    <section class="py-20 bg-slate-950 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2" x-text="lang === 'uz' ? 'Oʻzingiz sinab koʻring' : 'Интерактивная демо-проба'">
+                    Oʻzingiz sinab koʻring
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Jonli interaktiv shaxmatka simulyatori' : 'Попробуйте шахматку в действии'">
+                    Jonli interaktiv shaxmatka simulyatori
+                </h2>
+                <p class="text-slate-400 mt-3 text-sm sm:text-base" x-text="lang === 'uz' ? 'Quyidagi xonadonlardan birini bosing va tizim qanday tezkor maʼlumot berishini amalda koʻring:' : 'Нажмите на любую квартиру ниже, чтобы увидеть мгновенную карточку с расчетом цены:'">
+                    Quyidagi xonadonlardan birini bosing va tizim qanday tezkor maʼlumot berishini amalda koʻring:
+                </p>
+            </div>
+
+            <!-- Interactive Matrix Box -->
+            <div class="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+                <!-- Status Legend -->
+                <div class="flex flex-wrap items-center justify-center gap-6 mb-8 text-xs font-semibold">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 rounded bg-emerald-500"></span>
+                        <span class="text-slate-300" x-text="lang === 'uz' ? 'Boʻsh (Sotuvda)' : 'Свободно'">Boʻsh (Sotuvda)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 rounded bg-amber-500"></span>
+                        <span class="text-slate-300" x-text="lang === 'uz' ? 'Band qilingan' : 'Забронировано'">Band qilingan</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 rounded bg-rose-500"></span>
+                        <span class="text-slate-300" x-text="lang === 'uz' ? 'Sotilgan' : 'Продано'">Sotilgan</span>
+                    </div>
+                </div>
+
+                <!-- 3-Floor Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+                    <!-- Matrix Grid (Left 2 cols on md) -->
+                    <div class="md:col-span-2 space-y-3">
+                        <div class="grid grid-cols-3 gap-3">
+                            <template x-for="apt in apartments" :key="apt.number">
+                                <button type="button" 
+                                        @click="selectedApt = apt"
+                                        :class="{
+                                            'bg-emerald-500/20 border-emerald-500 text-emerald-300 hover:bg-emerald-500/30': apt.status === 'AVAILABLE',
+                                            'bg-amber-500/20 border-amber-500 text-amber-300 hover:bg-amber-500/30': apt.status === 'BOOKED',
+                                            'bg-rose-500/20 border-rose-500 text-rose-300 hover:bg-rose-500/30': apt.status === 'SOLD',
+                                            'ring-2 ring-white ring-offset-2 ring-offset-slate-900 scale-105': selectedApt.number === apt.number
+                                        }"
+                                        class="p-4 rounded-xl border text-left transition transform flex flex-col justify-between h-24">
+                                    <div class="flex justify-between items-center w-full">
+                                        <span class="font-extrabold text-base" x-text="'№' + apt.number"></span>
+                                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-950/60" x-text="apt.floor + '-qavat'"></span>
+                                    </div>
+                                    <div class="text-[11px] font-medium text-slate-400">
+                                        <span x-text="apt.rooms + ' xona'"></span> &bull; <span x-text="apt.area + ' m²'"></span>
+                                    </div>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Selected Apartment Card (Right) -->
+                    <div class="p-6 rounded-xl bg-slate-800/80 border border-slate-700 text-left space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+                            <div>
+                                <span class="text-xs text-slate-400 uppercase font-semibold">Xonadon kartochkasi</span>
+                                <h4 class="text-xl font-bold text-white" x-text="'№' + selectedApt.number"></h4>
+                            </div>
+                            <span :class="{
+                                      'bg-emerald-500/20 text-emerald-400 border-emerald-500/40': selectedApt.status === 'AVAILABLE',
+                                      'bg-amber-500/20 text-amber-400 border-amber-500/40': selectedApt.status === 'BOOKED',
+                                      'bg-rose-500/20 text-rose-400 border-rose-500/40': selectedApt.status === 'SOLD'
+                                  }" 
+                                  class="text-[11px] font-bold px-2.5 py-1 rounded-full border" 
+                                  x-text="selectedApt.status === 'AVAILABLE' ? (lang === 'uz' ? 'Boʻsh' : 'Свободно') : (selectedApt.status === 'BOOKED' ? (lang === 'uz' ? 'Band' : 'Бронь') : (lang === 'uz' ? 'Sotilgan' : 'Продано'))">
+                            </span>
+                        </div>
+
+                        <div class="space-y-2 text-xs">
+                            <div class="flex justify-between py-1 border-b border-slate-700/50">
+                                <span class="text-slate-400">Qavat:</span>
+                                <span class="font-bold text-white" x-text="selectedApt.floor"></span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-700/50">
+                                <span class="text-slate-400">Xonalar soni:</span>
+                                <span class="font-bold text-white" x-text="selectedApt.rooms + ' xona'"></span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-700/50">
+                                <span class="text-slate-400">Maydoni:</span>
+                                <span class="font-bold text-white" x-text="selectedApt.area + ' m²'"></span>
+                            </div>
+                            <div class="flex justify-between py-1 pt-2">
+                                <span class="text-slate-400 font-semibold">Umumiy narx:</span>
+                                <span class="font-extrabold text-sm text-emerald-400" x-text="selectedApt.price + ' UZS'"></span>
+                            </div>
+                        </div>
+
+                        <a href="#demo-form" class="w-full mt-4 block text-center py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition">
+                            <span x-text="lang === 'uz' ? 'Tizimda koʻrish' : 'Попробовать в системе'">Tizimda koʻrish</span> &rarr;
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: COMPARISON TABLE (Old Way vs TrustBuilding) -->
+    <section id="taqqoslash" class="py-24 bg-slate-900 border-t border-slate-800">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2" x-text="lang === 'uz' ? 'Farqni sezing' : 'Почувствуйте разницу'">
+                    Farqni sezing
+                </span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Eski usullar (Excel/Daftar) vs. TrustBuilding ERP' : 'Excel и блокноты vs. TrustBuilding ERP'">
+                    Eski usullar (Excel/Daftar) vs. TrustBuilding ERP
+                </h2>
+            </div>
+
+            <div class="bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden shadow-2xl">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="border-b border-slate-800 bg-slate-900/60 text-xs uppercase font-bold text-slate-400">
+                            <th class="p-4 sm:p-5">Amaliyot / Функция</th>
+                            <th class="p-4 sm:p-5 text-rose-400">❌ Eski usul (Excel / Qogʻoz)</th>
+                            <th class="p-4 sm:p-5 text-emerald-400 bg-emerald-500/5">✅ TrustBuilding ERP</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800/60 text-xs sm:text-sm">
+                        <tr>
+                            <td class="p-4 sm:p-5 font-semibold text-white">Xonadon band qilish tezligi</td>
+                            <td class="p-4 sm:p-5 text-slate-400">10-15 daqiqa (qoʻngʻiroqlar, tekshirish)</td>
+                            <td class="p-4 sm:p-5 text-emerald-300 font-bold bg-emerald-500/5">3 soniya (barcha xodimlarda sinxron)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-semibold text-white">Ikki marta sotib yuborish xavfi</td>
+                            <td class="p-4 sm:p-5 text-slate-400">Yuqori (insoniy omil va chalkashlik)</td>
+                            <td class="p-4 sm:p-5 text-emerald-300 font-bold bg-emerald-500/5">0% (tizim avtomatik bloklaydi)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-semibold text-white">Yuridik shartnoma tayyorlash</td>
+                            <td class="p-4 sm:p-5 text-slate-400">30 – 45 daqiqa Word faylda qoʻlda</td>
+                            <td class="p-4 sm:p-5 text-emerald-300 font-bold bg-emerald-500/5">10 soniya (avtomatik .docx)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-semibold text-white">Qarzdorlarga toʻlovni eslatish</td>
+                            <td class="p-4 sm:p-5 text-slate-400">Qoʻngʻiroq qilib qidirish, unutiladi</td>
+                            <td class="p-4 sm:p-5 text-emerald-300 font-bold bg-emerald-500/5">Eskiz orqali avtomatik shaxsiy SMS</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-semibold text-white">Kassa orderi va kvitansiya</td>
+                            <td class="p-4 sm:p-5 text-slate-400">Qoʻlda yozilgan daftarcha yoki cheksiz</td>
+                            <td class="p-4 sm:p-5 text-emerald-300 font-bold bg-emerald-500/5">KO-1 kassa orderi va rasmiy kvitansiyasi</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 sm:p-5 font-semibold text-white">Taʼsischi uchun hisobot</td>
+                            <td class="p-4 sm:p-5 text-slate-400">Buxgalteriya va sotuvdan kutish</td>
+                            <td class="p-4 sm:p-5 text-emerald-300 font-bold bg-emerald-500/5">Kuniga 2 marta avtomatik Telegram kokpit</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: LEAD CAPTURE & DEMO FORM -->
+    <section id="demo-form" class="py-24 bg-slate-950 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-700/80 shadow-2xl relative overflow-hidden">
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest block mb-2" x-text="lang === 'uz' ? 'Qulaylikni amalda his eting' : 'Оцените возможности'">
+                        Qulaylikni amalda his eting
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white" x-text="lang === 'uz' ? 'Kompaniyangiz uchun bepul jonli demo soʻrang' : 'Запросите бесплатную демонстрацию системы'">
+                        Kompaniyangiz uchun bepul jonli demo soʻrang
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-3" x-text="lang === 'uz' ? 'Mutaxassisimiz siz bilan bogʻlanib, TrustBuilding sizning obʼyektingizda qanday ishlashini 15 daqiqada koʻrsatib beradi.' : 'Наш эксперт свяжется с вами и за 15 минут покажет работу TrustBuilding на примере вашего объекта.'">
+                        Mutaxassisimiz siz bilan bogʻlanib, TrustBuilding sizning obʼyektingizda qanday ishlashini 15 daqiqada koʻrsatib beradi.
+                    </p>
+                </div>
+
+                <!-- Success Screen -->
+                <div x-show="demoFormSubmitted" x-cloak class="p-8 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-4">
+                    <div class="w-16 h-16 bg-emerald-500 text-slate-950 rounded-full flex items-center justify-center text-3xl font-bold mx-auto">
+                        ✓
+                    </div>
+                    <h3 class="text-2xl font-bold text-white" x-text="lang === 'uz' ? 'Soʻrovingiz qabul qilindi!' : 'Заявка успешно принята!'"></h3>
+                    <p class="text-slate-300 text-sm max-w-md mx-auto" x-text="lang === 'uz' ? 'Mutaxassisimiz tez orada siz bilan bogʻlanadi. Shuningdek, toʻgʻridan-toʻgʻri Telegram orqali yozishingiz mumkin:' : 'Наш специалист свяжется с вами в течение короткого времени. Также вы можете написать нам в Telegram:'"></p>
+                    <a href="https://t.me/{{ telegram_contact }}" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold rounded-xl text-sm transition">
+                        Telegram: @{{ telegram_contact }} &rarr;
+                    </a>
+                </div>
+
+                <!-- Form -->
+                <form x-show="!demoFormSubmitted" @submit.prevent="submitDemo($event)" class="space-y-5">
+                    <div x-show="demoFormError" x-cloak class="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold" x-text="demoFormError"></div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-2" x-text="lang === 'uz' ? 'Ism-familiyangiz *' : 'Ваше имя *'"></label>
+                            <input type="text" name="full_name" required placeholder="Alisher Qodirov" class="w-full px-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-2" x-text="lang === 'uz' ? 'Telefon raqamingiz *' : 'Номер телефона *'"></label>
+                            <input type="text" name="phone_number" required placeholder="+998 90 123 45 67" class="w-full px-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition font-mono">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-2" x-text="lang === 'uz' ? 'Kompaniya nomi' : 'Название компании'"></label>
+                            <input type="text" name="company_name" placeholder="Grand Build MCHJ" class="w-full px-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-2" x-text="lang === 'uz' ? 'Obʼyektdagi xonadonlar soni' : 'Количество квартир в объекте'"></label>
+                            <select name="apartments_count" class="w-full px-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition">
+                                <option value="1-50">1 - 50 xonadon</option>
+                                <option value="50-200" selected>50 - 200 xonadon</option>
+                                <option value="200+">200+ xonadon</option>
+                                <option value="other">Boshqa / Rejalashtirilmoqda</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 uppercase mb-2" x-text="lang === 'uz' ? 'Qoʻshimcha savol yoki talablar (ixtiyoriy)' : 'Комментарий или вопросы (необязательно)'"></label>
+                        <textarea name="notes" rows="2" placeholder="Hozirda 120 xonadonli uy quryapmiz, shaxmatka va boʻlib toʻlash hisobini avtomatlashtirmoqchimiz..." class="w-full px-4 py-3 bg-slate-950/80 border border-slate-700 rounded-xl text-white text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition"></textarea>
+                    </div>
+
+                    <button type="submit" 
+                            :disabled="demoFormSubmitting"
+                            :class="demoFormSubmitting ? 'opacity-60 cursor-not-allowed pointer-events-none' : 'hover:bg-emerald-400'"
+                            class="w-full py-4 bg-emerald-500 text-slate-950 font-extrabold text-base rounded-xl transition shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2">
+                        <template x-if="demoFormSubmitting">
+                            <svg class="animate-spin h-5 w-5 text-slate-950" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </template>
+                        <span x-text="demoFormSubmitting ? (lang === 'uz' ? 'Yuborilmoqda...' : 'Отправка...') : (lang === 'uz' ? '🚀 Bepul demoni soʻrash' : '🚀 Запросить бесплатную демонстрацию')">
+                            🚀 Bepul demoni soʻrash
+                        </span>
+                    </button>
+
+                    <div class="space-y-2 mt-4 text-center">
+                        <p class="text-xs text-slate-500">
+                            <span x-text="lang === 'uz' ? 'Hech qanday toʻlov talab etilmaydi. Biz siz bilan 15 daqiqada bogʻlanamiz.' : 'Никаких скрытых платежей. Мы свяжемся с вами в течение 15 минут.'"></span>
+                        </p>
+                        <p class="text-[11px] text-slate-500 leading-relaxed">
+                            <span x-text="lang === 'uz' ? 'Tugmani bosish orqali siz' : 'Нажимая кнопку, вы соглашаетесь с'"></span>
+                            <button type="button" @click="privacyModalOpen = true" class="text-emerald-400 hover:underline font-medium inline" x-text="lang === 'uz' ? 'Shaxsga doir maʼlumotlarni qayta ishlash siyosati' : 'Политикой обработки персональных данных'"></button>
+                            <span x-text="lang === 'uz' ? 'shartlariga rozilik bildirasiz.' : '.'"></span>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="aloqa" class="bg-slate-950 border-t border-slate-800/80 py-12 text-slate-400 text-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-2.5">
+                <img src="{% static 'images/logo_icon_white.png' %}" alt="TrustBuilding Logo" class="h-8 w-auto object-contain">
+                <div>
+                    <span class="font-bold text-white text-base">Trust<span class="text-emerald-400">Building</span></span>
+                    <p class="text-xs text-slate-500">&copy; 2026 TrustBuilding. <span x-text="lang === 'uz' ? 'Barcha huquqlar himoyalangan.' : 'Все права защищены.'">Barcha huquqlar himoyalangan.</span></p>
+                </div>
+            </div>
+
+            <!-- Legal and Navigation Links -->
+            <div class="flex flex-wrap items-center justify-center gap-6 text-xs">
+                <button type="button" @click="privacyModalOpen = true" class="text-slate-400 hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Maxfiylik siyosati' : 'Конфиденциальность'"></button>
+                <button type="button" @click="termsModalOpen = true" class="text-slate-400 hover:text-emerald-400 transition" x-text="lang === 'uz' ? 'Foydalanish shartlari' : 'Условия использования'"></button>
+                <a href="https://t.me/{{ telegram_contact }}" target="_blank" class="text-slate-300 hover:text-emerald-400 transition flex items-center gap-1.5 font-semibold">
+                    <svg class="w-4 h-4 text-sky-400 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.197 1.006.128.832.941z"/></svg>
+                    Telegram: @{{ telegram_contact }}
+                </a>
+                <a href="{{ app_login_url }}" target="_blank" class="text-slate-300 hover:text-emerald-400 transition font-semibold">
+                    <span x-text="lang === 'uz' ? 'Tizimga kirish' : 'Вход'">Tizimga kirish</span> &rarr;
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1: PRIVACY POLICY (Maxfiylik Siyosati) -->
+    <div x-show="privacyModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="relative bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl text-left space-y-4 max-h-[85vh] overflow-y-auto" @click.away="privacyModalOpen = false">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span class="text-emerald-400">🔒</span>
+                    <span x-text="lang === 'uz' ? 'Shaxsga doir maʼlumotlarni qayta ishlash siyosati' : 'Политика обработки персональных данных'"></span>
+                </h3>
+                <button type="button" @click="privacyModalOpen = false" class="text-slate-400 hover:text-white p-1">&times;</button>
+            </div>
+            
+            <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
+                <p x-show="lang === 'uz'">
+                    Oʻzbekiston Respublikasining 2019-yil 2-iyuldagi OʻRQ-547-son «Shaxsga doir maʼlumotlar toʻgʻrisida»gi Qonuniga muvofiq, TrustBuilding platformasi foydalanuvchilar va demo soʻrov yuborgan shaxslarning shaxsga doir maʼlumotlari maxfiyligini toʻliq himoya qiladi.
+                </p>
+                <p x-show="lang === 'ru'">
+                    В соответствии с Законом Республики Узбекистан № ЗРУ-547 «О персональных данных», платформа TrustBuilding обеспечивает полную конфиденциальность и защиту персональных данных пользователей и лиц, оставивших заявку на демонстрацию.
+                </p>
+
+                <h4 class="font-bold text-white text-sm" x-text="lang === 'uz' ? '1. Toʻplanadigan maʼlumotlar:' : '1. Собираемые данные:'"></h4>
+                <p x-show="lang === 'uz'">
+                    Demo soʻrovi yuborilganda faqat ism-familiya, telefon raqami, tashkilot nomi va murojaat qoldirilgan izohlar saqlanadi. Maʼlumotlar uchinchi shaxslarga berilmaydi va faqat mijoz bilan bogʻlanish hamda xizmat koʻrsatish maqsadida ishlatiladi.
+                </p>
+                <p x-show="lang === 'ru'">
+                    При отправке заявки собираются только имя, номер телефона, наименование компании и комментарий к запросу. Данные не передаются третьим лицам и используются исключительно для связи и демонстрации возможностей системы.
+                </p>
+
+                <h4 class="font-bold text-white text-sm" x-text="lang === 'uz' ? '2. Maʼlumotlarni saqlash:' : '2. Хранение данных:'"></h4>
+                <p x-show="lang === 'uz'">
+                    Qonunchilik talablariga muvofiq, barcha shaxsga doir maʼlumotlar Oʻzbekiston Respublikasi hududida joylashgan xavfsiz serverlarda saqlanadi va shifrlangan protokollar orqali uzatiladi.
+                </p>
+                <p x-show="lang === 'ru'">
+                    В соответствии с законодательством РУз, обработка и хранение данных осуществляются на защищенных серверах, физически расположенных на территории Республики Узбекистан.
+                </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex justify-end">
+                <button type="button" @click="privacyModalOpen = false" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition">
+                    <span x-text="lang === 'uz' ? 'Tushundim' : 'Понятно'">Tushundim</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: TERMS OF SERVICE & DISCLAIMER (Foydalanish shartlari) -->
+    <div x-show="termsModalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div class="relative bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl text-left space-y-4 max-h-[85vh] overflow-y-auto" @click.away="termsModalOpen = false">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <span class="text-sky-400">⚖️</span>
+                    <span x-text="lang === 'uz' ? 'Foydalanish shartlari va Masʼuliyatni cheklash' : 'Условия использования и ограничение ответственности'"></span>
+                </h3>
+                <button type="button" @click="termsModalOpen = false" class="text-slate-400 hover:text-white p-1">&times;</button>
+            </div>
+            
+            <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
+                <h4 class="font-bold text-white text-sm" x-text="lang === 'uz' ? '1. Tizimning maqomi:' : '1. Статус платформы:'"></h4>
+                <p x-show="lang === 'uz'">
+                    TrustBuilding — qurilish tashkilotlari uchun ichki boshqaruv (upravlencheskiy), kassa hisobi va shaxmatka vizualizatsiyasi dasturiy taʼminoti hisoblanadi. Tizim auditorlik yoki soliq maslahati xizmatlarini koʻrsatmaydi.
+                </p>
+                <p x-show="lang === 'ru'">
+                    TrustBuilding является программным комплексом для внутреннего управленческого учета, визуализации шахматки и контроля взаиморасчетов девелоперов. Платформа не является аудиторской или налоговой консультационной службой.
+                </p>
+
+                <h4 class="font-bold text-white text-sm" x-text="lang === 'uz' ? '2. Birlamchi kassa hujjati (KO-1):' : '2. Первичный кассовый ордер (КО-1):'"></h4>
+                <p x-show="lang === 'uz'">
+                    Tizimda shakllantiriluvchi KO-1 hujjati korxonaning ichki kassa hisobi va shartnoma boʻyicha hisob-kitoblar uchun birlamchi buxgalteriya hujjati hisoblanadi. Amaldagi soliq qonunchiligiga koʻra Onlayn-NKM / virtual kassa cheklarini taqdim etish va inkassatsiya majburiyatlari korxonaning oʻz zimmasidadir.
+                </p>
+                <p x-show="lang === 'ru'">
+                    Формируемые в системе бланки КО-1 служат первичными документами внутреннего кассового учета. Обязанности по фискализации через Онлайн-НКК/виртуальные кассы и инкассации регулируются налоговым законодательством и лежат на стороне девелопера.
+                </p>
+
+                <h4 class="font-bold text-white text-sm" x-text="lang === 'uz' ? '3. Intellektual mulk:' : '3. Интеллектуальная собственность:'"></h4>
+                <p x-show="lang === 'uz'">
+                    «TrustBuilding» savdo belgisi, veb-sayt dizayni va dasturiy kodi intellektual mulk toʻgʻrisidagi qonunchilik bilan himoyalangan. Ruxsatsiz nusxa koʻchirish taqiqlanadi.
+                </p>
+                <p x-show="lang === 'ru'">
+                    Торговая марка «TrustBuilding», дизайн и программный код защищены законодательством об интеллектуальной собственности. Несанкционированное копирование запрещено.
+                </p>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex justify-end">
+                <button type="button" @click="termsModalOpen = false" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg text-xs transition">
+                    <span x-text="lang === 'uz' ? 'Tushundim' : 'Понятно'">Tushundim</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

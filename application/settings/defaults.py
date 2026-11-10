@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'customer_portal',
     'otp',
     'bot',
+    'landing',
     
     # third
     'rest_framework',
@@ -81,6 +82,7 @@ INTERNAL_IPS = [
 NPM_BIN_PATH = os.getenv('NPM_BIN_PATH') or shutil.which('npm') or "/usr/bin/npm"
 
 MIDDLEWARE = [
+    'landing.middleware.SubdomainRoutingMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

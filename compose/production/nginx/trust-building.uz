@@ -16,7 +16,7 @@ upstream trustbuilding {
 server {
     listen 80;
     listen [::]:80;
-    server_name trust-building.uz;
+    server_name trust-building.uz about.trust-building.uz;
 
     access_log /var/log/nginx/trust-building.uz.access.log;
     error_log /var/log/nginx/trust-building.uz.error.log;
