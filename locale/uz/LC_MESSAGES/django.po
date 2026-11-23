@@ -4092,3 +4092,6 @@ msgstr ""
 
 #~ msgid "Year"
 #~ msgstr "Yil"
+
+msgid "Stop impersonating"
+msgstr "Impersonatsiyani yakunlash"

@@ -319,4 +319,4 @@ CELERY_TIMEZONE = TIME_ZONE
 # Hijack Settings
 HIJACK_LOGIN_REDIRECT_URL = '/dashboard/'
 HIJACK_LOGOUT_REDIRECT_URL = '/admin/users/customuser/'
-HIJACK_INSERT_BEFORE = '</body>'
+HIJACK_INSERT_BEFORE = None

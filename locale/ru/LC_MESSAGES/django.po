@@ -4053,3 +4053,6 @@ msgstr ""
 
 #~ msgid "Year"
 #~ msgstr "Год"
+
+msgid "Stop impersonating"
+msgstr "Завершить сеанс"
