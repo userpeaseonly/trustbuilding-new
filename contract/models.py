@@ -71,7 +71,7 @@ class Contract(models.Model):
         return round(min(100, percentage), 1)
 
     def __str__(self):
-        return f"Contract #{self.pk} - {self.customer.full_name}"
+        return f"Contract #{self.contract_id or self.pk} - {self.customer.full_name}"
 
     def save(self, *args, **kwargs):
         # Calculate total amount

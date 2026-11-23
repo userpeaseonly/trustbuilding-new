@@ -24,7 +24,7 @@
                     {% for term in terminations %}
                     <tr class="hover:bg-slate-50 transition">
                         <td class="px-4 py-3 font-mono font-bold text-rose-600">
-                            #{{ term.contract.id }}
+                            #{{ term.contract.contract_id|default:term.contract.id }}
                         </td>
                         <td class="px-4 py-3 font-semibold text-slate-900">
                             {{ term.contract.customer.full_name|default:term.contract.customer.phone_number }}

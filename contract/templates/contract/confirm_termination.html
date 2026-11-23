@@ -10,7 +10,7 @@
             </div>
             <div>
                 <h1 class="text-xl font-bold text-slate-900">{% trans "Confirm Contract Termination" %}</h1>
-                <p class="text-xs text-slate-500">{% trans "Contract" %} #{{ contract.id }} - {{ contract.customer.full_name|default:contract.customer.phone_number }}</p>
+                <p class="text-xs text-slate-500">{% trans "Contract" %} #{{ contract.contract_id|default:contract.id }} - {{ contract.customer.full_name|default:contract.customer.phone_number }}</p>
             </div>
         </div>
 

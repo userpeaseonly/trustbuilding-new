@@ -649,7 +649,7 @@ def initiate_termination(request, pk):
             # Send SMS to company user
             company_phone = str(contract.company.phone_number)
             from otp.transliteration import build_termination_otp_sms
-            msg = build_termination_otp_sms(contract.id, otp_code)
+            msg = build_termination_otp_sms(contract.contract_id or contract.id, otp_code)
             try:
                 sent = send_sms(company_phone, msg, company=contract.company)
                 if sent:
@@ -727,7 +727,7 @@ def confirm_termination(request, pk):
                 planned_refund=planned_refund
             )
             
-            messages.success(request, _("Contract #{} terminated successfully! Apartment reset to AVAILABLE.").format(contract.id))
+            messages.success(request, _("Contract #{} terminated successfully! Apartment reset to AVAILABLE.").format(contract.contract_id or contract.id))
             return redirect('contract:terminated_list')
         
         payment_logs = list(contract.payment_logs.all())
