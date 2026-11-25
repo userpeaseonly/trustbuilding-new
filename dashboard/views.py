@@ -15,9 +15,9 @@ from users.permissions import require_permission
 @require_permission('view_reports')
 def home(request):
     """Main KPI Dashboard for the Company"""
-    # If the user is a customer, redirect to a customer view (to be built later)
-    if request.user.is_customer:
-        return redirect('contract:list')
+    # Route customers to the customer portal instead of an admin-only contract list
+    if request.user.is_customer and not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+        return redirect('customer_portal:home')
     elif not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
         return redirect('users:login')
         
@@ -45,13 +45,13 @@ def home(request):
     # Helper to apply date filters
     def apply_date_filter(qs, field_name, is_datetime=False):
         if start_date and end_date:
-            kwargs = {f"{field_name}__gte": start_date}
             if is_datetime:
-                # include the whole end day
+                # include the full start and end days in the active timezone
+                start_dt = timezone.make_aware(datetime.datetime.combine(start_date, datetime.time.min))
                 end_dt = timezone.make_aware(datetime.datetime.combine(end_date, datetime.time.max))
-                kwargs[f"{field_name}__lte"] = end_dt
+                kwargs = {f"{field_name}__gte": start_dt, f"{field_name}__lte": end_dt}
             else:
-                kwargs[f"{field_name}__lte"] = end_date
+                kwargs = {f"{field_name}__gte": start_date, f"{field_name}__lte": end_date}
             return qs.filter(**kwargs)
         return qs
 

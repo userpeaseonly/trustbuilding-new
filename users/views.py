@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.utils.translation import gettext as _
 
 from .forms import PhoneAuthenticationForm
@@ -12,6 +12,8 @@ def login_view(request):
     """Phone-based login view"""
     # Redirect if already authenticated
     if request.user.is_authenticated:
+        if request.user.is_customer and not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+            return redirect('customer_portal:home')
         return redirect('dashboard:home')
     
     if request.method == 'POST':
@@ -25,7 +27,12 @@ def login_view(request):
                 auth_login(request, user)
                 messages.success(request, _('Welcome back, {}!').format(user.full_name or user.phone_number))
 
-                next_page = request.GET.get('next', 'dashboard:home')
+                next_page = request.GET.get('next')
+                if not next_page:
+                    if user.is_customer and not (user.is_company or getattr(user, 'is_staff_member', False)):
+                        next_page = 'customer_portal:home'
+                    else:
+                        next_page = 'dashboard:home'
                 return redirect(next_page)
             else:
                 messages.error(request, _('Invalid phone number or password.'))
@@ -303,7 +310,8 @@ def role_create_view(request):
             
             role.permissions = selected_permissions
             try:
-                role.save()
+                with transaction.atomic():
+                    role.save()
                 messages.success(request, _("Role created successfully!"))
                 return redirect('users:staff_list')
             except IntegrityError:
@@ -343,7 +351,8 @@ def role_edit_view(request, pk):
             
             role.permissions = selected_permissions
             try:
-                role.save()
+                with transaction.atomic():
+                    role.save()
                 messages.success(request, _("Role updated successfully!"))
                 return redirect('users:staff_list')
             except IntegrityError:

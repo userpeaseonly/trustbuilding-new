@@ -1,10 +1,12 @@
 import calendar
 from datetime import datetime
+from decimal import Decimal, InvalidOperation
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db import IntegrityError
 from django.db.models import Sum, Q, Count
-from django.http import HttpResponse, Http404, JsonResponse
+from django.http import HttpResponse, Http404, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -17,7 +19,7 @@ from building.views import get_user_company
 from contract.models import Contract, PaymentRecord, PaymentLog
 from otp.services import send_sms
 from otp.transliteration import build_overdue_sms, build_upcoming_reminder_sms
-from users.permissions import require_permission
+from users.permissions import require_permission, has_permission, get_safe_redirect_for_user
 from .models import Wallet, ExpenseCategory, FinancialTransaction
 
 
@@ -76,6 +78,11 @@ def finance_overview(request):
     - Inflows vs Outflows
     - Ledger table with filtering & Excel export
     """
+    if not (has_permission(request.user, 'view_finance') or has_permission(request.user, 'view_reports')):
+        messages.error(request, _("You don't have permission to perform this action."))
+        fallback = get_safe_redirect_for_user(request.user)
+        return redirect(fallback) if fallback else HttpResponseForbidden("Permission denied.")
+
     company = get_user_company(request.user)
     if not company:
         messages.error(request, _("Company profile not found."))
@@ -522,6 +529,11 @@ def finance_overview(request):
 @login_required
 def send_debtor_reminder(request, pk):
     """Trigger an instant SMS reminder to an overdue debtor."""
+    if not (has_permission(request.user, 'send_sms') or has_permission(request.user, 'manage_finance')):
+        messages.error(request, _("You don't have permission to perform this action."))
+        fallback = get_safe_redirect_for_user(request.user)
+        return redirect(fallback) if fallback else HttpResponseForbidden("Permission denied.")
+
     if request.method != 'POST':
         return redirect(f"{reverse('finance:overview')}?tab=debtors")
 
@@ -545,17 +557,18 @@ def send_debtor_reminder(request, pk):
     customer_phone = str(customer.phone_number)
     customer_name = customer.full_name or _("Customer")
     days_late = (timezone.localdate() - record.due_date).days
+    contract_num = record.contract.contract_id or record.contract.id
 
     if days_late > 0:
         message = build_overdue_sms(
             customer_full_name=customer.full_name,
-            contract_id=record.contract.id,
+            contract_id=contract_num,
             due_date=record.due_date,
             debt_amount=record.debt
         )
     else:
         message = build_upcoming_reminder_sms(
-            contract_id=record.contract.id,
+            contract_id=contract_num,
             due_date=record.due_date,
             amount=record.debt
         )
@@ -585,6 +598,7 @@ def send_debtor_reminder(request, pk):
 
 
 @login_required
+@require_permission('manage_finance')
 def add_transaction(request):
     """Create a manual Income, Expense, or Transfer transaction."""
     if request.method != 'POST':
@@ -598,10 +612,10 @@ def add_transaction(request):
     description = request.POST.get('description', '').strip()
 
     try:
-        amount = float(amount_raw)
-        if amount <= 0:
-            raise ValueError()
-    except ValueError:
+        amount = Decimal(amount_raw)
+        if not amount.is_finite() or amount <= 0:
+            raise InvalidOperation()
+    except (InvalidOperation, ValueError, TypeError):
         messages.error(request, _("Please provide a valid positive amount."))
         return redirect('finance:overview')
 
@@ -668,6 +682,7 @@ def add_transaction(request):
 
 
 @login_required
+@require_permission('manage_finance')
 def delete_transaction(request, pk):
     """Delete a manual transaction (contract-synced receipts cannot be deleted directly here)."""
     company = get_user_company(request.user)
@@ -683,6 +698,7 @@ def delete_transaction(request, pk):
 
 
 @login_required
+@require_permission('manage_finance')
 def manage_wallets(request):
     """Manage company cash desks and bank accounts."""
     company = get_user_company(request.user)
@@ -697,9 +713,11 @@ def manage_wallets(request):
         bank_name = request.POST.get('bank_name', '').strip()
 
         try:
-            initial_balance = float(initial_balance_raw)
-        except ValueError:
-            initial_balance = 0.0
+            initial_balance = Decimal(initial_balance_raw)
+            if not initial_balance.is_finite():
+                raise InvalidOperation()
+        except (InvalidOperation, ValueError, TypeError):
+            initial_balance = Decimal('0.00')
 
         if name:
             Wallet.objects.create(
@@ -718,6 +736,7 @@ def manage_wallets(request):
 
 
 @login_required
+@require_permission('manage_finance')
 def manage_categories(request):
     """Manage company expense categories."""
     company = get_user_company(request.user)
@@ -727,12 +746,15 @@ def manage_categories(request):
         name = request.POST.get('name', '').strip()
         cat_type = request.POST.get('category_type', 'EXPENSE')
         if name:
-            ExpenseCategory.objects.create(
+            cat, created = ExpenseCategory.objects.get_or_create(
                 company=company,
                 name=name,
                 category_type=cat_type
             )
-            messages.success(request, _("New category created!"))
+            if created:
+                messages.success(request, _("New category created!"))
+            else:
+                messages.info(request, _("Category already exists."))
             return redirect('finance:manage_categories')
 
     return render(request, 'finance/manage_categories.html', {'categories': categories})

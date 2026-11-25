@@ -33,7 +33,7 @@ def process_daily_payment_reminders():
         customer_phone = str(record.contract.customer.phone_number)
         message = build_overdue_sms(
             customer_full_name=record.contract.customer.full_name,
-            contract_id=record.contract.id,
+            contract_id=record.contract.contract_id or record.contract.id,
             due_date=record.due_date,
             debt_amount=record.debt
         )
@@ -54,7 +54,7 @@ def process_daily_payment_reminders():
     for record in upcoming_records:
         customer_phone = str(record.contract.customer.phone_number)
         message = build_upcoming_reminder_sms(
-            contract_id=record.contract.id,
+            contract_id=record.contract.contract_id or record.contract.id,
             due_date=record.due_date,
             amount=record.debt
         )

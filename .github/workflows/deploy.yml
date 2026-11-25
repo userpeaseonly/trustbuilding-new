@@ -1,14 +1,107 @@
-name: Deploy to Production
+name: Test & Deploy to Production
 
 on:
   push:
     branches:
-      - main # Trigger this workflow only on pushes to the main branch
+      - main # Run tests and deploy only on pushes to main
+  pull_request:
+    branches:
+      - main # Run checks and tests on PRs without deploying
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  test:
+    name: Automated Checks & Test Suite
     runs-on: ubuntu-latest
-    
+
+    services:
+      postgres:
+        image: postgres:18-bookworm
+        env:
+          POSTGRES_DB: trustbuilding_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d trustbuilding_test"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      DEBUG: '0'
+      SECRET_KEY: 'ci-test-0123456789abcdef-ghijklmnopqrstuvwxyz-ABCDEF-9876543210'
+      POSTGRES_ENGINE: 'django.db.backends.postgresql'
+      POSTGRES_DB: 'trustbuilding_test'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'test_password'
+      POSTGRES_HOST: '127.0.0.1'
+      POSTGRES_PORT: '5432'
+      CELERY_BROKER_URL: 'redis://127.0.0.1:6379/0'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+
+      - name: Install system and Python dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gettext
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Compile and validate translations
+        run: |
+          python -c "from pathlib import Path; import subprocess; [subprocess.run(['msgfmt', '--check', '-o', str(p.with_suffix('.mo')), str(p)], check=True) for p in Path('locale').rglob('*.po')]"
+
+      - name: Run Django system and migration checks
+        run: |
+          python manage.py check
+          python manage.py makemigrations --check --dry-run
+          DJANGO_SETTINGS_MODULE=application.settings.production \
+            ALLOWED_HOSTS=trust-building.uz,about.trust-building.uz \
+            CSRF_TRUSTED_ORIGINS=https://trust-building.uz,https://about.trust-building.uz \
+            DJANGO_HTTPS_ENABLED=1 \
+            DJANGO_SECURE_HSTS_SECONDS=3600 \
+            python manage.py check --deploy --fail-level ERROR
+
+      - name: Validate production Compose configuration
+        run: |
+          mkdir -p env
+          touch env/.production
+          trap 'rm -f env/.production && rmdir env 2>/dev/null || true' EXIT
+          docker compose -f docker-compose.prod.yml config --quiet
+
+      - name: Run full test suite
+        run: |
+          pytest -v
+
+  deploy:
+    name: Deploy to Production
+    needs: [test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    concurrency:
+      group: production-deploy
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -16,9 +109,10 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # Increase timeout in case the connection is slow
           timeout: 60s
+          command_timeout: 15m
           script: |
+            set -euo pipefail
             cd ~/trustbuilding
             # Discard any local changes just in case
             git reset --hard HEAD
@@ -26,3 +120,5 @@ jobs:
             git pull origin main
             # Rebuild and restart the containers in the background
             docker compose -f docker-compose.prod.yml up --build -d
+            # Verify web health endpoint responds cleanly
+            curl --fail --silent --show-error --retry 15 --retry-delay 3 --retry-connrefused http://127.0.0.1:8010/health/

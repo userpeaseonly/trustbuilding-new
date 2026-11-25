@@ -8,7 +8,7 @@ import logging
 from celery import shared_task
 from django.utils import timezone
 from .models import TelegramReportSubscriber
-from .reports import compile_executive_report_data, build_morning_report_text, build_evening_report_text, format_money_usd, format_compact_uzs
+from .reports import compile_executive_report_data, build_morning_report_text, build_evening_report_text, format_money_uzs, format_compact_uzs
 from .services import send_telegram_message, get_main_menu_keyboard
 
 logger = logging.getLogger(__name__)
@@ -107,11 +107,12 @@ def send_instant_deal_alert(contract_id: int):
     customer_name = contract.customer.full_name or str(contract.customer.phone_number)
     manager_name = contract.staff_member.full_name if contract.staff_member else "Administrator"
 
+    contract_num = contract.contract_id or contract.id
     text = (
-        f"🎯 <b>YANGI SHARTNOMA TUZILDI!</b>\n\n"
+        f"🎯 <b>YANGI SHARTNOMA №{contract_num} TUZILDI!</b>\n\n"
         f"🏢 <b>Obyekt:</b> {bld_name}, {apt_num}-xonadon\n"
         f"👤 <b>Mijoz:</b> {customer_name}\n"
-        f"💰 <b>Shartnoma qiymati:</b> {format_money_usd(contract.price_in_usd)} ({format_compact_uzs(contract.total_price)})\n"
+        f"💰 <b>Shartnoma qiymati:</b> {format_money_uzs(contract.total_amount)} ({format_compact_uzs(contract.total_amount)})\n"
         f"👨‍💼 <b>Menejer:</b> {manager_name}\n"
         f"🕒 <b>Vaqt:</b> {timezone.localtime().strftime('%H:%M, %d.%m.%Y')}"
     )

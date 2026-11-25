@@ -1,6 +1,9 @@
+from urllib.parse import urlparse
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.http import HttpResponseForbidden
+from django.shortcuts import redirect, resolve_url
 from django.contrib import messages
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _
 from functools import wraps
 
@@ -95,21 +98,56 @@ def has_permission(user, permission_code):
             
     return False
 
+_SAFE_LANDING_ROUTES = [
+    ('view_reports', 'dashboard:home'),
+    ('view_contracts', 'contract:list'),
+    ('create_payments', 'contract:quick_payment'),
+    ('view_buildings', 'building:list'),
+    ('view_customers', 'users:customer_list'),
+    ('view_finance', 'finance:overview'),
+    ('view_staff', 'users:staff_list'),
+    ('view_sms', 'dashboard:sms_usage'),
+]
+
+
+def get_safe_redirect_for_user(user):
+    """Return a URL name the user actually has access to, or None if none."""
+    if not user.is_authenticated:
+        return 'otp:request_otp'
+    if getattr(user, 'is_customer', False) and not (user.is_company or getattr(user, 'is_staff_member', False)):
+        return 'customer_portal:home'
+    for perm, url_name in _SAFE_LANDING_ROUTES:
+        if has_permission(user, perm):
+            return url_name
+    return None
+
+
 def require_permission(permission_code):
     """
     Decorator for views that checks if the user has a specific permission.
+    Prevents redirect loops when referrer or dashboard itself is inaccessible.
     """
     def decorator(view_func):
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                return redirect('otp:request_otp')
             if has_permission(request.user, permission_code):
                 return view_func(request, *args, **kwargs)
-            else:
-                messages.error(request, _("You don't have permission to perform this action."))
-                # Referer redirect or dashboard
-                referer = request.META.get('HTTP_REFERER')
-                if referer:
+
+            messages.error(request, _("You don't have permission to perform this action."))
+            referer = request.META.get('HTTP_REFERER')
+            if referer and url_has_allowed_host_and_scheme(
+                referer,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                if urlparse(referer).path != request.path:
                     return redirect(referer)
-                return redirect('dashboard:home')
+
+            fallback = get_safe_redirect_for_user(request.user)
+            if not fallback or resolve_url(fallback) == request.path:
+                return HttpResponseForbidden("Permission denied.")
+            return redirect(fallback)
         return _wrapped_view
     return decorator

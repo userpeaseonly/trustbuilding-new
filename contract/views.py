@@ -2,7 +2,7 @@ from decimal import Decimal
 import openpyxl
 import datetime
 import logging
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -18,7 +18,7 @@ from users.models import CustomUser
 from building.models import Apartment
 from building.views import get_user_company
 from .utils.utils import number_to_words, amount_to_words_ru, MONTHS_UZ
-from users.permissions import require_permission
+from users.permissions import require_permission, has_permission, get_safe_redirect_for_user
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +37,9 @@ def contract_list(request):
     sort_by = request.GET.get('sort', '')
     
     has_debt = request.GET.get('has_debt') == 'true'
+
+    if status_filter in (Contract.STATUS_ACTIVE, Contract.STATUS_TERMINATED, Contract.STATUS_COMPLETED):
+        contracts = contracts.filter(status=status_filter)
 
     if query:
         contracts = contracts.filter(
@@ -71,7 +74,9 @@ def contract_list(request):
             expected_to_date__gt=F('paid_to_date')
         )
         
-    if sort_by == 'oldest':
+    if sort_by == 'newest':
+        contracts = contracts.order_by('-created_at')
+    elif sort_by == 'oldest':
         contracts = contracts.order_by('created_at')
     elif sort_by == 'amount_desc':
         contracts = contracts.order_by('-total_amount')
@@ -596,12 +601,25 @@ def receipt_view(request, payment_id):
     from .utils.utils import amount_to_words_ru, MONTHS_RU
     payment = get_object_or_404(PaymentLog, pk=payment_id)
     contract = payment.contract
+
+    # Security Check: strict tenant & customer isolation
+    if getattr(request.user, 'is_customer', False) and not (
+        request.user.is_company or getattr(request.user, 'is_staff_member', False)
+    ):
+        if contract.customer != request.user:
+            raise Http404("Not found")
+    else:
+        if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+            raise Http404("Not found")
+        company = get_user_company(request.user)
+        if contract.company != company:
+            raise Http404("Not found")
     
     # Use robust fallback for company name
     try:
         company_name = contract.company.company_profile.company_name
     except AttributeError:
-        company_name = contract.company.get_full_name() or contract.company.username
+        company_name = contract.company.full_name or str(contract.company.phone_number)
         
     customer_name = contract.customer.full_name or contract.customer.phone_number
     customer_desc = f"{customer_name} №{contract.contract_id} сонли шартномага асосан тўлов"
@@ -752,8 +770,7 @@ def confirm_termination(request, pk):
 
 
 @login_required
-
-@login_required
+@require_permission('view_contracts')
 def termination_dashboard(request, pk):
     """Dashboard for managing refunds on a terminated contract."""
     company = get_user_company(request.user)
@@ -773,6 +790,11 @@ def termination_dashboard(request, pk):
 @login_required
 def process_refund(request, pk):
     """Process a refund payment to the customer with concurrency & deduplication guard."""
+    if not (has_permission(request.user, 'create_payments') or has_permission(request.user, 'delete_contracts')):
+        messages.error(request, _("You don't have permission to perform this action."))
+        fallback = get_safe_redirect_for_user(request.user)
+        return redirect(fallback) if fallback else HttpResponseForbidden("Permission denied.")
+
     company = get_user_company(request.user)
     contract = get_object_or_404(Contract, pk=pk, company=company, status=Contract.STATUS_TERMINATED)
     termination = get_object_or_404(TerminateContract, contract=contract)
@@ -809,6 +831,7 @@ def process_refund(request, pk):
     return redirect('contract:termination_dashboard', pk=contract.pk)
 
 @login_required
+@require_permission('view_contracts')
 def terminated_contracts_list(request):
     """List all terminated contracts"""
     company = get_user_company(request.user)

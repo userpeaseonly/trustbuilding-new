@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.translation import gettext as _
 from .models import Building, Apartment
 from .forms import BuildingForm, ApartmentUpdateForm
 from decimal import Decimal
-from users.permissions import require_permission
+from users.permissions import require_permission, has_permission, get_safe_redirect_for_user
 
 @login_required
 @require_permission('view_buildings')
@@ -115,6 +116,19 @@ def building_create(request):
 @login_required
 def apartment_update(request, pk):
     """Update apartment details via HTMX modal (Read-only if SOLD)"""
+    if not (request.user.is_company or getattr(request.user, 'is_staff_member', False)):
+        raise Http404("Not found")
+    if request.method == 'POST' and not has_permission(request.user, 'edit_buildings'):
+        messages.error(request, _("You don't have permission to perform this action."))
+        fallback = get_safe_redirect_for_user(request.user)
+        return redirect(fallback) if fallback else HttpResponseForbidden("Permission denied.")
+    if request.method != 'POST' and not (
+        has_permission(request.user, 'view_buildings') or has_permission(request.user, 'view_contracts')
+    ):
+        messages.error(request, _("You don't have permission to perform this action."))
+        fallback = get_safe_redirect_for_user(request.user)
+        return redirect(fallback) if fallback else HttpResponseForbidden("Permission denied.")
+
     company = get_user_company(request.user)
     apartment = get_object_or_404(Apartment, pk=pk, building__company=company)
     
@@ -156,6 +170,7 @@ def apartment_update(request, pk):
 
 
 @login_required
+@require_permission('view_buildings')
 def building_matrix_view(request, pk):
     """Interactive visual floor-by-entrance matrix layout for building apartments"""
     building = get_object_or_404(Building, pk=pk)
