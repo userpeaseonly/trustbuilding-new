@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="space-y-6" x-data="{ copiedId: null, copyUrl(id, url) { navigator.clipboard.writeText(url); this.copiedId = id; setTimeout(() => { if (this.copiedId === id) this.copiedId = null; }, 2000); } }">
+    <!-- Complexes Section -->
+    <section class="space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-base font-bold text-slate-900 tracking-tight">{% trans "Complexes" %}</h2>
+            {% if can_edit %}
+            <a href="{% url 'explorer:complex_create' %}" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition shadow-xs">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                {% trans "New Complex" %}
+            </a>
+            {% endif %}
+        </div>
+
+        {% if complex_cards %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+            {% for card in complex_cards %}
+            <div class="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                <a href="{% url 'explorer:complex_view' pk=card.complex.pk %}" class="h-40 bg-slate-900 relative overflow-hidden block group">
+                    {% if card.complex.masterplan_image %}
+                    <img src="{{ card.complex.masterplan_image.url }}" alt="{{ card.complex.name }}" class="w-full h-full object-cover group-hover:scale-[1.02] transition duration-300">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-slate-400 text-xs">{% trans "No image" %}</div>
+                    {% endif %}
+                    <div class="absolute top-2.5 right-2.5">
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold {% if card.complex.is_published %}bg-emerald-600 text-white{% else %}bg-slate-900/80 text-slate-200{% endif %}">
+                            {% if card.complex.is_published %}{% trans "Live" %}{% else %}{% trans "Draft" %}{% endif %}
+                        </span>
+                    </div>
+                </a>
+                <div class="p-3.5 flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <h3 class="text-sm font-bold text-slate-900 truncate">{{ card.complex.name }}</h3>
+                        <p class="text-[11px] text-slate-500">{{ card.hotspot_count }} {% trans "blocks" %}</p>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <a href="{% url 'explorer:complex_view' pk=card.complex.pk %}" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition">
+                            {% trans "Open" %}
+                        </a>
+                        {% if can_edit %}
+                        <a href="{% url 'explorer:complex_studio' pk=card.complex.pk %}" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition">
+                            {% trans "Studio" %}
+                        </a>
+                        {% endif %}
+                        {% if card.share_url %}
+                        <button type="button" @click="copyUrl('c{{ card.complex.pk }}', '{{ card.share_url|escapejs }}')" class="px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-lg transition">
+                            <span x-show="copiedId !== 'c{{ card.complex.pk }}'">{% trans "Link" %}</span>
+                            <span x-show="copiedId === 'c{{ card.complex.pk }}'" x-cloak>{% trans "Copied!" %}</span>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white border border-dashed border-slate-300 rounded-xl p-5 text-center text-xs text-slate-500">
+            {% trans "No complexes configured yet." %}
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Buildings Section -->
+    <section class="space-y-3">
+        <h2 class="text-base font-bold text-slate-900 tracking-tight">{% trans "Buildings" %}</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            {% for card in building_cards %}
+            <div class="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between">
+                <a href="{% url 'explorer:building_view' building_pk=card.building.pk %}" class="h-36 bg-slate-900 relative overflow-hidden block group">
+                    {% if card.explorer and card.explorer.hero_render %}
+                    <img src="{{ card.explorer.hero_render.url }}" alt="{{ card.building.name }}" class="w-full h-full object-cover group-hover:scale-[1.02] transition duration-300">
+                    {% else %}
+                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-400 text-xs gap-1">
+                        <span>🏢</span>
+                        <span>{% trans "Setup in Studio" %}</span>
+                    </div>
+                    {% endif %}
+                    <div class="absolute top-2.5 right-2.5">
+                        {% if card.explorer and card.explorer.is_published %}
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white">{% trans "Live" %}</span>
+                        {% elif card.explorer and card.explorer.extraction_status == 'READY' %}
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white">{% trans "Draft" %}</span>
+                        {% else %}
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-800/80 text-slate-300">{% trans "Empty" %}</span>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <div class="p-3.5 space-y-2.5">
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0">
+                            <h3 class="text-sm font-bold text-slate-900 truncate">
+                                {% if card.building.block_number %}{% trans "Block" %} {{ card.building.block_number }}{% else %}{{ card.building.name }}{% endif %}
+                            </h3>
+                            <p class="text-[11px] text-slate-500 truncate">
+                                {% if card.building.block_number %}{{ card.building.name }} • {% endif %}{{ card.building.floor_count }}F • {{ card.available_count }}/{{ card.real_total }} {% trans "avail" %}
+                            </p>
+                        </div>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 {% if card.mapped_count == card.real_total and card.real_total > 0 %}bg-emerald-50 text-emerald-700{% else %}bg-slate-100 text-slate-600{% endif %}">
+                            {{ card.mapped_count }}/{{ card.real_total }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 pt-2 border-t border-slate-100">
+                        <a href="{% url 'explorer:building_view' building_pk=card.building.pk %}" class="flex-1 text-center px-2.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg transition">
+                            {% trans "Open" %}
+                        </a>
+                        {% if can_edit %}
+                        <a href="{% url 'explorer:building_studio' building_pk=card.building.pk %}" class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition">
+                            {% trans "Studio" %}
+                        </a>
+                        {% endif %}
+                        {% if card.share_url %}
+                        <button type="button" @click="copyUrl('b{{ card.building.pk }}', '{{ card.share_url|escapejs }}')" class="px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-lg transition">
+                            <span x-show="copiedId !== 'b{{ card.building.pk }}'">{% trans "Link" %}</span>
+                            <span x-show="copiedId === 'b{{ card.building.pk }}'" x-cloak>{% trans "Copied!" %}</span>
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full bg-white border border-dashed border-slate-300 rounded-xl p-6 text-center text-xs text-slate-500">
+                {% trans "No buildings found." %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

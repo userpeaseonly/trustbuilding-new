@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'hijack.contrib.admin',
     'dashboard',
     'building',
+    'explorer',
     'contract',
     'finance',
     'customer_portal',
@@ -264,16 +265,22 @@ SIPUNI_SECRET = os.getenv('SIPUNI_SECRET', '')
 # Referral system
 BASE_REFERRAL_URL = os.getenv('BASE_REFERRAL_URL', '')
 
-# AI integration
+# AI integration (DeepSeek text/OCR + Google Gemini spatial vision)
 AI_ENABLED = os.getenv('AI_ENABLED', '0') == '1'
 AI_PROVIDER = os.getenv('AI_PROVIDER', 'deepseek')
 AI_API_KEY = os.getenv('AI_API_KEY', '')
 AI_BASE_URL = os.getenv('AI_BASE_URL', 'https://api.deepseek.com')
 AI_MODEL = os.getenv('AI_MODEL', 'deepseek-v4-flash')
 AI_REASONING_MODEL = os.getenv('AI_REASONING_MODEL', 'deepseek-v4-pro')
-AI_TIMEOUT_SECONDS = int(os.getenv('AI_TIMEOUT_SECONDS', '30'))
+AI_TIMEOUT_SECONDS = int(os.getenv('AI_TIMEOUT_SECONDS', '90'))
 AI_TEMPERATURE = float(os.getenv('AI_TEMPERATURE', '0.2'))
-AI_MAX_TOKENS = int(os.getenv('AI_MAX_TOKENS', '800'))
+AI_MAX_TOKENS = int(os.getenv('AI_MAX_TOKENS', '4096'))
+
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-3.8-flash')
+GEMINI_PRO_MODEL = os.getenv('GEMINI_PRO_MODEL', 'gemini-4-argon')
+GEMINI_IMAGE_MODEL = os.getenv('GEMINI_IMAGE_MODEL', 'gemini-3.1-flash-image')
+GEMINI_TIMEOUT_SECONDS = int(os.getenv('GEMINI_TIMEOUT_SECONDS', '120'))
 
 
 # Logging configuration

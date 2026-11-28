@@ -231,7 +231,7 @@ msgstr "Новый проект здания"
 
 #: building/templates/building/form.html:15
 msgid "Define structural parameters to auto-generate the apartment matrix"
-msgstr "Задайте структурные параметры для автогенерации сетки квартир"
+msgstr "Задайте структурные параметры для автоматического создания матрицы квартир"
 
 #: building/templates/building/form.html:30
 #: building/templates/building/list.html:95
@@ -261,7 +261,7 @@ msgstr "Расширенный: Импорт из Excel"
 
 #: building/templates/building/form.html:64
 msgid "Download a template, customize apartment details, and upload it back."
-msgstr "Скачайте шаблон, заполните данные о квартирах и загрузите его обратно."
+msgstr "Скачайте шаблон, настройте данные квартир и загрузите обратно."
 
 #: building/templates/building/form.html:67
 #: building/templates/building/list.html:132
@@ -403,11 +403,11 @@ msgstr "Создать первый объект"
 
 #: building/templates/building/list.html:83
 msgid "Define structural parameters to auto-generate the apartment grid"
-msgstr "Укажите параметры здания для автоматической генерации шахматки"
+msgstr "Задайте структурные параметры для автоматического создания сетки квартир"
 
 #: building/templates/building/list.html:129
 msgid "Download template, customize apartments, and upload back."
-msgstr "Скачайте шаблон, заполните параметры квартир и загрузите обратно."
+msgstr "Скачайте шаблон, настройте квартиры и загрузите обратно."
 
 #: building/templates/building/matrix.html:13
 msgid "Apartment Visualizer Matrix"
@@ -4056,3 +4056,825 @@ msgstr ""
 
 msgid "Stop impersonating"
 msgstr "Завершить сеанс"
+
+msgid "1-Room"
+msgstr "1-комнатные"
+
+msgid "2+ Rooms"
+msgstr "2+ комнатные"
+
+msgid "3D Building Explorer"
+msgstr "3D Обзор зданий"
+
+msgid "3D Explorer"
+msgstr "3D Обзор"
+
+msgid "4-Corner Quad"
+msgstr "4-угольный контур"
+
+msgid "AI Auto-Detect Facades & Windows"
+msgstr "ИИ-определение фасада и окон"
+
+msgid "AI Auto-Match Blocks"
+msgstr "ИИ-сопоставление блоков"
+
+msgid "AI analysis could not update facade."
+msgstr "ИИ-анализ не смог обновить фасад."
+
+msgid "AI block detection unavailable."
+msgstr "ИИ-определение блоков недоступно."
+
+msgid "Add Bend"
+msgstr "Добавить изгиб"
+
+msgid "Aerial / Overview Image"
+msgstr "Аэрофотоснимок / Общий вид"
+
+msgid "Allows clients & stakeholders to browse availability cleanly with zero prices or customer data."
+msgstr "Позволяет клиентам и партнёрам просматривать доступность квартир без цен и персональных данных."
+
+msgid "Also apply to typical floors (optional, e.g. 2,3,4,5)"
+msgstr "Применить также к типовым этажам (необязательно, напр. 2,3,4,5)"
+
+msgid "Analyzing Masterplan & Key-Maps..."
+msgstr "Анализ генплана и схем блокировки..."
+
+msgid "Analyzing..."
+msgstr "Анализ..."
+
+msgid "Angle"
+msgstr "Ракурс"
+
+msgid "Apartment Hotspot"
+msgstr "Область квартиры"
+
+msgid "Apartment Hotspots"
+msgstr "Области квартир"
+
+msgid "Apartments on Floor"
+msgstr "Квартиры на этаже"
+
+msgid "Assign Apartment to Selected Polygon"
+msgstr "Привязать квартиру к выбранному контуру"
+
+msgid "Atmosphere Switcher"
+msgstr "Переключатель освещения"
+
+msgid "Auto-Extract from Architectural PDF Album"
+msgstr "Автоизвлечение из архитектурного PDF-альбома"
+
+msgid "Auto-slice floor bands on upload"
+msgstr "Авторазметка этажей при загрузке"
+
+msgid "Avail"
+msgstr "Своб."
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Back to Explorer"
+msgstr "Назад к обзору"
+
+msgid "Back to Exterior View"
+msgstr "Назад к фасаду"
+
+msgid "Block regions saved!"
+msgstr "Области блоков сохранены!"
+
+msgid "Building Explorer"
+msgstr "Обзор здания"
+
+msgid "Building Explorers"
+msgstr "Обзоры зданий"
+
+msgid "Buildings 3D & Floor Presentations"
+msgstr "3D-фасады и поэтажные презентации зданий"
+
+msgid "Cancel Drawing"
+msgstr "Отменить рисование"
+
+msgid "Click a floor on the render or choose below"
+msgstr "Нажмите на этаж на рендере или выберите ниже"
+
+msgid "Click any polygon on the floor plan to assign or edit its apartment."
+msgstr "Нажмите на любой контур на плане этажа, чтобы привязать или изменить квартиру."
+
+msgid "Click to inspect floor plan →"
+msgstr "Нажмите, чтобы открыть план этажа →"
+
+msgid "Close dialog"
+msgstr "Закрыть окно"
+
+msgid "Complex Explorer"
+msgstr "Обзор комплекса"
+
+msgid "Complex Explorers"
+msgstr "Обзоры комплексов"
+
+msgid "Complex Masterplan Presentations"
+msgstr "Презентации генплана жилых комплексов"
+
+msgid "Complex Name"
+msgstr "Название комплекса"
+
+msgid "Complex Overview"
+msgstr "Обзор комплекса"
+
+msgid "Complex Overview created! Draw or AI-match clickable block regions."
+msgstr "Обзор комплекса создан! Нарисуйте или сопоставьте блоки с помощью ИИ."
+
+msgid "Complex Studio"
+msgstr "Студия комплекса"
+
+msgid "Complex details updated."
+msgstr "Данные комплекса обновлены."
+
+msgid "Complex share settings saved."
+msgstr "Настройки доступа к комплексу сохранены."
+
+msgid "Connect multiple blocks onto one interactive aerial/masterplan presentation."
+msgstr "Объедините несколько блоков на одной интерактивной презентации генплана."
+
+msgid "Copied floor %(src)s layout to %(cnt)s floors."
+msgstr "Планировка %(src)s-го этажа скопирована на %(cnt)s этажей."
+
+msgid "Copied!"
+msgstr "Скопировано!"
+
+msgid "Copy"
+msgstr "Копировать"
+
+msgid "Copy Floor Layout to Other Floors"
+msgstr "Копировать планировку на другие этажи"
+
+msgid "Copy Polygons & Match Apartments"
+msgstr "Копировать контуры и сопоставить квартиры"
+
+msgid "Copy Public Link"
+msgstr "Копировать публичную ссылку"
+
+msgid "Copy Share Link"
+msgstr "Копировать ссылку"
+
+msgid "Could not generate AI Sunset/Night renders."
+msgstr "Не удалось сгенерировать ИИ-рендеры заката и ночи."
+
+msgid "Create & Open Complex Studio"
+msgstr "Создать и открыть студию комплекса"
+
+msgid "Create Contract"
+msgstr "Создать договор"
+
+msgid "Create a building in Buildings Inventory first, then set up its 3D Explorer here."
+msgstr "Сначала создайте здание в разделе «Здания», а затем настройте его 3D-обзор здесь."
+
+msgid "Day"
+msgstr "День"
+
+msgid "Delete Selected"
+msgstr "Удалить выбранное"
+
+msgid "Detected windows"
+msgstr "Обнаружено окон"
+
+msgid "Draft"
+msgstr "Черновик"
+
+msgid "Draw Block Outline"
+msgstr "Нарисовать контур блока"
+
+msgid "Draw Polygon"
+msgstr "Нарисовать контур"
+
+msgid "East • Morning Sun"
+msgstr "Восток • Утреннее солнце"
+
+msgid "Edit Floor Vertices"
+msgstr "Редактировать точки этажа"
+
+msgid "Edit Masterplan"
+msgstr "Редактировать генплан"
+
+msgid "Enable Public Share Link"
+msgstr "Включить публичную ссылку"
+
+msgid "Enable Read-Only Public Share Link"
+msgstr "Включить публичную ссылку только для просмотра"
+
+msgid "Error saving block regions."
+msgstr "Ошибка сохранения областей блоков."
+
+msgid "Error saving floor bands."
+msgstr "Ошибка сохранения полос этажей."
+
+msgid "Error saving polygons."
+msgstr "Ошибка сохранения контуров."
+
+msgid "Exit Fullscreen"
+msgstr "Выйти из полноэкранного режима"
+
+msgid "Explore"
+msgstr "Обзор"
+
+msgid "Explorer Studio"
+msgstr "3D-студия"
+
+msgid "Exterior 3D Render"
+msgstr "Внешний 3D-рендер"
+
+msgid "Exterior Render & Floor Bands"
+msgstr "Внешний рендер и разметка этажей"
+
+msgid "Exterior render updated!"
+msgstr "Внешний рендер обновлён!"
+
+msgid "Extracted %(floors)s floors and matched %(matched)s/%(expected)s apartments!"
+msgstr "Извлечено этажей: %(floors)s, сопоставлено квартир: %(matched)s из %(expected)s!"
+
+msgid "Extracted PDF Angles"
+msgstr "Извлечённые из PDF ракурсы"
+
+msgid "Extracting..."
+msgstr "Извлечение..."
+
+msgid "Failed"
+msgstr "Ошибка"
+
+msgid "Failed to process floor plan: %(err)s"
+msgstr "Не удалось обработать план этажа: %(err)s"
+
+msgid "Filter apartments"
+msgstr "Фильтр квартир"
+
+msgid "Finish Block"
+msgstr "Завершить блок"
+
+msgid "Finish Polygon"
+msgstr "Завершить контур"
+
+msgid "Floor Explorer"
+msgstr "Обзор этажа"
+
+msgid "Floor Explorers"
+msgstr "Обзоры этажей"
+
+msgid "Floor Plans & Apartment Polygons"
+msgstr "Планы этажей и контуры квартир"
+
+msgid "Floor bands saved successfully!"
+msgstr "Разметка этажей успешно сохранена!"
+
+msgid "Floor polygons saved!"
+msgstr "Контуры этажа сохранены!"
+
+msgid "Full Complex View"
+msgstr "Весь комплекс"
+
+msgid "Fullscreen"
+msgstr "На весь экран"
+
+msgid "Fullscreen Mode"
+msgstr "Полноэкранный режим"
+
+msgid "Gemini API not yet active — manual & OpenCV modes enabled"
+msgstr "Gemini API ещё не активен — включены ручной режим и OpenCV"
+
+msgid "Generate AI Sunset & Night"
+msgstr "ИИ-генерация заката и ночи"
+
+msgid "Hero render switched cleanly."
+msgstr "Основной рендер успешно изменён."
+
+msgid "Highlight Block"
+msgstr "Выделить блок"
+
+msgid "Idle"
+msgstr "Ожидание"
+
+msgid "Interactive Building Explorer"
+msgstr "Интерактивный обзор зданий"
+
+msgid "Interactive Explorer"
+msgstr "Интерактивный обзор"
+
+msgid "Interactive Presentation"
+msgstr "Интерактивная презентация"
+
+msgid "Interactive Residential Complex"
+msgstr "Интерактивный жилой комплекс"
+
+msgid "Interactive lighting modes over the exterior 3D render."
+msgstr "Интерактивные режимы освещения внешнего 3D-рендера."
+
+msgid "Invalid render image: %(err)s"
+msgstr "Некорректное изображение рендера: %(err)s"
+
+msgid "Lighting"
+msgstr "Освещение"
+
+msgid "Lighting mode"
+msgstr "Режим освещения"
+
+msgid "Live"
+msgstr "Активно"
+
+msgid "Live Public Presentation URL:"
+msgstr "Публичная ссылка на презентацию:"
+
+msgid "Main View"
+msgstr "Главный вид"
+
+msgid "Makes this building presentation active inside the CRM and complex overview."
+msgstr "Делает презентацию здания активной в CRM и в обзоре комплекса."
+
+msgid "Mapped Apartment"
+msgstr "Привязанная квартира"
+
+msgid "Mapped Apartments"
+msgstr "Привязанные квартиры"
+
+msgid "Masterplan / Aerial Image"
+msgstr "Генплан / Вид сверху"
+
+msgid "Masterplan Image & Info"
+msgstr "Изображение и данные генплана"
+
+msgid "Matches aerial roof geometry against uploaded Genplan & PDF red key-maps (Схема блокировки), excluding neighbor buildings."
+msgstr "Сопоставляет геометрию крыш с генпланом и красными схемами блокировки из PDF, исключая соседние здания."
+
+msgid "Multi-Bend Corner Slicer"
+msgstr "Многоугловая разметка фасада"
+
+msgid "Network error during AI block matching."
+msgstr "Ошибка сети при ИИ-сопоставлении блоков."
+
+msgid "New Complex Overview"
+msgstr "Новый обзор комплекса"
+
+msgid "Night"
+msgstr "Ночь"
+
+msgid "No complex overviews configured yet. Create one to showcase all blocks together on a masterplan."
+msgstr "Обзоры комплексов ещё не настроены. Создайте обзор, чтобы показать все блоки на едином генплане."
+
+msgid "No exterior render yet. Upload a PDF album above or upload an exterior render image on the right."
+msgstr "Внешний рендер ещё не загружен. Загрузите PDF-альбом выше или изображение рендера справа."
+
+msgid "No floor plan uploaded for this floor yet."
+msgstr "Для этого этажа план ещё не загружен."
+
+msgid "No masterplan image yet"
+msgstr "Изображение генплана отсутствует"
+
+msgid "No plan image for this floor yet. Upload a floor plan image/PDF or copy layout from another floor."
+msgstr "Для этого этажа ещё нет плана. Загрузите изображение/PDF плана или скопируйте с другого этажа."
+
+msgid "None needed"
+msgstr "Не требуется"
+
+msgid "North Azimuth (deg)"
+msgstr "Азимут севера (град.)"
+
+msgid "North • Cool Even Light"
+msgstr "Север • Ровный дневной свет"
+
+msgid "North-East • Gentle Morning Sun"
+msgstr "Северо-восток • Мягкое утреннее солнце"
+
+msgid "North-West • Late Evening Light"
+msgstr "Северо-запад • Вечерний свет"
+
+msgid "Not Set Up"
+msgstr "Не настроено"
+
+msgid "Open 3D Presentation"
+msgstr "Открыть 3D-презентацию"
+
+msgid "Open 3D View"
+msgstr "Открыть 3D-обзор"
+
+msgid "Open Complex Presentation"
+msgstr "Открыть презентацию комплекса"
+
+msgid "Open Presentation"
+msgstr "Открыть презентацию"
+
+msgid "Open Visualizer Matrix"
+msgstr "Открыть шахматку"
+
+msgid "Or pick from extracted PDF renders & masterplans:"
+msgstr "Или выберите из извлечённых PDF-рендеров и генпланов:"
+
+msgid "PDF extraction failed: %(err)s"
+msgstr "Ошибка извлечения из PDF: %(err)s"
+
+msgid "Parent Complex Overview (Optional)"
+msgstr "Родительский комплекс (необязательно)"
+
+msgid "Plan"
+msgstr "План"
+
+msgid "Please upload a valid .pdf architectural album."
+msgstr "Пожалуйста, загрузите корректный архитектурный альбом в формате .pdf."
+
+msgid "Presentation settings updated."
+msgstr "Настройки презентации обновлены."
+
+msgid "Processing"
+msgstr "Обработка"
+
+msgid "Public Share Enabled"
+msgstr "Публичный доступ включён"
+
+msgid "Public URL copied!"
+msgstr "Публичная ссылка скопирована!"
+
+msgid "Publish & Public Share Link"
+msgstr "Публикация и публичная ссылка"
+
+msgid "Publish & Share Complex"
+msgstr "Опубликовать и поделиться комплексом"
+
+msgid "Publish Presentation"
+msgstr "Опубликовать презентацию"
+
+msgid "Published"
+msgstr "Опубликовано"
+
+msgid "Ready"
+msgstr "Готово"
+
+msgid "Ready (Draft)"
+msgstr "Готово (Черновик)"
+
+msgid "Regenerate Public Token"
+msgstr "Пересоздать публичный токен"
+
+msgid "Remove Bend"
+msgstr "Удалить изгиб"
+
+msgid "Rendering Lighting..."
+msgstr "Генерация освещения..."
+
+msgid "Save Block Regions"
+msgstr "Сохранить области блоков"
+
+msgid "Save Floor Bands"
+msgstr "Сохранить разметку этажей"
+
+msgid "Save Floor Polygons"
+msgstr "Сохранить контуры этажа"
+
+msgid "Save Settings"
+msgstr "Сохранить настройки"
+
+msgid "Save Share Settings"
+msgstr "Сохранить настройки доступа"
+
+msgid "Saving..."
+msgstr "Сохранение..."
+
+msgid "Select a Floor"
+msgstr "Выберите этаж"
+
+msgid "Select a block on the masterplan to inspect floors & apartments"
+msgstr "Выберите блок на генплане для просмотра этажей и квартир"
+
+msgid "Select a floor plan image or PDF page."
+msgstr "Выберите изображение или PDF-страницу плана этажа."
+
+msgid "Select an image file for the exterior render."
+msgstr "Выберите файл изображения для внешнего рендера."
+
+msgid "Setup Studio"
+msgstr "Студия настройки"
+
+msgid "Show Day / Sunset / Night Lighting Switcher"
+msgstr "Показывать переключатель День / Закат / Ночь"
+
+msgid "Site Masterplan PDF (Optional — for AI Matching & Compass)"
+msgstr "PDF генплана участка (необязательно — для ИИ-привязки и компаса)"
+
+msgid "Site Masterplan PDF (Optional)"
+msgstr "PDF генплана (необязательно)"
+
+msgid "Site Masterplan PDF (Ген план, optional)"
+msgstr "PDF генплана (Генплан, необязательно)"
+
+msgid "Site masterplan True North compass azimuth (optional)."
+msgstr "Азимут истинного севера по компасу генплана (необязательно)."
+
+msgid "Slice into"
+msgstr "Разделить на"
+
+msgid "Sliced facade into floor bands! Click Save Floor Bands to persist."
+msgstr "Фасад разделён на этажи! Нажмите «Сохранить разметку этажей» для сохранения."
+
+msgid "Sold out"
+msgstr "Продано"
+
+msgid "Source Architectural PDF"
+msgstr "Исходный архитектурный PDF"
+
+msgid "South • All-Day Sun"
+msgstr "Юг • Солнце весь день"
+
+msgid "South-East • Bright Morning & Midday Sun"
+msgstr "Юго-восток • Яркое утреннее и дневное солнце"
+
+msgid "South-West • Warm Afternoon Sun"
+msgstr "Юго-запад • Тёплое послеобеденное солнце"
+
+msgid "Spatial AI Engine"
+msgstr "Пространственный ИИ-движок"
+
+msgid "Standalone Building"
+msgstr "Отдельное здание"
+
+msgid "Studio"
+msgstr "Студия"
+
+msgid "Subtitle"
+msgstr "Подзаголовок"
+
+msgid "Sunset"
+msgstr "Закат"
+
+msgid "Switch floor"
+msgstr "Переключить этаж"
+
+msgid "The 3D interactive presentation for this building has not been configured yet. Ask your administrator to upload the PDF album or floor plans in the Explorer Studio."
+msgstr "Интерактивная 3D-презентация для этого здания ещё не настроена. Попросите администратора загрузить PDF-альбом или планы этажей в 3D-студии."
+
+msgid "Tip: drag the corner dots to reshape or drag the black badge to reposition the label."
+msgstr "Совет: перетаскивайте угловые точки для изменения формы или чёрный значок для перемещения подписи."
+
+msgid "Total"
+msgstr "Всего"
+
+msgid "Tree foliage masking"
+msgstr "Маска деревьев переднего плана"
+
+msgid "True North Orientation (deg, 0=Up, 90=Right)"
+msgstr "Ориентация на север (град., 0=Вверх, 90=Вправо)"
+
+msgid "Unmapped"
+msgstr "Не привязано"
+
+msgid "Unpublished"
+msgstr "Не опубликовано"
+
+msgid "Update Masterplan"
+msgstr "Обновить генплан"
+
+msgid "Upload & Auto-Detect Apartments"
+msgstr "Загрузить и автоопределить квартиры"
+
+msgid "Upload & Auto-Extract"
+msgstr "Загрузить и извлечь автоматически"
+
+msgid "Upload Custom Exterior Render"
+msgstr "Загрузить собственный рендер фасада"
+
+msgid "Upload Masterplan / Aerial Image"
+msgstr "Загрузить генплан / вид сверху"
+
+msgid "Upload PDF / Render in Studio"
+msgstr "Загрузить PDF / рендер в студии"
+
+msgid "Upload Plan for Floor"
+msgstr "Загрузить план для этажа"
+
+msgid "Upload Render"
+msgstr "Загрузить рендер"
+
+msgid "Upload a PDF album or exterior render + floor plan to configure the 3D Explorer."
+msgstr "Загрузите PDF-альбом или внешний рендер и план этажа для настройки 3D-обзора."
+
+msgid "Upload a masterplan/aerial image or pick one already extracted from a building PDF album."
+msgstr "Загрузите изображение генплана/аэроснимка или выберите уже извлечённое из PDF-альбома здания."
+
+msgid "Upload each building's PDF album or renders in Setup Studio to make floors & apartments interactive."
+msgstr "Загрузите PDF-альбом или рендеры каждого здания в Студии настройки, чтобы сделать этажи и квартиры интерактивными."
+
+msgid "Upload or pick a complex overview image to place building blocks."
+msgstr "Загрузите или выберите изображение обзора комплекса для размещения блоков зданий."
+
+msgid "Upload your building's architectural PDF (renders + floor plans). Floor bands and apartment polygons are extracted and matched automatically."
+msgstr "Загрузите архитектурный PDF здания (рендеры + планы этажей). Разметка этажей и контуры квартир извлекаются и сопоставляются автоматически."
+
+msgid "Uploaded floor plan & matched %(cnt)s apartments."
+msgstr "План этажа загружен, сопоставлено квартир: %(cnt)s."
+
+msgid "Use as Hero"
+msgstr "Сделать главным"
+
+msgid "West • Sunset & Evening Light"
+msgstr "Запад • Закат и вечерний свет"
+
+msgid "Zoom to Block"
+msgstr "Приблизить блок"
+
+msgid "apartments auto-matched"
+msgstr "квартир сопоставлено автоматически"
+
+msgid "apartments map"
+msgstr "карта квартир"
+
+msgid "apts"
+msgstr "кв."
+
+msgid "avail"
+msgstr "своб."
+
+msgid "available"
+msgstr "доступно"
+
+msgid "bends"
+msgstr "изгиба"
+
+msgid "blocks linked"
+msgstr "блоков привязано"
+
+msgid "e.g. 5-Storey Residential Complex"
+msgstr "напр. 5-этажный жилой комплекс"
+
+msgid "e.g. NUR AVENUE 2"
+msgstr "напр. NUR AVENUE 2"
+
+msgid "interactive complex overview"
+msgstr "интерактивный обзор комплекса"
+
+msgid "interactive floor selector"
+msgstr "интерактивный выбор этажа"
+
+msgid "plan"
+msgstr "план"
+
+msgid "rooms"
+msgstr "комн."
+
+msgid "shown"
+msgstr "показано"
+
+msgid "sold"
+msgstr "продано"
+
+msgid "AI Detect"
+msgstr "ИИ-распознавание"
+
+msgid "AI Sunset & Night"
+msgstr "ИИ закат и ночь"
+
+msgid "Auto-Extract PDF"
+msgstr "Авто-извлечение PDF"
+
+msgid "Complex"
+msgstr "Комплекс"
+
+msgid "Complexes"
+msgstr "Комплексы"
+
+msgid "Empty"
+msgstr "Пусто"
+
+msgid "Exit"
+msgstr "Выход"
+
+msgid "Exterior"
+msgstr "Фасад"
+
+msgid "Facade & Floors"
+msgstr "Фасад и этажи"
+
+msgid "Floor Plans"
+msgstr "Планы этажей"
+
+msgid "Full View"
+msgstr "Полный вид"
+
+msgid "Link"
+msgstr "Ссылка"
+
+msgid "Main"
+msgstr "Главный"
+
+msgid "Matrix"
+msgstr "Матрица"
+
+msgid "Multi-Bend"
+msgstr "Многогранный"
+
+msgid "New Complex"
+msgstr "Новый комплекс"
+
+msgid "No buildings found."
+msgstr "Здания не найдены."
+
+msgid "No complexes configured yet."
+msgstr "Комплексы еще не настроены."
+
+msgid "No image"
+msgstr "Нет фото"
+
+msgid "Open"
+msgstr "Открыть"
+
+msgid "Presentation not configured yet. Upload a PDF album or floor plans in Studio."
+msgstr "Презентация еще не настроена. Загрузите PDF-альбом или планы этажей в Студии."
+
+msgid "Quad"
+msgstr "Четырехугольник"
+
+msgid "Rendering..."
+msgstr "Генерация..."
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Setup in Studio"
+msgstr "Настроить в Студии"
+
+msgid "Share & Settings"
+msgstr "Доступ и настройки"
+
+msgid "Slice"
+msgstr "Нарезка"
+
+msgid "Vertices"
+msgstr "Вершины"
+
+msgid "Zoom"
+msgstr "Зум"
+
+msgid "blocks"
+msgstr "блоков"
+
+msgid "matched"
+msgstr "совпало"
+
+msgid "Labels"
+msgstr "Метки"
+
+msgid "Ent."
+msgstr "Под."
+
+msgid "Click to inspect layout"
+msgstr "Нажмите для просмотра планировки"
+
+msgid "Hover to spotlight • Click any unit for zoomed layout"
+msgstr "Наведите для подсветки • Нажмите на квартиру для увеличенной планировки"
+
+msgid "layout blueprint"
+msgstr "чертеж планировки"
+
+msgid "Unit Layout"
+msgstr "Планировка квартиры"
+
+msgid "Floor Position"
+msgstr "Позиция на этаже"
+
+msgid "Show position on full floor plan"
+msgstr "Показать расположение на полном плане этажа"
+
+msgid "Zoom back to apartment layout"
+msgstr "Вернуться к планировке квартиры"
+
+msgid "Floor Keymap"
+msgstr "Схема этажа"
+
+msgid "Layout view mode"
+msgstr "Режим просмотра планировки"
+
+msgid "Isolate"
+msgstr "Изолировать"
+
+msgid "Same Layout on Other Floors"
+msgstr "Эта же планировка на других этажах"
+
+msgid "Free"
+msgstr "Свободно"
+
+msgid "Free to sell"
+msgstr "Свободна для продажи"
+
+msgid "Sold to:"
+msgstr "Продано:"
+
+msgid "Available — Free to Sell"
+msgstr "Свободна — Доступна к продаже"
+
+msgid "This apartment is open and ready for contract."
+msgstr "Эта квартира свободна и готова к оформлению договора."
+
+msgid "Payment Progress"
+msgstr "Прогресс оплаты"
+
+msgid "Payment Completion"
+msgstr "Завершенность оплаты"
+
+msgid "Paid portion (%)"
+msgstr "Оплаченная часть (%)"
+
+msgid "Sold (Remaining)"
+msgstr "Продано (Остаток)"

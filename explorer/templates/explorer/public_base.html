@@ -1,0 +1,51 @@
+{% load static tailwind_tags i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}?v=2">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}?v=2">
+    <title>{% block title %}{% if browser_title %}{{ browser_title }}{% elif page_title %}{{ page_title }}{% else %}TrustBuilding Explorer{% endif %} | TrustBuilding{% endblock %}</title>
+    {% tailwind_css %}
+    <script defer src="{% static 'vendor/js/alpine.min.js' %}"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 h-14 flex items-center justify-between px-4 md:px-8 shrink-0 sticky top-0 z-20">
+        <div class="flex items-center gap-3">
+            <img src="{% static 'images/logo_icon.png' %}" alt="TrustBuilding" class="h-7 w-auto object-contain">
+            <span class="text-base font-bold tracking-tight text-white">Trust<span class="text-emerald-400">Building</span></span>
+        </div>
+        <div class="flex items-center gap-3">
+            <form action="{% url 'set_language' %}" method="post" class="inline-block">
+                {% csrf_token %}
+                <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                <label for="public-lang-select" class="sr-only">{% trans "Language" %}</label>
+                <select id="public-lang-select" name="language" onchange="this.form.submit()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer">
+                    {% get_current_language as LANGUAGE_CODE %}
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as languages %}
+                    {% for language in languages %}
+                        <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                            {% if language.code == 'uz' %}🇺🇿 O'zbekcha{% elif language.code == 'ru' %}🇷🇺 Русский{% else %}🇬🇧 English{% endif %}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
+            {% block public_header_extra %}{% endblock %}
+        </div>
+    </header>
+
+    <main class="flex-1 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="border-t border-slate-800/80 py-3 px-6 text-center text-xs text-slate-400">
+        <span>&copy; {% now "Y" %} TrustBuilding</span>
+    </footer>
+</body>
+</html>

@@ -180,8 +180,27 @@ def building_matrix_view(request, pk):
     if building.company != company:
         return redirect('dashboard:home')
 
-    # Fetch all active apartments in 1 single optimized database query
-    all_apts = list(building.apartments.filter(is_real=True).order_by('apartment_number'))
+    # Fetch all active apartments with contracts, customer, and payment logs in optimized queries
+    all_apts = list(
+        building.apartments.filter(is_real=True)
+        .prefetch_related('contracts__customer', 'contracts__payment_logs')
+        .order_by('apartment_number')
+    )
+    for a in all_apts:
+        a.buyer_name = ''
+        a.paid_percentage = 0.0
+        if a.status in ('SOLD', 'RESERVED'):
+            contracts = list(a.contracts.all())
+            active_c = next((c for c in contracts if c.status in ('ACTIVE', 'COMPLETED') and c.customer_id), None)
+            if not active_c:
+                active_c = next((c for c in contracts if c.customer_id), None)
+            if active_c:
+                if active_c.customer:
+                    a.buyer_name = (active_c.customer.full_name or '').strip()
+                total_amt = float(active_c.total_amount or 0)
+                if total_amt > 0:
+                    paid_sum = sum(float(p.amount or 0) for p in active_c.payment_logs.all())
+                    a.paid_percentage = round(min(100.0, max(0.0, (paid_sum / total_amt) * 100.0)), 1)
     
     # Calculate stats in memory (0 extra queries)
     available_count = sum(1 for a in all_apts if a.status == 'AVAILABLE')

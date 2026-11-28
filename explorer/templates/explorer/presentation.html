@@ -1,0 +1,1549 @@
+{% extends base_template|default:"base.html" %}
+{% load static i18n %}
+
+{% block content %}
+{{ payload|json_script:"explorer-payload" }}
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+  .explorer-stage-shell {
+    view-transition-name: explorer-stage-card;
+  }
+  .explorer-band {
+    transition: fill 180ms ease, stroke 180ms ease, opacity 180ms ease;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .explorer-apt-card {
+      transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+    }
+  }
+  .explorer-focusable:focus-visible {
+    outline: 3px solid #10b981;
+    outline-offset: 2px;
+  }
+  .explorer-plan-canvas {
+    container-type: inline-size;
+  }
+  button.explorer-focusable:not(:disabled) {
+    cursor: pointer;
+  }
+  .explorer-plan-pin {
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+  }
+  .explorer-plan-pin.is-hovered {
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  @container (max-width: 720px) {
+    .explorer-plan-pin { transform: translate(-50%, -50%) scale(0.84); }
+    .explorer-plan-pin.is-hovered { transform: translate(-50%, -50%) scale(0.90); }
+  }
+  @container (max-width: 540px) {
+    .explorer-plan-pin { transform: translate(-50%, -50%) scale(0.70); }
+    .explorer-plan-pin.is-hovered { transform: translate(-50%, -50%) scale(0.75); }
+  }
+  dialog.explorer-apt-dialog {
+    padding: 0;
+    border: none;
+    border-radius: 1rem;
+    background: transparent;
+    max-width: 68rem;
+    width: calc(100% - 1.5rem);
+    margin: auto;
+    opacity: 0;
+    transition-property: opacity, transform, display, overlay;
+    transition-duration: 0.24s;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-behavior: allow-discrete;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    dialog.explorer-apt-dialog {
+      transform: scale(0.95) translateY(8px);
+    }
+  }
+  :is(dialog.explorer-apt-dialog[open]):where(:not([data-closing])) {
+    display: block;
+    opacity: 1;
+  }
+  @starting-style {
+    :is(dialog.explorer-apt-dialog[open]):where(:not([data-closing])) {
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    :is(dialog.explorer-apt-dialog[open]):where(:not([data-closing])) {
+      transform: scale(1) translateY(0);
+    }
+    @starting-style {
+      :is(dialog.explorer-apt-dialog[open]):where(:not([data-closing])) {
+        transform: scale(0.95) translateY(8px);
+      }
+    }
+  }
+  dialog.explorer-apt-dialog:modal {
+    overscroll-behavior: contain;
+  }
+  dialog.explorer-apt-dialog::backdrop {
+    overflow: hidden;
+    overscroll-behavior: contain;
+    background-color: rgba(15, 23, 42, 0);
+    backdrop-filter: blur(5px);
+    transition-property: background-color, display, overlay;
+    transition-duration: 0.24s;
+    transition-timing-function: ease-out;
+    transition-behavior: allow-discrete;
+  }
+  :is(dialog.explorer-apt-dialog[open]):where(:not([data-closing]))::backdrop {
+    background-color: rgba(15, 23, 42, 0.74);
+  }
+  @starting-style {
+    :is(dialog.explorer-apt-dialog[open]):where(:not([data-closing]))::backdrop {
+      background-color: rgba(15, 23, 42, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    dialog.explorer-apt-dialog,
+    dialog.explorer-apt-dialog::backdrop {
+      transition-duration: 0.08s;
+    }
+  }
+  .atmosphere-day {
+    filter: brightness(1) saturate(1.04);
+  }
+  .atmosphere-sunset {
+    filter: brightness(0.95) saturate(1.18) sepia(0.16) hue-rotate(-6deg);
+  }
+  .atmosphere-night {
+    filter: brightness(0.56) contrast(1.16) saturate(0.74);
+  }
+</style>
+
+<div x-data="buildingExplorerApp()" x-init="init()" class="{% if is_public %}max-w-7xl mx-auto px-4 md:px-6 py-5{% else %}space-y-5{% endif %}">
+
+  <!-- ========================================================= -->
+  <!-- MODE A: COMPLEX MASTERPLAN OVERVIEW                       -->
+  <!-- ========================================================= -->
+  <template x-if="payload.mode === 'complex'">
+    <div class="space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 {% if is_public %}bg-slate-900/90 border-slate-800 text-white{% else %}bg-white border-slate-200 text-slate-900{% endif %} border rounded-2xl px-4 py-3 shadow-xs">
+        <div class="flex items-baseline gap-2.5">
+          <h1 class="text-lg md:text-xl font-bold tracking-tight" x-text="payload.complex.name"></h1>
+          <span x-show="payload.complex.subtitle && payload.complex.subtitle !== payload.complex.name"
+                class="text-xs {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %}"
+                x-text="payload.complex.subtitle"></span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
+          <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+            <strong x-text="payload.complex.summary.available"></strong> {% trans "Avail" %}
+          </span>
+          <span x-show="payload.complex.summary.reserved > 0" x-cloak
+                class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-500 border border-amber-500/30">
+            <strong x-text="payload.complex.summary.reserved"></strong> {% trans "Reserved" %}
+          </span>
+          <span class="px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-500 border border-rose-500/30">
+            <strong x-text="payload.complex.summary.sold"></strong> {% trans "Sold" %}
+          </span>
+          {% if can_edit and payload.is_crm and complex_obj %}
+          <a href="{% url 'explorer:complex_studio' pk=complex_obj.pk %}" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
+            {% trans "Studio" %}
+          </a>
+          {% endif %}
+          {% if payload.is_crm and not is_fullscreen %}
+          <a href="{{ request.path }}?fullscreen=1" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white transition">
+            {% trans "Fullscreen" %}
+          </a>
+          {% elif payload.is_crm and is_fullscreen %}
+          <a href="{{ request.path }}" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition">
+            {% trans "Exit" %}
+          </a>
+          {% endif %}
+          <button type="button" @click="toggleBrowserFullscreen()" :title="isBrowserFullscreen ? '{% trans 'Exit' %}' : '{% trans 'Fullscreen' %}'"
+                  class="explorer-focusable px-2.5 py-1 rounded-lg {% if is_public %}bg-slate-800 hover:bg-slate-700 text-slate-200{% else %}bg-slate-100 hover:bg-slate-200 text-slate-800{% endif %} transition">
+            <span x-text="isBrowserFullscreen ? '⤓ {% trans 'Exit' %}' : '⛶'"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Masterplan Visual Canvas -->
+      <div class="relative rounded-2xl overflow-hidden shadow-lg border {% if is_public %}border-slate-800 bg-slate-900{% else %}border-slate-200 bg-slate-950{% endif %}"
+           :style="`aspect-ratio: ${payload.complex.image_width} / ${payload.complex.image_height}`">
+        <img :src="payload.complex.image_url"
+             :alt="payload.complex.name"
+             fetchpriority="high"
+             class="w-full h-full object-fill select-none block">
+
+        <svg viewBox="0 0 100 100"
+             preserveAspectRatio="none"
+             role="img"
+             :aria-label="payload.complex.name + ' {% trans 'interactive complex overview' %}'"
+             class="absolute inset-0 w-full h-full pointer-events-none"></svg>
+        <template x-for="hs in payload.hotspots" :key="hs.building_id">
+          <svg viewBox="0 0 100 100"
+               preserveAspectRatio="none"
+               aria-hidden="true"
+               class="absolute inset-0 w-full h-full pointer-events-none">
+            <polygon :points="polyStr(hs.polygon_points)"
+                     @mouseenter="hoveredBlock = hs"
+                     @mouseleave="hoveredBlock = null"
+                     @click="if (hs.target_url) window.location = hs.target_url"
+                     :class="hs.target_url ? 'cursor-pointer pointer-events-auto' : 'cursor-not-allowed pointer-events-auto'"
+                     :fill="hoveredBlock && hoveredBlock.building_id === hs.building_id ? 'rgba(16, 185, 129, 0.42)' : 'rgba(16, 185, 129, 0.16)'"
+                     :stroke="hoveredBlock && hoveredBlock.building_id === hs.building_id ? '#34d399' : '#ffffff'"
+                     stroke-width="0.35"
+                     vector-effect="non-scaling-stroke"
+                     class="explorer-band"></polygon>
+          </svg>
+        </template>
+
+        <!-- Block Floating Labels -->
+        <template x-for="hs in payload.hotspots" :key="'lbl-'+hs.building_id">
+          <div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+               :style="`left: ${hs.label_x}%; top: ${hs.label_y}%;`">
+            <div class="px-2.5 py-1 rounded-full bg-slate-950/90 text-white text-[11px] font-bold shadow-md border border-emerald-400/60 whitespace-nowrap flex items-center gap-1.5">
+              <span x-text="hs.block_number ? '{% trans 'Block' %} ' + hs.block_number : hs.name"></span>
+              <span class="px-1.5 py-0.2 rounded-full bg-emerald-500 text-slate-950 text-[10px] font-black" x-text="hs.stats.available"></span>
+            </div>
+          </div>
+        </template>
+
+        <!-- Compact Hover HUD -->
+        <div x-show="hoveredBlock" x-cloak
+             class="absolute bottom-3 left-3 bg-slate-950/90 backdrop-blur-md text-white rounded-xl px-3.5 py-2.5 border border-white/15 shadow-xl pointer-events-none flex items-center gap-3">
+          <span class="text-xs text-emerald-400 font-extrabold"
+                x-text="hoveredBlock ? (hoveredBlock.block_number ? '{% trans 'Block' %} ' + hoveredBlock.block_number : hoveredBlock.name) : ''"></span>
+          <span class="text-xs font-bold text-white"><span x-text="hoveredBlock?.stats.available"></span> {% trans "Avail" %}</span>
+          <span class="text-[11px] text-slate-400"><span x-text="hoveredBlock?.stats.sold"></span> {% trans "Sold" %} • <span x-text="hoveredBlock?.floor_count"></span>F</span>
+        </div>
+      </div>
+
+      <!-- Companion Block Selector Cards with Mini Availability Progress Bar -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+        <template x-for="hs in payload.hotspots" :key="'btn-'+hs.building_id">
+          <button type="button"
+                  @mouseenter="hoveredBlock = hs"
+                  @mouseleave="hoveredBlock = null"
+                  @focus="hoveredBlock = hs"
+                  @blur="hoveredBlock = null"
+                  @click="if (hs.target_url) window.location = hs.target_url"
+                  :disabled="!hs.target_url"
+                  class="explorer-focusable explorer-apt-card min-h-[56px] text-left rounded-xl px-3.5 py-2.5 border transition space-y-2 {% if is_public %}bg-slate-900 border-slate-800 hover:border-emerald-500 text-white{% else %}bg-white border-slate-200 hover:border-indigo-500 text-slate-900 shadow-2xs{% endif %} disabled:opacity-60 disabled:cursor-not-allowed">
+            <div class="flex items-center justify-between gap-2">
+              <div>
+                <div class="text-xs font-extrabold" x-text="hs.block_number ? '{% trans 'Block' %} ' + hs.block_number : hs.name"></div>
+                <div class="text-[11px] {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %}"
+                     x-text="hs.floor_count + 'F • ' + hs.stats.sold + ' {% trans 'Sold' %}'"></div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold {% if is_public %}bg-emerald-500/15 text-emerald-400 border border-emerald-500/30{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}"
+                    x-text="hs.stats.available + ' {% trans 'Free' %}'"></span>
+            </div>
+            <div class="w-full h-1.5 rounded-full {% if is_public %}bg-rose-950/80{% else %}bg-rose-100{% endif %} overflow-hidden">
+              <div class="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                   :style="`width: ${Math.round(((hs.stats.available || 0) / Math.max(1, hs.stats.total || 1)) * 100)}%;`"></div>
+            </div>
+          </button>
+        </template>
+      </div>
+    </div>
+  </template>
+
+  <!-- ========================================================= -->
+  <!-- MODE B: BUILDING 3D RENDER -> ANIMATED FLOOR PLAN -> UNIT -->
+  <!-- ========================================================= -->
+  <template x-if="payload.mode === 'building'">
+    <div class="space-y-3.5">
+      <!-- Top Control & Breadcrumb Bar (No duplicate complex+block text) -->
+      <div class="flex flex-wrap items-center justify-between gap-3 {% if is_public %}bg-slate-900/90 border-slate-800 text-white{% else %}bg-white border-slate-200 text-slate-900{% endif %} border rounded-2xl px-4 py-2.5 shadow-xs">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <template x-if="payload.complex_back_url">
+            <a :href="payload.complex_back_url"
+               class="explorer-focusable inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold {% if is_public %}bg-slate-800 hover:bg-slate-700 text-slate-100{% else %}bg-slate-100 hover:bg-slate-200 text-slate-800{% endif %} transition min-h-[34px]">
+              ← <span x-text="payload.complex_name || '{% trans 'Complex' %}'"></span>
+            </a>
+          </template>
+          <div class="flex items-baseline gap-2">
+            <h1 id="building-stage-heading" tabindex="-1" class="text-base md:text-lg font-extrabold tracking-tight focus:outline-none">
+              <span x-text="(payload.complex_back_url && payload.building.block_number) ? ('{% trans 'Block' %} ' + payload.building.block_number) : (payload.building.block_number ? (payload.building.name + ' — {% trans 'Block' %} ' + payload.building.block_number) : payload.building.name)"></span>
+            </h1>
+            <span x-show="payload.building.address" class="hidden md:inline text-[11px] {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %} truncate max-w-xs" x-text="payload.building.address"></span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
+          <span class="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">
+            <strong x-text="payload.building.summary.available"></strong> {% trans "Avail" %}
+          </span>
+          <span x-show="payload.building.summary.reserved > 0" x-cloak
+                class="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-500 border border-amber-500/30">
+            <strong x-text="payload.building.summary.reserved"></strong> {% trans "Reserved" %}
+          </span>
+          <span class="px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-500 border border-rose-500/30">
+            <strong x-text="payload.building.summary.sold"></strong> {% trans "Sold" %}
+          </span>
+
+          {% if can_edit and payload.is_crm and building %}
+          <a href="{% url 'explorer:building_studio' building_pk=building.pk %}" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 transition">
+            {% trans "Studio" %}
+          </a>
+          {% endif %}
+          {% if payload.is_crm and not is_fullscreen %}
+          <a href="{{ request.path }}?fullscreen=1{% if request.GET.complex %}&complex={{ request.GET.complex }}{% endif %}" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white transition">
+            {% trans "Fullscreen" %}
+          </a>
+          {% elif payload.is_crm and is_fullscreen %}
+          <a href="{{ request.path }}{% if request.GET.complex %}?complex={{ request.GET.complex }}{% endif %}" class="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition">
+            {% trans "Exit" %}
+          </a>
+          {% endif %}
+          <button type="button" @click="toggleBrowserFullscreen()" :title="isBrowserFullscreen ? '{% trans 'Exit' %}' : '{% trans 'Fullscreen' %}'"
+                  class="explorer-focusable px-2.5 py-1 rounded-lg {% if is_public %}bg-slate-800 hover:bg-slate-700 text-slate-200{% else %}bg-slate-100 hover:bg-slate-200 text-slate-800{% endif %} transition">
+            <span x-text="isBrowserFullscreen ? '⤓ {% trans 'Exit' %}' : '⛶'"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STAGE 1: PHOTOREALISTIC EXTERIOR RENDER & FLOOR SELECTOR -->
+      <section x-show="stage === 'building'" aria-labelledby="building-stage-heading" class="explorer-stage-shell grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <!-- Main Exterior Render Canvas -->
+        <div class="lg:col-span-9 space-y-3">
+          <div class="relative rounded-2xl overflow-hidden shadow-xl border {% if is_public %}border-slate-800 bg-slate-900{% else %}border-slate-200 bg-slate-950{% endif %}"
+               :style="`aspect-ratio: ${activeRender.width} / ${activeRender.height}`">
+            <!-- Zoomable Stage Wrapper -->
+            <div class="relative w-full h-full transition-transform duration-500 ease-out origin-center"
+                 :style="blockZoomTransformStyle()">
+              <img :src="displayedRenderUrl"
+                   :alt="payload.building.name"
+                   fetchpriority="high"
+                   :class="'w-full h-full object-fill select-none block transition duration-500 ' + atmosphereClass()">
+
+              <!-- Fallback Tinted Overlay ONLY when AI-regenerated Sunset/Night image is unavailable for current view -->
+              <div x-show="!hasAiAtmosphereForActiveRender"
+                   class="absolute inset-0 pointer-events-none transition-opacity duration-500"
+                   :style="atmosphereOverlayStyle()"></div>
+
+              <!-- Fallback Window Glow Overlay ONLY when AI-regenerated Sunset/Night image is unavailable -->
+              <template x-if="!hasAiAtmosphereForActiveRender && (atmosphere === 'night' || atmosphere === 'sunset') && activeRenderIndex === 0">
+                <div class="absolute inset-0 pointer-events-none overflow-hidden">
+                  <template x-for="fl in payload.floors" :key="'wfl-'+fl.floor_number">
+                    <div class="contents">
+                      <template x-for="(wr, wi) in floorWindowRects(fl.floor_number)" :key="'w-'+fl.floor_number+'-'+wi">
+                        <div class="absolute rounded-[1px] transition-opacity duration-500"
+                             :style="windowGlowStyle(fl, wr, wi)"></div>
+                      </template>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <!-- Architectural Spotlight Cutout & Glowing Active Block Perimeter Frame -->
+              <template x-if="activeRenderIndex === 0 && blockEnvelopePolygon.length >= 3">
+                <svg viewBox="0 0 100 100"
+                     preserveAspectRatio="none"
+                     aria-hidden="true"
+                     class="absolute inset-0 w-full h-full pointer-events-none">
+                  <path x-show="spotlightEnabled"
+                        :d="blockSpotlightPathD"
+                        fill-rule="evenodd"
+                        :fill="atmosphere === 'night' ? 'rgba(2, 6, 23, 0.48)' : 'rgba(15, 23, 42, 0.34)'"
+                        class="transition-opacity duration-300"></path>
+                  <polygon :points="polyStr(blockEnvelopePolygon)"
+                           fill="none"
+                           stroke="#10b981"
+                           stroke-width="0.55"
+                           stroke-dasharray="1.4,0.7"
+                           vector-effect="non-scaling-stroke"></polygon>
+                </svg>
+              </template>
+
+              <!-- Interactive Floor Band Overlay (HTML <template> outside <svg> for Alpine compatibility) -->
+              <svg viewBox="0 0 100 100"
+                   preserveAspectRatio="none"
+                   role="img"
+                   :aria-label="payload.building.name + ' {% trans 'interactive floor selector' %}'"
+                   class="absolute inset-0 w-full h-full pointer-events-none"></svg>
+              <template x-for="fl in payload.floors" :key="fl.floor_number">
+                <svg x-show="floorPoly(fl).length >= 3"
+                     viewBox="0 0 100 100"
+                     preserveAspectRatio="none"
+                     aria-hidden="true"
+                     class="absolute inset-0 w-full h-full pointer-events-none">
+                  <polygon :points="polyStr(floorPoly(fl))"
+                           @mouseenter="hoveredFloor = fl"
+                           @mouseleave="hoveredFloor = null"
+                           @click="openFloor(fl.floor_number)"
+                           class="explorer-band cursor-pointer pointer-events-auto"
+                           :fill="floorBandFill(fl)"
+                           :stroke="hoveredFloor && hoveredFloor.floor_number === fl.floor_number ? '#34d399' : 'rgba(16, 185, 129, 0.52)'"
+                           :stroke-width="hoveredFloor && hoveredFloor.floor_number === fl.floor_number ? '0.65' : '0.35'"
+                           vector-effect="non-scaling-stroke"></polygon>
+                </svg>
+              </template>
+
+              <!-- Fallback Canopy Mask ONLY when rendering legacy CSS Night tint without AI relighting -->
+              <template x-if="!hasAiAtmosphereForActiveRender && activeRenderIndex === 0 && payload.building.canopy_url">
+                <img :src="payload.building.canopy_url"
+                     alt=""
+                     aria-hidden="true"
+                     :class="'absolute inset-0 w-full h-full object-fill pointer-events-none select-none transition duration-500 ' + atmosphereClass()">
+              </template>
+
+              <!-- Always-Visible Compact Floating Active Block Roof Badge -->
+              <template x-if="activeRenderIndex === 0 && blockCalloutPos">
+                <div :style="blockCalloutStyle()"
+                     class="absolute z-10 pointer-events-auto flex flex-col items-center select-none origin-bottom">
+                  <div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-950/90 backdrop-blur-md text-white border border-emerald-400 shadow-lg whitespace-nowrap">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-[11px] font-extrabold tracking-tight"
+                          x-text="payload.building.block_number ? ('{% trans 'Block' %} ' + payload.building.block_number) : payload.building.name"></span>
+                  </div>
+                  <div class="w-0.5 h-2 bg-emerald-400"></div>
+                </div>
+              </template>
+
+              <!-- Always-Visible Interactive On-Facade Floor Pills (F1..FN) -->
+              <template x-if="activeViewSelectable">
+                <div class="absolute inset-0 pointer-events-none">
+                  <template x-for="fl in floorsDescending" :key="'fpill-'+fl.floor_number">
+                    <button type="button"
+                            x-show="Boolean(floorTagPos(fl))"
+                            @mouseenter="hoverFloorByNum(fl.floor_number)"
+                            @mouseleave="hoverFloorByNum(null)"
+                            @focus="hoverFloorByNum(fl.floor_number)"
+                            @blur="hoverFloorByNum(null)"
+                            @click="openFloor(fl.floor_number)"
+                            :style="floorTagStyle(fl)"
+                            :aria-label="'{% trans 'Floor' %} ' + fl.floor_number + ', ' + fl.stats.available + ' {% trans 'available' %}'"
+                            :class="(hoveredFloor && hoveredFloor.floor_number === fl.floor_number)
+                              ? 'bg-emerald-400 text-slate-950 border-white z-20 shadow-emerald-500/40'
+                              : (fl.stats.available > 0
+                                  ? 'bg-slate-950/90 text-white border-emerald-400/80 hover:border-emerald-300 z-10'
+                                  : 'bg-slate-900/80 text-slate-400 border-rose-500/50 z-10')"
+                            class="explorer-focusable pointer-events-auto absolute px-1.5 py-0.5 rounded-md border text-[10px] leading-none font-extrabold shadow-md transition-colors duration-150 flex items-center gap-1 whitespace-nowrap">
+                      <span x-text="'F' + fl.floor_number"></span>
+                    </button>
+                  </template>
+                </div>
+              </template>
+            </div>
+
+            <!-- Shown only on camera angles whose floors have not been mapped yet (never draw main-view shapes on them) -->
+            <template x-if="!activeViewSelectable">
+              <div class="absolute bottom-3 left-3 right-3 sm:right-auto max-w-sm bg-slate-950/85 backdrop-blur-md text-white rounded-xl px-3 py-2 border border-white/15 shadow-xl text-[11px] font-semibold leading-snug flex items-center gap-2 pointer-events-auto">
+                <span aria-hidden="true">ℹ️</span>
+                <span>{% trans "Floors aren't mapped on this angle. Pick a floor from the list, or switch to Main." %}</span>
+                <button type="button" @click="activeRenderIndex = 0"
+                        class="explorer-focusable shrink-0 px-2 py-1 rounded-lg bg-emerald-500 text-slate-950 font-extrabold hover:bg-emerald-400 transition">{% trans "Main" %}</button>
+              </div>
+            </template>
+
+            <!-- Compact Floating Floor HUD Pill -->
+            <div x-show="hoveredFloor" x-cloak
+                 class="absolute top-3 left-3 bg-slate-950/90 backdrop-blur-md text-white rounded-xl px-3 py-2 border border-white/15 shadow-xl pointer-events-none flex items-center gap-2.5">
+              <span class="text-xs font-extrabold">{% trans "Floor" %} <span x-text="hoveredFloor?.floor_number"></span></span>
+              <span class="text-[11px] font-black px-2 py-0.5 rounded-full bg-emerald-500 text-slate-950"
+                    x-text="(hoveredFloor?.stats.available || 0) + ' {% trans 'Avail' %}'"></span>
+              <span class="text-[11px] text-slate-300"><span x-text="hoveredFloor?.stats.sold"></span> {% trans "Sold" %}</span>
+            </div>
+          </div>
+
+          <!-- Compact Controls Bar: Lighting + Spotlight/Zoom + Angles -->
+          <div class="flex flex-wrap items-center justify-between gap-2 {% if is_public %}bg-slate-900/85 border-slate-800{% else %}bg-white border-slate-200{% endif %} border rounded-xl px-3 py-2">
+            <div class="flex flex-wrap items-center gap-1.5">
+              <template x-if="payload.building.atmosphere_enabled">
+                <div class="flex items-center gap-1" role="group" aria-label="{% trans 'Lighting mode' %}">
+                  <button type="button" @click="atmosphere = 'day'" :aria-pressed="atmosphere === 'day'"
+                          :class="atmosphere === 'day' ? 'bg-indigo-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300 hover:bg-slate-700{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}'"
+                          class="explorer-focusable px-2.5 py-1 rounded-lg text-xs font-semibold transition min-h-[32px]">
+                    ☀️ {% trans "Day" %}
+                  </button>
+                  <button type="button" @click="atmosphere = 'sunset'" :aria-pressed="atmosphere === 'sunset'"
+                          :class="atmosphere === 'sunset' ? 'bg-amber-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300 hover:bg-slate-700{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}'"
+                          class="explorer-focusable px-2.5 py-1 rounded-lg text-xs font-semibold transition min-h-[32px]">
+                    🌇 {% trans "Sunset" %}
+                  </button>
+                  <button type="button" @click="atmosphere = 'night'" :aria-pressed="atmosphere === 'night'"
+                          :class="atmosphere === 'night' ? 'bg-slate-700 text-emerald-300 ring-1 ring-emerald-400/50' : '{% if is_public %}bg-slate-800 text-slate-300 hover:bg-slate-700{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}'"
+                          class="explorer-focusable px-2.5 py-1 rounded-lg text-xs font-semibold transition min-h-[32px]">
+                    🌙 {% trans "Night" %}
+                  </button>
+                </div>
+              </template>
+
+              <template x-if="activeRenderIndex === 0 && blockEnvelopePolygon.length >= 3">
+                <div class="flex items-center gap-1 pl-1.5 border-l {% if is_public %}border-slate-700{% else %}border-slate-200{% endif %}">
+                  <button type="button"
+                          @click="spotlightEnabled = !spotlightEnabled"
+                          :aria-pressed="spotlightEnabled"
+                          :class="spotlightEnabled ? 'bg-emerald-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300 hover:bg-slate-700{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}'"
+                          class="explorer-focusable px-2.5 py-1 rounded-lg text-xs font-semibold transition min-h-[32px]">
+                    🎯 {% trans "Highlight Block" %}
+                  </button>
+                  <button type="button"
+                          x-show="canZoomToBlock"
+                          @click="zoomToBlock = !zoomToBlock"
+                          :aria-pressed="zoomToBlock"
+                          :class="zoomToBlock ? 'bg-indigo-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300 hover:bg-slate-700{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}'"
+                          class="explorer-focusable px-2.5 py-1 rounded-lg text-xs font-semibold transition min-h-[32px]">
+                    <span x-text="zoomToBlock ? '🌐 {% trans 'Full View' %}' : '🔍 {% trans 'Zoom' %}'"></span>
+                  </button>
+                </div>
+              </template>
+            </div>
+
+            <template x-if="renderAngles.length > 1">
+              <div class="flex flex-wrap items-center gap-1">
+                <template x-for="(ang, idx) in renderAngles" :key="idx">
+                  <button type="button"
+                          @click="activeRenderIndex = idx"
+                          :aria-pressed="activeRenderIndex === idx"
+                          :class="activeRenderIndex === idx ? 'bg-emerald-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300{% else %}bg-slate-100 text-slate-700{% endif %}'"
+                          class="explorer-focusable px-2.5 py-1 rounded-lg text-xs font-semibold transition min-h-[32px]"
+                          x-text="ang.label"></button>
+                </template>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Compact Floor Selector Rail with Availability Progress Bars -->
+        <aside class="lg:col-span-3 {% if is_public %}bg-slate-900/90 border-slate-800 text-white{% else %}bg-white border-slate-200 text-slate-900{% endif %} border rounded-2xl p-3.5 shadow-xs space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-bold uppercase tracking-wider {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %}">{% trans "Floors" %}</h2>
+            <span class="text-[11px] font-semibold {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %}" x-text="payload.floors.length + 'F'"></span>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <template x-for="fl in floorsDescending" :key="'rail-'+fl.floor_number">
+              <button type="button"
+                      @mouseenter="hoverFloorByNum(fl.floor_number)"
+                      @mouseleave="hoverFloorByNum(null)"
+                      @focus="hoverFloorByNum(fl.floor_number)"
+                      @blur="hoverFloorByNum(null)"
+                      @click="openFloor(fl.floor_number)"
+                      :class="(hoveredFloor && hoveredFloor.floor_number === fl.floor_number) ? 'border-emerald-500 bg-emerald-500/10 shadow-xs' : '{% if is_public %}border-slate-800 bg-slate-800/60 hover:border-slate-600{% else %}border-slate-200 bg-slate-50 hover:border-indigo-400{% endif %}'"
+                      class="explorer-focusable min-h-[48px] w-full px-3 py-2 rounded-xl border text-left transition space-y-1.5">
+                <div class="flex items-center justify-between gap-2">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-sm font-extrabold">{% trans "Floor" %} <span x-text="fl.floor_number"></span></span>
+                    <span class="text-[11px] {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %}"
+                          x-text="fl.stats.sold + ' {% trans 'Sold' %}'"></span>
+                  </div>
+                  <span class="px-2 py-0.5 rounded-full text-[11px] font-extrabold"
+                        :class="fl.stats.available > 0 ? '{% if is_public %}bg-emerald-500/20 text-emerald-400 border border-emerald-500/30{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}' : '{% if is_public %}bg-rose-500/20 text-rose-400{% else %}bg-rose-50 text-rose-700 border border-rose-200{% endif %}'"
+                        x-text="fl.stats.available > 0 ? (fl.stats.available + ' {% trans 'Free' %}') : '{% trans 'Sold' %}'"></span>
+                </div>
+                <div class="w-full h-1 rounded-full {% if is_public %}bg-rose-950/80{% else %}bg-rose-100{% endif %} overflow-hidden">
+                  <div class="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                       :style="`width: ${Math.round(((fl.stats.available || 0) / Math.max(1, fl.stats.total || 1)) * 100)}%;`"></div>
+                </div>
+              </button>
+            </template>
+          </div>
+        </aside>
+      </section>
+
+      <!-- STAGE 2: ANIMATED FLOOR PLAN & APARTMENTS -->
+      <section x-show="stage === 'floor'" x-cloak aria-labelledby="floor-stage-heading" class="explorer-stage-shell space-y-3.5">
+        <!-- Floor Plan Toolbar -->
+        <div class="flex flex-wrap items-center justify-between gap-2.5 {% if is_public %}bg-slate-900/90 border-slate-800 text-white{% else %}bg-white border-slate-200 text-slate-900{% endif %} border rounded-2xl px-4 py-2.5 shadow-xs">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button type="button" @click="backToBuilding()" aria-label="{% trans 'Back to Exterior View' %}"
+                    class="explorer-focusable min-h-[34px] px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white transition shadow-2xs">
+              ← {% trans "Exterior" %}
+            </button>
+            <h2 id="floor-stage-heading" tabindex="-1" class="text-base font-bold focus:outline-none">
+              {% trans "Floor" %} <span x-text="currentFloor?.floor_number"></span>
+            </h2>
+            <template x-if="currentFloor && currentFloor.stats">
+              <div class="flex items-center gap-1.5 text-xs font-bold">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full {% if is_public %}bg-emerald-500/15 text-emerald-400 border border-emerald-500/40{% else %}bg-emerald-50 text-emerald-700 border border-emerald-200{% endif %}">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span x-text="currentFloor.stats.available"></span> {% trans "Free" %}
+                </span>
+                <span x-show="currentFloor.stats.reserved > 0"
+                      class="px-2.5 py-0.5 rounded-full {% if is_public %}bg-amber-500/15 text-amber-400 border border-amber-500/30{% else %}bg-amber-50 text-amber-700 border border-amber-200{% endif %}">
+                  <span x-text="currentFloor.stats.reserved"></span> {% trans "Reserved" %}
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full {% if is_public %}bg-rose-500/15 text-rose-400 border border-rose-500/30{% else %}bg-rose-50 text-rose-700 border border-rose-200{% endif %}">
+                  <span x-text="currentFloor.stats.sold"></span> {% trans "Sold" %}
+                </span>
+              </div>
+            </template>
+          </div>
+
+          <!-- Quick Floor Switch Tabs -->
+          <div class="flex flex-wrap items-center gap-1" role="group" aria-label="{% trans 'Switch floor' %}">
+            <template x-for="fl in payload.floors" :key="'tab-'+fl.floor_number">
+              <button type="button"
+                      @click="switchFloor(fl.floor_number)"
+                      :aria-pressed="currentFloorNumber === fl.floor_number"
+                      :class="currentFloorNumber === fl.floor_number ? 'bg-emerald-600 text-white shadow-xs' : '{% if is_public %}bg-slate-800 text-slate-300 hover:bg-slate-700{% else %}bg-slate-100 text-slate-700 hover:bg-slate-200{% endif %}'"
+                      class="explorer-focusable min-h-[32px] min-w-[32px] px-2.5 py-1 rounded-lg text-xs font-bold transition"
+                      x-text="'F' + fl.floor_number"></button>
+            </template>
+          </div>
+
+          <!-- Filter Chips & Labels Toggle -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <div class="flex flex-wrap items-center gap-1" role="group" aria-label="{% trans 'Filter apartments' %}">
+              <button type="button" @click="setFilterMode('all')" :aria-pressed="filterMode === 'all'"
+                      :class="filterMode === 'all' ? 'bg-indigo-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300{% else %}bg-slate-100 text-slate-700{% endif %}'"
+                      class="explorer-focusable min-h-[32px] px-2.5 py-1 rounded-lg text-xs font-semibold transition">{% trans "All" %}</button>
+              <button type="button" @click="setFilterMode('available')" :aria-pressed="filterMode === 'available'"
+                      :class="filterMode === 'available' ? 'bg-emerald-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300{% else %}bg-slate-100 text-slate-700{% endif %}'"
+                      class="explorer-focusable min-h-[32px] px-2.5 py-1 rounded-lg text-xs font-semibold transition">{% trans "Free" %}</button>
+              <button type="button" @click="setFilterMode('1r')" :aria-pressed="filterMode === '1r'"
+                      :class="filterMode === '1r' ? 'bg-indigo-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300{% else %}bg-slate-100 text-slate-700{% endif %}'"
+                      class="explorer-focusable min-h-[32px] px-2.5 py-1 rounded-lg text-xs font-semibold transition">1R</button>
+              <button type="button" @click="setFilterMode('2r')" :aria-pressed="filterMode === '2r'"
+                      :class="filterMode === '2r' ? 'bg-indigo-600 text-white' : '{% if is_public %}bg-slate-800 text-slate-300{% else %}bg-slate-100 text-slate-700{% endif %}'"
+                      class="explorer-focusable min-h-[32px] px-2.5 py-1 rounded-lg text-xs font-semibold transition">2R+</button>
+            </div>
+            <div class="h-4 w-px {% if is_public %}bg-slate-800{% else %}bg-slate-200{% endif %}"></div>
+            <button type="button" @click="showFloorPins = !showFloorPins" :aria-pressed="showFloorPins"
+                    :class="showFloorPins ? '{% if is_public %}bg-emerald-600/20 text-emerald-400 border border-emerald-500/40{% else %}bg-emerald-50 text-emerald-700 border border-emerald-300{% endif %}' : '{% if is_public %}bg-slate-800 text-slate-400{% else %}bg-slate-100 text-slate-600{% endif %}'"
+                    class="explorer-focusable min-h-[32px] px-2.5 py-1 rounded-lg text-xs font-semibold transition">
+              🏷️ {% trans "Labels" %}
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+          <!-- Floor Visualization Pane (Clean Monochrome Architectural Blueprint + Status Highlights) -->
+          <div class="lg:col-span-8 space-y-2.5">
+            <div class="{% if is_public %}bg-slate-900/90 border-slate-800{% else %}bg-white border-slate-200{% endif %} border rounded-2xl p-2.5 md:p-3.5 shadow-md space-y-2.5">
+              <template x-if="currentFloor && currentFloor.plan_image_url">
+                <div class="explorer-plan-canvas relative w-full rounded-xl overflow-hidden bg-white border border-slate-200/80"
+                     :style="`aspect-ratio: ${currentFloor.plan_width} / ${currentFloor.plan_height}`">
+                  <img :src="currentFloor.plan_image_url"
+                       :alt="payload.building.name + ' {% trans 'Floor' %} ' + currentFloor.floor_number + ' {% trans 'plan' %}'"
+                       class="w-full h-full object-fill select-none block">
+
+                  <svg viewBox="0 0 100 100"
+                       preserveAspectRatio="none"
+                       role="img"
+                       :aria-label="'{% trans 'Floor' %} ' + currentFloor.floor_number + ' {% trans 'apartments map' %}'"
+                       class="absolute inset-0 w-full h-full pointer-events-none">
+                    <!-- Subtle Spotlight Cutout when hovering an apartment -->
+                    <path x-show="hoveredHotspotId && floorSpotlightPathD"
+                          :d="floorSpotlightPathD"
+                          fill-rule="evenodd"
+                          fill="rgba(15, 23, 42, 0.28)"
+                          class="transition-opacity duration-200 pointer-events-none"></path>
+                  </svg>
+
+                  <template x-for="hs in currentFloor.hotspots" :key="hs.id">
+                    <svg viewBox="0 0 100 100"
+                         preserveAspectRatio="none"
+                         aria-hidden="true"
+                         class="absolute inset-0 w-full h-full pointer-events-none">
+                      <polygon :points="polyStr(hs.polygon_points)"
+                               @mouseenter="hoveredHotspotId = hs.id"
+                               @mouseleave="hoveredHotspotId = null"
+                               @click="if (hs.apartment_id) openAptDialog(hs.apartment_id, hs)"
+                               :class="hs.apartment_id ? 'cursor-pointer pointer-events-auto explorer-band' : 'pointer-events-auto'"
+                               :style="`opacity: ${hotspotOpacity(hs)}`"
+                               :fill="hotspotFill(hs)"
+                               :stroke="hotspotStroke(hs)"
+                               :stroke-width="hoveredHotspotId === hs.id ? '3.0' : '2.0'"
+                               stroke-linejoin="round"
+                               vector-effect="non-scaling-stroke"></polygon>
+                    </svg>
+                  </template>
+
+                  <!-- Compact Architectural Status, Buyer & Payment Ring Badges inside each apartment -->
+                  <template x-for="hs in (currentFloor.hotspots || []).filter(h => h.apartment_id && getApt(h.apartment_id))" :key="'pin-'+hs.id">
+                    <button type="button"
+                            x-show="showFloorPins"
+                            @mouseenter="hoveredHotspotId = hs.id"
+                            @mouseleave="hoveredHotspotId = null"
+                            @click="openAptDialog(hs.apartment_id, hs)"
+                            :style="`left: ${hs.label_x}%; top: ${hs.label_y}%; opacity: ${hotspotOpacity(hs)};`"
+                            :aria-label="aptAccessibleLabel(getApt(hs.apartment_id))"
+                            class="explorer-focusable explorer-plan-pin cursor-pointer absolute px-2 py-1 rounded-xl bg-white/95 backdrop-blur-xs shadow-md border border-slate-200/90 border-l-4 leading-tight whitespace-nowrap transition-all duration-150"
+                            :class="[aptPinClass(getApt(hs.apartment_id).status), hoveredHotspotId === hs.id ? 'is-hovered z-20 ' + aptPinHoverClass(getApt(hs.apartment_id).status) : 'z-10']">
+                      <!-- Available Unit: Matching Light Card with Emerald Left Edge -->
+                      <div x-show="getApt(hs.apartment_id).status === 'AVAILABLE'" class="space-y-0.5 text-left">
+                        <div class="flex items-baseline gap-1">
+                          <span class="text-[11.5px] font-black text-slate-900" x-text="'#' + getApt(hs.apartment_id).apartment_number"></span>
+                          <span class="text-[9.5px] font-semibold text-slate-500" x-text="getApt(hs.apartment_id).total_area + 'm²'"></span>
+                        </div>
+                        <div class="flex items-center gap-1 text-[8.5px] font-extrabold uppercase tracking-wide text-emerald-700">
+                          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                          <span>{% trans "Free to sell" %}</span>
+                        </div>
+                      </div>
+
+                      <!-- Sold / Reserved Unit: Horizontal on wide units, stacked vertically on narrow (<16.5% width) units -->
+                      <div x-show="getApt(hs.apartment_id).status !== 'AVAILABLE'"
+                           :class="isNarrowHotspot(hs) ? 'flex flex-col items-center text-center gap-0.5' : 'flex items-center text-left gap-1.5'">
+                        <div class="relative shrink-0 flex items-center justify-center"
+                             :class="isNarrowHotspot(hs) ? 'w-9 h-9' : 'w-10 h-10'"
+                             :aria-label="(getApt(hs.apartment_id).paid_percentage || 0) + '% {% trans 'Paid' %}'">
+                          <svg viewBox="0 0 42 42" aria-hidden="true" class="-rotate-90" :class="isNarrowHotspot(hs) ? 'w-9 h-9' : 'w-10 h-10'">
+                            <circle cx="21" cy="21" r="18" fill="none" stroke="#e2e8f0" stroke-width="3.6"></circle>
+                            <circle cx="21" cy="21" r="18" fill="none"
+                                    :stroke="paidRingStroke(getApt(hs.apartment_id).paid_percentage)"
+                                    stroke-width="3.6"
+                                    stroke-linecap="round"
+                                    stroke-dasharray="113.1"
+                                    :stroke-dashoffset="paidRingOffset(getApt(hs.apartment_id).paid_percentage)"
+                                    class="transition-all duration-500"></circle>
+                          </svg>
+                          <span class="absolute inset-0 flex items-center justify-center font-black tabular-nums tracking-tighter text-slate-900"
+                                :class="String(getApt(hs.apartment_id).paid_percentage || 0).length >= 4 ? 'text-[10.5px]' : 'text-[12px]'">
+                            <span x-text="getApt(hs.apartment_id).paid_percentage || 0"></span><span class="text-[8px] font-extrabold text-slate-500 ml-px">%</span>
+                          </span>
+                        </div>
+
+                        <div class="min-w-0 space-y-0.5">
+                          <div class="flex items-baseline gap-1" :class="isNarrowHotspot(hs) ? 'justify-center' : ''">
+                            <span class="text-[11.5px] font-black text-slate-900" x-text="'#' + getApt(hs.apartment_id).apartment_number"></span>
+                            <span class="text-[9.5px] font-semibold text-slate-500" x-text="getApt(hs.apartment_id).total_area + 'm²'"></span>
+                          </div>
+                          <div x-show="getApt(hs.apartment_id).buyer_short"
+                               class="flex items-center gap-1 font-bold text-slate-700"
+                               :class="isNarrowHotspot(hs) ? 'justify-center text-[9.5px]' : 'text-[10px]'">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="w-3 h-3 text-slate-400 shrink-0">
+                              <circle cx="8" cy="5.5" r="2.5"></circle>
+                              <path stroke-linecap="round" d="M3.2 13.5c.6-2.3 2.5-3.5 4.8-3.5s4.2 1.2 4.8 3.5"></path>
+                            </svg>
+                            <span class="truncate" :class="isNarrowHotspot(hs) ? 'max-w-[74px]' : 'max-w-[100px]'" x-text="getApt(hs.apartment_id).buyer_short"></span>
+                          </div>
+                          <div x-show="!getApt(hs.apartment_id).buyer_short"
+                               class="text-[9px] font-extrabold uppercase tracking-wider"
+                               :class="getApt(hs.apartment_id).status === 'RESERVED' ? 'text-amber-700' : 'text-rose-700'"
+                               x-text="getApt(hs.apartment_id).status_label"></div>
+                        </div>
+                      </div>
+                    </button>
+                  </template>
+                </div>
+              </template>
+
+              <template x-if="!currentFloor || !currentFloor.plan_image_url">
+                <div class="py-16 text-center text-sm text-slate-500">
+                  {% trans "No floor plan uploaded for this floor yet." %}
+                </div>
+              </template>
+
+              <!-- Architectural Legend & Live Hover Status Footer -->
+              <div class="flex flex-wrap items-center justify-between gap-2 px-1 text-[11px] {% if is_public %}text-slate-300{% else %}text-slate-600{% endif %}">
+                <div class="flex flex-wrap items-center gap-3 font-semibold">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> {% trans "Free to sell" %}
+                  </span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> {% trans "Reserved" %}
+                  </span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> {% trans "Sold" %}
+                  </span>
+                </div>
+                <div x-show="hoveredApt" x-cloak class="font-bold {% if is_public %}text-slate-200{% else %}text-slate-800{% endif %} truncate">
+                  #<span x-text="hoveredApt?.apartment_number"></span> •
+                  <span x-text="hoveredApt?.living_room_count + 'R • ' + hoveredApt?.total_area + ' m²'"></span>
+                  <span x-show="hoveredApt?.status === 'AVAILABLE'" class="{% if is_public %}text-emerald-400{% else %}text-emerald-700{% endif %}"> • ✓ {% trans "Free to sell" %}</span>
+                  <span x-show="hoveredApt?.status !== 'AVAILABLE'" class="{% if is_public %}text-rose-300{% else %}text-rose-700{% endif %}">
+                    • 🔒 <span x-text="hoveredApt?.buyer_name"></span> (<span x-text="(hoveredApt?.paid_percentage || 0) + '%'"></span>)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Accessible Apartment Strip for Floor (Zero Clipping, Clean Single-Color Progress Bars & High-Contrast Light/Dark Cards) -->
+          <div class="lg:col-span-4 space-y-2 {% if is_public %}bg-slate-900/90 border-slate-800 text-white{% else %}bg-white border-slate-200 text-slate-900{% endif %} border rounded-2xl p-3.5 shadow-xs">
+            <div class="flex items-center justify-between px-1">
+              <h3 class="text-xs font-bold uppercase tracking-wider {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %}">{% trans "Apartments" %}</h3>
+              <span class="text-xs font-semibold {% if is_public %}text-slate-400{% else %}text-slate-500{% endif %}" x-text="filteredFloorApts().length"></span>
+            </div>
+
+            <div class="space-y-2 max-h-[560px] overflow-y-auto p-1">
+              <template x-for="apt in filteredFloorApts()" :key="apt.id">
+                <button type="button"
+                        @mouseenter="highlightApt(apt.id)"
+                        @mouseleave="highlightApt(null)"
+                        @click="openAptDialog(apt.id, findHotspotForApt(apt.id))"
+                        :aria-label="aptAccessibleLabel(apt)"
+                        :class="[
+                          aptCardClass(apt.status),
+                          isAptHovered(apt.id) ? aptHoverRingClass(apt.status) : ''
+                        ]"
+                        class="explorer-focusable explorer-apt-card relative overflow-hidden min-h-[52px] w-full px-3.5 py-2.5 rounded-xl border text-left transition-all">
+                  <!-- Full-Card Payment Loading Fill Overlay (fills horizontally up to paid_percentage% over the red Sold base) -->
+                  <div x-show="apt.status !== 'AVAILABLE' && (apt.paid_percentage || 0) > 0"
+                       class="absolute inset-y-0 left-0 pointer-events-none transition-all duration-500 {% if is_public %}bg-gradient-to-r from-emerald-500/25 via-amber-500/20 to-amber-500/25{% else %}bg-gradient-to-r from-emerald-500/20 via-amber-400/20 to-amber-500/25{% endif %}"
+                       :style="`width: ${apt.paid_percentage || 0}%;`"></div>
+
+                  <div class="relative z-10 flex items-center justify-between gap-2">
+                    <div class="flex items-baseline gap-2">
+                      <span class="text-sm font-black">#<span x-text="apt.apartment_number"></span></span>
+                      <span class="text-xs font-semibold {% if is_public %}text-slate-300{% else %}text-slate-600{% endif %}">
+                        <span x-text="apt.living_room_count"></span>R • <span x-text="apt.total_area"></span> m²
+                      </span>
+                    </div>
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold shrink-0"
+                          :class="statusBadgeClass(apt.status)">
+                      <span x-show="apt.status === 'AVAILABLE'" class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                      <span x-show="apt.status === 'SOLD'" class="text-[10px]">🔒</span>
+                      <span x-text="apt.status === 'AVAILABLE' ? '{% trans 'Free to sell' %}' : apt.status_label"></span>
+                    </span>
+                  </div>
+
+                  <!-- Buyer Name & Payment Completion Meter for Sold Apartments -->
+                  <div x-show="apt.status !== 'AVAILABLE'"
+                       class="relative z-10 mt-2 pt-2 border-t {% if is_public %}border-rose-500/25{% else %}border-rose-200/80{% endif %} space-y-1.5">
+                    <div x-show="apt.buyer_name"
+                         class="{% if is_public %}text-rose-100{% else %}text-rose-950{% endif %} text-xs font-bold truncate">
+                      👤 <span class="{% if is_public %}text-rose-300/80{% else %}text-rose-700/80{% endif %} font-medium">{% trans "Sold to:" %}</span> <span x-text="apt.buyer_name"></span>
+                    </div>
+                    <div class="space-y-1">
+                      <div class="flex items-center justify-between text-[11px] font-bold">
+                        <span class="{% if is_public %}text-slate-300{% else %}text-slate-600{% endif %}">{% trans "Payment Progress" %}</span>
+                        <span class="tabular-nums font-extrabold"
+                              :class="(apt.paid_percentage || 0) >= 50 ? '{% if is_public %}text-emerald-400{% else %}text-emerald-700{% endif %}' : '{% if is_public %}text-amber-300{% else %}text-amber-700{% endif %}'"
+                              x-text="(apt.paid_percentage || 0) + '% {% trans 'Paid' %}'"></span>
+                      </div>
+                      <div class="w-full h-1.5 rounded-full {% if is_public %}bg-rose-950/80{% else %}bg-rose-200/70{% endif %} overflow-hidden">
+                        <div class="h-full rounded-full transition-all duration-500 bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-500"
+                             :style="`width: ${Math.max(5, apt.paid_percentage || 0)}%;`"></div>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </template>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </template>
+
+  <!-- Low-priority preload images for instant Sunset/Night & floor switching without hurting LCP -->
+  <template x-if="payload.mode === 'building'">
+    <div class="hidden" aria-hidden="true">
+      <img x-show="payload.building.sunset_render_url" :src="payload.building.sunset_render_url" alt="" fetchpriority="low" loading="lazy">
+      <img x-show="payload.building.night_render_url" :src="payload.building.night_render_url" alt="" fetchpriority="low" loading="lazy">
+      <template x-for="fl in payload.floors" :key="'pre-'+fl.floor_number">
+        <img x-show="fl.plan_image_url" :src="fl.plan_image_url" alt="" fetchpriority="low" loading="lazy">
+      </template>
+    </div>
+  </template>
+
+  <!-- STAGE 3: NATIVE MODAL <dialog> FOR APARTMENT DETAILS -->
+  <dialog id="apt-detail-dialog" closedby="any" aria-labelledby="apt-dialog-title" class="explorer-apt-dialog">
+    <div class="bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200 overflow-hidden" x-show="selectedApt">
+      <div class="flex flex-wrap items-center justify-between gap-2.5 px-5 py-3.5 border-b border-slate-200 bg-slate-50">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="px-2.5 py-1 rounded-lg bg-slate-200/80 text-slate-700 text-xs font-bold"
+                x-text="(payload.building?.block_number ? '{% trans 'Block' %} ' + payload.building.block_number : (payload.building?.name || '')) + ' • F' + (selectedApt?.floor_number || '') + ' • {% trans 'Ent.' %} ' + (selectedApt?.entrance_number || 1)"></span>
+          <h1 id="apt-dialog-title" class="text-lg font-extrabold text-slate-900">
+            {% trans "Apartment" %} #<span x-text="selectedApt?.apartment_number"></span>
+          </h1>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold"
+                :class="selectedApt ? statusBadgeClass(selectedApt.status) : ''">
+            <span x-show="selectedApt?.status === 'AVAILABLE'" class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span x-show="selectedApt?.status === 'SOLD'">🔒</span>
+            <span x-text="selectedApt?.status === 'AVAILABLE' ? '{% trans 'Free to sell' %}' : selectedApt?.status_label"></span>
+          </span>
+        </div>
+
+        <div class="flex items-center gap-1.5">
+          <button type="button"
+                  x-show="prevFloorApt"
+                  @click="stepFloorApt(-1)"
+                  class="explorer-focusable min-h-[32px] px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition">
+            ← #<span x-text="prevFloorApt?.apartment_number"></span>
+          </button>
+          <button type="button"
+                  x-show="nextFloorApt"
+                  @click="stepFloorApt(1)"
+                  class="explorer-focusable min-h-[32px] px-2.5 py-1 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-xs font-bold text-slate-700 transition">
+            #<span x-text="nextFloorApt?.apartment_number"></span> →
+          </button>
+          <button type="button" @click="closeAptDialog()" aria-label="{% trans 'Close dialog' %}"
+                  class="explorer-focusable min-w-[34px] min-h-[34px] inline-flex items-center justify-center rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-5 grid grid-cols-1 md:grid-cols-12 gap-5 items-start">
+        <!-- Interactive Floor Plan Highlight Preview with Liquid Payment Fill & Floating Callout -->
+        <div class="md:col-span-7 space-y-2">
+          <div x-show="currentFloor && currentFloor.plan_image_url"
+               class="relative rounded-xl border border-slate-200 bg-white overflow-hidden shadow-xs"
+               :style="currentFloor ? `aspect-ratio: ${currentFloor.plan_width} / ${currentFloor.plan_height}` : ''">
+            <img :src="currentFloor?.plan_image_url" alt="" class="w-full h-full object-fill block">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" class="absolute inset-0 w-full h-full">
+              <polygon x-show="selectedHotspot && selectedHotspot.polygon_points"
+                       :points="polyStr(selectedHotspot?.polygon_points || [])"
+                       :fill="selectedApt?.status === 'AVAILABLE' ? 'rgba(16, 185, 129, 0.34)' : 'rgba(225, 29, 72, 0.24)'"
+                       :stroke="selectedApt?.status === 'AVAILABLE' ? '#059669' : '#be123c'"
+                       stroke-width="2.6"
+                       stroke-linejoin="round"
+                       vector-effect="non-scaling-stroke"></polygon>
+            </svg>
+
+            <!-- Floating Callout Badge on Modal Floor Plan Preview -->
+            <template x-if="selectedHotspot && selectedApt">
+              <div class="absolute -translate-x-1/2 -translate-y-1/2 pointer-events-none px-2.5 py-1 rounded-xl shadow-lg border text-[11px] font-black whitespace-nowrap"
+                   :style="`left: ${selectedHotspot.label_x}%; top: ${selectedHotspot.label_y}%;`"
+                   :class="aptPinClass(selectedApt.status)">
+                <span>#<span x-text="selectedApt.apartment_number"></span> • <span x-text="selectedApt.total_area"></span>m²</span>
+                <span x-show="selectedApt.status !== 'AVAILABLE'"
+                      class="ml-1 px-1.5 py-0.2 rounded bg-black/35 text-amber-300 tabular-nums"
+                      x-text="(selectedApt.paid_percentage || 0) + '%'"></span>
+              </div>
+            </template>
+          </div>
+
+          <div class="flex items-center justify-between text-[11px] text-slate-500 px-1">
+            <span x-text="'{% trans 'Floor' %} ' + (selectedApt?.floor_number || '') + ' • ' + (selectedApt?.living_room_count || '') + ' {% trans 'Rooms' %} • ' + (selectedApt?.total_area || '') + ' m²'"></span>
+            <span x-show="selectedApt && selectedApt.status !== 'AVAILABLE'" class="font-semibold text-rose-700">
+              <span x-text="(selectedApt?.paid_percentage || 0) + '% {% trans 'Paid' %}'"></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Apartment Status Banner, Buyer Info, Payment Progress & Specifications -->
+        <div class="md:col-span-5 space-y-3.5">
+          <!-- Obvious Status & Buyer Banner -->
+          <template x-if="selectedApt && selectedApt.status === 'AVAILABLE'">
+            <div class="p-3.5 rounded-xl bg-emerald-50 border-2 border-emerald-400 text-emerald-950 flex items-center gap-3 shadow-2xs">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+              <div>
+                <div class="text-xs font-black uppercase tracking-wider text-emerald-800">{% trans "Available — Free to Sell" %}</div>
+                <div class="text-xs text-emerald-700 font-medium mt-0.5">{% trans "This apartment is open and ready for contract." %}</div>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="selectedApt && selectedApt.status !== 'AVAILABLE'">
+            <div class="p-4 rounded-xl bg-rose-50/90 border-2 border-rose-300 text-rose-950 space-y-3 shadow-2xs">
+              <div class="flex items-start justify-between gap-3">
+                <div class="space-y-1 min-w-0">
+                  <div class="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-rose-800">
+                    <span>🔒</span>
+                    <span x-text="selectedApt?.status_label"></span>
+                  </div>
+                  <div x-show="selectedApt?.buyer_name" class="text-sm font-extrabold text-slate-900">
+                    <span class="text-xs font-semibold text-rose-700">{% trans "Sold to:" %}</span>
+                    <span x-text="selectedApt?.buyer_name"></span>
+                  </div>
+                </div>
+
+                <!-- Radial Conic-Gradient Gauge + Digital Readout -->
+                <div class="shrink-0 flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-xl border border-rose-200 shadow-2xs">
+                  <div class="w-9 h-9 rounded-full flex items-center justify-center p-1"
+                       :style="`background: conic-gradient(#10b981 ${(selectedApt?.paid_percentage || 0) * 3.6}deg, #f1f5f9 0deg);`">
+                    <div class="w-full h-full rounded-full bg-white flex items-center justify-center">
+                      <span class="text-[9px] font-black tabular-nums text-slate-900" x-text="Math.round(selectedApt?.paid_percentage || 0) + '%'"></span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm font-black tabular-nums text-slate-900" x-text="(selectedApt?.paid_percentage || 0) + '%'"></div>
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">{% trans "Paid" %}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Linear Solid-Color Progress Bar -->
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-[11px] font-bold text-rose-900">
+                  <span>{% trans "Payment Completion" %}</span>
+                  <span class="tabular-nums font-extrabold" x-text="(selectedApt?.paid_percentage || 0) + '% / 100%'"></span>
+                </div>
+                <div class="w-full h-2.5 rounded-full bg-white border border-rose-200 overflow-hidden p-0.5">
+                  <div class="h-full rounded-full transition-all duration-500"
+                       :class="paidBarColorClass(selectedApt?.paid_percentage)"
+                       :style="`width: ${Math.max(4, selectedApt?.paid_percentage || 0)}%;`"></div>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <dl class="grid grid-cols-2 gap-2.5 text-xs">
+            <div class="col-span-2 p-3.5 rounded-xl bg-indigo-50/70 border border-indigo-200/80 flex items-center justify-between">
+              <div>
+                <dt class="text-indigo-700 font-bold uppercase tracking-wider text-[10px]">{% trans "Total Area" %}</dt>
+                <dd class="text-2xl font-black text-indigo-950 mt-0.5"><span x-text="selectedApt?.total_area"></span> m²</dd>
+              </div>
+              <span class="px-3 py-1 rounded-lg bg-indigo-600 text-white text-xs font-extrabold"
+                    x-text="(selectedApt?.living_room_count || '') + ' {% trans 'Rooms' %}'"></span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <dt class="text-slate-500 font-medium">{% trans "Floor" %}</dt>
+              <dd class="text-base font-extrabold text-slate-900 mt-0.5">
+                <span x-text="selectedApt?.floor_number"></span>
+                <span class="text-xs font-semibold text-slate-400" x-text="'/ ' + (payload.building?.floor_count || 5)"></span>
+              </dd>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <dt class="text-slate-500 font-medium">{% trans "Entrance" %}</dt>
+              <dd class="text-base font-extrabold text-slate-900 mt-0.5">#<span x-text="selectedApt?.entrance_number"></span></dd>
+            </div>
+            <template x-if="selectedApt && (parseFloat(selectedApt.balcony_area || 0) > 0 || selectedApt.living_area !== selectedApt.total_area)">
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <dt class="text-slate-500 font-medium">{% trans "Living Area" %}</dt>
+                <dd class="text-sm font-bold text-slate-800 mt-0.5"><span x-text="selectedApt?.living_area"></span> m²</dd>
+              </div>
+            </template>
+            <template x-if="selectedApt && (parseFloat(selectedApt.balcony_area || 0) > 0 || selectedApt.living_area !== selectedApt.total_area)">
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <dt class="text-slate-500 font-medium">{% trans "Balcony Area" %}</dt>
+                <dd class="text-sm font-bold text-slate-800 mt-0.5"><span x-text="selectedApt?.balcony_area"></span> m²</dd>
+              </div>
+            </template>
+          </dl>
+
+          <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            <template x-if="payload.is_crm && selectedApt && selectedApt.create_contract_url">
+              <a :href="selectedApt.create_contract_url"
+                 class="explorer-focusable flex-1 text-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition shadow-sm">
+                + {% trans "Create Contract" %}
+              </a>
+            </template>
+            <button type="button" @click="closeAptDialog()"
+                    class="explorer-focusable px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm font-semibold rounded-xl transition">
+              {% trans "Close" %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script>
+function buildingExplorerApp() {
+  return {
+    payload: {},
+    stage: 'building',
+    atmosphere: 'day',
+    activeRenderIndex: 0,
+    spotlightEnabled: true,
+    zoomToBlock: false,
+    hoveredBlock: null,
+    hoveredFloor: null,
+    hoveredHotspotId: null,
+    currentFloorNumber: 1,
+    filterMode: 'all',
+    showFloorPins: true,
+    selectedApt: null,
+    selectedHotspot: null,
+    isBrowserFullscreen: false,
+    renderAngles: [],
+
+    init() {
+      const el = document.getElementById('explorer-payload');
+      this.payload = el ? JSON.parse(el.textContent) : {};
+
+      document.addEventListener('fullscreenchange', () => {
+        this.isBrowserFullscreen = Boolean(document.fullscreenElement);
+      });
+
+      if (this.payload.mode === 'building') {
+        const b = this.payload.building;
+        const angles = [];
+        if (b.hero_render_url) {
+          angles.push({ label: '{% trans "Main" %}', url: b.hero_render_url, width: b.hero_width, height: b.hero_height });
+        }
+        for (const er of (b.extra_renders || [])) {
+          if (er.url && er.url !== b.hero_render_url) {
+            angles.push(er);
+          }
+        }
+        this.renderAngles = angles.length ? angles : [{ label: 'Render', url: '', width: 1600, height: 1000 }];
+        if (!b.hero_render_url && (this.payload.floors || []).length) {
+          this.currentFloorNumber = this.payload.floors[0].floor_number;
+          this.stage = 'floor';
+        }
+      }
+
+      const dialog = document.getElementById('apt-detail-dialog');
+      if (dialog) {
+        if (!('closedBy' in HTMLDialogElement.prototype)) {
+          let pressedOutside = false;
+          const outside = (e) => {
+            const r = dialog.getBoundingClientRect();
+            return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+          };
+          dialog.addEventListener('pointerdown', (e) => { pressedOutside = outside(e); });
+          dialog.addEventListener('pointerup', (e) => { if (pressedOutside && outside(e)) dialog.close(); });
+        }
+      }
+    },
+
+    toggleBrowserFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.().catch(() => {});
+      } else {
+        document.exitFullscreen?.().catch(() => {});
+      }
+    },
+
+    get activeRender() {
+      return this.renderAngles[this.activeRenderIndex] || this.renderAngles[0] || { url: '', width: 1600, height: 1000 };
+    },
+
+    get hasAiAtmosphereForActiveRender() {
+      if (this.atmosphere === 'day') return true;
+      if (this.activeRenderIndex !== 0) return false;
+      if (this.atmosphere === 'sunset') return Boolean(this.payload.building?.sunset_render_url);
+      if (this.atmosphere === 'night') return Boolean(this.payload.building?.night_render_url);
+      return false;
+    },
+
+    get displayedRenderUrl() {
+      if (this.activeRenderIndex === 0) {
+        if (this.atmosphere === 'sunset' && this.payload.building?.sunset_render_url) {
+          return this.payload.building.sunset_render_url;
+        }
+        if (this.atmosphere === 'night' && this.payload.building?.night_render_url) {
+          return this.payload.building.night_render_url;
+        }
+      }
+      return this.activeRender.url;
+    },
+
+    get floorsDescending() {
+      return [...(this.payload.floors || [])].sort((a, b) => b.floor_number - a.floor_number);
+    },
+
+    get currentFloor() {
+      return (this.payload.floors || []).find(f => f.floor_number === this.currentFloorNumber) || null;
+    },
+
+    polyStr(pts) {
+      return (pts || []).map(p => `${p[0]},${p[1]}`).join(' ');
+    },
+
+    hoverFloorByNum(floorNum) {
+      if (floorNum === null) {
+        this.hoveredFloor = null;
+        return;
+      }
+      const fl = (this.payload.floors || []).find(f => f.floor_number === floorNum) || null;
+      this.hoveredFloor = fl;
+    },
+
+    atmosphereClass() {
+      if (this.hasAiAtmosphereForActiveRender) return '';
+      if (this.atmosphere === 'sunset') return 'atmosphere-sunset';
+      if (this.atmosphere === 'night') return 'atmosphere-night';
+      return 'atmosphere-day';
+    },
+
+    atmosphereOverlayStyle() {
+      if (this.hasAiAtmosphereForActiveRender) return 'opacity: 0;';
+      if (this.atmosphere === 'sunset') {
+        return 'background: radial-gradient(circle at 80% 15%, rgba(251, 146, 60, 0.28), transparent 60%); opacity: 1;';
+      }
+      if (this.atmosphere === 'night') {
+        return 'background: linear-gradient(180deg, rgba(10, 22, 48, 0.38), rgba(15, 23, 42, 0.20)); opacity: 1;';
+      }
+      return 'opacity: 0;';
+    },
+
+    floorBandFill(fl) {
+      const isHovered = this.hoveredFloor && this.hoveredFloor.floor_number === fl.floor_number;
+      if (isHovered) return 'rgba(16, 185, 129, 0.44)';
+      if ((fl.stats?.available || 0) > 0) return 'rgba(16, 185, 129, 0.12)';
+      return 'rgba(244, 63, 94, 0.10)';
+    },
+
+    get blockEnvelopePolygon() {
+      const faces = this.payload.building?.facade_faces || [];
+      if (faces.length >= 1) {
+        const tops = [faces[0].tl, ...faces.map(f => f.tr)];
+        const bots = [faces[0].bl, ...faces.map(f => f.br)].reverse();
+        return [...tops, ...bots];
+      }
+      const floors = (this.payload.floors || []).filter(f => f.facade_polygon && f.facade_polygon.length >= 4);
+      if (!floors.length) return [];
+      const sorted = [...floors].sort((a, b) => a.floor_number - b.floor_number);
+      const botPoly = sorted[0].facade_polygon;
+      const topPoly = sorted[sorted.length - 1].facade_polygon;
+      const halfTop = Math.floor(topPoly.length / 2);
+      const halfBot = Math.floor(botPoly.length / 2);
+      return [...topPoly.slice(0, halfTop), ...botPoly.slice(halfBot)];
+    },
+
+    get blockSpotlightPathD() {
+      const env = this.blockEnvelopePolygon;
+      if (!env || env.length < 3) return '';
+      const inner = env.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ') + ' Z';
+      return `M 0 0 L 100 0 L 100 100 L 0 100 Z ${inner}`;
+    },
+
+    get blockBounds() {
+      const env = this.blockEnvelopePolygon;
+      if (!env.length) return null;
+      const xs = env.map(p => p[0]);
+      const ys = env.map(p => p[1]);
+      const minX = Math.min(...xs);
+      const maxX = Math.max(...xs);
+      const minY = Math.min(...ys);
+      const maxY = Math.max(...ys);
+      return { minX, maxX, minY, maxY, width: maxX - minX, height: maxY - minY };
+    },
+
+    get blockCalloutPos() {
+      const env = this.blockEnvelopePolygon;
+      if (!env.length) return null;
+      const half = Math.max(2, Math.floor(env.length / 2));
+      const topEdge = env.slice(0, half);
+      const cx = topEdge.reduce((s, p) => s + p[0], 0) / topEdge.length;
+      const minY = Math.min(...topEdge.map(p => p[1]));
+      return {
+        x: Number(Math.max(10, Math.min(90, cx)).toFixed(2)),
+        y: Number(Math.max(6, minY - 0.8).toFixed(2)),
+      };
+    },
+
+    get canZoomToBlock() {
+      const b = this.blockBounds;
+      if (!b) return false;
+      return b.width < 68 || b.height < 55;
+    },
+
+    get currentZoomScale() {
+      if (!this.zoomToBlock || this.activeRenderIndex !== 0) return 1;
+      const b = this.blockBounds;
+      if (!b) return 1;
+      const padW = Math.max(28, b.width * 1.45);
+      const padH = Math.max(32, b.height * 1.65);
+      return Math.min(2.35, Math.max(1.25, Math.min(88 / padW, 82 / padH)));
+    },
+
+    blockZoomTransformStyle() {
+      const scale = this.currentZoomScale;
+      if (scale <= 1.01) return '';
+      const b = this.blockBounds;
+      if (!b) return '';
+      const cx = (b.minX + b.maxX) / 2;
+      const cy = (b.minY + b.maxY) / 2;
+      const maxShift = ((scale - 1) / (2 * scale)) * 100;
+      const tx = Math.max(-maxShift, Math.min(maxShift, 50 - cx));
+      const ty = Math.max(-maxShift, Math.min(maxShift, 52 - cy));
+      return `transform: scale(${scale.toFixed(2)}) translate(${tx.toFixed(2)}%, ${ty.toFixed(2)}%);`;
+    },
+
+    blockCalloutStyle() {
+      const pos = this.blockCalloutPos;
+      if (!pos) return 'display: none;';
+      const inv = (1 / this.currentZoomScale).toFixed(3);
+      return `left: ${pos.x}%; top: ${pos.y}%; transform: translate(-50%, -100%) scale(${inv}); transform-origin: bottom center;`;
+    },
+
+    floorPoly(fl) {
+      if (this.activeRenderIndex === 0) return fl?.facade_polygon || [];
+      const map = this.activeRender.floors || {};
+      return map[String(fl?.floor_number)] || [];
+    },
+
+    get activeViewSelectable() {
+      if (this.activeRenderIndex === 0) return true;
+      return Object.keys(this.activeRender.floors || {}).length > 0;
+    },
+
+    floorTagPos(fl) {
+      const poly = this.floorPoly(fl);
+      if (!poly || poly.length < 4) return null;
+      const firstTop = poly[0];
+      const lastBot = poly[poly.length - 1];
+      const leftX = (firstTop[0] + lastBot[0]) / 2;
+      const leftY = (firstTop[1] + lastBot[1]) / 2;
+      const placeInside = leftX < 9.0;
+      return {
+        x: Number((placeInside ? leftX + 0.8 : leftX - 0.6).toFixed(2)),
+        y: Number(leftY.toFixed(2)),
+        inside: placeInside,
+      };
+    },
+
+    floorTagStyle(fl) {
+      const pos = this.floorTagPos(fl);
+      if (!pos) return 'display: none;';
+      const tx = pos.inside ? '0%' : '-100%';
+      const origin = pos.inside ? 'left center' : 'right center';
+      const inv = (1 / this.currentZoomScale).toFixed(3);
+      return `left: ${pos.x}%; top: ${pos.y}%; transform: translate(${tx}, -50%) scale(${inv}); transform-origin: ${origin};`;
+    },
+
+    floorWindowRects(floorNum) {
+      return (this.payload.building?.windows_by_floor || {})[String(floorNum)] || [];
+    },
+
+    windowGlowStyle(fl, wr, idx) {
+      const [x, y, w, h] = wr;
+      const isNight = this.atmosphere === 'night';
+      const isHov = this.hoveredFloor && this.hoveredFloor.floor_number === fl.floor_number;
+      const litPattern = ((fl.floor_number * 7 + idx * 3) % 10) < 7;
+      if (!isHov && !litPattern && !isNight) return 'display: none;';
+      const bg = isHov
+        ? 'rgba(52, 211, 153, 0.62)'
+        : (isNight
+            ? (litPattern ? 'rgba(253, 224, 130, 0.68)' : 'rgba(30, 58, 138, 0.25)')
+            : 'rgba(251, 191, 36, 0.34)');
+      const shadow = isHov
+        ? '0 0 10px rgba(16, 185, 129, 0.7)'
+        : (isNight && litPattern ? '0 0 8px rgba(251, 191, 36, 0.52)' : 'none');
+      return `left:${x}%; top:${y}%; width:${w}%; height:${h}%; background:${bg}; box-shadow:${shadow}; mix-blend-mode: screen;`;
+    },
+
+    openFloor(floorNum) {
+      const update = () => {
+        this.currentFloorNumber = floorNum;
+        this.stage = 'floor';
+        this.hoveredFloor = null;
+      };
+      this.runStageTransition(update, 'floor-stage-heading');
+    },
+
+    switchFloor(floorNum) {
+      const update = () => {
+        this.currentFloorNumber = floorNum;
+      };
+      this.runStageTransition(update, 'floor-stage-heading');
+    },
+
+    backToBuilding() {
+      const update = () => {
+        this.stage = 'building';
+        this.hoveredHotspotId = null;
+      };
+      this.runStageTransition(update, 'building-stage-heading');
+    },
+
+    runStageTransition(updateFn, focusId, afterFn) {
+      if (!document.startViewTransition) {
+        updateFn();
+        this.$nextTick(() => {
+          document.getElementById(focusId)?.focus();
+          if (afterFn) requestAnimationFrame(afterFn);
+        });
+        return;
+      }
+      const transition = document.startViewTransition(() => updateFn());
+      transition.finished.finally(() => {
+        this.$nextTick(() => {
+          document.getElementById(focusId)?.focus();
+          if (afterFn) requestAnimationFrame(afterFn);
+        });
+      });
+    },
+
+    get hoveredHotspot() {
+      if (!this.hoveredHotspotId) return null;
+      return (this.currentFloor?.hotspots || []).find(h => h.id === this.hoveredHotspotId) || null;
+    },
+
+    get hoveredApt() {
+      const hs = this.hoveredHotspot;
+      if (!hs || !hs.apartment_id) return null;
+      return this.getApt(hs.apartment_id);
+    },
+
+    get floorSpotlightPathD() {
+      const hs = this.hoveredHotspot;
+      if (!hs || !hs.polygon_points || hs.polygon_points.length < 3) return '';
+      const inner = hs.polygon_points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ') + ' Z';
+      return `M 0 0 L 100 0 L 100 100 L 0 100 Z ${inner}`;
+    },
+
+    getApt(aptId) {
+      return (this.payload.apartments || {})[aptId] || null;
+    },
+
+    setFilterMode(mode) {
+      this.filterMode = mode;
+    },
+
+    matchesFilter(apt) {
+      if (!apt) return false;
+      if (this.filterMode === 'available') return apt.status === 'AVAILABLE';
+      if (this.filterMode === '1r') return apt.living_room_count === 1;
+      if (this.filterMode === '2r') return apt.living_room_count >= 2;
+      return true;
+    },
+
+    filteredFloorApts() {
+      return (this.currentFloor?.apartments || []).filter(a => this.matchesFilter(a));
+    },
+
+    findHotspotForApt(aptId) {
+      return (this.currentFloor?.hotspots || []).find(h => h.apartment_id === aptId) || null;
+    },
+
+    isAptHovered(aptId) {
+      if (!this.hoveredHotspotId || !aptId) return false;
+      const hs = this.findHotspotForApt(aptId);
+      return Boolean(hs && hs.id === this.hoveredHotspotId);
+    },
+
+    highlightApt(aptId) {
+      if (!aptId) {
+        this.hoverHotspot(null);
+        return;
+      }
+      const hs = this.findHotspotForApt(aptId);
+      this.hoverHotspot(hs ? hs.id : null);
+    },
+
+    hoverHotspot(hsId) {
+      this.hoveredHotspotId = hsId || null;
+    },
+
+    hotspotOpacity(hs) {
+      if (!hs.apartment_id) return 0.4;
+      const apt = this.getApt(hs.apartment_id);
+      return this.matchesFilter(apt) ? 1.0 : 0.14;
+    },
+
+    hotspotFill(hs) {
+      const hover = this.hoveredHotspotId === hs.id;
+      const apt = hs.apartment_id ? this.getApt(hs.apartment_id) : null;
+      if (!apt) return hover ? 'rgba(100, 116, 139, 0.35)' : 'rgba(100, 116, 139, 0.16)';
+      if (apt.status === 'AVAILABLE') return hover ? 'rgba(16, 185, 129, 0.38)' : 'rgba(16, 185, 129, 0.24)';
+      if (apt.status === 'RESERVED') return hover ? 'rgba(245, 158, 11, 0.42)' : 'rgba(245, 158, 11, 0.25)';
+      return hover ? 'rgba(225, 29, 72, 0.30)' : 'rgba(225, 29, 72, 0.20)';
+    },
+
+    isNarrowHotspot(hs) {
+      const pts = hs?.polygon_points || [];
+      if (pts.length < 3) return false;
+      let minX = 100, maxX = 0;
+      for (const p of pts) {
+        if (p[0] < minX) minX = p[0];
+        if (p[0] > maxX) maxX = p[0];
+      }
+      if ((maxX - minX) < 18.8) return true;
+      const others = (this.currentFloor?.hotspots || []).filter(
+        o => o.id !== hs.id && o.apartment_id && this.getApt(o.apartment_id)
+      );
+      return others.some(
+        o => Math.abs((o.label_y || 0) - (hs.label_y || 0)) < 16 &&
+             Math.abs((o.label_x || 0) - (hs.label_x || 0)) < 18.5
+      );
+    },
+
+    paidRingStroke(pct) {
+      const val = Number(pct || 0);
+      if (val >= 75) return '#10b981';
+      if (val >= 25) return '#f59e0b';
+      return '#f43f5e';
+    },
+
+    paidRingOffset(pct) {
+      const raw = Math.max(0, Math.min(100, Number(pct || 0)));
+      const vis = raw > 0 ? Math.max(5, raw) : 0;
+      return (113.1 * (1 - vis / 100)).toFixed(2);
+    },
+
+    paidBarColorClass(pct) {
+      const val = Number(pct || 0);
+      if (val >= 75) return 'bg-emerald-500';
+      if (val >= 25) return 'bg-amber-500';
+      return 'bg-rose-500';
+    },
+
+    aptHoverRingClass(status) {
+      if (status === 'AVAILABLE') return 'ring-2 ring-emerald-500/50 border-emerald-500 shadow-sm';
+      if (status === 'RESERVED') return 'ring-2 ring-amber-500/50 border-amber-500 shadow-sm';
+      return 'ring-2 ring-rose-400/50 border-rose-400 shadow-sm';
+    },
+
+    get prevFloorApt() {
+      const list = this.currentFloor?.apartments || [];
+      if (!this.selectedApt || list.length < 2) return null;
+      const idx = list.findIndex(a => a.id === this.selectedApt.id);
+      if (idx < 0) return null;
+      return list[(idx - 1 + list.length) % list.length];
+    },
+
+    get nextFloorApt() {
+      const list = this.currentFloor?.apartments || [];
+      if (!this.selectedApt || list.length < 2) return null;
+      const idx = list.findIndex(a => a.id === this.selectedApt.id);
+      if (idx < 0) return null;
+      return list[(idx + 1) % list.length];
+    },
+
+    stepFloorApt(delta) {
+      const target = delta < 0 ? this.prevFloorApt : this.nextFloorApt;
+      if (!target) return;
+      this.selectedApt = target;
+      this.selectedHotspot = this.findHotspotForApt(target.id);
+    },
+
+    hotspotStroke(hs) {
+      const apt = hs.apartment_id ? this.getApt(hs.apartment_id) : null;
+      if (!apt) return '#64748b';
+      if (apt.status === 'AVAILABLE') return '#059669';
+      if (apt.status === 'RESERVED') return '#d97706';
+      return '#be123c';
+    },
+
+    aptPinClass(status) {
+      if (status === 'AVAILABLE') return 'border-l-emerald-500 hover:border-emerald-400';
+      if (status === 'RESERVED') return 'border-l-amber-500 hover:border-amber-400';
+      return 'border-l-rose-500 hover:border-rose-400';
+    },
+
+    aptPinHoverClass(status) {
+      if (status === 'AVAILABLE') return 'ring-2 ring-emerald-500/50 shadow-lg';
+      if (status === 'RESERVED') return 'ring-2 ring-amber-500/50 shadow-lg';
+      return 'ring-2 ring-rose-500/50 shadow-lg';
+    },
+
+    aptCardClass(status) {
+      if (status === 'AVAILABLE') {
+        return '{% if is_public %}bg-emerald-950/40 border-emerald-500/60 hover:border-emerald-400 text-white shadow-2xs{% else %}bg-emerald-50/55 border-emerald-300 hover:border-emerald-500 hover:bg-emerald-50/80 text-slate-900 shadow-2xs{% endif %}';
+      }
+      if (status === 'RESERVED') {
+        return '{% if is_public %}bg-amber-950/35 border-amber-500/50 hover:border-amber-400 text-white{% else %}bg-amber-50/55 border-amber-300 hover:border-amber-500 text-slate-900{% endif %}';
+      }
+      return '{% if is_public %}bg-rose-950/35 border-rose-500/45 hover:border-rose-400 text-slate-100{% else %}bg-rose-50/75 border-rose-200 hover:border-rose-400 text-slate-800 shadow-2xs{% endif %}';
+    },
+
+    statusBadgeClass(status) {
+      if (status === 'AVAILABLE') return 'bg-emerald-100 text-emerald-800 border border-emerald-300';
+      if (status === 'RESERVED') return 'bg-amber-100 text-amber-800 border border-amber-300';
+      return 'bg-rose-100 text-rose-800 border border-rose-200';
+    },
+
+    aptAccessibleLabel(apt) {
+      const buyer = apt.buyer_name ? `, {% trans "Sold to:" %} ${apt.buyer_name}` : '';
+      return `{% trans "Apt" %} ${apt.apartment_number}, ${apt.living_room_count} {% trans "rooms" %}, ${apt.total_area} m², ${apt.status_label}${buyer}`;
+    },
+
+    openAptDialog(aptId, hs) {
+      const apt = this.getApt(aptId);
+      if (!apt) return;
+      this.selectedApt = apt;
+      this.selectedHotspot = hs || this.findHotspotForApt(aptId);
+      const dialog = document.getElementById('apt-detail-dialog');
+      if (dialog && !dialog.open) {
+        dialog.showModal();
+      }
+    },
+
+    closeAptDialog() {
+      const dialog = document.getElementById('apt-detail-dialog');
+      if (dialog && dialog.open) {
+        dialog.close();
+      }
+    },
+  };
+}
+</script>
+{% endblock %}

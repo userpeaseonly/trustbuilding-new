@@ -1,0 +1,934 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+{{ studio_data|json_script:"studio-payload" }}
+
+<div x-data="buildingStudioApp()" x-init="init()" class="space-y-4">
+  <!-- Compact Studio Header -->
+  <div class="bg-white border border-slate-200 rounded-2xl px-4 py-3 shadow-xs flex flex-wrap items-center justify-between gap-3">
+    <div class="flex flex-wrap items-center gap-3">
+      <a href="{% url 'explorer:index' %}" class="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition">
+        ← {% trans "Back" %}
+      </a>
+      <div>
+        <h2 class="text-base md:text-lg font-bold text-slate-900">
+          {% if building.block_number %}{% trans "Block" %} {{ building.block_number }} <span class="text-slate-400 font-normal text-xs">({{ building.name }})</span>{% else %}{{ building.name }}{% endif %}
+        </h2>
+        <p class="text-[11px] text-slate-500">
+          {{ explorer_obj.get_extraction_status_display }}
+          {% if explorer_obj.extraction_summary.matched_apartments %}
+            • {{ explorer_obj.extraction_summary.matched_apartments }}/{{ explorer_obj.extraction_summary.expected_apartments }} {% trans "matched" %}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2">
+      <form method="post" enctype="multipart/form-data" class="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1" @submit="extracting = true">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="upload_pdf">
+        <input type="file" name="source_pdf" accept=".pdf,application/pdf" required
+               class="text-[11px] text-slate-600 max-w-[180px] file:mr-2 file:py-1 file:px-2.5 file:rounded-md file:border-0 file:text-[11px] file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
+        <button type="submit" :disabled="extracting"
+                class="px-2.5 py-1 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-bold rounded-md transition disabled:opacity-60">
+          <span x-show="!extracting">{% trans "Auto-Extract PDF" %}</span>
+          <span x-show="extracting" x-cloak>{% trans "Extracting..." %}</span>
+        </button>
+      </form>
+      <a href="{% url 'explorer:building_view' building_pk=building.pk %}" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition shadow-2xs">
+        {% trans "Open" %} →
+      </a>
+      <a href="{% url 'building:matrix' pk=building.pk %}" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition">
+        {% trans "Matrix" %}
+      </a>
+    </div>
+  </div>
+
+  <!-- Studio Workspace Tabs -->
+  <div class="flex flex-wrap gap-1.5 border-b border-slate-200 pb-2.5">
+    <button type="button" @click="tab = 'facade'"
+            :class="tab === 'facade' ? 'bg-indigo-600 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">
+      🏢 {% trans "Facade & Floors" %}
+    </button>
+    <button type="button" @click="tab = 'floors'"
+            :class="tab === 'floors' ? 'bg-indigo-600 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">
+      📐 {% trans "Floor Plans" %}
+    </button>
+    <button type="button" @click="tab = 'settings'"
+            :class="tab === 'settings' ? 'bg-indigo-600 text-white shadow-2xs' : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'"
+            class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition">
+      🌐 {% trans "Share & Settings" %}
+    </button>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- TAB 1: FACADE RENDER & FLOOR SLICER               -->
+  <!-- ================================================= -->
+  <div x-show="tab === 'facade'" class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+    <div class="lg:col-span-8 bg-white border border-slate-200 rounded-2xl p-3.5 shadow-xs space-y-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button type="button" @click="facadeTool = 'slicer'"
+                  :class="facadeTool === 'slicer' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'"
+                  class="px-2.5 py-1 rounded-lg text-xs font-semibold transition">
+            {% trans "Quad" %}
+          </button>
+          <button type="button" @click="facadeTool = 'corner'"
+                  :class="facadeTool === 'corner' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'"
+                  class="px-2.5 py-1 rounded-lg text-xs font-semibold transition">
+            {% trans "Multi-Bend" %} (<span x-text="Math.max(0, verticalEdges.length - 2)"></span>)
+          </button>
+          <button type="button" x-show="facadeTool === 'corner'" @click="addCornerBend()"
+                  class="px-2 py-1 rounded-lg text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition">
+            + {% trans "Add Bend" %}
+          </button>
+          <button type="button" x-show="facadeTool === 'corner' && verticalEdges.length > 3" @click="removeCornerBend()"
+                  class="px-2 py-1 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 transition">
+            − {% trans "Remove Bend" %}
+          </button>
+          <button type="button" @click="facadeTool = 'vertex'"
+                  :class="facadeTool === 'vertex' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700'"
+                  class="px-2.5 py-1 rounded-lg text-xs font-semibold transition">
+            {% trans "Vertices" %}
+          </button>
+          <button type="button" x-show="facadeTool === 'slicer' || facadeTool === 'corner'" @click="sliceFacadeCorners()"
+                  class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white transition">
+            {% trans "Slice" %} ({{ building.floor_count }}F)
+          </button>
+          <button type="button" @click="runAiFacadeAnalyze()" :disabled="aiRunning || atmoRunning"
+                  class="px-2.5 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-indigo-600 to-emerald-600 text-white transition disabled:opacity-60">
+            <span x-show="!aiRunning">✨ {% trans "AI Detect" %}</span>
+            <span x-show="aiRunning" x-cloak>{% trans "Analyzing..." %}</span>
+          </button>
+          <button type="button" @click="runGenerateAtmosphere()" :disabled="atmoRunning || aiRunning"
+                  x-show="activeView === ''"
+                  class="px-2.5 py-1 rounded-lg text-xs font-bold bg-gradient-to-r from-amber-500 to-slate-800 text-white transition disabled:opacity-60">
+            <span x-show="!atmoRunning">🌇 {% trans "AI Sunset & Night" %}</span>
+            <span x-show="atmoRunning" x-cloak>{% trans "Rendering..." %}</span>
+          </button>
+        </div>
+
+        <button type="button" @click="saveFacadeBands()" :disabled="saving"
+                class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition shadow-2xs">
+          <span x-text="saving ? '{% trans 'Saving...' %}' : '{% trans 'Save' %}'"></span>
+        </button>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5">
+        <span>
+          {% trans "Detected windows" %}: <strong class="text-slate-800" x-text="windowsCount">{{ windows_total }}</strong>
+          • {% trans "Tree foliage masking" %}: <strong class="text-slate-800">{% if has_canopy %}{% trans "Active" %}{% else %}{% trans "None needed" %}{% endif %}</strong>
+        </span>
+        <span>
+          {% if ai_status.gemini_ready %}
+          <span class="text-emerald-700 font-bold">Gemini Spatial Ready</span>
+          {% else %}
+          <span class="text-slate-500">{% trans "Gemini API not yet active — manual & OpenCV modes enabled" %}</span>
+          {% endif %}
+        </span>
+      </div>
+
+      <p x-show="statusMsg" x-cloak class="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2" x-text="statusMsg"></p>
+
+      <!-- Camera angle tabs: every angle has its OWN floor bands (shapes from one angle never fit another) -->
+      <div x-show="(data.extra_renders || []).length" class="flex flex-wrap items-center gap-1.5">
+        <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mr-1">{% trans "Angle" %}</span>
+        <button type="button" @click="switchView('')"
+                :class="activeView === '' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+                class="px-2.5 py-1 rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
+          {% trans "Main" %} <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        </button>
+        <template x-for="er in (data.extra_renders || [])" :key="'vt-'+er.path">
+          <button type="button" @click="switchView(er.path)"
+                  :class="activeView === er.path ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+                  class="px-2.5 py-1 rounded-lg text-xs font-bold transition inline-flex items-center gap-1.5">
+            <span x-text="er.label"></span>
+            <span class="w-1.5 h-1.5 rounded-full" :class="viewIsMapped(er.path) ? 'bg-emerald-400' : 'bg-amber-400'"
+                  :title="viewIsMapped(er.path) ? 'Floors mapped' : 'Floors not mapped yet'"></span>
+          </button>
+        </template>
+        <span x-show="activeView !== ''" x-cloak class="text-[11px] text-slate-500">
+          {% trans "Editing floor bands for this angle only. Main stays untouched." %}
+        </span>
+      </div>
+
+      <template x-if="data.hero_render_url">
+        <div class="relative rounded-xl overflow-hidden border border-slate-200 bg-slate-950 select-none"
+             :style="`aspect-ratio: ${canvasWidth} / ${canvasHeight}`">
+          <img :src="canvasUrl" alt="{{ building.name }}" class="w-full h-full object-fill pointer-events-none block">
+
+          <div id="facade-svg"
+               @pointermove="onFacadePointerMove($event)"
+               @pointerup="dragState = null"
+               class="absolute inset-0 w-full h-full touch-none">
+            <!-- Existing floor polygons (HTML <template> outside <svg> for Alpine compatibility) -->
+            <template x-for="fl in data.floors" :key="'fb-'+fl.floor_number">
+              <div x-show="fl.facade_polygon && fl.facade_polygon.length >= 3" class="absolute inset-0 pointer-events-none">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" class="w-full h-full pointer-events-none">
+                  <polygon :points="polyStr(fl.facade_polygon)"
+                           @click="selectedFacadeFloor = fl.floor_number"
+                           :fill="selectedFacadeFloor === fl.floor_number ? 'rgba(79, 70, 229, 0.38)' : 'rgba(16, 185, 129, 0.22)'"
+                           :stroke="selectedFacadeFloor === fl.floor_number ? '#4338ca' : '#10b981'"
+                           stroke-width="0.35"
+                           vector-effect="non-scaling-stroke"
+                           class="cursor-pointer pointer-events-auto"></polygon>
+                </svg>
+                <span :style="`left: ${polyCenter(fl.facade_polygon)[0]}%; top: ${polyCenter(fl.facade_polygon)[1]}%;`"
+                      class="absolute -translate-x-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-slate-900/80 text-white text-[10px] font-bold pointer-events-none"
+                      x-text="'F' + fl.floor_number"></span>
+              </div>
+            </template>
+
+            <!-- 4-Corner Slicer Quad + Handles -->
+            <template x-if="facadeTool === 'slicer'">
+              <div class="absolute inset-0 pointer-events-none">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" class="w-full h-full pointer-events-none">
+                  <polygon :points="polyStr(slicerCorners)"
+                           fill="none"
+                           stroke="#f59e0b"
+                           stroke-dasharray="1.2,0.8"
+                           stroke-width="0.45"
+                           vector-effect="non-scaling-stroke"></polygon>
+                </svg>
+                <template x-for="(pt, cIdx) in slicerCorners" :key="'sc-'+cIdx">
+                  <span :style="`left: ${pt[0]}%; top: ${pt[1]}%;`"
+                        @pointerdown.prevent="dragState = { kind: 'slicer', idx: cIdx }"
+                        class="absolute -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-amber-400 border-2 border-slate-900 shadow cursor-grab active:cursor-grabbing pointer-events-auto"></span>
+                </template>
+              </div>
+            </template>
+
+            <!-- Multi-Bend N-Face Perspective Corner Slicer (supports 1, 2, 3+ corner bends) -->
+            <template x-if="facadeTool === 'corner'">
+              <div class="absolute inset-0 pointer-events-none">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" class="w-full h-full pointer-events-none">
+                  <polygon :points="polyStr(cornerOutlinePoints)"
+                           fill="rgba(16, 185, 129, 0.08)"
+                           stroke="#10b981"
+                           stroke-dasharray="1.2,0.8"
+                           stroke-width="0.45"
+                           vector-effect="non-scaling-stroke"></polygon>
+                </svg>
+                <template x-for="(ed, eIdx) in verticalEdges" :key="'ved-line-'+eIdx">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" class="absolute inset-0 w-full h-full pointer-events-none">
+                    <line :x1="ed.top[0]" :y1="ed.top[1]" :x2="ed.bottom[0]" :y2="ed.bottom[1]"
+                          stroke="#34d399" stroke-width="0.45" stroke-dasharray="0.9,0.6" vector-effect="non-scaling-stroke"></line>
+                  </svg>
+                </template>
+                <template x-for="(ed, eIdx) in verticalEdges" :key="'ved-h-'+eIdx">
+                  <div class="contents">
+                    <span :style="`left: ${ed.top[0]}%; top: ${ed.top[1]}%;`"
+                          @pointerdown.prevent="dragState = { kind: 'verticalEdge', idx: eIdx, pos: 'top' }"
+                          :title="eIdx === 0 ? 'Left top' : (eIdx === verticalEdges.length - 1 ? 'Right top' : 'Corner bend ' + eIdx + ' top')"
+                          class="absolute -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-emerald-400 border-2 border-slate-900 shadow cursor-grab active:cursor-grabbing pointer-events-auto"></span>
+                    <span :style="`left: ${ed.bottom[0]}%; top: ${ed.bottom[1]}%;`"
+                          @pointerdown.prevent="dragState = { kind: 'verticalEdge', idx: eIdx, pos: 'bottom' }"
+                          :title="eIdx === 0 ? 'Left base' : (eIdx === verticalEdges.length - 1 ? 'Right base' : 'Corner bend ' + eIdx + ' base')"
+                          class="absolute -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-amber-300 border-2 border-slate-900 shadow cursor-grab active:cursor-grabbing pointer-events-auto"></span>
+                  </div>
+                </template>
+              </div>
+            </template>
+
+            <!-- Individual Vertex Handles for Selected Floor -->
+            <template x-if="facadeTool === 'vertex' && currentFacadeFloorObj && currentFacadeFloorObj.facade_polygon">
+              <div class="absolute inset-0 pointer-events-none">
+                <template x-for="(pt, vIdx) in currentFacadeFloorObj.facade_polygon" :key="'fv-'+vIdx">
+                  <span :style="`left: ${pt[0]}%; top: ${pt[1]}%;`"
+                        @pointerdown.prevent="dragState = { kind: 'facadeVertex', floorNum: selectedFacadeFloor, idx: vIdx }"
+                        class="absolute -translate-x-1/2 -translate-y-1/2 w-3.5 h-3.5 rounded-full bg-indigo-600 border-2 border-white shadow cursor-grab active:cursor-grabbing pointer-events-auto"></span>
+                </template>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <template x-if="!data.hero_render_url">
+        <div class="py-16 text-center text-sm text-slate-500 border border-dashed border-slate-300 rounded-xl">
+          {% trans "No exterior render yet. Upload a PDF album above or upload an exterior render image on the right." %}
+        </div>
+      </template>
+    </div>
+
+    <!-- Side Panel: Upload Render & Pick Camera Angle -->
+    <div class="lg:col-span-4 space-y-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">{% trans "Upload Custom Exterior Render" %}</h3>
+        <form method="post" enctype="multipart/form-data" class="space-y-3">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="upload_render">
+          <input type="file" name="hero_render" accept="image/*" required class="w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700 file:font-semibold">
+          <label class="flex items-center gap-2 text-xs text-slate-600">
+            <input type="checkbox" name="re_slice" value="1" checked class="rounded border-slate-300 text-indigo-600">
+            <span>{% trans "Auto-slice floor bands on upload" %}</span>
+          </label>
+          <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition">
+            {% trans "Upload Render" %}
+          </button>
+        </form>
+      </div>
+
+      {% if extra_renders %}
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">{% trans "Extracted PDF Angles" %}</h3>
+        <div class="space-y-2.5 max-h-96 overflow-y-auto">
+          {% for er in extra_renders %}
+          <form method="post" class="border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="select_extra_render">
+            <input type="hidden" name="render_path" value="{{ er.path }}">
+            <input type="hidden" name="re_slice" value="1">
+            <img src="{{ er.url }}" alt="{{ er.label }}" class="w-full h-24 object-cover">
+            <div class="p-2 flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-slate-700 truncate">{{ er.label }}</span>
+              <button type="submit" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold rounded-md">
+                {% trans "Use as Hero" %}
+              </button>
+            </div>
+          </form>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- TAB 2: FLOOR PLAN POLYGONS & APARTMENT MAPPING    -->
+  <!-- ================================================= -->
+  <div x-show="tab === 'floors'" x-cloak class="space-y-4">
+    <!-- Floor Tabs -->
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
+      <div class="flex flex-wrap items-center gap-1.5">
+        <template x-for="fl in data.floors" :key="'stf-'+fl.floor_number">
+          <button type="button" @click="selectStudioFloor(fl.floor_number)"
+                  :class="activeFloor === fl.floor_number ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+                  class="px-3 py-1.5 rounded-lg text-xs font-bold transition">
+            {% trans "Floor" %} <span x-text="fl.floor_number"></span>
+            (<span x-text="mappedCountForFloor(fl)"></span>/<span x-text="fl.apartments.length"></span>)
+          </button>
+        </template>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" @click="toggleDrawMode()"
+                :class="drawingMode ? 'bg-amber-500 text-slate-950' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'"
+                class="px-3 py-1.5 rounded-lg text-xs font-bold transition">
+          <span x-text="drawingMode ? '{% trans 'Cancel Drawing' %}' : '+ {% trans 'Draw Polygon' %}'"></span>
+        </button>
+        <button type="button" x-show="drawingMode && draftPoints.length >= 3" @click="finishDrawing()"
+                class="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white">
+          {% trans "Finish Polygon" %}
+        </button>
+        <button type="button" x-show="selectedHotspotIndex !== null" @click="deleteSelectedHotspot()"
+                class="px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+          {% trans "Delete Selected" %}
+        </button>
+        <button type="button" @click="saveFloorHotspots()" :disabled="saving"
+                class="px-4 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs">
+          {% trans "Save Floor Polygons" %}
+        </button>
+      </div>
+    </div>
+
+    <p x-show="statusMsg" x-cloak class="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2" x-text="statusMsg"></p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <!-- Polygon Canvas -->
+      <div class="lg:col-span-8 bg-white border border-slate-200 rounded-2xl p-3 shadow-sm">
+        <template x-if="currentStudioFloor && currentStudioFloor.plan_image_url">
+          <div class="relative rounded-xl overflow-hidden border border-slate-200 bg-white select-none"
+               :style="`aspect-ratio: ${currentStudioFloor.plan_width} / ${currentStudioFloor.plan_height}`">
+            <img :src="currentStudioFloor.plan_image_url" alt="" class="w-full h-full object-fill pointer-events-none block">
+
+            <div id="floor-svg"
+                 @click="onFloorSvgClick($event)"
+                 @pointermove="onFloorPointerMove($event)"
+                 @pointerup="dragState = null"
+                 :class="drawingMode ? 'cursor-crosshair' : ''"
+                 class="absolute inset-0 w-full h-full touch-none">
+              <template x-for="(hs, idx) in currentStudioFloor.hotspots" :key="'shs-'+idx">
+                <div class="absolute inset-0 pointer-events-none">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" class="w-full h-full pointer-events-none">
+                    <polygon :points="polyStr(hs.polygon_points)"
+                             @click.stop="if (!drawingMode) selectedHotspotIndex = idx"
+                             :fill="selectedHotspotIndex === idx ? 'rgba(79, 70, 229, 0.35)' : (hs.apartment_id ? 'rgba(16, 185, 129, 0.25)' : 'rgba(245, 158, 11, 0.28)')"
+                             :stroke="selectedHotspotIndex === idx ? '#4338ca' : (hs.apartment_id ? '#059669' : '#d97706')"
+                             stroke-width="0.4"
+                             vector-effect="non-scaling-stroke"
+                             class="cursor-pointer pointer-events-auto"></polygon>
+                  </svg>
+
+                  <!-- Draggable label center -->
+                  <span :style="`left: ${hs.label_x}%; top: ${hs.label_y}%;`"
+                        @pointerdown.stop.prevent="if (!drawingMode) { selectedHotspotIndex = idx; dragState = { kind: 'label', idx: idx }; }"
+                        class="absolute -translate-x-1/2 -translate-y-1/2 px-2 py-0.5 rounded-full bg-slate-900 text-white border border-white text-[10px] font-bold shadow cursor-move pointer-events-auto"
+                        x-text="aptNumForId(currentStudioFloor, hs.apartment_id) || ('?' + (idx+1))"></span>
+
+                  <!-- Vertex handles when selected -->
+                  <template x-if="selectedHotspotIndex === idx">
+                    <div class="absolute inset-0 pointer-events-none">
+                      <template x-for="(pt, vIdx) in hs.polygon_points" :key="'vh-'+vIdx">
+                        <span :style="`left: ${pt[0]}%; top: ${pt[1]}%;`"
+                              @pointerdown.stop.prevent="dragState = { kind: 'aptVertex', idx: idx, vIdx: vIdx }"
+                              class="absolute -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-indigo-600 border-2 border-white shadow cursor-grab active:cursor-grabbing pointer-events-auto"></span>
+                      </template>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <!-- Draft Polygon Preview -->
+              <svg x-show="drawingMode && draftPoints.length > 0" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" class="absolute inset-0 w-full h-full pointer-events-none">
+                <polyline :points="polyStr(draftPoints)" fill="none" stroke="#f59e0b" stroke-width="0.45" vector-effect="non-scaling-stroke"></polyline>
+              </svg>
+              <template x-if="drawingMode && draftPoints.length > 0">
+                <div class="absolute inset-0 pointer-events-none">
+                  <template x-for="(dp, di) in draftPoints" :key="'dp-'+di">
+                    <span :style="`left: ${dp[0]}%; top: ${dp[1]}%;`"
+                          class="absolute -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-amber-400 border border-slate-900 pointer-events-none"></span>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+
+        <template x-if="!currentStudioFloor || !currentStudioFloor.plan_image_url">
+          <div class="py-16 text-center text-sm text-slate-500 border border-dashed border-slate-300 rounded-xl">
+            {% trans "No plan image for this floor yet. Upload a floor plan image/PDF or copy layout from another floor." %}
+          </div>
+        </template>
+      </div>
+
+      <!-- Floor Side Tools -->
+      <div class="lg:col-span-4 space-y-4">
+        <!-- Selected Hotspot Apartment Mapper -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">{% trans "Assign Apartment to Selected Polygon" %}</h3>
+          <template x-if="selectedHotspotObj">
+            <div class="space-y-2">
+              <label for="studio-apt-select" class="text-xs text-slate-500 block">{% trans "Mapped Apartment" %}</label>
+              <select id="studio-apt-select"
+                      x-model="selectedHotspotObj.apartment_id"
+                      class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs text-slate-900">
+                <option value="">-- {% trans "Unmapped" %} --</option>
+                <template x-for="apt in currentStudioFloor.apartments" :key="apt.id">
+                  <option :value="apt.id"
+                          x-text="'Apt #' + apt.apartment_number + ' (' + apt.living_room_count + 'r, ' + apt.total_area + 'm²)'"></option>
+                </template>
+              </select>
+              <p class="text-[11px] text-slate-500">{% trans "Tip: drag the corner dots to reshape or drag the black badge to reposition the label." %}</p>
+            </div>
+          </template>
+          <template x-if="!selectedHotspotObj">
+            <p class="text-xs text-slate-500">{% trans "Click any polygon on the floor plan to assign or edit its apartment." %}</p>
+          </template>
+        </div>
+
+        <!-- Upload Single Floor Plan -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">{% trans "Upload Plan for Floor" %} <span x-text="activeFloor"></span></h3>
+          <form method="post" enctype="multipart/form-data" class="space-y-2.5">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="upload_floor_plan">
+            <input type="hidden" name="floor_number" :value="activeFloor">
+            <input type="file" name="plan_file" accept="image/*,.pdf" required class="w-full text-xs text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-slate-100 file:text-slate-700 file:font-semibold">
+            <div>
+              <label class="block text-[11px] text-slate-500 mb-1">{% trans "Also apply to typical floors (optional, e.g. 2,3,4,5)" %}</label>
+              <input type="text" name="apply_to_floors" placeholder="2,3,4,5" class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-xs">
+            </div>
+            <button type="submit" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition">
+              {% trans "Upload & Auto-Detect Apartments" %}
+            </button>
+          </form>
+        </div>
+
+        <!-- Copy Layout to Other Floors -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">{% trans "Copy Floor Layout to Other Floors" %}</h3>
+          <form method="post" class="space-y-2.5">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="copy_floor_layout">
+            <input type="hidden" name="source_floor" :value="activeFloor">
+            <div class="flex flex-wrap gap-2">
+              <template x-for="fl in data.floors" :key="'cp-'+fl.floor_number">
+                <label x-show="fl.floor_number !== activeFloor" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs">
+                  <input type="checkbox" name="target_floors" :value="fl.floor_number" class="rounded border-slate-300 text-indigo-600">
+                  <span>F<span x-text="fl.floor_number"></span></span>
+                </label>
+              </template>
+            </div>
+            <button type="submit" class="w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-lg transition">
+              {% trans "Copy Polygons & Match Apartments" %}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================= -->
+  <!-- TAB 3: PUBLISH & SHARE SETTINGS                   -->
+  <!-- ================================================= -->
+  <div x-show="tab === 'settings'" x-cloak class="max-w-2xl bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-5">
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="update_settings">
+
+      <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+        <input type="checkbox" name="is_published" {% if explorer_obj.is_published %}checked{% endif %} class="mt-0.5 rounded border-slate-300 text-indigo-600">
+        <div>
+          <div class="text-sm font-bold text-slate-900">{% trans "Publish Presentation" %}</div>
+          <div class="text-xs text-slate-500">{% trans "Makes this building presentation active inside the CRM and complex overview." %}</div>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+        <input type="checkbox" name="public_share_enabled" {% if explorer_obj.public_share_enabled %}checked{% endif %} class="mt-0.5 rounded border-slate-300 text-emerald-600">
+        <div>
+          <div class="text-sm font-bold text-slate-900">{% trans "Enable Read-Only Public Share Link" %}</div>
+          <div class="text-xs text-slate-500">{% trans "Allows clients & stakeholders to browse availability cleanly with zero prices or customer data." %}</div>
+        </div>
+      </label>
+
+      <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+        <input type="checkbox" name="atmosphere_enabled" {% if explorer_obj.atmosphere_enabled %}checked{% endif %} class="mt-0.5 rounded border-slate-300 text-indigo-600">
+        <div>
+          <div class="text-sm font-bold text-slate-900">{% trans "Show Day / Sunset / Night Lighting Switcher" %}</div>
+          <div class="text-xs text-slate-500">{% trans "Interactive lighting modes over the exterior 3D render." %}</div>
+        </div>
+      </label>
+
+      <div>
+        <label for="id_compass_angle" class="block text-xs font-semibold text-slate-600 uppercase mb-1">{% trans "True North Orientation (deg, 0=Up, 90=Right)" %}</label>
+        <div class="flex items-center gap-3">
+          <input id="id_compass_angle" type="number" step="5" min="0" max="355" name="compass_angle"
+                 value="{{ explorer_obj.compass_angle|default:'0' }}"
+                 class="w-32 px-3.5 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+          <span class="text-xs text-slate-500">{% trans "Site masterplan True North compass azimuth (optional)." %}</span>
+        </div>
+      </div>
+
+      <div>
+        <label for="id_complex_explorer" class="block text-xs font-semibold text-slate-600 uppercase mb-1">{% trans "Parent Complex Overview (Optional)" %}</label>
+        <select id="id_complex_explorer" name="complex_explorer" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg text-sm bg-white">
+          <option value="">-- {% trans "Standalone Building" %} --</option>
+          {% for cx in company_complexes %}
+          <option value="{{ cx.pk }}" {% if explorer_obj.complex_explorer_id == cx.pk %}selected{% endif %}>{{ cx.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-lg transition">
+            {% trans "Save Settings" %}
+          </button>
+        </div>
+        <button type="submit" name="regenerate_token" value="1" class="px-4 py-2 bg-white hover:bg-rose-50 text-rose-700 border border-rose-200 text-xs font-semibold rounded-lg transition">
+          {% trans "Regenerate Public Token" %}
+        </button>
+      </div>
+    </form>
+
+    {% if public_url %}
+    <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl space-y-2">
+      <div class="text-xs font-bold text-emerald-800">{% trans "Live Public Presentation URL:" %}</div>
+      <div class="flex items-center gap-2">
+        <input type="text" readonly value="{{ public_url }}" class="flex-1 px-3 py-2 bg-white border border-emerald-200 rounded-lg text-xs font-mono text-slate-700">
+        <button type="button" @click="navigator.clipboard.writeText('{{ public_url|escapejs }}'); statusMsg = '{% trans 'Public URL copied!' %}'"
+                class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg">
+          {% trans "Copy" %}
+        </button>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function getCookie(name) {
+  const m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return m ? m.pop() : '';
+}
+
+function buildingStudioApp() {
+  return {
+    data: {},
+    tab: 'facade',
+    facadeTool: 'slicer',
+    selectedFacadeFloor: 1,
+    activeFloor: 1,
+    slicerCorners: [[10, 24], [90, 24], [90, 76], [10, 76]],
+    verticalEdges: [
+      { top: [15, 24], bottom: [15, 74] },
+      { top: [48, 22], bottom: [46, 74] },
+      { top: [62, 30], bottom: [58, 80] },
+      { top: [88, 32], bottom: [84, 82] },
+    ],
+    windowsCount: {{ windows_total|default:0 }},
+    aiRunning: false,
+    atmoRunning: false,
+    selectedHotspotIndex: null,
+    drawingMode: false,
+    draftPoints: [],
+    dragState: null,
+    extracting: false,
+    saving: false,
+    statusMsg: '',
+    activeView: '',
+    mainPolys: null,
+    viewPolys: {},
+
+    init() {
+      const el = document.getElementById('studio-payload');
+      this.data = el ? JSON.parse(el.textContent) : { floors: [] };
+      for (const er of (this.data.extra_renders || [])) {
+        this.viewPolys[er.path] = er.floors || {};
+      }
+      this.activeFloor = this.data.active_floor || 1;
+      if (new URLSearchParams(window.location.search).has('floor')) {
+        this.tab = 'floors';
+      }
+      this.syncVerticalEdgesFromFaces(this.data.facade_faces || []);
+      const f1 = this.data.floors.find(f => f.floor_number === 1);
+      const fn = this.data.floors.find(f => f.floor_number === this.data.floor_count);
+      if (f1?.facade_polygon?.length === 4 && fn?.facade_polygon?.length === 4) {
+        this.slicerCorners = [fn.facade_polygon[0], fn.facade_polygon[1], f1.facade_polygon[2], f1.facade_polygon[3]].map(p => [...p]);
+      } else if ((f1?.facade_polygon?.length || 0) >= 6) {
+        this.facadeTool = 'corner';
+      }
+    },
+
+    get cornerOutlinePoints() {
+      const tops = this.verticalEdges.map(e => e.top);
+      const bots = [...this.verticalEdges].reverse().map(e => e.bottom);
+      return [...tops, ...bots];
+    },
+
+    syncVerticalEdgesFromFaces(faces) {
+      if (!Array.isArray(faces) || !faces.length) return;
+      const edges = [{ top: [...faces[0].tl], bottom: [...faces[0].bl] }];
+      for (const fc of faces) {
+        edges.push({ top: [...fc.tr], bottom: [...fc.br] });
+      }
+      if (edges.length >= 2) {
+        this.verticalEdges = edges;
+        if (edges.length >= 3) this.facadeTool = 'corner';
+      }
+    },
+
+    addCornerBend() {
+      if (this.verticalEdges.length < 2) return;
+      let bestIdx = 0;
+      let bestSpan = -1;
+      for (let i = 0; i < this.verticalEdges.length - 1; i++) {
+        const e0 = this.verticalEdges[i];
+        const e1 = this.verticalEdges[i + 1];
+        const span = Math.hypot(e1.top[0] - e0.top[0], e1.top[1] - e0.top[1]);
+        if (span > bestSpan) {
+          bestSpan = span;
+          bestIdx = i;
+        }
+      }
+      const a = this.verticalEdges[bestIdx];
+      const b = this.verticalEdges[bestIdx + 1];
+      const midTop = [Number(((a.top[0] + b.top[0]) / 2).toFixed(2)), Number(((a.top[1] + b.top[1]) / 2).toFixed(2))];
+      const midBot = [Number(((a.bottom[0] + b.bottom[0]) / 2).toFixed(2)), Number(((a.bottom[1] + b.bottom[1]) / 2).toFixed(2))];
+      this.verticalEdges.splice(bestIdx + 1, 0, { top: midTop, bottom: midBot });
+    },
+
+    removeCornerBend() {
+      if (this.verticalEdges.length <= 3) return;
+      this.verticalEdges.splice(this.verticalEdges.length - 2, 1);
+    },
+
+    get currentFacadeFloorObj() {
+      return this.data.floors.find(f => f.floor_number === this.selectedFacadeFloor) || null;
+    },
+
+    get currentStudioFloor() {
+      return this.data.floors.find(f => f.floor_number === this.activeFloor) || null;
+    },
+
+    get selectedHotspotObj() {
+      if (this.selectedHotspotIndex === null || !this.currentStudioFloor) return null;
+      return this.currentStudioFloor.hotspots[this.selectedHotspotIndex] || null;
+    },
+
+    polyStr(pts) {
+      return (pts || []).map(p => `${p[0]},${p[1]}`).join(' ');
+    },
+
+    polyCenter(pts) {
+      if (!pts || !pts.length) return [50, 50];
+      const sx = pts.reduce((a, p) => a + p[0], 0) / pts.length;
+      const sy = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+      return [sx.toFixed(2), sy.toFixed(2)];
+    },
+
+    svgPctFromEvent(svgId, e) {
+      const svg = document.getElementById(svgId);
+      const r = svg.getBoundingClientRect();
+      const x = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+      const y = Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100));
+      return [Number(x.toFixed(2)), Number(y.toFixed(2))];
+    },
+
+    sliceFacadeCorners() {
+      const N = Math.max(1, this.data.floor_count);
+      const gap = 0.03;
+      const interp = (a, b, t) => [
+        Number((a[0] + t * (b[0] - a[0])).toFixed(2)),
+        Number((a[1] + t * (b[1] - a[1])).toFixed(2)),
+      ];
+      if (this.facadeTool === 'corner' && this.verticalEdges.length >= 2) {
+        for (const fl of this.data.floors) {
+          const k = fl.floor_number;
+          const t0 = (k - 1 + gap) / N;
+          const t1 = (k - gap) / N;
+          const topPts = this.verticalEdges.map(ed => interp(ed.bottom, ed.top, t1));
+          const botPts = [...this.verticalEdges].reverse().map(ed => interp(ed.bottom, ed.top, t0));
+          fl.facade_polygon = [...topPts, ...botPts];
+        }
+      } else {
+        const [tl, tr, br, bl] = this.slicerCorners;
+        for (const fl of this.data.floors) {
+          const k = fl.floor_number;
+          const t0 = (k - 1 + gap) / N;
+          const t1 = (k - gap) / N;
+          fl.facade_polygon = [
+            interp(bl, tl, t1),
+            interp(br, tr, t1),
+            interp(br, tr, t0),
+            interp(bl, tl, t0),
+          ];
+        }
+      }
+      this.statusMsg = '{% trans "Sliced facade into floor bands! Click Save Floor Bands to persist." %}';
+    },
+
+    onFacadePointerMove(e) {
+      if (!this.dragState) return;
+      const pt = this.svgPctFromEvent('facade-svg', e);
+      if (this.dragState.kind === 'slicer') {
+        this.slicerCorners[this.dragState.idx] = pt;
+      } else if (this.dragState.kind === 'verticalEdge') {
+        const ed = this.verticalEdges[this.dragState.idx];
+        if (ed) ed[this.dragState.pos] = pt;
+      } else if (this.dragState.kind === 'facadeVertex') {
+        const fl = this.data.floors.find(f => f.floor_number === this.dragState.floorNum);
+        if (fl) fl.facade_polygon[this.dragState.idx] = pt;
+      }
+    },
+
+    async runAiFacadeAnalyze() {
+      this.aiRunning = true;
+      this.statusMsg = '';
+      const fd = new FormData();
+      fd.append('action', 'ai_analyze_facade');
+      if (this.activeView) fd.append('view_path', this.activeView);
+      try {
+        const resp = await fetch(window.location.pathname, {
+          method: 'POST',
+          headers: { 'X-CSRFToken': getCookie('csrftoken') },
+          body: fd,
+        });
+        const res = await resp.json();
+        if (resp.ok && res.ok) {
+          for (const fl of this.data.floors) {
+            const poly = (res.floors || {})[String(fl.floor_number)];
+            if (poly) fl.facade_polygon = poly;
+          }
+          if (this.activeView) {
+            this.viewPolys[this.activeView] = this.snapshotPolys();
+          }
+          if (Array.isArray(res.facade_faces) && res.facade_faces.length) {
+            this.syncVerticalEdgesFromFaces(res.facade_faces);
+          }
+          if (!this.activeView && res.total_windows !== undefined) this.windowsCount = res.total_windows;
+          const bendsCnt = Math.max(0, (res.faces_detected || 1) - 1);
+          this.statusMsg = this.activeView
+            ? `AI mapped ${res.faces_detected || 1} facade face(s) on this angle (saved). Review the bands and adjust if needed.`
+            : `AI detected ${res.faces_detected || 1} facade face(s) (${bendsCnt} corner bend(s)) & ${res.total_windows || 0} windows!`;
+        } else {
+          this.statusMsg = res.error || '{% trans "AI analysis could not update facade." %}';
+        }
+      } finally {
+        this.aiRunning = false;
+      }
+    },
+
+    snapshotPolys() {
+      const out = {};
+      for (const fl of this.data.floors) {
+        out[String(fl.floor_number)] = (fl.facade_polygon || []).map(p => [...p]);
+      }
+      return out;
+    },
+
+    get canvasUrl() {
+      const er = (this.data.extra_renders || []).find(r => r.path === this.activeView);
+      return er ? er.url : this.data.hero_render_url;
+    },
+    get canvasWidth() {
+      const er = (this.data.extra_renders || []).find(r => r.path === this.activeView);
+      return er ? (er.width || 1600) : this.data.hero_width;
+    },
+    get canvasHeight() {
+      const er = (this.data.extra_renders || []).find(r => r.path === this.activeView);
+      return er ? (er.height || 1000) : this.data.hero_height;
+    },
+
+    viewIsMapped(path) {
+      const polys = path === this.activeView ? this.snapshotPolys() : (this.viewPolys[path] || {});
+      return Object.values(polys).some(p => (p || []).length >= 3);
+    },
+
+    switchView(path) {
+      if (path === this.activeView) return;
+      // Keep unsaved edits of the angle we are leaving in memory.
+      if (this.activeView === '') {
+        this.mainPolys = this.snapshotPolys();
+      } else {
+        this.viewPolys[this.activeView] = this.snapshotPolys();
+      }
+      const target = path === '' ? (this.mainPolys || {}) : (this.viewPolys[path] || {});
+      for (const fl of this.data.floors) {
+        fl.facade_polygon = (target[String(fl.floor_number)] || []).map(p => [...p]);
+      }
+      this.activeView = path;
+      this.selectedFacadeFloor = 1;
+      this.dragState = null;
+      this.statusMsg = '';
+    },
+
+    async runGenerateAtmosphere() {
+      this.atmoRunning = true;
+      this.statusMsg = '';
+      const fd = new FormData();
+      fd.append('action', 'generate_atmosphere');
+      try {
+        const resp = await fetch(window.location.pathname, {
+          method: 'POST',
+          headers: { 'X-CSRFToken': getCookie('csrftoken') },
+          body: fd,
+        });
+        const res = await resp.json();
+        if (resp.ok && res.ok) {
+          this.statusMsg = `Generated photorealistic AI renders: ${(res.generated || []).join(', ')}!`;
+        } else {
+          this.statusMsg = res.error || '{% trans "Could not generate AI Sunset/Night renders." %}';
+        }
+      } finally {
+        this.atmoRunning = false;
+      }
+    },
+
+    async saveFacadeBands() {
+      this.saving = true;
+      const floorsPayload = {};
+      for (const fl of this.data.floors) {
+        floorsPayload[String(fl.floor_number)] = fl.facade_polygon || [];
+      }
+      const fd = new FormData();
+      fd.append('action', this.activeView ? 'save_view_bands' : 'save_facade_bands');
+      if (this.activeView) fd.append('view_path', this.activeView);
+      fd.append('facade_bands_json', JSON.stringify({ floors: floorsPayload }));
+      const resp = await fetch(window.location.pathname, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCookie('csrftoken') },
+        body: fd,
+      });
+      this.saving = false;
+      if (resp.ok && this.activeView) this.viewPolys[this.activeView] = this.snapshotPolys();
+      this.statusMsg = resp.ok ? '{% trans "Floor bands saved successfully!" %}' : '{% trans "Error saving floor bands." %}';
+    },
+
+    selectStudioFloor(flNum) {
+      this.activeFloor = flNum;
+      this.selectedHotspotIndex = null;
+      this.drawingMode = false;
+      this.draftPoints = [];
+    },
+
+    mappedCountForFloor(fl) {
+      return (fl.hotspots || []).filter(h => !!h.apartment_id).length;
+    },
+
+    aptNumForId(fl, aptId) {
+      if (!aptId) return '';
+      const a = (fl.apartments || []).find(x => String(x.id) === String(aptId));
+      return a ? '#' + a.apartment_number : '';
+    },
+
+    toggleDrawMode() {
+      this.drawingMode = !this.drawingMode;
+      this.draftPoints = [];
+      if (this.drawingMode) this.selectedHotspotIndex = null;
+    },
+
+    onFloorSvgClick(e) {
+      if (!this.drawingMode) return;
+      this.draftPoints.push(this.svgPctFromEvent('floor-svg', e));
+    },
+
+    finishDrawing() {
+      if (this.draftPoints.length < 3 || !this.currentStudioFloor) return;
+      const c = this.polyCenter(this.draftPoints);
+      this.currentStudioFloor.hotspots.push({
+        id: null,
+        apartment_id: '',
+        polygon_points: [...this.draftPoints],
+        label_x: Number(c[0]),
+        label_y: Number(c[1]),
+        detected_label: 'Custom',
+      });
+      this.selectedHotspotIndex = this.currentStudioFloor.hotspots.length - 1;
+      this.drawingMode = false;
+      this.draftPoints = [];
+    },
+
+    deleteSelectedHotspot() {
+      if (this.selectedHotspotIndex === null || !this.currentStudioFloor) return;
+      this.currentStudioFloor.hotspots.splice(this.selectedHotspotIndex, 1);
+      this.selectedHotspotIndex = null;
+    },
+
+    onFloorPointerMove(e) {
+      if (!this.dragState || !this.currentStudioFloor) return;
+      const pt = this.svgPctFromEvent('floor-svg', e);
+      const hs = this.currentStudioFloor.hotspots[this.dragState.idx];
+      if (!hs) return;
+      if (this.dragState.kind === 'label') {
+        hs.label_x = pt[0];
+        hs.label_y = pt[1];
+      } else if (this.dragState.kind === 'aptVertex') {
+        hs.polygon_points[this.dragState.vIdx] = pt;
+      }
+    },
+
+    async saveFloorHotspots() {
+      if (!this.currentStudioFloor) return;
+      this.saving = true;
+      const fd = new FormData();
+      fd.append('action', 'save_floor_hotspots');
+      fd.append('floor_number', String(this.activeFloor));
+      fd.append('hotspots_json', JSON.stringify({ hotspots: this.currentStudioFloor.hotspots }));
+      const resp = await fetch(window.location.pathname, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCookie('csrftoken') },
+        body: fd,
+      });
+      this.saving = false;
+      this.statusMsg = resp.ok ? '{% trans "Floor polygons saved!" %}' : '{% trans "Error saving polygons." %}';
+    },
+  };
+}
+</script>
+{% endblock %}

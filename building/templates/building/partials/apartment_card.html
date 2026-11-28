@@ -1,42 +1,60 @@
 {% load i18n %}
-<div class="group relative p-2.5 bg-white border border-slate-200 rounded-xl transition-all duration-200 cursor-pointer shadow-sm hover:shadow-md overflow-hidden text-left
-    {% if apt.status == 'AVAILABLE' %}hover:border-emerald-400
-    {% elif apt.status == 'RESERVED' %}hover:border-amber-400
-    {% else %}hover:border-rose-400{% endif %}"
+<div class="group relative p-3 rounded-xl transition-all duration-200 cursor-pointer overflow-hidden text-left border-2
+    {% if apt.status == 'AVAILABLE' %}bg-emerald-50/70 border-emerald-400 hover:border-emerald-600 hover:bg-emerald-50 shadow-sm hover:shadow-md
+    {% elif apt.status == 'RESERVED' %}bg-amber-50/60 border-amber-300 hover:border-amber-500 shadow-xs
+    {% else %}bg-slate-100/90 border-rose-200 hover:border-rose-400 opacity-90{% endif %}"
     hx-get="{% url 'building:apartment_update' pk=apt.pk %}"
     hx-target="#modal-container"
     hx-swap="innerHTML">
     
-    <div class="flex justify-between items-start mt-1">
-        <div class="text-[13px] font-extrabold text-slate-900">{% trans "Apt" %} {{ apt.apartment_number }}</div>
-        <div class="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded
-                    {% if apt.status == 'AVAILABLE' %}bg-emerald-50 text-emerald-700
-                    {% elif apt.status == 'RESERVED' %}bg-amber-50 text-amber-700
-                    {% else %}bg-rose-50 text-rose-700{% endif %}">
-            {{ apt.get_status_display|truncatechars:5 }}
+    <div class="flex justify-between items-center gap-1">
+        <div class="text-sm font-black text-slate-900">#{{ apt.apartment_number }}</div>
+        <div class="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full
+                    {% if apt.status == 'AVAILABLE' %}bg-emerald-600 text-white shadow-2xs
+                    {% elif apt.status == 'RESERVED' %}bg-amber-500 text-slate-950
+                    {% else %}bg-rose-100 text-rose-800 border border-rose-200{% endif %}">
+            {% if apt.status == 'AVAILABLE' %}
+            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+            {% endif %}
+            {{ apt.get_status_display }}
         </div>
     </div>
     
-    <div class="mt-2.5 space-y-1.5">
-        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
-            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-            </svg>
-            {{ apt.total_area }} m²
+    <div class="mt-2 flex items-center justify-between text-xs font-bold text-slate-700">
+        <span>{{ apt.living_room_count }}R</span>
+        <span>{{ apt.total_area }} m²</span>
+    </div>
+
+    {% if apt.status == 'SOLD' %}
+    <div class="mt-2 pt-1.5 border-t border-rose-200/80 space-y-1.5">
+        {% if apt.buyer_name %}
+        <div class="text-[11px] font-bold text-rose-900 truncate" title="{{ apt.buyer_name }}">
+            👤 {{ apt.buyer_name }}
         </div>
-        <div class="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600">
-            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5" />
-            </svg>
-            {{ apt.living_room_count }} {% trans "Rooms" %}
+        {% endif %}
+        <div class="space-y-1">
+            <div class="flex items-center justify-between text-[10px] font-extrabold">
+                <span class="text-slate-500 uppercase tracking-wider">{% trans "Paid" %}</span>
+                <span class="tabular-nums text-rose-800">{{ apt.paid_percentage }}%</span>
+            </div>
+            <div class="w-full h-1.5 rounded-full bg-slate-200 overflow-hidden">
+                <div class="h-full rounded-full {% if apt.paid_percentage >= 75 %}bg-emerald-500{% elif apt.paid_percentage >= 25 %}bg-amber-500{% else %}bg-rose-500{% endif %} transition-all duration-500"
+                     style="width: {{ apt.paid_percentage|default:0 }}%;"></div>
+            </div>
         </div>
     </div>
+    {% elif apt.status == 'AVAILABLE' %}
+    <div class="mt-2 pt-1.5 border-t border-emerald-200/80 text-[11px] font-extrabold text-emerald-700 flex items-center justify-between">
+        <span>✓ {% trans "Free to sell" %}</span>
+        <span>→</span>
+    </div>
+    {% endif %}
 
     <!-- Action Buttons on Hover -->
     {% if apt.status == 'AVAILABLE' %}
-    <div class="absolute inset-0 bg-white/90 backdrop-blur-[2px] flex items-center justify-center p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-        <a href="{% url 'contract:create' %}?apartment={{ apt.pk }}" onclick="event.stopPropagation()" class="flex-1 text-center text-xs font-bold bg-emerald-600 text-white hover:bg-emerald-700 py-1.5 rounded-md shadow-sm transition-colors">
-            + Contract
+    <div class="absolute inset-0 bg-emerald-950/85 backdrop-blur-[2px] flex items-center justify-center p-2.5 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <a href="{% url 'contract:create' %}?apartment={{ apt.pk }}" onclick="event.stopPropagation()" class="flex-1 text-center text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 py-2 rounded-lg shadow-md transition-colors">
+            + {% trans "Create Contract" %}
         </a>
     </div>
     {% endif %}

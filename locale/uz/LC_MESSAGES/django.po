@@ -233,7 +233,7 @@ msgstr "Yangi bino loyihasi"
 
 #: building/templates/building/form.html:15
 msgid "Define structural parameters to auto-generate the apartment matrix"
-msgstr ""
+msgstr "Xonadonlar matritsasini avtomatik yaratish uchun strukturaviy parametrlarni belgilang"
 "Kvartiralar to'rini avtomatik yaratish uchun tuzilmaviy parametrlarni "
 "kiritingKvartira matritsasini avtomatik yaratish uchun tizimli parametrlarni "
 "aniqlang"
@@ -266,7 +266,7 @@ msgstr "Kengaytirilgan: Excel-dan import"
 
 #: building/templates/building/form.html:64
 msgid "Download a template, customize apartment details, and upload it back."
-msgstr ""
+msgstr "Shablonni yuklab oling, xonadon tafsilotlarini sozlang va qayta yuklang."
 "Shablonni yuklab oling, kvartira ma'lumotlarini to'ldiring va uni qayta "
 "yuklang.Shablonni yuklab oling, kvartira tafsilotlarini sozlang va uni qayta "
 "yuklang."
@@ -411,13 +411,13 @@ msgstr "Birinchi loyihani yaratish"
 
 #: building/templates/building/list.html:83
 msgid "Define structural parameters to auto-generate the apartment grid"
-msgstr ""
+msgstr "Xonadonlar setkasini avtomatik yaratish uchun strukturaviy parametrlarni belgilang"
 "Xonadonlar shaxmatkasini avtomatik yaratish uchun bino parametrlarini "
 "kiriting"
 
 #: building/templates/building/list.html:129
 msgid "Download template, customize apartments, and upload back."
-msgstr ""
+msgstr "Shablonni yuklab oling, xonadonlarni sozlang va qayta yuklang."
 "Shablonni yuklab oling, xonadonlar parametrlarini to'ldiring va qayta "
 "yuklang."
 
@@ -4095,3 +4095,825 @@ msgstr ""
 
 msgid "Stop impersonating"
 msgstr "Impersonatsiyani yakunlash"
+
+msgid "1-Room"
+msgstr "1 xonali"
+
+msgid "2+ Rooms"
+msgstr "2+ xonali"
+
+msgid "3D Building Explorer"
+msgstr "3D Bino Ko‘rish"
+
+msgid "3D Explorer"
+msgstr "3D Ko‘rish"
+
+msgid "4-Corner Quad"
+msgstr "4 burchakli kontur"
+
+msgid "AI Auto-Detect Facades & Windows"
+msgstr "AI orqali fasad va oynalarni aniqlash"
+
+msgid "AI Auto-Match Blocks"
+msgstr "AI orqali bloklarni moslash"
+
+msgid "AI analysis could not update facade."
+msgstr "AI tahlili fasadni yangilay olmadi."
+
+msgid "AI block detection unavailable."
+msgstr "AI orqali bloklarni aniqlash mavjud emas."
+
+msgid "Add Bend"
+msgstr "Burilish qo‘shish"
+
+msgid "Aerial / Overview Image"
+msgstr "Yuqoridan ko‘rinish / Bosh reja rasmi"
+
+msgid "Allows clients & stakeholders to browse availability cleanly with zero prices or customer data."
+msgstr "Mijozlar va hamkorlarga narxlar hamda shaxsiy ma’lumotlarsiz bo‘sh xonadonlarni ko‘rish imkonini beradi."
+
+msgid "Also apply to typical floors (optional, e.g. 2,3,4,5)"
+msgstr "Tipovoy qavatlarga ham qo‘llash (ixtiyoriy, masalan: 2,3,4,5)"
+
+msgid "Analyzing Masterplan & Key-Maps..."
+msgstr "Bosh reja va sxemalar tahlil qilinmoqda..."
+
+msgid "Analyzing..."
+msgstr "Tahlil qilinmoqda..."
+
+msgid "Angle"
+msgstr "Rakurs"
+
+msgid "Apartment Hotspot"
+msgstr "Xonadon hududi"
+
+msgid "Apartment Hotspots"
+msgstr "Xonadon hududlari"
+
+msgid "Apartments on Floor"
+msgstr "Qavatdagi xonadonlar:"
+
+msgid "Assign Apartment to Selected Polygon"
+msgstr "Tanlangan shaklga xonadonni biriktirish"
+
+msgid "Atmosphere Switcher"
+msgstr "Yoritish rejimi"
+
+msgid "Auto-Extract from Architectural PDF Album"
+msgstr "Arxitektura PDF albomidan avtomatik ajratib olish"
+
+msgid "Auto-slice floor bands on upload"
+msgstr "Yuklanganda qavatlarni avtomatik ajratish"
+
+msgid "Avail"
+msgstr "Bo‘sh"
+
+msgid "Back"
+msgstr "Orqaga"
+
+msgid "Back to Explorer"
+msgstr "Ko‘rish sahifasiga qaytish"
+
+msgid "Back to Exterior View"
+msgstr "Tashqi ko‘rinishga qaytish"
+
+msgid "Block regions saved!"
+msgstr "Blok hududlari saqlandi!"
+
+msgid "Building Explorer"
+msgstr "Bino ko‘rinishi"
+
+msgid "Building Explorers"
+msgstr "Binolar ko‘rinishi"
+
+msgid "Buildings 3D & Floor Presentations"
+msgstr "Binolar 3D va qavat taqdimotlari"
+
+msgid "Cancel Drawing"
+msgstr "Chizishni bekor qilish"
+
+msgid "Click a floor on the render or choose below"
+msgstr "Renderdagi qavat ustiga bosing yoki quyidan tanlang"
+
+msgid "Click any polygon on the floor plan to assign or edit its apartment."
+msgstr "Xonadonni biriktirish yoki tahrirlash uchun qavat rejasidagi istalgan shaklni bosing."
+
+msgid "Click to inspect floor plan →"
+msgstr "Qavat rejasini ko‘rish uchun bosing →"
+
+msgid "Close dialog"
+msgstr "Oynani yopish"
+
+msgid "Complex Explorer"
+msgstr "Majmua ko‘rinishi"
+
+msgid "Complex Explorers"
+msgstr "Majmualar ko‘rinishi"
+
+msgid "Complex Masterplan Presentations"
+msgstr "Turar-joy majmuasi bosh reja taqdimotlari"
+
+msgid "Complex Name"
+msgstr "Majmua nomi"
+
+msgid "Complex Overview"
+msgstr "Majmua bosh rejasi"
+
+msgid "Complex Overview created! Draw or AI-match clickable block regions."
+msgstr "Majmua bosh rejasi yaratildi! Blok hududlarini chizing yoki AI yordamida moslang."
+
+msgid "Complex Studio"
+msgstr "Majmua studiyasi"
+
+msgid "Complex details updated."
+msgstr "Majmua ma’lumotlari yangilandi."
+
+msgid "Complex share settings saved."
+msgstr "Majmuani ulashish sozlamalari saqlandi."
+
+msgid "Connect multiple blocks onto one interactive aerial/masterplan presentation."
+msgstr "Bir nechta bloklarni yagona interaktiv bosh reja taqdimotiga birlashtiring."
+
+msgid "Copied floor %(src)s layout to %(cnt)s floors."
+msgstr "%(src)s-qavat rejasi %(cnt)s ta qavatga nusxalandi."
+
+msgid "Copied!"
+msgstr "Nusxalandi!"
+
+msgid "Copy"
+msgstr "Nusxalash"
+
+msgid "Copy Floor Layout to Other Floors"
+msgstr "Qavat rejasini boshqa qavatlarga nusxalash"
+
+msgid "Copy Polygons & Match Apartments"
+msgstr "Shakllarni nusxalash va xonadonlarni moslash"
+
+msgid "Copy Public Link"
+msgstr "Ochiq havolani nusxalash"
+
+msgid "Copy Share Link"
+msgstr "Ulashish havolasini nusxalash"
+
+msgid "Could not generate AI Sunset/Night renders."
+msgstr "AI quyosh botishi/tun renderlarini yaratib bo‘lmadi."
+
+msgid "Create & Open Complex Studio"
+msgstr "Yaratish va majmua studiyasini ochish"
+
+msgid "Create Contract"
+msgstr "Shartnoma tuzish"
+
+msgid "Create a building in Buildings Inventory first, then set up its 3D Explorer here."
+msgstr "Avval Binolar bo‘limida bino yarating, so‘ngra bu yerda uning 3D ko‘rinishini sozlang."
+
+msgid "Day"
+msgstr "Kunduz"
+
+msgid "Delete Selected"
+msgstr "Tanlanganni o‘chirish"
+
+msgid "Detected windows"
+msgstr "Aniqlangan oynalar"
+
+msgid "Draft"
+msgstr "Qoralama"
+
+msgid "Draw Block Outline"
+msgstr "Blok chegarasini chizish"
+
+msgid "Draw Polygon"
+msgstr "Hudud chizish"
+
+msgid "East • Morning Sun"
+msgstr "Sharq • Tonggi quyosh"
+
+msgid "Edit Floor Vertices"
+msgstr "Qavat nuqtalarini tahrirlash"
+
+msgid "Edit Masterplan"
+msgstr "Bosh rejani tahrirlash"
+
+msgid "Enable Public Share Link"
+msgstr "Ochiq ulashish havolasini yoqish"
+
+msgid "Enable Read-Only Public Share Link"
+msgstr "Faqat ko‘rish uchun ochiq havolani yoqish"
+
+msgid "Error saving block regions."
+msgstr "Blok hududlarini saqlashda xatolik."
+
+msgid "Error saving floor bands."
+msgstr "Qavat chiziqlarini saqlashda xatolik."
+
+msgid "Error saving polygons."
+msgstr "Shakllarni saqlashda xatolik."
+
+msgid "Exit Fullscreen"
+msgstr "To‘liq ekrandan chiqish"
+
+msgid "Explore"
+msgstr "Ko‘rish"
+
+msgid "Explorer Studio"
+msgstr "3D Studiya"
+
+msgid "Exterior 3D Render"
+msgstr "Tashqi 3D render"
+
+msgid "Exterior Render & Floor Bands"
+msgstr "Tashqi render va qavat belgilari"
+
+msgid "Exterior render updated!"
+msgstr "Tashqi render yangilandi!"
+
+msgid "Extracted %(floors)s floors and matched %(matched)s/%(expected)s apartments!"
+msgstr "%(floors)s ta qavat ajratib olindi va %(matched)s/%(expected)s ta xonadon moslandi!"
+
+msgid "Extracted PDF Angles"
+msgstr "PDF-dan ajratilgan rakurslar"
+
+msgid "Extracting..."
+msgstr "Ajratib olinmoqda..."
+
+msgid "Failed"
+msgstr "Xatolik"
+
+msgid "Failed to process floor plan: %(err)s"
+msgstr "Qavat rejasini qayta ishlashda xatolik: %(err)s"
+
+msgid "Filter apartments"
+msgstr "Xonadonlarni saralash"
+
+msgid "Finish Block"
+msgstr "Blokni yakunlash"
+
+msgid "Finish Polygon"
+msgstr "Shaklni yakunlash"
+
+msgid "Floor Explorer"
+msgstr "Qavat ko‘rinishi"
+
+msgid "Floor Explorers"
+msgstr "Qavatlar ko‘rinishi"
+
+msgid "Floor Plans & Apartment Polygons"
+msgstr "Qavat rejalari va xonadon hududlari"
+
+msgid "Floor bands saved successfully!"
+msgstr "Qavat belgilari muvaffaqiyatli saqlandi!"
+
+msgid "Floor polygons saved!"
+msgstr "Qavat hududlari saqlandi!"
+
+msgid "Full Complex View"
+msgstr "To‘liq majmua ko‘rinishi"
+
+msgid "Fullscreen"
+msgstr "To‘liq ekran"
+
+msgid "Fullscreen Mode"
+msgstr "To‘liq ekran rejimi"
+
+msgid "Gemini API not yet active — manual & OpenCV modes enabled"
+msgstr "Gemini API faol emas — qo‘lda va OpenCV rejimlari yoqilgan"
+
+msgid "Generate AI Sunset & Night"
+msgstr "AI quyosh botishi va tun ko‘rinishi"
+
+msgid "Hero render switched cleanly."
+msgstr "Asosiy render muvaffaqiyatli almashtirildi."
+
+msgid "Highlight Block"
+msgstr "Blokni ajratib ko‘rsatish"
+
+msgid "Idle"
+msgstr "Kutilmoqda"
+
+msgid "Interactive Building Explorer"
+msgstr "Interaktiv bino taqdimoti"
+
+msgid "Interactive Explorer"
+msgstr "Interaktiv ko‘rinish"
+
+msgid "Interactive Presentation"
+msgstr "Interaktiv taqdimot"
+
+msgid "Interactive Residential Complex"
+msgstr "Interaktiv turar-joy majmuasi"
+
+msgid "Interactive lighting modes over the exterior 3D render."
+msgstr "Tashqi 3D render ustida interaktiv yoritish rejimlari."
+
+msgid "Invalid render image: %(err)s"
+msgstr "Yaroqsiz render rasmi: %(err)s"
+
+msgid "Lighting"
+msgstr "Yoritish"
+
+msgid "Lighting mode"
+msgstr "Yoritish rejimi"
+
+msgid "Live"
+msgstr "Faol"
+
+msgid "Live Public Presentation URL:"
+msgstr "Ochiq taqdimot havolasi (URL):"
+
+msgid "Main View"
+msgstr "Asosiy ko‘rinish"
+
+msgid "Makes this building presentation active inside the CRM and complex overview."
+msgstr "Ushbu bino taqdimotini CRM va majmua bosh rejasida faollashtiradi."
+
+msgid "Mapped Apartment"
+msgstr "Biriktirilgan xonadon"
+
+msgid "Mapped Apartments"
+msgstr "Biriktirilgan xonadonlar"
+
+msgid "Masterplan / Aerial Image"
+msgstr "Bosh reja / Yuqoridan ko‘rinish"
+
+msgid "Masterplan Image & Info"
+msgstr "Bosh reja rasmi va ma’lumotlari"
+
+msgid "Matches aerial roof geometry against uploaded Genplan & PDF red key-maps (Схема блокировки), excluding neighbor buildings."
+msgstr "Qo‘shni binolarni hisobga olmagan holda, bosh reja va PDF bloklash sxemasi (Схема блокировки) asosida bloklarni aniqlaydi."
+
+msgid "Multi-Bend Corner Slicer"
+msgstr "Ko‘p burilishli fasad ajratgich"
+
+msgid "Network error during AI block matching."
+msgstr "AI bloklarni moslashda tarmoq xatoligi."
+
+msgid "New Complex Overview"
+msgstr "Yangi majmua bosh rejasi"
+
+msgid "Night"
+msgstr "Tun"
+
+msgid "No complex overviews configured yet. Create one to showcase all blocks together on a masterplan."
+msgstr "Hozircha majmua bosh rejasi yaratilmagan. Barcha bloklarni bitta bosh rejada ko‘rsatish uchun yarating."
+
+msgid "No exterior render yet. Upload a PDF album above or upload an exterior render image on the right."
+msgstr "Tashqi render hali yuklanmagan. Yuqorida PDF albom yuklang yoki o‘ng tomondan tashqi render rasmini yuklang."
+
+msgid "No floor plan uploaded for this floor yet."
+msgstr "Ushbu qavat uchun reja hali yuklanmagan."
+
+msgid "No masterplan image yet"
+msgstr "Bosh reja rasmi hali yo‘q"
+
+msgid "No plan image for this floor yet. Upload a floor plan image/PDF or copy layout from another floor."
+msgstr "Ushbu qavat uchun reja rasmi yo‘q. Qavat rejasi rasmi/PDF-ni yuklang yoki boshqa qavatdan nusxalang."
+
+msgid "None needed"
+msgstr "Talab etilmaydi"
+
+msgid "North Azimuth (deg)"
+msgstr "Shimol azimuti (daraja)"
+
+msgid "North • Cool Even Light"
+msgstr "Shimol • Bir tekis yorug‘lik"
+
+msgid "North-East • Gentle Morning Sun"
+msgstr "Shimoli-sharq • Yumshoq tonggi quyosh"
+
+msgid "North-West • Late Evening Light"
+msgstr "Shimoli-g‘arb • Kechki yorug‘lik"
+
+msgid "Not Set Up"
+msgstr "Sozlanmagan"
+
+msgid "Open 3D Presentation"
+msgstr "3D taqdimotni ochish"
+
+msgid "Open 3D View"
+msgstr "3D ko‘rinishni ochish"
+
+msgid "Open Complex Presentation"
+msgstr "Majmua taqdimotini ochish"
+
+msgid "Open Presentation"
+msgstr "Taqdimotni ochish"
+
+msgid "Open Visualizer Matrix"
+msgstr "Shaxmatkani ochish"
+
+msgid "Or pick from extracted PDF renders & masterplans:"
+msgstr "Yoki PDF-dan ajratib olingan render va bosh rejalardan tanlang:"
+
+msgid "PDF extraction failed: %(err)s"
+msgstr "PDF-dan ajratib olishda xatolik: %(err)s"
+
+msgid "Parent Complex Overview (Optional)"
+msgstr "Tegishli majmua bosh rejasi (ixtiyoriy)"
+
+msgid "Plan"
+msgstr "Rejasi"
+
+msgid "Please upload a valid .pdf architectural album."
+msgstr "Iltimos, yaroqli .pdf arxitektura albomini yuklang."
+
+msgid "Presentation settings updated."
+msgstr "Taqdimot sozlamalari yangilandi."
+
+msgid "Processing"
+msgstr "Ishlanmoqda"
+
+msgid "Public Share Enabled"
+msgstr "Ochiq havola yoqilgan"
+
+msgid "Public URL copied!"
+msgstr "Ochiq havola nusxalandi!"
+
+msgid "Publish & Public Share Link"
+msgstr "Nashr qilish va ochiq havola"
+
+msgid "Publish & Share Complex"
+msgstr "Majmuani nashr qilish va ulashish"
+
+msgid "Publish Presentation"
+msgstr "Taqdimotni nashr qilish"
+
+msgid "Published"
+msgstr "Nashr qilingan"
+
+msgid "Ready"
+msgstr "Tayyor"
+
+msgid "Ready (Draft)"
+msgstr "Tayyor (Qoralama)"
+
+msgid "Regenerate Public Token"
+msgstr "Ochiq havolani yangilash"
+
+msgid "Remove Bend"
+msgstr "Burilishni o‘chirish"
+
+msgid "Rendering Lighting..."
+msgstr "Yoritish yaratilmoqda..."
+
+msgid "Save Block Regions"
+msgstr "Blok hududlarini saqlash"
+
+msgid "Save Floor Bands"
+msgstr "Qavat belgilarini saqlash"
+
+msgid "Save Floor Polygons"
+msgstr "Qavat hududlarini saqlash"
+
+msgid "Save Settings"
+msgstr "Sozlamalarni saqlash"
+
+msgid "Save Share Settings"
+msgstr "Ulashish sozlamalarini saqlash"
+
+msgid "Saving..."
+msgstr "Saqlanmoqda..."
+
+msgid "Select a Floor"
+msgstr "Qavatni tanlang"
+
+msgid "Select a block on the masterplan to inspect floors & apartments"
+msgstr "Qavatlar va xonadonlarni ko‘rish uchun bosh rejadagi blokni tanlang"
+
+msgid "Select a floor plan image or PDF page."
+msgstr "Qavat rejasi rasmi yoki PDF sahifasini tanlang."
+
+msgid "Select an image file for the exterior render."
+msgstr "Tashqi render uchun rasm faylini tanlang."
+
+msgid "Setup Studio"
+msgstr "Sozlash studiyasi"
+
+msgid "Show Day / Sunset / Night Lighting Switcher"
+msgstr "Kunduz / Quyosh botishi / Tun rejimlarini ko‘rsatish"
+
+msgid "Site Masterplan PDF (Optional — for AI Matching & Compass)"
+msgstr "Bosh reja PDF fayli (Ixtiyoriy — AI moslash va kompas uchun)"
+
+msgid "Site Masterplan PDF (Optional)"
+msgstr "Bosh reja PDF fayli (ixtiyoriy)"
+
+msgid "Site Masterplan PDF (Ген план, optional)"
+msgstr "Bosh reja PDF (Ген план, ixtiyoriy)"
+
+msgid "Site masterplan True North compass azimuth (optional)."
+msgstr "Bosh rejadagi haqiqiy shimol kompas yo‘nalishi (ixtiyoriy)."
+
+msgid "Slice into"
+msgstr "Bo‘lish:"
+
+msgid "Sliced facade into floor bands! Click Save Floor Bands to persist."
+msgstr "Fasad qavatlarga ajratildi! Saqlash uchun «Qavat belgilarini saqlash» tugmasini bosing."
+
+msgid "Sold out"
+msgstr "Sotilgan"
+
+msgid "Source Architectural PDF"
+msgstr "Manba arxitektura PDF fayli"
+
+msgid "South • All-Day Sun"
+msgstr "Janub • Kun bo‘yi quyosh"
+
+msgid "South-East • Bright Morning & Midday Sun"
+msgstr "Janubi-sharq • Yorqin tonggi va tushgi quyosh"
+
+msgid "South-West • Warm Afternoon Sun"
+msgstr "Janubi-g‘arb • Iliq tushdan keyingi quyosh"
+
+msgid "Spatial AI Engine"
+msgstr "Fazoviy AI tizimi"
+
+msgid "Standalone Building"
+msgstr "Alohida bino"
+
+msgid "Studio"
+msgstr "Studiya"
+
+msgid "Subtitle"
+msgstr "Qo‘shimcha sarlavha"
+
+msgid "Sunset"
+msgstr "Quyosh botishi"
+
+msgid "Switch floor"
+msgstr "Qavatni almashtirish"
+
+msgid "The 3D interactive presentation for this building has not been configured yet. Ask your administrator to upload the PDF album or floor plans in the Explorer Studio."
+msgstr "Ushbu bino uchun 3D interaktiv taqdimot hali sozlanmagan. Administratoringizdan 3D Studiyada PDF albom yoki qavat rejalarini yuklashni so‘rang."
+
+msgid "Tip: drag the corner dots to reshape or drag the black badge to reposition the label."
+msgstr "Maslahat: shaklni o‘zgartirish uchun burchak nuqtalarini suring yoki yorliq joyini o‘zgartirish uchun qora belgini torting."
+
+msgid "Total"
+msgstr "Jami"
+
+msgid "Tree foliage masking"
+msgstr "Daraxtlar qatlami"
+
+msgid "True North Orientation (deg, 0=Up, 90=Right)"
+msgstr "Shimol yo‘nalishi (daraja, 0=Yuqori, 90=O‘ng)"
+
+msgid "Unmapped"
+msgstr "Biriktirilmagan"
+
+msgid "Unpublished"
+msgstr "Nashr qilinmagan"
+
+msgid "Update Masterplan"
+msgstr "Bosh rejani yangilash"
+
+msgid "Upload & Auto-Detect Apartments"
+msgstr "Yuklash va xonadonlarni avtomatik aniqlash"
+
+msgid "Upload & Auto-Extract"
+msgstr "Yuklash va avtomatik ajratib olish"
+
+msgid "Upload Custom Exterior Render"
+msgstr "Maxsus tashqi renderni yuklash"
+
+msgid "Upload Masterplan / Aerial Image"
+msgstr "Bosh reja / yuqoridan ko‘rinish rasmini yuklash"
+
+msgid "Upload PDF / Render in Studio"
+msgstr "Studiyada PDF / Render yuklash"
+
+msgid "Upload Plan for Floor"
+msgstr "Qavat rejasini yuklash:"
+
+msgid "Upload Render"
+msgstr "Renderni yuklash"
+
+msgid "Upload a PDF album or exterior render + floor plan to configure the 3D Explorer."
+msgstr "3D ko‘rinishni sozlash uchun PDF albom yoki tashqi render + qavat rejasini yuklang."
+
+msgid "Upload a masterplan/aerial image or pick one already extracted from a building PDF album."
+msgstr "Bosh reja/yuqoridan ko‘rinish rasmini yuklang yoki bino PDF albomidan ajratilgan rasmni tanlang."
+
+msgid "Upload each building's PDF album or renders in Setup Studio to make floors & apartments interactive."
+msgstr "Qavatlar va xonadonlarni interaktiv qilish uchun Sozlash studiyasida har bir binoning PDF albomi yoki renderlarini yuklang."
+
+msgid "Upload or pick a complex overview image to place building blocks."
+msgstr "Bino bloklarini joylashtirish uchun majmua bosh rejasi rasmini yuklang yoki tanlang."
+
+msgid "Upload your building's architectural PDF (renders + floor plans). Floor bands and apartment polygons are extracted and matched automatically."
+msgstr "Binoning arxitektura PDF albomini (renderlar + qavat rejalari) yuklang. Qavat belgilari va xonadon hududlari avtomatik ajratib olinadi hamda moslanadi."
+
+msgid "Uploaded floor plan & matched %(cnt)s apartments."
+msgstr "Qavat rejasi yuklandi va %(cnt)s ta xonadon moslandi."
+
+msgid "Use as Hero"
+msgstr "Asosiy qilish"
+
+msgid "West • Sunset & Evening Light"
+msgstr "G‘arb • Quyosh botishi va kechki yorug‘lik"
+
+msgid "Zoom to Block"
+msgstr "Blokka yaqinlashtirish"
+
+msgid "apartments auto-matched"
+msgstr "xonadon avtomatik moslandi"
+
+msgid "apartments map"
+msgstr "xonadonlar xaritasi"
+
+msgid "apts"
+msgstr "xonadon"
+
+msgid "avail"
+msgstr "bo‘sh"
+
+msgid "available"
+msgstr "bo‘sh"
+
+msgid "bends"
+msgstr "burilish"
+
+msgid "blocks linked"
+msgstr "blok ulangan"
+
+msgid "e.g. 5-Storey Residential Complex"
+msgstr "masalan: 5 qavatli turar-joy majmuasi"
+
+msgid "e.g. NUR AVENUE 2"
+msgstr "masalan: NUR AVENUE 2"
+
+msgid "interactive complex overview"
+msgstr "interaktiv majmua bosh rejasi"
+
+msgid "interactive floor selector"
+msgstr "interaktiv qavat tanlagich"
+
+msgid "plan"
+msgstr "rejasi"
+
+msgid "rooms"
+msgstr "xona"
+
+msgid "shown"
+msgstr "ko‘rsatildi"
+
+msgid "sold"
+msgstr "sotilgan"
+
+msgid "AI Detect"
+msgstr "AI aniqlash"
+
+msgid "AI Sunset & Night"
+msgstr "AI kun botishi va tun"
+
+msgid "Auto-Extract PDF"
+msgstr "PDF avtomatik ajratish"
+
+msgid "Complex"
+msgstr "Majmua"
+
+msgid "Complexes"
+msgstr "Majmualar"
+
+msgid "Empty"
+msgstr "Bo'sh"
+
+msgid "Exit"
+msgstr "Chiqish"
+
+msgid "Exterior"
+msgstr "Tashqi ko'rinish"
+
+msgid "Facade & Floors"
+msgstr "Fasad va qavatlar"
+
+msgid "Floor Plans"
+msgstr "Qavat rejalari"
+
+msgid "Full View"
+msgstr "To'liq ko'rinish"
+
+msgid "Link"
+msgstr "Havola"
+
+msgid "Main"
+msgstr "Asosiy"
+
+msgid "Matrix"
+msgstr "Matritsa"
+
+msgid "Multi-Bend"
+msgstr "Ko'p burilishli"
+
+msgid "New Complex"
+msgstr "Yangi majmua"
+
+msgid "No buildings found."
+msgstr "Binolar topilmadi."
+
+msgid "No complexes configured yet."
+msgstr "Hozircha majmualar sozlanmagan."
+
+msgid "No image"
+msgstr "Rasm yo'q"
+
+msgid "Open"
+msgstr "Ochish"
+
+msgid "Presentation not configured yet. Upload a PDF album or floor plans in Studio."
+msgstr "Taqdimot hali sozlanmagan. Studiyada PDF albom yoki qavat rejalarini yuklang."
+
+msgid "Quad"
+msgstr "To'rtburchak"
+
+msgid "Rendering..."
+msgstr "Yaratilmoqda..."
+
+msgid "Save"
+msgstr "Saqlash"
+
+msgid "Setup in Studio"
+msgstr "Studiyada sozlash"
+
+msgid "Share & Settings"
+msgstr "Ulashish va sozlamalar"
+
+msgid "Slice"
+msgstr "Bo'lish"
+
+msgid "Vertices"
+msgstr "Nuqtalar"
+
+msgid "Zoom"
+msgstr "Yaqinlashtirish"
+
+msgid "blocks"
+msgstr "blok"
+
+msgid "matched"
+msgstr "mos"
+
+msgid "Labels"
+msgstr "Yorliqlar"
+
+msgid "Ent."
+msgstr "Pod."
+
+msgid "Click to inspect layout"
+msgstr "Planirovkani ko'rish uchun bosing"
+
+msgid "Hover to spotlight • Click any unit for zoomed layout"
+msgstr "Ajratib ko'rsatish uchun ustiga olib boring • Kattalashtirilgan planirovka uchun xonadonni bosing"
+
+msgid "layout blueprint"
+msgstr "xonadon planirovkasi"
+
+msgid "Unit Layout"
+msgstr "Xonadon planirovkasi"
+
+msgid "Floor Position"
+msgstr "Qavatdagi joylashuv"
+
+msgid "Show position on full floor plan"
+msgstr "To'liq qavat rejasida joylashuvni ko'rsatish"
+
+msgid "Zoom back to apartment layout"
+msgstr "Xonadon planirovkasiga qayta yaqinlashtirish"
+
+msgid "Floor Keymap"
+msgstr "Qavat sxemasi"
+
+msgid "Layout view mode"
+msgstr "Planirovka ko'rinish rejimi"
+
+msgid "Isolate"
+msgstr "Ajratish"
+
+msgid "Same Layout on Other Floors"
+msgstr "Boshqa qavatlardagi bir xil planirovka"
+
+msgid "Free"
+msgstr "Bo'sh"
+
+msgid "Free to sell"
+msgstr "Sotuvga tayyor"
+
+msgid "Sold to:"
+msgstr "Xaridor:"
+
+msgid "Available — Free to Sell"
+msgstr "Bo'sh — Sotuvga tayyor"
+
+msgid "This apartment is open and ready for contract."
+msgstr "Ushbu xonadon bo'sh va shartnoma tuzishga tayyor."
+
+msgid "Payment Progress"
+msgstr "To'lov jarayoni"
+
+msgid "Payment Completion"
+msgstr "To'lov bajarilishi"
+
+msgid "Paid portion (%)"
+msgstr "To'langan qism (%)"
+
+msgid "Sold (Remaining)"
+msgstr "Sotilgan (Qoldiq)"

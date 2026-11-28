@@ -63,7 +63,7 @@ jobs:
       - name: Install system and Python dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends gettext
+          sudo apt-get install -y --no-install-recommends gettext poppler-utils
           pip install --upgrade pip
           pip install -r requirements.txt
 

@@ -10,6 +10,13 @@
   */
 @source "../../../**/*.{html,py,js}";
 
+@layer base {
+    button:not(:disabled),
+    [role="button"]:not([aria-disabled="true"]) {
+        cursor: pointer;
+    }
+}
+
 /* Custom Scrollbars */
 * {
     scrollbar-color: #94a3b8 #f1f5f9;

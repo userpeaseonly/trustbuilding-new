@@ -25,7 +25,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     DJANGO_SETTINGS_MODULE=application.settings.production \
     PATH="/opt/venv/bin:$PATH"
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq5 gettext \
+    libpq5 gettext poppler-utils \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --gid 10001 trustbuilding \
     && useradd --uid 10001 --gid trustbuilding --create-home trustbuilding

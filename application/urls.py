@@ -28,6 +28,7 @@ urlpatterns = [
     path('users/', include('users.urls')),  # Users app
     path('otp/', include('otp.urls')),  # OTP Auth app
     path('building/', include('building.urls')),  # Inventory app
+    path('explorer/', include('explorer.urls')),  # Interactive 3D & floor-plan explorer
     path('contract/', include('contract.urls')),
     path('finance/', include('finance.urls')),  # Finance & Cash Flow app
     path('portal/', include('customer_portal.urls')),  # Contract app

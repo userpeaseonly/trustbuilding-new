@@ -18,6 +18,10 @@ RUN node --version \
   && gcc --version \
   && pg_config --version
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+  poppler-utils \
+  && rm -rf /var/lib/apt/lists/*
+
 RUN pip install --upgrade pip
 
 # Requirements are installed here to ensure they will be cached.
